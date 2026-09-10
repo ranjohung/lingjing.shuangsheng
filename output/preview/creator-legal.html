@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>创作者法律指南 · 灵境 · 双生</title>
+<meta name="description" content="v6.3 · 第三卷·第五章 · 13 份创作者专属法律文书 · 仅作者可见" />
+<meta name="theme-color" content="#0d0b22" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/design-system.css" />
+<style>
+  .legal-page{min-height:100vh;padding-bottom:100px;background:var(--ink-1);}
+  .legal-banner{
+    padding:24px 16px;background:linear-gradient(135deg,rgba(232,199,90,.15),rgba(139,124,246,.06));
+    border-bottom:1px solid var(--ink-4);
+  }
+  .legal-banner h1{font-family:var(--font-display);font-size:24px;font-weight:600;color:#fff;margin:0;display:flex;align-items:center;gap:10px;}
+  .legal-banner p{font-size:13px;color:rgba(255,255,255,.6);margin-top:6px;line-height:1.6;}
+  .legal-grid{display:grid;grid-template-columns:1fr;gap:8px;padding:16px;}
+  .legal-card{
+    padding:18px;background:var(--ink-2);
+    border:1px solid var(--ink-4);border-radius:var(--r-4);
+    text-decoration:none;color:inherit;display:block;
+    transition:all var(--dur-fast) var(--ease-spring);
+  }
+  .legal-card:hover{transform:translateY(-2px);border-color:var(--brand-gold);background:rgba(232,199,90,.04);}
+  .legal-card .head{display:flex;align-items:flex-start;gap:14px;}
+  .legal-card .ico{
+    font-size:24px;width:48px;height:48px;
+    display:grid;place-items:center;background:var(--ink-4);
+    border-radius:var(--r-3);flex-shrink:0;
+  }
+  .legal-card .body{flex:1;min-width:0;}
+  .legal-card .title{font-size:15px;color:#fff;font-weight:600;margin-bottom:4px;}
+  .legal-card .desc{font-size:12px;color:rgba(255,255,255,.6);line-height:1.6;margin-bottom:8px;}
+  .legal-card .tags{display:flex;gap:4px;flex-wrap:wrap;}
+  .legal-card .status{margin-left:auto;}
+</style>
+</head>
+<body>
+<div class="legal-page">
+  <div style="padding:16px 16px 0;"><a href="creator-center.html" class="ds-back-arrow">‹ 返回创作者中心</a></div>
+
+  <div class="legal-banner">
+    <h1>📜 创作者法律指南</h1>
+    <p><strong style="color:var(--brand-gold);">第三卷·第五章</strong> · 13 份创作者专属法律文书 · 仅作者可见<br/>
+    首次进入强制阅读前 5 项 · 创作者实名后解锁全部</p>
+  </div>
+
+  <!-- 必读前置 -->
+  <div class="ds-callout" data-type="warning" style="margin:16px;">
+    <span class="ico">⚠️</span>
+    <div class="body">
+      <strong>创作者必读：</strong> 签署前 5 项后才能上架作品<br/>
+      <strong>工具型文书：</strong> 版权证书 / 导出版权附页 / 双生角色告知 可在需要时查阅
+    </div>
+  </div>
+
+  <!-- 必读 5 项 -->
+  <div style="padding:0 16px 8px;">
+    <h3 style="font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-bottom:8px;">必读 · 5 项</h3>
+  </div>
+
+  <div class="legal-grid">
+    <a href="docs/legal/AI_COPYRIGHT_NOTICE.html" class="legal-card">
+      <div class="head">
+        <div class="ico" style="background:rgba(139,124,246,.15);">🤖</div>
+        <div class="body">
+          <div class="title">AI 创作版权声明</div>
+          <div class="desc">AI 辅助生成内容的版权归属 · 创作者权益 · 平台权益 · 用户权益边界</div>
+          <div class="tags">
+            <span class="ds-badge ds-badge-violet">必读 · 1</span>
+            <span class="ds-tag ds-tag-violet">AI 创作</span>
+            <span class="ds-tag ds-tag-cyan">版权归属</span>
+          </div>
+        </div>
+        <span class="ds-status-pill" data-status="pending">未读</span>
+      </div>
+    </a>
+
+    <a href="docs/legal/UPLOAD_THIRD_PARTY_NOTICE.html" class="legal-card">
+      <div class="head">
+        <div class="ico" style="background:rgba(232,199,90,.15);">🛡️</div>
+        <div class="body">
+          <div class="title">第三方素材上传声明</div>
+          <div class="desc">字体 · 音乐 · 图片 · 角色立绘 · 第三方素材的版权要求与审核标准</div>
+          <div class="tags">
+            <span class="ds-badge ds-badge-violet">必读 · 2</span>
+            <span class="ds-tag ds-tag-amber">第三方</span>
+            <span class="ds-tag ds-tag-gold">素材</span>
+          </div>
+        </div>
+        <span class="ds-status-pill" data-status="pending">未读</span>
+      </div>
+    </a>
+
+    <a href="legal-pending.html" class="legal-card" onclick="showToast('warning','待建','著作权授权协议 · v6.4 上线')">
+      <div class="head">
+        <div class="ico" style="background:rgba(232,155,90,.15);">📜</div>
+        <div class="body">
+          <div class="title">著作权授权协议</div>
+          <div class="desc">作品版权归属 · 授权范围（独家/非独家）· 期限与终止条款</div>
+          <div class="tags">
+            <span class="ds-badge ds-badge-violet">必读 · 3</span>
+            <span class="ds-tag ds-tag-violet">待建</span>
+          </div>
+        </div>
+        <span class="ds-status-pill" data-status="pending">待建</span>
+      </div>
+    </a>
+
+    <a href="legal-pending.html" class="legal-card" onclick="showToast('warning','待建','改编授权协议 · v6.4 上线')">
+      <div class="head">
+        <div class="ico" style="background:rgba(155,91,224,.15);">🔄</div>
+        <div class="body">
+          <div class="title">改编授权协议</div>
+          <div class="desc">改编游戏 / 漫画 / 影视 / 周边时的权益分配与授权流程</div>
+          <div class="tags">
+            <span class="ds-badge ds-badge-violet">必读 · 4</span>
+            <span class="ds-tag ds-tag-coral">待建</span>
+          </div>
+        </div>
+        <span class="ds-status-pill" data-status="pending">待建</span>
+      </div>
+    </a>
+
+    <a href="legal-pending.html" class="legal-card" onclick="showToast('warning','待建','收益分成协议 · v6.4 上线')">
+      <div class="head">
+        <div class="ico" style="background:rgba(110,198,255,.15);">💰</div>
+        <div class="body">
+          <div class="title">收益分成协议</div>
+          <div class="desc">双币种 / 订阅 / 抽成的具体比例 · 5 档分成 · 提现规则</div>
+          <div class="tags">
+            <span class="ds-badge ds-badge-violet">必读 · 5</span>
+            <span class="ds-tag ds-tag-cyan">待建</span>
+          </div>
+        </div>
+        <span class="ds-status-pill" data-status="pending">待建</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- 选读 8 项 -->
+  <div style="padding:0 16px 8px;margin-top:16px;">
+    <h3 style="font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-bottom:8px;">选读 · 工具型</h3>
+  </div>
+
+  <div class="legal-grid">
+    <a href="docs/legal/COPYRIGHT_CERTIFICATE.html" class="legal-card">
+      <div class="head">
+        <div class="ico">📄</div>
+        <div class="body">
+          <div class="title">版权证书模板</div>
+          <div class="desc">导出 PDF · 作为上架凭证</div>
+          <div class="tags"><span class="ds-tag ds-tag-gold">工具</span><span class="ds-tag ds-tag-cyan">PDF</span></div>
+        </div>
+        <span class="ds-icon-btn">›</span>
+      </div>
+    </a>
+
+    <a href="docs/legal/EXPORT_COPYRIGHT_PAGE.html" class="legal-card">
+      <div class="head">
+        <div class="ico">📤</div>
+        <div class="body">
+          <div class="title">导出版权附页</div>
+          <div class="desc">导出 TXT / PDF 时附带的版权页模板</div>
+          <div class="tags"><span class="ds-tag ds-tag-gold">工具</span></div>
+        </div>
+        <span class="ds-icon-btn">›</span>
+      </div>
+    </a>
+
+    <a href="docs/legal/DUAL_SOUL_CHARACTER_NOTICE.html" class="legal-card">
+      <div class="head">
+        <div class="ico">🌉</div>
+        <div class="body">
+          <div class="title">双生角色告知</div>
+          <div class="desc">带角色进心屿前必须签署的角色使用告知</div>
+          <div class="tags"><span class="ds-tag ds-tag-violet">双界</span></div>
+        </div>
+        <span class="ds-icon-btn">›</span>
+      </div>
+    </a>
+
+    <a href="legal-pending.html" class="legal-card" onclick="showToast('warning','待建','内容审核标准 · v6.4 上线')">
+      <div class="head">
+        <div class="ico">✅</div>
+        <div class="body">
+          <div class="title">内容审核标准（创作者必读）</div>
+          <div class="desc">5 维审核 · 6 级评定 · S/A/B/C/D · 上架前自查</div>
+          <div class="tags"><span class="ds-tag ds-tag-cyan">审核</span></div>
+        </div>
+        <span class="ds-status-pill" data-status="pending">待建</span>
+      </div>
+    </a>
+
+    <a href="legal-pending.html" class="legal-card" onclick="showToast('warning','待建','创作者实名认证规则 · v6.4 上线')">
+      <div class="head">
+        <div class="ico">🆔</div>
+        <div class="body">
+          <div class="title">创作者实名认证规则</div>
+          <div class="desc">创作前必读 · 18+ 验证 · 身份核验 · 创作资质</div>
+          <div class="tags"><span class="ds-tag ds-tag-amber">实名</span></div>
+        </div>
+        <span class="ds-status-pill" data-status="pending">待建</span>
+      </div>
+    </a>
+
+    <a href="legal-pending.html" class="legal-card" onclick="showToast('warning','待建','创作者税务与发票 · v6.4 上线')">
+      <div class="head">
+        <div class="ico">🧾</div>
+        <div class="body">
+          <div class="title">创作者税务与发票</div>
+          <div class="desc">收入结算方式 · 开票流程 · 个税代扣</div>
+          <div class="tags"><span class="ds-tag ds-tag-violet">税务</span></div>
+        </div>
+        <span class="ds-status-pill" data-status="pending">待建</span>
+      </div>
+    </a>
+
+    <a href="legal-pending.html" class="legal-card" onclick="showToast('warning','待建','创作者侧投诉与申诉 · v6.4 上线')">
+      <div class="head">
+        <div class="ico">⚖️</div>
+        <div class="body">
+          <div class="title">创作者侧投诉与申诉</div>
+          <div class="desc">作品被下架/被投诉的维权流程 · 申诉渠道</div>
+          <div class="tags"><span class="ds-tag ds-tag-coral">申诉</span></div>
+        </div>
+        <span class="ds-status-pill" data-status="pending">待建</span>
+      </div>
+    </a>
+
+    <a href="docs/LEGAL_INTEGRATION_PLAN.html" class="legal-card" style="background:linear-gradient(135deg,rgba(232,199,90,.06),rgba(139,124,246,.04));border-color:rgba(232,199,90,.2);">
+      <div class="head">
+        <div class="ico">📋</div>
+        <div class="body">
+          <div class="title" style="color:var(--brand-gold);">完整法律文书清单</div>
+          <div class="desc">LEGAL_INTEGRATION_PLAN.md · 23 份文书 · 卷次归属</div>
+          <div class="tags"><span class="ds-tag ds-tag-gold">总方案</span></div>
+        </div>
+        <span class="ds-icon-btn">›</span>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- 5 Tab 底部 -->
+<nav class="ds-bottom-tabs">
+  <a class="ds-bottom-tab" href="../../product-preview.html"><span class="ico">🏠</span><span>总览</span></a>
+  <a class="ds-bottom-tab" href="library.html"><span class="ico">📚</span><span>小说世界</span></a>
+  <a class="ds-bottom-tab" href="heart-island.html"><span class="ico">🏝️</span><span>心屿</span></a>
+  <a class="ds-bottom-tab active" href="creator-center.html"><span class="ico">✍️</span><span>创作</span></a>
+  <a class="ds-bottom-tab" href="me.html"><span class="ico">👤</span><span>我的</span></a>
+</nav>
+
+<div class="ds-toast-container" id="toast-container"></div>
+
+<script src="js/db.js"></script>
+<script>
+function showToast(type, title, msg) {
+  const c = document.getElementById('toast-container');
+  const icons = { success: '✓', warning: '⚠', danger: '✕', info: 'ℹ' };
+  const t = document.createElement('div');
+  t.className = 'ds-toast ' + type;
+  t.innerHTML = `<span class="ico">${icons[type]}</span><div class="msg"><strong>${title}</strong>${msg ? '<div style="font-size:11px;opacity:.7;margin-top:2px;">' + msg + '</div>' : ''}</div><button class="close" onclick="this.parentElement.remove()">×</button>`;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+try { console.log('[v6.3 creator-legal] 加载完成'); } catch(e) {}
+</script>
+</body>
+</html>

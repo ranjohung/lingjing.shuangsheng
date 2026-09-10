@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>发现 · 灵境 · 双生</title>
+<meta name="description" content="第四卷·寻幽探胜 · 3 广场（创作/心屿/记忆）+ 排行榜 + 标签 + 举报中心" />
+<meta name="theme-color" content="#0d0b22" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/design-system.css" />
+<style>
+  .discover-page { min-height:100vh; padding-bottom:100px; background:var(--ink-1); }
+  .discover-container { max-width:768px; margin:0 auto; padding:0 16px; }
+  .discover-banner {
+    padding:24px 16px; background:linear-gradient(135deg, rgba(246,166,216,.12), rgba(139,124,246,.06));
+    border-bottom:1px solid var(--ink-4);
+  }
+  .discover-banner h1 { font-family:var(--font-display); font-size:24px; font-weight:600; color:#fff; margin:0; }
+  .discover-banner p { font-size:13px; color:rgba(255,255,255,.6); margin-top:6px; line-height:1.6; }
+  .discover-section { padding:20px 0; }
+  .discover-section-title {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 16px; margin-bottom:12px;
+  }
+  .discover-section-title h2 { font-size:16px; font-weight:600; color:#fff; margin:0; }
+  .discover-tabs {
+    display:flex; gap:4px; padding:4px;
+    background:var(--ink-3); border-radius:var(--r-3);
+    margin:0 16px 16px;
+  }
+  .discover-tab {
+    flex:1; padding:8px 12px; text-align:center;
+    font-size:12px; color:rgba(255,255,255,.6);
+    border-radius:var(--r-2); cursor:pointer;
+    transition:all var(--dur-fast) var(--ease-spring);
+  }
+  .discover-tab[data-active="1"] { background:var(--brand-coral); color:#fff; }
+  .discover-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; padding:0 16px; }
+  @media(max-width:380px){.discover-grid{grid-template-columns:1fr;}}
+  .discover-card {
+    background:var(--ink-2); border:1px solid var(--ink-4);
+    border-radius:var(--r-4); overflow:hidden;
+    transition:all var(--dur-fast) var(--ease-spring);
+    cursor:pointer;
+  }
+  .discover-card:hover { transform:translateY(-2px); border-color:var(--brand-coral); }
+  .discover-card .cover { height:120px; display:grid; place-items:center; font-size:48px; }
+  .discover-card .body { padding:12px; }
+  .discover-card .title { font-size:14px; font-weight:600; color:#fff; margin-bottom:4px; }
+  .discover-card .meta { font-size:11px; color:rgba(255,255,255,.5); display:flex; gap:8px; }
+  .discover-card .tags { display:flex; gap:4px; flex-wrap:wrap; margin-top:8px; }
+  .discover-list { padding:0 16px; }
+  .discover-list-item {
+    display:flex; align-items:center; gap:12px;
+    padding:12px 0; border-bottom:1px solid var(--ink-4);
+    cursor:pointer; transition:background var(--dur-fast);
+  }
+  .discover-list-item:hover { background:rgba(246,166,216,.04); }
+  .discover-list-item .rank {
+    width:28px; height:28px; border-radius:50%;
+    display:grid; place-items:center;
+    font-family:var(--font-display); font-size:14px; font-weight:700;
+    background:var(--ink-4); color:rgba(255,255,255,.6);
+  }
+  .discover-list-item .rank.top1 { background:linear-gradient(135deg,#FFD700,#FFA500); color:#07061a; }
+  .discover-list-item .rank.top2 { background:linear-gradient(135deg,#C0C0C0,#A0A0A0); color:#07061a; }
+  .discover-list-item .rank.top3 { background:linear-gradient(135deg,#CD7F32,#A07028); color:#fff; }
+  .discover-list-item .body { flex:1; min-width:0; }
+  .discover-list-item .title { font-size:14px; color:#fff; }
+  .discover-list-item .sub { font-size:11px; color:rgba(255,255,255,.5); margin-top:2px; }
+  .discover-list-item .metric { font-size:11px; color:rgba(255,255,255,.4); text-align:right; }
+</style>
+</head>
+<body>
+
+<div class="discover-page">
+  <div style="padding:16px 16px 0;">
+    <a href="library.html" class="ds-back-arrow">‹ 返回小说世界</a>
+  </div>
+
+  <div class="discover-banner">
+    <h1>寻幽探胜 · 第四卷</h1>
+    <p>3 广场 · 排行榜 · 标签 · 举报中心<br/>发现更多好作品、好角色、好故事。</p>
+  </div>
+
+  <!-- Tab 切换：创作广场 / 心屿广场 / 记忆广场 -->
+  <div class="discover-tabs">
+    <div class="discover-tab" data-active="1" onclick="switchTab(0)">📚 创作广场</div>
+    <div class="discover-tab" onclick="switchTab(1)">🏝️ 心屿广场</div>
+    <div class="discover-tab" onclick="switchTab(2)">🌌 记忆广场</div>
+  </div>
+
+  <!-- 创作广场 -->
+  <section class="discover-section" id="discover-works">
+    <div class="discover-section-title">
+      <h2>本周热门</h2>
+      <span style="font-size:11px;color:rgba(255,255,255,.5);">周目榜 · 周一更新</span>
+    </div>
+    <div class="discover-list">
+      <div class="discover-list-item">
+        <div class="rank top1">1</div>
+        <div style="width:40px;height:50px;background:linear-gradient(135deg,#8E5BD8,#C95B9C);border-radius:6px;display:grid;place-items:center;font-size:18px;flex-shrink:0;">🏯</div>
+        <div class="body">
+          <div class="title">锦绣未央 · 长夜惊鸿</div>
+          <div class="sub">古风仙侠 · 作者 @墨染青衫</div>
+        </div>
+        <div class="metric"><div style="color:var(--brand-gold);">2.3k</div><div>收藏</div></div>
+      </div>
+      <div class="discover-list-item">
+        <div class="rank top2">2</div>
+        <div style="width:40px;height:50px;background:linear-gradient(135deg,#4FB3D9,#5b7ad8);border-radius:6px;display:grid;place-items:center;font-size:18px;flex-shrink:0;">🌌</div>
+        <div class="body">
+          <div class="title">长夜城</div>
+          <div class="sub">赛博朋克 · 作者 @夜行者</div>
+        </div>
+        <div class="metric"><div style="color:var(--brand-gold);">1.8k</div><div>收藏</div></div>
+      </div>
+      <div class="discover-list-item">
+        <div class="rank top3">3</div>
+        <div style="width:40px;height:50px;background:linear-gradient(135deg,#88A668,#88C97B);border-radius:6px;display:grid;place-items:center;font-size:18px;flex-shrink:0;">🌸</div>
+        <div class="body">
+          <div class="title">校园物语 · 夏日终曲</div>
+          <div class="sub">青春校园 · 作者 @柠檬汽水</div>
+        </div>
+        <div class="metric"><div style="color:var(--brand-gold);">1.5k</div><div>收藏</div></div>
+      </div>
+      <div class="discover-list-item">
+        <div class="rank">4</div>
+        <div style="width:40px;height:50px;background:linear-gradient(135deg,#5A6B8E,#C95B9C);border-radius:6px;display:grid;place-items:center;font-size:18px;flex-shrink:0;">🔍</div>
+        <div class="body">
+          <div class="title">迷雾之城</div>
+          <div class="sub">悬疑推理 · 作者 @夜枭</div>
+        </div>
+        <div class="metric"><div style="color:var(--brand-gold);">1.2k</div><div>收藏</div></div>
+      </div>
+      <div class="discover-list-item">
+        <div class="rank">5</div>
+        <div style="width:40px;height:50px;background:linear-gradient(135deg,#D8A45B,#C97BD8);border-radius:6px;display:grid;place-items:center;font-size:18px;flex-shrink:0;">⚡</div>
+        <div class="body">
+          <div class="title">凡人修仙传 · 灵根篇</div>
+          <div class="sub">玄幻修真 · 作者 @剑客行</div>
+        </div>
+        <div class="metric"><div style="color:var(--brand-gold);">980</div><div>收藏</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 心屿广场 -->
+  <section class="discover-section" id="discover-characters" style="display:none;">
+    <div class="discover-section-title">
+      <h2>最受喜爱的角色</h2>
+      <span style="font-size:11px;color:rgba(255,255,255,.5);">按收藏数</span>
+    </div>
+    <div class="discover-grid">
+      <div class="discover-card">
+        <div class="cover" style="background:linear-gradient(135deg,#8E5BD8,#5b6bd8);">👸</div>
+        <div class="body">
+          <div class="title">凌霜 · 冰山师尊</div>
+          <div class="meta"><span>❤️ 8.2k</span><span>· 12 段记忆</span></div>
+          <div class="tags"><span class="ds-tag ds-tag-violet">古风</span><span class="ds-tag ds-tag-cyan">冰山</span></div>
+        </div>
+      </div>
+      <div class="discover-card">
+        <div class="cover" style="background:linear-gradient(135deg,#f6a6d8,#e89b5a);">🧝</div>
+        <div class="body">
+          <div class="title">星见 · 月下精灵</div>
+          <div class="meta"><span>❤️ 6.8k</span><span>· 8 段记忆</span></div>
+          <div class="tags"><span class="ds-tag ds-tag-coral">奇幻</span><span class="ds-tag ds-tag-amber">治愈</span></div>
+        </div>
+      </div>
+      <div class="discover-card">
+        <div class="cover" style="background:linear-gradient(135deg,#5b6bd8,#9b5be0);">🤖</div>
+        <div class="body">
+          <div class="title">ARIA · 智能助手</div>
+          <div class="meta"><span>❤️ 5.4k</span><span>· 6 段记忆</span></div>
+          <div class="tags"><span class="ds-tag ds-tag-cyan">科幻</span><span class="ds-tag ds-tag-violet">理性</span></div>
+        </div>
+      </div>
+      <div class="discover-card">
+        <div class="cover" style="background:linear-gradient(135deg,#88A668,#88C97B);">🎒</div>
+        <div class="body">
+          <div class="title">小晚 · 青梅竹马</div>
+          <div class="meta"><span>❤️ 4.9k</span><span>· 15 段记忆</span></div>
+          <div class="tags"><span class="ds-tag ds-tag-amber">校园</span><span class="ds-tag ds-tag-coral">治愈</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 记忆广场 -->
+  <section class="discover-section" id="discover-memories" style="display:none;">
+    <div class="discover-section-title">
+      <h2>公开记忆 · 命运卡</h2>
+      <span style="font-size:11px;color:rgba(255,255,255,.5);">网友分享</span>
+    </div>
+    <div class="discover-grid">
+      <div class="discover-card">
+        <div class="cover" style="background:linear-gradient(135deg,#FFD700,#FF8C00);">✨</div>
+        <div class="body">
+          <div class="title">HE · 长相守</div>
+          <div class="meta"><span>❤️ 12k 收藏</span><span>· 锦绣未央</span></div>
+          <div class="tags"><span class="ds-tag ds-tag-gold">HE</span><span class="ds-tag ds-tag-violet">命运卡</span></div>
+        </div>
+      </div>
+      <div class="discover-card">
+        <div class="cover" style="background:linear-gradient(135deg,#2a2645,#1c1937);">🌙</div>
+        <div class="body">
+          <div class="title">BE · 雨夜诀别</div>
+          <div class="meta"><span>❤️ 8.7k 收藏</span><span>· 长夜城</span></div>
+          <div class="tags"><span class="ds-tag ds-tag-violet">BE</span><span class="ds-tag ds-tag-cyan">命运卡</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 举报中心入口（v6.3 显眼化） -->
+  <section class="discover-section">
+    <div class="discover-section-title">
+      <h2>反馈与举报</h2>
+    </div>
+    <div style="padding:0 16px;">
+      <div class="ds-callout" data-type="warning">
+        <span class="ico">⚠️</span>
+        <div class="body">
+          <strong>遇到违规内容？</strong> 举报处理流程：投诉 → 24h 审核 → 冻结/下架/警告。详细见 <a href="settings.html#legal" style="color:var(--brand-gold);">附录·法律中心 → 举报中心</a>。
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- 5 Tab 底部 -->
+<nav class="ds-bottom-tabs">
+  <a class="ds-bottom-tab" href="../../product-preview.html"><span class="ico">🏠</span><span>总览</span></a>
+  <a class="ds-bottom-tab" href="library.html"><span class="ico">📚</span><span>小说世界</span></a>
+  <a class="ds-bottom-tab" href="heart-island.html"><span class="ico">🏝️</span><span>心屿</span></a>
+  <a class="ds-bottom-tab" href="creator-center.html"><span class="ico">✍️</span><span>创作</span></a>
+  <a class="ds-bottom-tab" href="me.html"><span class="ico">👤</span><span>我的</span></a>
+</nav>
+
+<script src="js/db.js"></script>
+<script>
+function switchTab(i) {
+  document.querySelectorAll('.discover-tab').forEach((t, idx) => t.dataset.active = (idx === i ? '1' : ''));
+  document.getElementById('discover-works').style.display = i === 0 ? '' : 'none';
+  document.getElementById('discover-characters').style.display = i === 1 ? '' : 'none';
+  document.getElementById('discover-memories').style.display = i === 2 ? '' : 'none';
+}
+try { console.log('[v6.3 discover.html] 加载完成'); } catch(e) {}
+</script>
+</body>
+</html>

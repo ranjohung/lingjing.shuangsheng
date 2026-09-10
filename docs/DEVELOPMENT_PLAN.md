@@ -1,6 +1,22 @@
-# 灵境 · 双生 — 开发计划 v5.1 + v5.6~v5.17 增量登记
+# 灵境 · 双生 — 开发计划 v5.1 + v5.6~v5.20 增量登记
 
-> **当前最新版本**：v5.17（商业化降级 + 小说辅助模拟器）/ v5.16（UX 修复）/ v5.15（代码审查）/ v5.14（商业化 4 大系统）/ v5.13（沉浸剧情 UI）/ v5.12（30 题材库）
+> **当前最新版本**：v5.20（心屿陪伴功能区 · 官方命名落地）/ v5.19（知己 AI 陪伴功能区重建）/ v5.18（创作者中心设计系统重构）/ v5.17（商业化降级 + 小说辅助模拟器）/ v5.16（UX 修复）/ v5.15（代码审查）/ v5.14（商业化 4 大系统）/ v5.13（沉浸剧情 UI）/ v5.12（30 题材库）
+>
+> **v5.20 关键变更**：
+> - 4 张新数据表：`heart_island_characters` / `dual_soul_bringout_records` / `daily_interactions` / `proactive_behaviors`（17 → 21 张）
+> - 4 页面正式以 **「心屿」** 命名：heart-island.html / chat.html / memory.html / profile.html
+> - 设计系统组件骨架待新增：`ds-character-card`（角色大卡）/ `ds-relationship-meter`（7 维关系仪表）/ `ds-stage-progress`（6 阶段进度条）
+> - 待新建页面：`character-create.html`（7 步角色创建 wizard）/ `character-detail.html`（角色详情 + 关系养成）
+> - 双界穿梭：从心屿进入小说世界 / 从小说带角色回家
+>
+> **v5.19 关键变更**：
+> - 4 个新页面：`companion.html` / `chat.html` / `memory.html` / `profile.html`
+> - 设计系统扩展：`ds-mh` / `ds-bottom-tabs` / `ds-bottom-tab` / `ds-icon-btn`（1209 行总）
+> - 修复 P0：library.html mobile 视图顶部 nav `hidden md:flex` 导致 AI 陪伴入口消失
+>
+> **v5.18 关键变更**：
+> - 新建 `css/design-system.css`（710 行，含 25+ 组件 token）
+> - 创作者中心整体重构：3 大功能区 + 0 重复入口 + ds-page-header 统一顶部
 >
 > **v5.17 关键变更**：
 > - 商业化从顶级功能区降级为创作者中心内部按键

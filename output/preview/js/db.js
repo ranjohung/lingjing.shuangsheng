@@ -134,6 +134,38 @@
       fields: ['id', 'novel_id', 'creator_id', 'foreshadow_id', 'content',
                'planted_chapter', 'expected_recover_chapter', 'foreshadow_type',
                'importance', 'status', 'recovered_chapter', 'created_at', 'updated_at']
+    },
+    // ===== v5.20 新增 4 张表（心屿 · 陪伴功能区） =====
+    heart_island_characters: {
+      key: 'id',
+      fields: ['id', 'user_id', 'character_id', 'character_name', 'character_avatar',
+               'personality_json', 'source_type', 'source_world_id', 'source_novel_id',
+               'dual_status', 'intimacy_level', 'intimacy_stage',
+               'trust', 'intimacy', 'familiarity', 'respect', 'attraction',
+               'understanding', 'shared_history',
+               'voice_id', 'daily_attitude', 'cover_gradient',
+               'is_active', 'last_interaction_at', 'created_at', 'updated_at']
+    },
+    dual_soul_bringout_records: {
+      key: 'id',
+      fields: ['id', 'user_id', 'character_id', 'character_name',
+               'source_world_id', 'source_novel_id',
+               'brought_out_at', 'bring_out_cost', 'intimacy_at_bringout',
+               'dual_status', 'memory_synced',
+               'unlocked_skins', 'unlocked_cg', 'unlocked_voicepacks',
+               'created_at', 'updated_at']
+    },
+    daily_interactions: {
+      key: 'id',
+      fields: ['id', 'user_id', 'character_id', 'interaction_type',
+               'content', 'duration_seconds', 'intimacy_gain',
+               'mood_before', 'mood_after', 'location', 'created_at']
+    },
+    proactive_behaviors: {
+      key: 'id',
+      fields: ['id', 'character_id', 'user_id', 'behavior_type',
+               'content', 'is_read', 'read_at',
+               'trigger_source', 'created_at']
     }
   };
 

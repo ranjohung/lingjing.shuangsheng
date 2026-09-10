@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>个人主页 · 心屿</title>
+<meta name="description" content="v6.3 · 个人主页 · AI 偏好 · 订阅 · 关于" />
+<meta name="theme-color" content="#0d0b22" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/design-system.css" />
+<style>
+  .pf-page{min-height:100vh;padding-bottom:100px;background:var(--ink-1);}
+  .pf-header{padding:32px 16px;text-align:center;background:linear-gradient(135deg,rgba(232,199,90,.15),rgba(139,124,246,.06));border-bottom:1px solid var(--ink-4);}
+  .pf-name{font-family:var(--font-display);font-size:24px;font-weight:600;color:#fff;margin-top:12px;}
+  .pf-id{font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;}
+  .pf-tags{display:flex;gap:6px;justify-content:center;margin-top:12px;flex-wrap:wrap;}
+  .pf-section{padding:20px 16px;}
+  .pf-section-title{font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-bottom:12px;padding-left:4px;}
+  .pf-row{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--ink-2);border:1px solid var(--ink-4);border-radius:var(--r-3);margin-bottom:8px;text-decoration:none;color:inherit;cursor:pointer;transition:all var(--dur-fast);}
+  .pf-row:hover{border-color:var(--brand-violet);background:rgba(139,124,246,.04);}
+  .pf-row .ico{font-size:18px;width:36px;height:36px;display:grid;place-items:center;background:var(--ink-4);border-radius:var(--r-3);flex-shrink:0;}
+  .pf-row .body{flex:1;min-width:0;}
+  .pf-row .title{font-size:14px;color:#fff;}
+  .pf-row .sub{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="pf-page">
+  <div style="padding:16px 16px 0;"><a href="heart-island.html" class="ds-back-arrow">‹ 返回心屿</a></div>
+
+  <div class="pf-header">
+    <div class="ds-avatar xl" style="background:linear-gradient(135deg,#e8c75a,#f6a6d8);font-size:32px;margin:0 auto;">L</div>
+    <div class="pf-name">灵境旅人</div>
+    <div class="pf-id">ID: 2026-09-11-A07F</div>
+    <div class="pf-tags">
+      <span class="ds-status-pill" data-status="active">已实名</span>
+      <span class="ds-badge ds-badge-gold">月度会员</span>
+      <span class="ds-tag ds-tag-violet">25 岁</span>
+    </div>
+  </div>
+
+  <!-- 数据概览 -->
+  <div class="pf-section">
+    <div class="pf-section-title">📊 我的数据</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div class="ds-metric-card"><div class="label">陪伴天数</div><div class="value">9</div><div class="delta up">↑ +1</div></div>
+      <div class="ds-metric-card"><div class="label">角色数</div><div class="value">3</div><div class="delta">知己 1 · 亲密 1 · 初识 1</div></div>
+      <div class="ds-metric-card"><div class="label">累计对话</div><div class="value">1.2k</div><div class="delta">条消息</div></div>
+      <div class="ds-metric-card"><div class="label">已收 CG</div><div class="value">12</div><div class="delta">8 命运卡</div></div>
+    </div>
+  </div>
+
+  <!-- AI 偏好 -->
+  <div class="pf-section">
+    <div class="pf-section-title">🤖 AI 偏好</div>
+    <a href="settings.html#ai" class="pf-row">
+      <div class="ico">💬</div>
+      <div class="body">
+        <div class="title">回复风格</div>
+        <div class="sub">温柔 · 已选</div>
+      </div>
+      <span class="ds-icon-btn">›</span>
+    </a>
+    <a href="settings.html#ai" class="pf-row">
+      <div class="ico">📏</div>
+      <div class="body">
+        <div class="title">回复长度</div>
+        <div class="sub">中等 · 已选</div>
+      </div>
+      <span class="ds-icon-btn">›</span>
+    </a>
+    <a href="settings.html#notification" class="pf-row">
+      <div class="ico">❤️</div>
+      <div class="body">
+        <div class="title">主动关怀</div>
+        <div class="sub">中等频率 · 已开启</div>
+      </div>
+      <div class="ds-switch" data-checked="1" onclick="event.preventDefault();this.dataset.checked=this.dataset.checked==='1'?'':'1'"></div>
+    </a>
+    <a href="settings.html#notification" class="pf-row">
+      <div class="ico">🌙</div>
+      <div class="body">
+        <div class="title">静默时段</div>
+        <div class="sub">22:00 - 08:00 默认不推送</div>
+      </div>
+      <span class="ds-icon-btn">›</span>
+    </a>
+  </div>
+
+  <!-- 订阅 -->
+  <div class="pf-section">
+    <div class="pf-section-title">👑 订阅</div>
+    <a href="wallet.html#subscribe" class="pf-row" style="border-color:rgba(232,199,90,.3);background:linear-gradient(135deg,rgba(232,199,90,.06),rgba(232,199,90,.02));">
+      <div class="ico" style="background:rgba(232,199,90,.15);">👑</div>
+      <div class="body">
+        <div class="title">月度会员 · 进行中</div>
+        <div class="sub">¥30/月 · 剩余 23 天 · 续费 ¥120/年</div>
+      </div>
+      <span class="ds-badge ds-badge-gold">VIP</span>
+    </a>
+    <a href="wallet.html#subscribe" class="pf-row">
+      <div class="ico">📊</div>
+      <div class="body">
+        <div class="title">本月已用</div>
+        <div class="sub">AI 辅助 124 次 · 语音 8.4 小时</div>
+      </div>
+      <span class="ds-icon-btn">›</span>
+    </a>
+  </div>
+
+  <!-- 账户 -->
+  <div class="pf-section">
+    <div class="pf-section-title">⚙️ 账户</div>
+    <a href="settings.html" class="pf-row">
+      <div class="ico">⚙️</div>
+      <div class="body"><div class="title">设置</div><div class="sub">9 Tab · 账号/安全/通知/隐私/显示/声音/AI/法律/关于</div></div>
+      <span class="ds-icon-btn">›</span>
+    </a>
+    <a href="settings.html#legal" class="pf-row">
+      <div class="ico">📜</div>
+      <div class="body"><div class="title">法律中心</div><div class="sub">附录·第五章 · 10 份通用法律</div></div>
+      <span class="ds-icon-btn">›</span>
+    </a>
+  </div>
+
+  <!-- 关于 -->
+  <div class="pf-section">
+    <div class="pf-section-title">ℹ️ 关于</div>
+    <a href="settings.html#about" class="pf-row">
+      <div class="ico">ℹ️</div>
+      <div class="body"><div class="title">关于灵境 · 双生</div><div class="sub">v6.3 · 设计语言 · 团队</div></div>
+      <span class="ds-icon-btn">›</span>
+    </a>
+    <a href="docs/DESIGN_LANGUAGE.html" class="pf-row">
+      <div class="ico">🎨</div>
+      <div class="body"><div class="title">设计语言 v6.3</div><div class="sub">DESIGN_LANGUAGE.md</div></div>
+      <span class="ds-icon-btn">›</span>
+    </a>
+  </div>
+
+  <div style="text-align:center;font-size:10px;color:rgba(255,255,255,.3);padding:24px 16px;">灵境 · 双生 © 2026 · v6.3</div>
+</div>
+
+<!-- 5 Tab 底部 -->
+<nav class="ds-bottom-tabs">
+  <a class="ds-bottom-tab" href="../../product-preview.html"><span class="ico">🏠</span><span>总览</span></a>
+  <a class="ds-bottom-tab" href="library.html"><span class="ico">📚</span><span>小说世界</span></a>
+  <a class="ds-bottom-tab active" href="heart-island.html"><span class="ico">🏝️</span><span>心屿</span></a>
+  <a class="ds-bottom-tab" href="creator-center.html"><span class="ico">✍️</span><span>创作</span></a>
+  <a class="ds-bottom-tab" href="me.html"><span class="ico">👤</span><span>我的</span></a>
+</nav>
+
+<script src="js/db.js"></script>
+<script>
+try{console.log('[v6.3 profile] 加载完成');}catch(e){}
+</script>
+</body>
+</html>

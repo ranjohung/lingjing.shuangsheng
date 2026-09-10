@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>创建角色 · 心屿</title>
+<meta name="description" content="v6.3 · 7 层建角向导 · 基础/外貌/人格/声音/背景/关系/能力" />
+<meta name="theme-color" content="#0d0b22" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/design-system.css" />
+<style>
+  .cc-page{min-height:100vh;padding-bottom:100px;background:var(--ink-1);}
+  .cc-banner{padding:24px 16px;background:linear-gradient(135deg,rgba(232,199,90,.12),rgba(139,124,246,.06));border-bottom:1px solid var(--ink-4);}
+  .cc-banner h1{font-family:var(--font-display);font-size:24px;font-weight:600;color:#fff;margin:0;}
+  .cc-banner p{font-size:13px;color:rgba(255,255,255,.6);margin-top:6px;line-height:1.6;}
+  .cc-stepper{padding:16px;}
+  .cc-section{padding:0 16px 16px;}
+  .cc-field{margin-bottom:16px;}
+  .cc-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .cc-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .cc-chip{padding:10px;background:var(--ink-3);border:1px solid var(--ink-4);border-radius:var(--r-3);text-align:center;font-size:12px;color:rgba(255,255,255,.7);cursor:pointer;transition:all var(--dur-fast) var(--ease-spring);}
+  .cc-chip:hover{border-color:var(--brand-violet);color:#fff;}
+  .cc-chip[data-selected="1"]{background:rgba(139,124,246,.15);border-color:var(--brand-violet);color:#fff;box-shadow:var(--shadow-md);}
+  .cc-chip .ico{font-size:20px;margin-bottom:4px;}
+  .cc-meter{display:grid;grid-template-columns:80px 1fr 40px;align-items:center;gap:10px;margin-bottom:8px;}
+  .cc-meter .label{font-size:11px;color:rgba(255,255,255,.7);}
+  .cc-slider-wrap{padding:6px 0;}
+  .cc-input-v2{
+    width:100%;height:42px;padding:0 14px;background:var(--ink-3);
+    border:1px solid var(--ink-5);border-radius:var(--r-3);
+    color:#fff;font-size:13px;font-family:var(--font-body);
+    transition:all var(--dur-fast);
+  }
+  .cc-input-v2:focus{outline:0;border-color:var(--brand-violet);box-shadow:0 0 0 3px rgba(139,124,246,.15);}
+  .cc-textarea-v2{width:100%;min-height:80px;padding:12px 14px;background:var(--ink-3);border:1px solid var(--ink-5);border-radius:var(--r-3);color:#fff;font-size:13px;font-family:var(--font-body);resize:vertical;transition:all var(--dur-fast);}
+  .cc-textarea-v2:focus{outline:0;border-color:var(--brand-violet);box-shadow:0 0 0 3px rgba(139,124,246,.15);}
+  .cc-step-section{display:none;}
+  .cc-step-section[data-active="1"]{display:block;}
+</style>
+</head>
+<body>
+<div class="cc-page">
+  <div style="padding:16px 16px 0;"><a href="heart-island.html" class="ds-back-arrow">‹ 返回心屿</a></div>
+
+  <div class="cc-banner">
+    <h1>✨ 创建新角色</h1>
+    <p>7 层向导 · 完成后即可在心屿与 TA 相伴<br/>预计 8 分钟</p>
+  </div>
+
+  <!-- 7 步 Stepper -->
+  <div class="cc-stepper">
+    <div class="ds-step-indicator" style="overflow-x:auto;padding-bottom:4px;">
+      <div class="ds-step" data-state="active"><div class="ds-step-num">1</div><span>基础</span></div>
+      <div class="ds-step-divider"></div>
+      <div class="ds-step"><div class="ds-step-num">2</div><span>外貌</span></div>
+      <div class="ds-step-divider"></div>
+      <div class="ds-step"><div class="ds-step-num">3</div><span>人格</span></div>
+      <div class="ds-step-divider"></div>
+      <div class="ds-step"><div class="ds-step-num">4</div><span>声音</span></div>
+      <div class="ds-step-divider"></div>
+      <div class="ds-step"><div class="ds-step-num">5</div><span>背景</span></div>
+      <div class="ds-step-divider"></div>
+      <div class="ds-step"><div class="ds-step-num">6</div><span>关系</span></div>
+      <div class="ds-step-divider"></div>
+      <div class="ds-step"><div class="ds-step-num">7</div><span>能力</span></div>
+    </div>
+  </div>
+
+  <!-- Step 1: 基础信息 -->
+  <section class="cc-section cc-step-section" data-active="1">
+    <h2 style="font-size:16px;font-weight:600;color:#fff;margin:16px 0 12px;">📋 基础信息</h2>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">姓名 <span style="color:var(--danger);">*</span></label>
+      <input class="cc-input-v2" placeholder="给你的角色起个名字" value="阿岁" />
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">性别</label>
+      <div class="cc-grid-3">
+        <div class="cc-chip" data-selected="1"><div class="ico">👨</div>男</div>
+        <div class="cc-chip"><div class="ico">👩</div>女</div>
+        <div class="cc-chip"><div class="ico">🧝</div>非二元</div>
+      </div>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">种族 / 物种</label>
+      <div class="cc-grid-3">
+        <div class="cc-chip"><div class="ico">👤</div>人类</div>
+        <div class="cc-chip"><div class="ico">🧝</div>精灵</div>
+        <div class="cc-chip"><div class="ico">🦇</div>吸血鬼</div>
+        <div class="cc-chip"><div class="ico">🐺</div>兽人</div>
+        <div class="cc-chip"><div class="ico">🤖</div>机器人</div>
+        <div class="cc-chip"><div class="ico">✨</div>自定义</div>
+      </div>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">身份 / 职业</label>
+      <input class="cc-input-v2" placeholder="如：学生、教师、医生、剑客..." />
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">年龄 <span style="color:rgba(255,255,255,.4);">(18+ 强制)</span></label>
+      <div class="cc-grid-2">
+        <div class="cc-chip" data-selected="1"><div>25 岁</div></div>
+        <div class="cc-chip"><div>自定义</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 2: 外貌 -->
+  <section class="cc-section cc-step-section">
+    <h2 style="font-size:16px;font-weight:600;color:#fff;margin:16px 0 12px;">🎨 外貌形象</h2>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">立绘生成方式</label>
+      <div class="cc-grid-3">
+        <div class="cc-chip" data-selected="1"><div class="ico">🤖</div>AI 一键生成</div>
+        <div class="cc-chip"><div class="ico">📤</div>上传图片</div>
+        <div class="cc-chip"><div class="ico">📋</div>模板选择</div>
+      </div>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">服装风格</label>
+      <div class="cc-grid-3">
+        <div class="cc-chip"><div class="ico">👔</div>现代</div>
+        <div class="cc-chip"><div class="ico">🏯</div>古风</div>
+        <div class="cc-chip"><div class="ico">🐉</div>奇幻</div>
+        <div class="cc-chip"><div class="ico">🤖</div>赛博</div>
+        <div class="cc-chip"><div class="ico">🎒</div>校园</div>
+        <div class="cc-chip"><div class="ico">⚔️</div>战斗</div>
+      </div>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">发色 / 瞳色</label>
+      <div class="cc-grid-2">
+        <input class="cc-input-v2" placeholder="发色" value="深棕" />
+        <input class="cc-input-v2" placeholder="瞳色" value="琥珀色" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 3: 人格 -->
+  <section class="cc-section cc-step-section">
+    <h2 style="font-size:16px;font-weight:600;color:#fff;margin:16px 0 12px;">🧠 人格与性格</h2>
+    <div class="ds-callout" data-type="info" style="margin-bottom:16px;">
+      <span class="ico">💡</span>
+      <div class="body"><strong>5 大维度 + 7 扩展</strong> · 拖动滑块调整 0-100 数值</div>
+    </div>
+    <div class="cc-meter"><span class="label">开放性</span><div><div class="ds-slider-wrap"><div class="ds-slider-track"><div class="ds-slider-fill" style="width:78%;"></div><div class="ds-slider-thumb" style="left:78%;"></div></div></div></div><span style="text-align:right;color:#fff;font-weight:600;">78</span></div>
+    <div class="cc-meter"><span class="label">尽责性</span><div><div class="ds-slider-wrap"><div class="ds-slider-track"><div class="ds-slider-fill" style="width:82%;"></div><div class="ds-slider-thumb" style="left:82%;"></div></div></div></div><span style="text-align:right;color:#fff;font-weight:600;">82</span></div>
+    <div class="cc-meter"><span class="label">外向性</span><div><div class="ds-slider-wrap"><div class="ds-slider-track"><div class="ds-slider-fill" style="width:65%;"></div><div class="ds-slider-thumb" style="left:65%;"></div></div></div></div><span style="text-align:right;color:#fff;font-weight:600;">65</span></div>
+    <div class="cc-meter"><span class="label">宜人性</span><div><div class="ds-slider-wrap"><div class="ds-slider-track"><div class="ds-slider-fill" style="width:92%;background:linear-gradient(90deg,#5be05b,#88e08e);"></div><div class="ds-slider-thumb" style="left:92%;"></div></div></div></div><span style="text-align:right;color:#fff;font-weight:600;">92</span></div>
+    <div class="cc-meter"><span class="label">神经质</span><div><div class="ds-slider-wrap"><div class="ds-slider-track"><div class="ds-slider-fill" style="width:30%;"></div><div class="ds-slider-thumb" style="left:30%;"></div></div></div></div><span style="text-align:right;color:#fff;font-weight:600;">30</span></div>
+    <div class="cc-meter"><span class="label">共情力</span><div><div class="ds-slider-wrap"><div class="ds-slider-track"><div class="ds-slider-fill" style="width:88%;background:linear-gradient(90deg,#e8c75a,#f0d77a);"></div><div class="ds-slider-thumb" style="left:88%;"></div></div></div></div><span style="text-align:right;color:#fff;font-weight:600;">88</span></div>
+    <div class="cc-meter"><span class="label">幽默感</span><div><div class="ds-slider-wrap"><div class="ds-slider-track"><div class="ds-slider-fill" style="width:72%;"></div><div class="ds-slider-thumb" style="left:72%;"></div></div></div></div><span style="text-align:right;color:#fff;font-weight:600;">72</span></div>
+    <div class="cc-meter"><span class="label">浪漫倾向</span><div><div class="ds-slider-wrap"><div class="ds-slider-track"><div class="ds-slider-fill" style="width:70%;background:linear-gradient(90deg,#c95b9c,#d580b4);"></div><div class="ds-slider-thumb" style="left:70%;"></div></div></div></div><span style="text-align:right;color:#fff;font-weight:600;">70</span></div>
+  </section>
+
+  <!-- Step 4: 声音 -->
+  <section class="cc-section cc-step-section">
+    <h2 style="font-size:16px;font-weight:600;color:#fff;margin:16px 0 12px;">🎵 声音与语音</h2>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">音色</label>
+      <div class="cc-grid-3">
+        <div class="cc-chip"><div class="ico">☁️</div>温柔</div>
+        <div class="cc-chip" data-selected="1"><div class="ico">✨</div>清亮</div>
+        <div class="cc-chip"><div class="ico">🌊</div>沉稳</div>
+        <div class="cc-chip"><div class="ico">🍯</div>甜美</div>
+        <div class="cc-chip"><div class="ico">🎷</div>磁性</div>
+        <div class="cc-chip"><div class="ico">🌙</div>沙哑</div>
+      </div>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">语速</label>
+      <div class="cc-grid-3">
+        <div class="cc-chip">慢</div>
+        <div class="cc-chip" data-selected="1">中</div>
+        <div class="cc-chip">快</div>
+      </div>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">语调</label>
+      <div class="cc-grid-2">
+        <div class="cc-chip" data-selected="1">平和</div>
+        <div class="cc-chip">活泼</div>
+        <div class="cc-chip">慵懒</div>
+        <div class="cc-chip">正式</div>
+      </div>
+    </div>
+    <div class="ds-callout" style="margin-top:16px;">
+      <span class="ico">🔊</span>
+      <div class="body"><strong>试听：</strong> 语音通话功能需要订阅会员</div>
+    </div>
+  </section>
+
+  <!-- Step 5: 背景故事 -->
+  <section class="cc-section cc-step-section">
+    <h2 style="font-size:16px;font-weight:600;color:#fff;margin:16px 0 12px;">📖 背景故事</h2>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">身世</label>
+      <textarea class="cc-textarea-v2" placeholder="用一段话描述 TA 的来历..."></textarea>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">重要经历</label>
+      <textarea class="cc-textarea-v2" placeholder="影响性格的关键事件..."></textarea>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">当前目标</label>
+      <input class="cc-input-v2" placeholder="TA 现在在追求什么？" />
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">内心秘密</label>
+      <textarea class="cc-textarea-v2" placeholder="TA 不愿轻易透露的秘密..."></textarea>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">恐惧 / 渴望</label>
+      <div class="cc-grid-2">
+        <input class="cc-input-v2" placeholder="TA 害怕什么？" />
+        <input class="cc-input-v2" placeholder="TA 最渴望什么？" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 6: 关系设定 -->
+  <section class="cc-section cc-step-section">
+    <h2 style="font-size:16px;font-weight:600;color:#fff;margin:16px 0 12px;">🤝 关系设定</h2>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">与你的关系</label>
+      <div class="cc-grid-3">
+        <div class="cc-chip">陌生人</div>
+        <div class="cc-chip" data-selected="1">朋友</div>
+        <div class="cc-chip">恋人</div>
+        <div class="cc-chip">家人</div>
+        <div class="cc-chip">导师</div>
+        <div class="cc-chip">宿敌</div>
+      </div>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">关系起始状态</label>
+      <div class="cc-grid-2">
+        <div class="cc-chip">初次见面</div>
+        <div class="cc-chip" data-selected="1">久别重逢</div>
+        <div class="cc-chip">青梅竹马</div>
+        <div class="cc-chip">命中注定</div>
+      </div>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">关系发展速度</label>
+      <div class="cc-grid-3">
+        <div class="cc-chip">缓慢</div>
+        <div class="cc-chip" data-selected="1">自然</div>
+        <div class="cc-chip">快速</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 7: 能力 -->
+  <section class="cc-section cc-step-section">
+    <h2 style="font-size:16px;font-weight:600;color:#fff;margin:16px 0 12px;">⚡ 能力与特长</h2>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">特长</label>
+      <div class="cc-grid-3">
+        <div class="cc-chip"><div class="ico">🎵</div>音乐</div>
+        <div class="cc-chip"><div class="ico">🎨</div>绘画</div>
+        <div class="cc-chip"><div class="ico">📝</div>写作</div>
+        <div class="cc-chip"><div class="ico">🍳</div>烹饪</div>
+        <div class="cc-chip"><div class="ico">⚔️</div>战斗</div>
+        <div class="cc-chip"><div class="ico">✨</div>魔法</div>
+      </div>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">弱点</label>
+      <textarea class="cc-textarea-v2" placeholder="TA 不擅长什么？"></textarea>
+    </div>
+    <div class="ds-callout" data-type="success" style="margin-top:16px;">
+      <span class="ico">🎉</span>
+      <div class="body"><strong>即将完成！</strong> 全部 7 层填写完毕，点击下方"完成"按钮即可创建。</div>
+    </div>
+  </section>
+
+  <!-- 底部操作 -->
+  <div style="padding:16px;display:flex;gap:8px;border-top:1px solid var(--ink-4);background:var(--ink-2);position:sticky;bottom:0;">
+    <button class="ds-btn ds-btn-ghost" id="prev-btn" onclick="prev()" disabled>‹ 上一步</button>
+    <button class="ds-btn ds-btn-primary" id="next-btn" onclick="next()" style="flex:1;">下一步 ›</button>
+  </div>
+</div>
+
+<!-- 5 Tab 底部 -->
+<nav class="ds-bottom-tabs">
+  <a class="ds-bottom-tab" href="../../product-preview.html"><span class="ico">🏠</span><span>总览</span></a>
+  <a class="ds-bottom-tab" href="library.html"><span class="ico">📚</span><span>小说世界</span></a>
+  <a class="ds-bottom-tab active" href="heart-island.html"><span class="ico">🏝️</span><span>心屿</span></a>
+  <a class="ds-bottom-tab" href="creator-center.html"><span class="ico">✍️</span><span>创作</span></a>
+  <a class="ds-bottom-tab" href="me.html"><span class="ico">👤</span><span>我的</span></a>
+</nav>
+
+<div class="ds-toast-container" id="toast-container"></div>
+
+<script src="js/db.js"></script>
+<script>
+let step = 1;
+const total = 7;
+function showStep() {
+  document.querySelectorAll('.cc-step-section').forEach((s, i) => s.dataset.active = (i === step - 1 ? '1' : ''));
+  document.querySelectorAll('.ds-step').forEach((s, i) => s.dataset.state = (i < step - 1 ? 'done' : (i === step - 1 ? 'active' : '')));
+  document.querySelectorAll('.ds-step-divider').forEach((s, i) => { if(i < step - 1) s.classList.add('done'); else s.classList.remove('done'); });
+  document.getElementById('prev-btn').disabled = step === 1;
+  document.getElementById('next-btn').textContent = step === total ? '✓ 完成创建' : '下一步 ›';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function prev() { if(step > 1) { step--; showStep(); } }
+function next() {
+  if(step < total) { step++; showStep(); }
+  else { showToast('success', '创建成功', '阿岁已入驻心屿'); setTimeout(() => location.href='heart-island.html', 1200); }
+}
+document.querySelectorAll('.cc-chip').forEach(c => c.addEventListener('click', () => {
+  c.parentElement.querySelectorAll('.cc-chip').forEach(s => s.dataset.selected = '');
+  c.dataset.selected = '1';
+}));
+function showToast(type, title, msg) {
+  const c = document.getElementById('toast-container');
+  const icons = { success: '✓', warning: '⚠', danger: '✕', info: 'ℹ' };
+  const t = document.createElement('div');
+  t.className = 'ds-toast ' + type;
+  t.innerHTML = `<span class="ico">${icons[type]}</span><div class="msg"><strong>${title}</strong>${msg ? '<div style="font-size:11px;opacity:.7;margin-top:2px;">' + msg + '</div>' : ''}</div><button class="close" onclick="this.parentElement.remove()">×</button>`;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+try { console.log('[v6.3 character-create] 加载完成'); } catch(e) {}
+</script>
+</body>
+</html>

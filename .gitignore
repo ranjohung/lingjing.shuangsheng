@@ -79,7 +79,11 @@ output/preview/screenshots/v514/
 **/sd_temp/
 **/sd_logs/
 
-# 临时工作区遗留
-"·"
-"双生"
-"F:"
+# 临时工作区遗留（空目录，防复活）
+·
+双生
+F:
+
+# v5.18 打包产物（3.7G zip / 45M bundle，远超 GitHub 限制，仅本地留存）
+output/preview/lingjing-v518-source.zip
+output/preview/*.bundle

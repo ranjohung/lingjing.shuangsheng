@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>心屿 · 灵境 · 双生</title>
+<meta name="description" content="v6.4 · 第二卷·心屿之约 · 陪伴角色 · 双界穿梭 · 创建新角色" />
+<meta name="theme-color" content="#1A1A2E" />
+<link rel="stylesheet" href="css/shell-v64.css" />
+<style>
+/* ---------- 搜索框 ---------- */
+.search{
+  display:flex;align-items:center;gap:10px;
+  margin:14px var(--margin) 0;padding:12px 16px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--line);
+}
+.search input{flex:1;background:none;border:0;outline:0;color:var(--text);font-size:15px}
+.search input::placeholder{color:rgba(160,160,176,.55)}
+
+/* ---------- 主角色大卡 ---------- */
+.protagonist{
+  margin:14px var(--margin);padding:16px;border-radius:var(--radius);
+  background:linear-gradient(135deg,rgba(108,92,231,.22),rgba(0,184,148,.10)),
+             var(--card);
+  border:1px solid rgba(108,92,231,.3);
+  display:flex;gap:12px;align-items:center;
+}
+.p-ava{
+  width:60px;height:60px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--xinyu),#A29BFE);
+  display:grid;place-items:center;font-size:24px;
+  box-shadow:0 4px 14px rgba(108,92,231,.4);
+}
+.p-body{flex:1;min-width:0}
+.p-head{display:flex;align-items:center;gap:6px}
+.p-name{font-size:16px;font-weight:600}
+.p-stage{font-size:10px;padding:1px 8px;border-radius:6px;background:rgba(108,92,231,.25);color:#A29BFE;font-weight:600}
+.p-status{font-size:11px;color:var(--ok);display:flex;align-items:center;gap:4px;margin-top:3px}
+.p-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 6px var(--ok)}
+.p-quote{font-size:13px;color:var(--sub);margin-top:8px;line-height:1.5;font-style:italic}
+.p-row{display:flex;gap:12px;margin-top:8px;font-size:11px;color:rgba(160,160,176,.7)}
+.p-row b{color:var(--text);font-weight:600}
+
+/* ---------- 双界穿梭 CTA ---------- */
+.dual-cta{
+  margin:0 var(--margin) 14px;padding:14px;border-radius:var(--radius);
+  background:linear-gradient(135deg,rgba(91,107,216,.18),rgba(155,91,224,.18));
+  border:1px solid rgba(155,91,224,.3);
+  display:flex;gap:12px;align-items:center;cursor:pointer;
+  transition:transform .2s;
+}
+.dual-cta:active{transform:scale(.98)}
+.dual-cta .ico{
+  width:42px;height:42px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,#5b6bd8,#9b5be0);
+  display:grid;place-items:center;font-size:20px;
+}
+.dual-cta .t{font-size:14px;font-weight:600}
+.dual-cta .s{font-size:11px;color:var(--sub);margin-top:2px}
+
+/* ---------- 角色列表 ---------- */
+.char-list{margin:0 var(--margin);display:flex;flex-direction:column;gap:10px}
+.char{
+  display:flex;gap:12px;align-items:center;padding:12px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--line);
+  transition:transform .2s cubic-bezier(.16,1,.3,1);
+}
+.char:active{transform:scale(.98)}
+.char .ava{
+  width:52px;height:52px;border-radius:50%;flex-shrink:0;
+  display:grid;place-items:center;font-size:22px;
+}
+.char .body{flex:1;min-width:0}
+.char .head{display:flex;align-items:center;gap:6px}
+.char .n{font-size:15px;font-weight:600}
+.char .stage{font-size:10px;padding:1px 6px;border-radius:6px;font-weight:600}
+.stage-cj{background:rgba(160,160,176,.15);color:var(--sub)}
+.stage-fr{background:rgba(78,204,163,.18);color:var(--ok)}
+.stage-nj{background:rgba(108,92,231,.2);color:#A29BFE}
+.char .quote{font-size:12px;color:var(--sub);margin-top:4px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.char .acts{display:flex;gap:6px;margin-top:8px}
+.char .acts .a{
+  font-size:12px;padding:5px 12px;border-radius:8px;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--text);
+}
+.char .acts .a.primary{background:rgba(108,92,231,.2);border-color:rgba(108,92,231,.4);color:#A29BFE}
+
+/* ---------- 创建按钮 ---------- */
+.create-cta{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin:16px var(--margin) 0;height:48px;
+  border-radius:var(--radius);
+  background:rgba(255,255,255,.04);border:1px dashed rgba(108,92,231,.4);
+  color:var(--text);font-size:15px;font-weight:500;
+  transition:background .2s;
+}
+.create-cta:active{background:rgba(108,92,231,.1)}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- 顶栏（v6.4 共享壳） -->
+  <header class="topbar">
+    <div class="topbar-title"><span class="dot"></span>心屿</div>
+    <div class="topbar-acts">
+      <button class="icon-btn" onclick="showToast('ok','搜索已就绪','搜角色名 / 标签 / 性格')" title="搜索">🔍</button>
+      <a class="icon-btn" href="character-create.html" title="新建角色">＋</a>
+      <button class="icon-btn" onclick="showToast('warn','3 条主动行为','早安 / 关心 / 邀请 · 进入角色查看')">🔔<span class="badge">3</span></button>
+      <a class="icon-btn" href="me.html" title="我的">👤</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- 搜索框 -->
+    <div class="search">
+      <span>🔍</span>
+      <input type="search" placeholder="搜角色名 / 标签 / 性格" />
+    </div>
+
+    <!-- 主陪伴角色大卡 -->
+    <section class="protagonist">
+      <div class="p-ava">❄️</div>
+      <div class="p-body">
+        <div class="p-head">
+          <span class="p-name">林清雪</span>
+          <span class="p-stage">亲密 · 89%</span>
+        </div>
+        <div class="p-status">在线</div>
+        <div class="p-quote">"今天路过一家花店，想起你说喜欢向日葵。"</div>
+        <div class="p-row">
+          <span>信任 <b>90</b></span>
+          <span>亲密 <b>75</b></span>
+          <span>共历 <b>70</b></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 双界穿梭 -->
+    <a class="dual-cta" href="character-detail.html" onclick="event.preventDefault();openDual();">
+      <div class="ico">🌉</div>
+      <div style="flex:1">
+        <div class="t">双界穿梭</div>
+        <div class="s">带 TA 回到小说世界 / 带 TA 回到心屿</div>
+      </div>
+      <div style="font-size:18px;opacity:.4">›</div>
+    </a>
+
+    <!-- 我的角色 -->
+    <h2 class="sec">我的角色 <a class="more" href="character-detail.html">全部</a></h2>
+    <div class="char-list">
+      <div class="char">
+        <div class="ava" style="background:linear-gradient(135deg,var(--xinyu),#A29BFE)">❄️</div>
+        <div class="body">
+          <div class="head">
+            <span class="n">林清雪</span>
+            <span class="stage stage-nj">亲密</span>
+          </div>
+          <div class="quote">"你昨晚没说完的那句话——我等到现在。"</div>
+          <div class="acts">
+            <a class="a primary" href="chat.html">💬 聊天</a>
+            <a class="a" href="plot-runner.html?from=linqingxue">🌐 进入世界</a>
+            <a class="a" href="character-detail.html">详情</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="char">
+        <div class="ava" style="background:linear-gradient(135deg,#E94560,#FF8A5B)">🏮</div>
+        <div class="body">
+          <div class="head">
+            <span class="n">顾长夜</span>
+            <span class="stage stage-fr">知己</span>
+          </div>
+          <div class="quote">"长夜未央，你是我的第一缕光。"</div>
+          <div class="acts">
+            <a class="a primary" href="chat.html">💬 聊天</a>
+            <a class="a" href="plot-runner.html?from=guchangye">🌐 进入世界</a>
+            <a class="a" href="character-detail.html">详情</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="char">
+        <div class="ava" style="background:linear-gradient(135deg,#FFB347,#E89B5A)">📚</div>
+        <div class="body">
+          <div class="head">
+            <span class="n">苏晚</span>
+            <span class="stage stage-cj">初识</span>
+          </div>
+          <div class="quote">"你好呀，我叫苏晚，你呢？"</div>
+          <div class="acts">
+            <a class="a primary" href="chat.html">💬 聊天</a>
+            <a class="a" href="character-detail.html">详情</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 创建新角色 -->
+    <a class="create-cta" href="character-create.html">
+      ＋ 创建新角色（7 层向导）
+    </a>
+
+    <!-- 角色广场 -->
+    <h2 class="sec">角色广场 <a class="more" href="discover.html">发现更多</a></h2>
+    <div class="char-list">
+      <div class="char">
+        <div class="ava" style="background:linear-gradient(135deg,#4ECCA3,#6EC6FF)">🌊</div>
+        <div class="body">
+          <div class="head">
+            <span class="n">白月</span>
+            <span class="stage stage-cj">官方</span>
+          </div>
+          <div class="quote">温柔治愈型 · 海洋系 · 免费</div>
+          <div class="acts">
+            <a class="a primary" href="character-detail.html">认领</a>
+            <a class="a" href="character-create.html">相似创建</a>
+          </div>
+        </div>
+      </div>
+      <div class="char">
+        <div class="ava" style="background:linear-gradient(135deg,#5b6bd8,#9b5be0)">⚔️</div>
+        <div class="body">
+          <div class="head">
+            <span class="n">剑无尘</span>
+            <span class="stage stage-cj">官方</span>
+          </div>
+          <div class="quote">高冷剑客 · 古风系 · 订阅</div>
+          <div class="acts">
+            <a class="a primary" href="wallet.html">订阅解锁</a>
+            <a class="a" href="character-create.html">相似创建</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 5 Tab 底部（心屿 active） -->
+  <nav class="tabbar">
+    <a class="tab" href="../product-preview.html"><span class="ico">🏠</span><span>首页</span></a>
+    <a class="tab t-world" href="library.html"><span class="ico">📖</span><span>世界</span></a>
+    <a class="tab t-xinyu active" href="heart-island.html"><span class="ico">💬</span><span>心屿</span></a>
+    <a class="tab t-create" href="creator-center.html"><span class="ico">✨</span><span>创作</span></a>
+    <a class="tab" href="me.html"><span class="ico">👤</span><span>我的</span></a>
+  </nav>
+</div>
+
+<!-- 双界穿梭 modal -->
+<dialog id="dual-modal" style="border:0;background:transparent;padding:0;max-width:420px;width:86vw">
+  <div style="background:var(--card);border:1px solid rgba(108,92,231,.4);border-radius:16px;padding:20px;color:var(--text)">
+    <h3 style="font-size:18px;font-weight:600;margin-bottom:8px">🌉 双界穿梭</h3>
+    <p style="font-size:13px;color:var(--sub);line-height:1.7;margin-bottom:14px">
+      角色同时存在心屿（现实陪伴）与小说世界（命运冒险）。
+      想带 TA 回到小说世界继续剧情，或带 TA 回到心屿继续日常生活？
+    </p>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="btn-mini" style="height:48px" onclick="location.href='plot-runner.html?from=linqingxue'">🌐 带 TA 回到小说世界</button>
+      <button class="btn-mini" style="height:48px;background:linear-gradient(135deg,var(--xinyu),#A29BFE)" onclick="showToast('ok','TA 已回家','林清雪正在心屿等你')">🏝️ 带 TA 回到心屿</button>
+      <button onclick="document.getElementById('dual-modal').close()" style="margin-top:6px;padding:10px;color:var(--sub);font-size:13px">取消</button>
+    </div>
+  </div>
+</dialog>
+
+<div id="toast"></div>
+
+<script>
+function showToast(kind, title, msg){
+  var c = document.getElementById('toast');
+  var t = document.createElement('div');
+  t.className = 'toast-item ' + (kind || 'ok');
+  t.innerHTML = '<span class="ti"></span><span><b>' + title + '</b>' + (msg ? '<span style="opacity:.65"> · ' + msg + '</span>' : '') + '</span>';
+  c.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 3000);
+}
+function openDual(){ document.getElementById('dual-modal').showModal(); }
+</script>
+</body>
+</html>

@@ -2,387 +2,275 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>灵境 · 双生 · 30 题材小说世界目录 · v5.14</title>
-<meta name="description" content="v5.14：30 题材全分类 · 上传即生成沉浸剧情 · 4 大商业化系统（AI 辅助/版权分层/收费点/质量审核）" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
-<script src="https://cdn.tailwindcss.com?plugins=line-clamp"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>世界 · 灵境 · 双生</title>
+<meta name="description" content="v6.4 · 第一卷·灵界万象 · 30 题材全分类 · 我的故事 · 官方库 · 玩家创作" />
+<meta name="theme-color" content="#1A1A2E" />
+<link rel="stylesheet" href="css/shell-v64.css" />
 <style>
-  :root { color-scheme: dark; }
-  * { box-sizing: border-box; }
-  html, body { margin:0; padding:0; min-height:100%; background:#0d0b22; color:#edf1f6; font-family:'Noto Sans SC','Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
-  .font-display{ font-family:'Noto Serif SC',serif; }
-  .font-brand{ font-family:'Cormorant Garamond','Noto Serif SC',serif; letter-spacing:.3em; }
-  .text-gradient{ background:linear-gradient(120deg,#f6a6d8,#8b7cf6 60%,#6ec6ff); -webkit-background-clip:text; background-clip:text; color:transparent; }
-  .glass{ background:rgba(20,18,46,.55); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,.08); }
-  .chip{ display:inline-flex; align-items:center; gap:.4rem; padding:.4rem .9rem; border-radius:9999px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); font-size:.78rem; color:rgba(255,255,255,.7); cursor:pointer; transition:background .15s; }
-  .chip:hover{ background:rgba(255,255,255,.1); }
-  .chip.active{ background:rgba(255,255,255,.1); color:#fff; border-color:rgba(207,190,240,.6); }
-  .genre-card{ position:relative; overflow:hidden; border-radius:1.25rem; }
-  .genre-card::before{ content:''; position:absolute; inset:0; background:var(--c1)33; opacity:.85; transition:opacity .25s; }
-  .genre-card:hover::before{ opacity:1; }
-  .hero-shimmer{ background:linear-gradient(110deg,transparent 0%,transparent 40%,rgba(255,255,255,.08) 50%,transparent 60%,transparent 100%); background-size:400% 100%; animation:shimmer 6s linear infinite; }
-  @keyframes shimmer { 0% { background-position:-400% 0; } 100% { background-position:400% 0; } }
-  .stars{ position:absolute; inset:0; pointer-events:none; background:radial-gradient(1px 1px at 13% 17%,rgba(255,255,255,.6) 50%,transparent 51%),radial-gradient(1px 1px at 71% 33%,rgba(255,255,255,.4) 50%,transparent 51%),radial-gradient(1px 1px at 28% 73%,rgba(255,255,255,.5) 50%,transparent 51%),radial-gradient(1px 1px at 87% 87%,rgba(255,255,255,.3) 50%,transparent 51%),radial-gradient(1px 1px at 56% 22%,rgba(255,255,255,.6) 50%,transparent 51%); opacity:.45; }
-  .empty-cta{ border:1px dashed rgba(255,255,255,.15); padding:24px; border-radius:18px; text-align:center; color:rgba(255,255,255,.55); cursor:pointer; transition:background .15s; }
-  .empty-cta:hover{ background:rgba(255,255,255,.04); color:#fff; }
-  .novel-card{ position:relative; overflow:hidden; border-radius:14px; cursor:pointer; transition:transform .2s; }
-  .novel-card:hover{ transform:translateY(-4px); }
-  .badge{ position:absolute; top:8px; right:8px; padding:3px 8px; border-radius:6px; font-size:10px; backdrop-filter:blur(8px); }
-  details>summary{ list-style:none; cursor:pointer; }
-  details>summary::-webkit-details-marker{ display:none; }
-  .stat-num{ font-family:'Cormorant Garamond'; font-size:24px; font-weight:600; }
+/* ---------- 搜索框 ---------- */
+.search{
+  display:flex;align-items:center;gap:10px;
+  margin:14px var(--margin) 0;
+  padding:12px 16px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--line);
+}
+.search input{flex:1;background:none;border:0;outline:0;color:var(--text);font-size:15px}
+.search input::placeholder{color:rgba(160,160,176,.55)}
+.search .ico{color:var(--sub)}
+
+/* ---------- 分类 chips ---------- */
+.chips{display:flex;gap:8px;overflow-x:auto;padding:14px var(--margin) 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex-shrink:0;padding:7px 14px;border-radius:999px;font-size:13px;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--sub);
+  transition:all .15s;
+}
+.chip.active{background:rgba(233,69,96,.15);border-color:rgba(233,69,96,.4);color:var(--accent);font-weight:600}
+
+/* ---------- 数据概览 4 卡 ---------- */
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+  margin:14px var(--margin) 0;
+}
+.stat{
+  padding:10px 6px;border-radius:10px;text-align:center;
+  background:var(--card);border:1px solid var(--line);
+}
+.stat .v{font-size:20px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,serif}
+.stat .l{font-size:10px;color:var(--sub);margin-top:2px}
+.stat .v.c1{color:var(--world)}
+.stat .v.c2{color:var(--accent)}
+.stat .v.c3{color:var(--xinyu)}
+.stat .v.c4{color:var(--warn)}
+
+/* ---------- 我的故事 列表卡 ---------- */
+.story-list{margin:0 var(--margin);display:flex;flex-direction:column;gap:10px}
+.story{
+  display:flex;gap:12px;align-items:center;padding:12px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--line);
+  transition:transform .2s cubic-bezier(.16,1,.3,1);
+}
+.story:active{transform:scale(.98)}
+.story .cov{
+  width:54px;height:70px;border-radius:8px;flex-shrink:0;
+  display:grid;place-items:center;font-size:24px;
+}
+.story .body{flex:1;min-width:0}
+.story .t{font-size:15px;font-weight:600;line-height:1.3}
+.story .s{font-size:12px;color:var(--sub);margin-top:3px}
+.story .meta{display:flex;gap:10px;font-size:11px;color:rgba(160,160,176,.7);margin-top:5px;align-items:center}
+.story .meta .star{color:var(--warn)}
+.story .meta .play{color:var(--world);margin-left:auto}
+
+/* ---------- 进度条 ---------- */
+.pb{margin-top:6px;height:4px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden}
+.pb>div{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--warn))}
+
+/* ---------- 跳转完整版链接 ---------- */
+.more-link{
+  display:block;margin:18px var(--margin) 0;text-align:center;
+  font-size:12px;color:var(--sub);padding:10px;
+  border:1px dashed var(--line);border-radius:10px;
+}
 </style>
 </head>
-<body class="min-h-screen">
+<body>
 
-<!-- v5.16: 统一返回箭头（左上角固定） -->
-<a href="../product-preview.html" class="back-arrow" style="position:fixed;top:14px;left:14px;z-index:60;display:flex;align-items:center;gap:6px;padding:8px 14px 8px 12px;border-radius:999px;background:rgba(20,18,46,.75);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:13px;text-decoration:none;transition:all .2s;">
-  <span style="font-size:18px;line-height:1;font-weight:700;">◀</span><span>返回</span>
-</a>
+<div id="app">
 
-<!-- 顶栏 -->
-<header class="fixed top-0 inset-x-0 z-40 glass">
-  <div class="max-w-7xl mx-auto px-5 h-14 flex items-center justify-between">
-    <a href="library.html" class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-aurora-violet to-aurora-pink grid place-items-center font-display text-night-950 font-bold">灵</div>
-      <div>
-        <p class="font-display text-base font-semibold leading-none">灵境 · 双生</p>
-        <p class="text-[10px] tracking-widest text-white/45 mt-0.5">LINGJING · 30 题材 · v5.14</p>
-      </div>
-    </a>
-    <nav class="hidden md:flex items-center gap-1 text-sm">
-      <a class="px-3 py-2 rounded-lg bg-aurora-violet/25 text-white border border-aurora-violet/40" href="library.html"><i class="mr-1.5 text-xs">📚</i>小说世界</a>
-      <a class="px-3 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/5" href="creator-center.html"><i class="mr-1.5 text-xs">✍️</i>创作者中心</a>
-      <a class="px-3 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/5" href="game-3d.html"><i class="mr-1.5 text-xs">🎮</i>5 题材老版</a>
-      <a class="px-3 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/5" href="catalog.html"><i class="mr-1.5 text-xs">🏛️</i>v5.8 旧版</a>
-    </nav>
-    <div class="flex items-center gap-2 text-xs">
-      <span class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/5 border border-white/10">📖 <span id="hdr-novel-count">0</span> 本小说</span>
-      <a class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-aurora-violet to-aurora-pink text-night-950 font-medium hover:opacity-90" href="novel-upload.html">＋ 上传小说</a>
+  <!-- 顶栏（v6.4 共享壳） -->
+  <header class="topbar">
+    <div class="topbar-title"><span class="dot"></span>世界</div>
+    <div class="topbar-acts">
+      <button class="icon-btn" onclick="showToast('ok','搜索已就绪','试试搜三国 / 林黛玉')" title="搜索">🔍</button>
+      <a class="icon-btn" href="novel-upload.html" title="上传">📤</a>
+      <button class="icon-btn" onclick="showToast('warn','3 条未读通知','通知中心即将开放')">🔔<span class="badge">3</span></button>
+      <a class="icon-btn" href="me.html" title="我的">👤</a>
     </div>
-  </div>
-</header>
-<div class="h-14"></div>
+  </header>
 
-<!-- Hero -->
-<section class="relative overflow-hidden">
-  <div class="absolute inset-0 -z-10" style="background:radial-gradient(80% 60% at 50% 0%,#27234d 0%,#0d0b22 60%)"></div>
-  <div class="stars animate-pulse"></div>
-  <div class="max-w-7xl mx-auto px-5 py-16 md:py-20 relative">
-    <p class="text-[11px] tracking-[0.3em] text-aurora-violet/85 uppercase mb-3">Lingjing · Story Worlds · v5.14</p>
-    <h1 class="font-display text-4xl md:text-6xl font-bold leading-tight">进入<span class="text-gradient"> 你想活过 </span>的那个故事</h1>
-    <p class="mt-5 max-w-2xl text-sm md:text-base text-white/65 leading-relaxed">
-      30 题材全分类 · 客户上传小说后自动归类入库并自动生成沉浸剧情 3D 文字游戏。
-      每本小说对应的游戏保证覆盖<strong class="text-aurora-violet">所有章节、所有角色（包括配角与反派）、所有高光剧情</strong>。
-      <strong class="text-aurora-pink">不会漏掉任何主线、支线或高光</strong>。
-    </p>
+  <main>
+    <!-- 搜索框 -->
+    <div class="search">
+      <span class="ico">🔍</span>
+      <input type="search" placeholder="搜题材 / 小说 / 角色" id="search-input" oninput="filterStories(this.value)" />
+    </div>
 
-    <!-- 搜索 + 筛选 -->
-    <div class="mt-7 max-w-3xl">
-      <div class="flex items-center gap-3 rounded-2xl glass px-4 py-3">
-        <span>🔍</span>
-        <input id="search" type="search" placeholder="搜题材 / 小说名 / 角色" class="w-full bg-transparent text-sm placeholder:text-white/35 focus:outline-none" />
-        <button id="search-clear" class="text-xs text-white/45 hover:text-white">清空</button>
-      </div>
-      <div class="mt-3 flex flex-wrap gap-2" id="filter-chips"></div>
+    <!-- 分类 chips -->
+    <div class="chips" id="chips">
+      <div class="chip active" data-cat="all">全部</div>
+      <div class="chip" data-cat="古风">古风</div>
+      <div class="chip" data-cat="都市">都市</div>
+      <div class="chip" data-cat="悬疑">悬疑</div>
+      <div class="chip" data-cat="仙侠">仙侠</div>
+      <div class="chip" data-cat="科幻">科幻</div>
+      <div class="chip" data-cat="恋爱">恋爱</div>
+      <div class="chip" data-cat="玄幻">玄幻</div>
+      <div class="chip" data-cat="校园">校园</div>
+      <div class="chip" data-cat="武侠">武侠</div>
     </div>
 
     <!-- 数据概览 -->
-    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl">
-      <div class="glass rounded-2xl px-5 py-4">
-        <p class="text-[10px] tracking-widest uppercase text-white/45">题材总数</p>
-        <p class="stat-num text-gradient mt-1" id="stats-genres">30</p>
-      </div>
-      <div class="glass rounded-2xl px-5 py-4">
-        <p class="text-[10px] tracking-widest uppercase text-white/45">已上传</p>
-        <p class="stat-num text-aurora-pink mt-1" id="stats-novels">0</p>
-      </div>
-      <div class="glass rounded-2xl px-5 py-4">
-        <p class="text-[10px] tracking-widest uppercase text-white/45">已生成游戏</p>
-        <p class="stat-num text-aurora-blue mt-1" id="stats-games">0</p>
-      </div>
-      <div class="glass rounded-2xl px-5 py-4">
-        <p class="text-[10px] tracking-widest uppercase text-white/45">完成结局</p>
-        <p class="stat-num text-aurora-mint mt-1" id="stats-endings">0</p>
-      </div>
+    <div class="stats">
+      <div class="stat"><div class="v c1">30</div><div class="l">题材</div></div>
+      <div class="stat"><div class="v c2">6</div><div class="l">我的故事</div></div>
+      <div class="stat"><div class="v c3">128</div><div class="l">可探索</div></div>
+      <div class="stat"><div class="v c4">12</div><div class="l">结局</div></div>
     </div>
-  </div>
-</section>
 
-<!-- 已上传小说专区 -->
-<section class="max-w-7xl mx-auto px-5 py-8" id="novel-section">
-  <div class="flex items-end justify-between mb-5">
-    <div>
-      <h2 class="font-display text-2xl md:text-3xl font-semibold">📖 我的小说世界</h2>
-      <p class="text-xs text-white/55 mt-1">点开一本进入游戏；尚未上传的题材可以一键上传</p>
+    <!-- 我的故事（进行中） -->
+    <h2 class="sec">我的故事 <a class="more" href="me.html#play">查看全部</a></h2>
+    <div class="story-list" id="my-stories">
+      <a class="story" href="plot-runner.html?novelId=changye">
+        <div class="cov" style="background:linear-gradient(160deg,#2E3A6E,#4A3A8C)">🏯</div>
+        <div class="body">
+          <div class="t">《长夜城》</div>
+          <div class="s">第3章 · 初入长夜城</div>
+          <div class="pb"><div style="width:45%"></div></div>
+          <div class="meta"><span>45%</span><span class="play">继续 →</span></div>
+        </div>
+      </a>
+      <a class="story" href="plot-runner.html?novelId=jinxiu">
+        <div class="cov" style="background:linear-gradient(160deg,#5E2E3A,#E94560)">🌸</div>
+        <div class="body">
+          <div class="t">《锦绣未央》</div>
+          <div class="s">第3章 · 雨夜抉择</div>
+          <div class="pb"><div style="width:35%;background:linear-gradient(90deg,#E94560,#FFB347)"></div></div>
+          <div class="meta"><span>35%</span><span class="play">继续 →</span></div>
+        </div>
+      </a>
+      <a class="story" href="plot-runner.html?novelId=saibo">
+        <div class="cov" style="background:linear-gradient(160deg,#2E5E56,#00B894)">🤖</div>
+        <div class="body">
+          <div class="t">《赛博长夜》</div>
+          <div class="s">共通线 · 5/20</div>
+          <div class="pb"><div style="width:25%;background:linear-gradient(90deg,#00B894,#4ECCA3)"></div></div>
+          <div class="meta"><span>25%</span><span class="play">继续 →</span></div>
+        </div>
+      </a>
     </div>
-    <div class="flex items-center gap-3">
-      <span id="novel-filter-indicator" class="hidden text-xs text-aurora-pink"></span>
-      <a class="text-xs text-aurora-violet hover:underline" href="novel-upload.html">＋ 上传更多</a>
-    </div>
-  </div>
-  <div id="novel-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
-</section>
 
-<!-- 30 题材封面墙 -->
-<section class="max-w-7xl mx-auto px-5 py-8">
-  <div class="flex items-end justify-between mb-5">
-    <div>
-      <h2 class="font-display text-2xl md:text-3xl font-semibold">🗂 30 题材分类</h2>
-      <p class="text-xs text-white/55 mt-1">暂未上传小说的题材也可空着，你写好小说 / 上传，系统自动归类到对应题材</p>
-    </div>
-  </div>
-  <div id="genre-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"></div>
-</section>
-
-<!-- 资料：30 题材详情表 -->
-<section class="max-w-7xl mx-auto px-5 py-12">
-  <details class="glass rounded-3xl p-6">
-    <summary class="text-base md:text-lg font-medium flex items-center gap-2">
-      <span>🗃️ 30 题材完整对照表</span>
-      <span class="text-xs text-white/45">展开看关键词匹配表 & 简介</span>
-    </summary>
-    <div id="genre-detail" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-6"></div>
-  </details>
-</section>
-
-<!-- Footer -->
-<footer class="max-w-7xl mx-auto px-5 py-12 text-center text-xs text-white/40">
-  <p>灵境 · 双生 · v5.14 — 30 题材 · 客户上传即自动游戏化 · 覆盖审计保不漏主线支线高光</p>
-  <p class="mt-2">SD 写实立绘 + SD 场景 + Blender 3D 角色 · WebGL · 离线可玩 · 本地存储</p>
-</footer>
-
-<!-- ===== Scripts ===== -->
-<script src="js/genres.js"></script>
-<script src="js/novel-store.js"></script>
-<script src="js/novel-parser.js"></script>
-<script src="js/plot-schema.js"></script>
-<script src="js/demo-seed.js"></script>
-<script>
-(function(){
-  // 头部计数
-  function refreshStats() {
-    const novels = NovelStore.listNovels();
-    document.getElementById('hdr-novel-count').textContent = novels.length;
-    document.getElementById('stats-novels').textContent = novels.length;
-    document.getElementById('stats-games').textContent = novels.length;
-    document.getElementById('stats-endings').textContent = novels.reduce((s,n)=>{
-      const p = NovelStore.loadNovel(n.id);
-      return s + (p?.endings ? Object.keys(p.endings).length : 0);
-    }, 0);
-    document.getElementById('stats-genres').textContent = GENRES_LIBRARY.length;
-  }
-
-  // 筛选 chips
-  const filterEl = document.getElementById('filter-chips');
-  function makeChip(label, value, active=false) {
-    const c = document.createElement('button');
-    c.className = 'chip' + (active ? ' active' : '');
-    c.textContent = label;
-    c.dataset.value = value;
-    c.onclick = () => {
-      document.querySelectorAll('#filter-chips .chip').forEach(x=>x.classList.remove('active'));
-      c.classList.add('active');
-      applyFilters();
-    };
-    filterEl.appendChild(c);
-  }
-  makeChip('全部', 'all', true);
-  makeChip('已上传', 'uploaded');
-  makeChip('空仓', 'empty');
-
-  // 全题材网格
-  const grid = document.getElementById('genre-grid');
-  function renderGenres(visibleGenres) {
-    grid.innerHTML = '';
-    visibleGenres.forEach(g => {
-      const cnt = NovelStore.countByGenre(g.id);
-      const el = document.createElement('div');
-      el.className = 'genre-card group';
-      el.innerHTML = `
-        <a href="${cnt>0 ? `library.html?genre=${g.id}#novel-grid` : `novel-upload.html?genre=${g.id}`}" class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
-          <div class="absolute inset-0" style="background:radial-gradient(120% 120% at 0% 0%, ${g.color}55 0%, ${g.color}28 40%, transparent 75%)"></div>
-          <div class="relative flex h-40 md:h-44 flex-col justify-between border border-white/10 bg-white/[0.04] p-5 backdrop-blur transition-all duration-300 group-hover:-translate-y-1 group-hover:border-white/20 group-hover:bg-white/[0.07]">
-            <div class="flex items-start justify-between">
-              <div class="flex h-12 w-12 items-center justify-center rounded-xl text-2xl" style="background:${g.color}33;">${g.icon}</div>
-              <div class="flex flex-col items-end gap-1">
-                ${cnt > 0 ? `<span class="rounded-full bg-aurora-violet/30 px-2 py-0.5 text-[10px] text-white border border-aurora-violet/40">${cnt} 本</span>` : ''}
-              </div>
-            </div>
-            <div>
-              <h3 class="font-display text-xl font-semibold leading-tight text-white">${g.cn}</h3>
-              <p class="mt-1 line-clamp-2 text-[11px] leading-relaxed text-white/55">${g.desc}</p>
-              <p class="mt-1 text-[10px] text-white/30">${g.tag}</p>
-            </div>
+    <!-- 官方故事库 -->
+    <h2 class="sec">官方故事库 <a class="more" href="catalog.html">全部题材 →</a></h2>
+    <div class="story-list" id="official-stories">
+      <a class="story" data-cat="古风" href="catalog.html?g=guofeng">
+        <div class="cov" style="background:linear-gradient(160deg,#B8863B,#8C5A2B)">🎭</div>
+        <div class="body">
+          <div class="t">《三国演义》· 吕布篇</div>
+          <div class="s">穿越成吕布，改写三国命运</div>
+          <div class="meta">
+            <span>古风</span><span>5 转折</span><span>6 结局</span>
+            <span class="star">★</span><span>4.8</span>
+            <span class="play">开始 →</span>
           </div>
-        </a>`;
-      grid.appendChild(el);
-    });
-  }
-
-  // 详情表
-  function renderDetail() {
-    const d = document.getElementById('genre-detail');
-    GENRES_LIBRARY.forEach(g => {
-      const kws = g.keywords.slice(0,6).map(k=>`<span class="inline-block rounded border border-white/10 bg-white/5 px-1.5 py-0.5 mr-1 mb-1 text-[10px] text-white/65">${k}</span>`).join('');
-      const cnt = NovelStore.countByGenre(g.id);
-      const card = document.createElement('div');
-      card.className = 'rounded-xl border border-white/10 bg-white/[0.025] p-3 hover:bg-white/[0.05] transition cursor-pointer';
-      card.onclick = () => location.href = (cnt>0 ? `library.html?genre=${g.id}#novel-grid` : `novel-upload.html?genre=${g.id}`);
-      card.innerHTML = `
-        <div class="flex items-center gap-2 mb-1.5">
-          <span class="text-lg">${g.icon}</span>
-          <strong class="text-sm">${g.cn}</strong>
-          <span class="ml-auto text-[10px] text-white/40">${g.tag}</span>
-          ${cnt>0?`<span class="rounded-full bg-aurora-violet/25 text-[10px] text-white px-2 py-0.5">${cnt}</span>`:''}
         </div>
-        <p class="text-[11px] text-white/55 mb-1.5 leading-relaxed">${g.desc}</p>
-        <div>${kws}</div>`;
-      d.appendChild(card);
-    });
-  }
-
-  // 已上传小说专区
-  const novelGrid = document.getElementById('novel-grid');
-  function renderNovels() {
-    novelGrid.innerHTML = '';
-    let novels = NovelStore.listNovels();
-    // URL 参数 ?genre=xxx 过滤
-    const urlGenre = new URLSearchParams(location.search).get('genre');
-    if (urlGenre) novels = novels.filter(n => n.genre === urlGenre);
-    if (novels.length === 0) {
-      const cta = document.createElement('div');
-      cta.className = 'col-span-full empty-cta';
-      cta.onclick = () => location.href = 'novel-upload.html';
-      cta.innerHTML = urlGenre
-        ? `<div class="text-3xl mb-2">📭</div><div class="text-sm">此题材暂无小说 —</div><div class="text-base text-aurora-violet mt-1">点此上传一本</div>`
-        : `<div class="text-3xl mb-2">📚</div><div class="text-sm">还没有上传过小说 —</div><div class="text-base text-aurora-violet mt-1">点此上传你的第一本</div>`;
-      novelGrid.appendChild(cta);
-      return;
-    }
-    novels.forEach(n => {
-      const genre = getGenreById(n.genre) || { cn: n.genre, icon: '📖', color: '#888', desc: '' };
-      const el = document.createElement('div');
-      el.className = 'novel-card glass';
-      el.onclick = () => location.href = `plot-runner.html?novelId=${n.id}`;
-      el.innerHTML = `
-        <div class="relative h-32" style="background:linear-gradient(135deg, ${genre.color}55, ${genre.color}11);">
-          <div class="absolute inset-0 flex items-center justify-center text-5xl opacity-90">${genre.icon}</div>
-          <span class="badge bg-black/40">${genre.cn}</span>
+      </a>
+      <a class="story" data-cat="恋爱" href="catalog.html?g=haomen">
+        <div class="cov" style="background:linear-gradient(160deg,#8E5BD8,#C95B9C)">🎭</div>
+        <div class="body">
+          <div class="t">《傲慢与偏见》· 达西篇</div>
+          <div class="s">英伦豪门，重写你与达西的相遇</div>
+          <div class="meta">
+            <span>豪门</span><span>4 转折</span><span>5 结局</span>
+            <span class="star">★</span><span>4.9</span>
+            <span class="play">开始 →</span>
+          </div>
         </div>
-        <div class="p-3">
-          <p class="font-display text-base font-semibold leading-tight line-clamp-1">${escapeHtml(n.title)}</p>
-          <p class="text-[11px] text-white/55 mt-0.5">${escapeHtml(n.author || '匿名')} · ${fmtDate(n.uploadedAt)}</p>
-          <p class="text-[10px] text-white/40 mt-1.5 flex gap-2">
-            <span>📑 ${n.chapters||0} 章</span>
-            <span>👤 ${n.chars||0} 角色</span>
-            <span>✦ ${n.highlights||0} 高光</span>
-            <span class="ml-auto text-aurora-violet">玩 →</span>
-          </p>
-        </div>`;
-      novelGrid.appendChild(el);
-    });
-  }
-
-  // 筛选
-  function applyFilters() {
-    const q = (document.getElementById('search').value || '').trim().toLowerCase();
-    const activeChip = document.querySelector('#filter-chips .chip.active')?.dataset.value || 'all';
-    let visible = GENRES_LIBRARY.slice();
-    if (q) {
-      visible = visible.filter(g =>
-        g.cn.toLowerCase().includes(q) ||
-        g.tag.toLowerCase().includes(q) ||
-        g.desc.toLowerCase().includes(q) ||
-        g.keywords.some(k => k.toLowerCase().includes(q))
-      );
-    }
-    if (activeChip === 'uploaded') {
-      visible = visible.filter(g => NovelStore.countByGenre(g.id) > 0);
-    } else if (activeChip === 'empty') {
-      visible = visible.filter(g => NovelStore.countByGenre(g.id) === 0);
-    }
-    renderGenres(visible);
-    if (q) {
-      // 同时筛选小说网格
-      const novels = NovelStore.listNovels().filter(n =>
-        n.title.toLowerCase().includes(q) ||
-        (n.author||'').toLowerCase().includes(q)
-      );
-      renderNovelList(novels);
-    } else {
-      renderNovels();
-    }
-  }
-
-  function renderNovelList(novels) {
-    novelGrid.innerHTML = '';
-    if (!novels.length) {
-      novelGrid.innerHTML = '<div class="col-span-full text-center text-white/40 text-sm py-12">没有匹配的小说</div>';
-      return;
-    }
-    novels.forEach(n => {
-      const genre = getGenreById(n.genre) || { cn: n.genre, icon: '📖', color: '#888' };
-      const el = document.createElement('div');
-      el.className = 'novel-card glass';
-      el.onclick = () => location.href = `plot-runner.html?novelId=${n.id}`;
-      el.innerHTML = `
-        <div class="relative h-32" style="background:linear-gradient(135deg, ${genre.color}55, ${genre.color}11);">
-          <div class="absolute inset-0 flex items-center justify-center text-5xl opacity-90">${genre.icon}</div>
-          <span class="badge bg-black/40">${genre.cn}</span>
+      </a>
+      <a class="story" data-cat="悬疑" href="catalog.html?g=xuanyi">
+        <div class="cov" style="background:linear-gradient(160deg,#2E5E56,#00B894)">🧛</div>
+        <div class="body">
+          <div class="t">《德古拉》</div>
+          <div class="s">哥特暗夜，与吸血鬼共写命运</div>
+          <div class="meta">
+            <span>哥特</span><span>6 转折</span><span>7 结局</span>
+            <span class="star">★</span><span>4.7</span>
+            <span class="play">开始 →</span>
+          </div>
         </div>
-        <div class="p-3">
-          <p class="font-display text-base font-semibold leading-tight line-clamp-1">${escapeHtml(n.title)}</p>
-          <p class="text-[11px] text-white/55 mt-0.5">${escapeHtml(n.author)}</p>
-        </div>`;
-      novelGrid.appendChild(el);
+      </a>
+    </div>
+
+    <!-- 玩家创作 -->
+    <h2 class="sec">玩家创作 <a class="more" href="discover.html">发现广场 →</a></h2>
+    <div class="story-list">
+      <a class="story" href="catalog.html?u=123">
+        <div class="cov" style="background:linear-gradient(160deg,#3A2E5E,#6C5CE7)">🌌</div>
+        <div class="body">
+          <div class="t">《深海回声》by 林清雪</div>
+          <div class="s">悬疑 · 8 转折 · 12 结局</div>
+          <div class="meta">
+            <span>悬疑</span><span>⭐ 4.8</span><span>2.3 万人游玩</span>
+            <span class="play">开始 →</span>
+          </div>
+        </div>
+      </a>
+      <a class="story" href="catalog.html?u=456">
+        <div class="cov" style="background:linear-gradient(160deg,#5A6B8E,#C95B9C)">⚡</div>
+        <div class="body">
+          <div class="t">《长夜未央》by 顾长夜</div>
+          <div class="s">玄幻 · 7 转折 · 9 结局</div>
+          <div class="meta">
+            <span>玄幻</span><span>⭐ 4.6</span><span>1.1 万人游玩</span>
+            <span class="play">开始 →</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- 完整版入口 -->
+    <a class="more-link" href="library.html?full=1" onclick="showToast('warn','已是移动版','完整版桌面视图请用 PC 打开');return false;">
+      📋 查看 30 题材完整对照表（即将开放）
+    </a>
+  </main>
+
+  <!-- 5 Tab 底部（世界 active） -->
+  <nav class="tabbar">
+    <a class="tab" href="../product-preview.html"><span class="ico">🏠</span><span>首页</span></a>
+    <a class="tab t-world active" href="library.html"><span class="ico">📖</span><span>世界</span></a>
+    <a class="tab t-xinyu" href="heart-island.html"><span class="ico">💬</span><span>心屿</span></a>
+    <a class="tab t-create" href="creator-center.html"><span class="ico">✨</span><span>创作</span></a>
+    <a class="tab" href="me.html"><span class="ico">👤</span><span>我的</span></a>
+  </nav>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+function showToast(kind, title, msg){
+  var c = document.getElementById('toast');
+  var t = document.createElement('div');
+  t.className = 'toast-item ' + (kind || 'ok');
+  t.innerHTML = '<span class="ti"></span><span><b>' + title + '</b>' + (msg ? '<span style="opacity:.65"> · ' + msg + '</span>' : '') + '</span>';
+  c.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 3000);
+}
+
+// 分类筛选
+document.querySelectorAll('#chips .chip').forEach(function(ch){
+  ch.addEventListener('click', function(){
+    document.querySelectorAll('#chips .chip').forEach(function(x){ x.classList.remove('active'); });
+    ch.classList.add('active');
+    var cat = ch.dataset.cat;
+    document.querySelectorAll('#official-stories .story').forEach(function(s){
+      s.style.display = (cat === 'all' || s.dataset.cat === cat) ? 'flex' : 'none';
     });
-  }
+  });
+});
 
-  // 工具
-  function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-  function fmtDate(iso){
-    if(!iso) return '';
-    const d=new Date(iso);return d.getFullYear()+'.'+(d.getMonth()+1)+'.'+d.getDate();
-  }
-
-  document.getElementById('search').oninput = applyFilters;
-  document.getElementById('search-clear').onclick = () => { document.getElementById('search').value=''; applyFilters(); };
-
-  // 初始化
-  renderGenres(GENRES_LIBRARY);
-  renderDetail();
-  renderNovels();
-  refreshStats();
-
-  // URL 参数：?genre=xxx 显示筛选指示 + 跳转到 novel-grid 锚点
-  const params = new URLSearchParams(location.search);
-  const urlGenre = params.get('genre');
-  if (urlGenre) {
-    const g = GENRES_LIBRARY.find(x => x.id === urlGenre);
-    if (g) {
-      const ind = document.getElementById('novel-filter-indicator');
-      ind.textContent = `🔍 筛选中：${g.cn} (${g.tag}) · ${NovelStore.countByGenre(urlGenre)} 本 · `;
-      const clr = document.createElement('a');
-      clr.href = 'library.html';
-      clr.className = 'underline hover:text-white';
-      clr.textContent = '清除';
-      ind.appendChild(clr);
-      ind.classList.remove('hidden');
-    }
-    setTimeout(() => {
-      const grid = document.getElementById('novel-grid');
-      if (grid) grid.scrollIntoView({ behavior: 'smooth' });
-    }, 400);
-  }
-
-  // demo-seed 50ms 后注入完成 → 再 refresh 一次
-  setTimeout(() => { renderNovels(); refreshStats(); renderGenres(GENRES_LIBRARY); }, 200);
-  setTimeout(() => { renderNovels(); refreshStats(); }, 800);
-})();
+// 搜索筛选
+function filterStories(q){
+  q = (q || '').toLowerCase();
+  ['my-stories','official-stories'].forEach(function(group){
+    document.querySelectorAll('#' + group + ' .story').forEach(function(s){
+      var t = s.querySelector('.t').textContent.toLowerCase();
+      s.style.display = (!q || t.indexOf(q) > -1) ? 'flex' : 'none';
+    });
+  });
+}
 </script>
 </body>
 </html>

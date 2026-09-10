@@ -1,1474 +1,478 @@
-<!doctype html>
-<html lang="zh-CN" data-page-node-id="FDNr3bZ8dloB7Va1PJAVNK">
-<head data-page-node-id="YOfhe3eDKnEhQryPCdBxOd">
-<meta charset="utf-8" data-page-node-id="8kS9Ffp94yzZFy0HvASfAO" />
-<meta name="viewport" content="width=device-width,initial-scale=1" data-page-node-id="aQkfUVY3Binw6feHunuYPL" />
-<title>灵境 · 双生 — 产品体验总览（v5.17）</title>
-<meta name="description" content="一个角色，两种人生。v5.13 沉浸剧情对话 + v5.14 商业化 4 大系统（已降级为创作者内部按键） + v5.17 小说辅助模拟器（填表+提问系统）" />
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+SC:wght@500;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: {
-        display: ['"Cormorant Garamond"', '"Noto Serif SC"', 'serif'],
-        han: ['"Noto Serif SC"', '"Noto Sans SC"', 'serif'],
-        sans: ['"Noto Sans SC"', 'Inter', 'system-ui', 'sans-serif'],
-      },
-      colors: {
-        ink: { 900: '#070912', 800: '#0b0f1c', 700: '#111733', 600: '#1a2142' },
-        aurora: {
-          violet: '#8E5BD8',
-          indigo: '#5B6BD8',
-          cyan: '#5BC5D8',
-          rose: '#D85B8E',
-          amber: '#E89B5A',
-          gold: '#E8C75A',
-        },
-      },
-      boxShadow: {
-        glass: '0 8px 32px rgba(11,15,28,.45)',
-        glow: '0 0 48px rgba(142,91,216,.35)',
-        gold: '0 0 36px rgba(232,199,90,.28)',
-      },
-      keyframes: {
-        float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-8px)' } },
-        shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
-        aurora: { '0%,100%': { opacity: '.55' }, '50%': { opacity: '.9' } },
-        pulse2: { '0%,100%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.05)' } },
-      },
-      animation: {
-        float: 'float 6s ease-in-out infinite',
-        shimmer: 'shimmer 8s linear infinite',
-        aurora: 'aurora 12s ease-in-out infinite',
-        pulse2: 'pulse2 2.5s ease-in-out infinite',
-      },
-    },
-  },
-};
-</script>
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="hz4i9eO1zbyYgycj5Mg7mu">
+<head data-page-node-id="i8jEw0G8e7Yz0MYBzvq7Cr">
+<meta charset="UTF-8" data-page-node-id="jzqjMom7rS0aNNGGFzMr8W" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" data-page-node-id="HjS2EK5t2YfEYn1IdtAa5G" />
+<title>灵境 · 双生 — 首页</title>
+<meta name="description" content="v6.4 · 按《完整UI/UX界面布局设计文档 V1.0》重做：深空蓝黑 #1A1A2E · 灵境红 #E94560 · 5 Tab 底部导航 · 启动页 + 首页" data-page-node-id="9ACwYpUMBDBLSkNzlKkFq1" />
+<meta name="theme-color" content="#1A1A2E" data-page-node-id="IvhFEFlPTYf0D1Z5PLz49q" />
 <style>
-  html, body { background: #070912; color: #e8ecf4; font-family: 'Noto Sans SC', Inter, system-ui, sans-serif; }
-  body {
-    background-image:
-      radial-gradient(1200px 800px at 80% -10%, rgba(142,91,216,.25), transparent 60%),
-      radial-gradient(900px 700px at -10% 30%, rgba(91,197,216,.18), transparent 60%),
-      radial-gradient(1000px 800px at 50% 110%, rgba(216,91,142,.15), transparent 60%);
-    background-attachment: fixed;
-  }
-  .glass { background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.08); }
-  .glass-strong { background: linear-gradient(180deg, rgba(20,28,55,.65), rgba(11,15,28,.55)); backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,.10); }
-  .text-grad { background: linear-gradient(120deg, #c9a8ff 0%, #8fb5ff 50%, #6fd4d8 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .text-grad-gold { background: linear-gradient(120deg, #E8C75A 0%, #E89B5A 50%, #D85B8E 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .hairline { background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent); height: 1px; }
-  .genrecard { transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s; }
-  .genrecard:hover { transform: translateY(-6px); box-shadow: 0 18px 48px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.08) inset; }
-  .chip { transition: all .2s ease; }
-  .chip:hover { transform: translateY(-1px); }
-  .scroll-x::-webkit-scrollbar { height: 6px; }
-  .scroll-x::-webkit-scrollbar-thumb { background: rgba(255,255,255,.12); border-radius: 3px; }
-  details > summary { list-style: none; cursor: pointer; }
-  details > summary::-webkit-details-marker { display: none; }
-  .scroll-smooth { scroll-behavior: smooth; }
-  .ph-portrait {
-    background-image:
-      radial-gradient(circle at 30% 30%, var(--ph-a, #2a3358), transparent 55%),
-      radial-gradient(circle at 70% 70%, var(--ph-b, #1a2142), transparent 55%),
-      linear-gradient(180deg, var(--ph-a, #1a2142), var(--ph-c, #0b0f1c));
-  }
-  .nav-tab.active { color: #c9a8ff; }
-  .nav-tab.active::after { content: ''; display:block; height:2px; background: linear-gradient(90deg, #8E5BD8, #5BC5D8); margin-top:6px; border-radius:2px; }
-  .pulse-dot { width:8px; height:8px; border-radius:50%; background:#5BC5D8; box-shadow:0 0 0 0 rgba(91,197,216,.7); animation: pulse 2s infinite; }
-  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(91,197,216,.7); } 70% { box-shadow: 0 0 0 8px rgba(91,197,216,0); } 100% { box-shadow: 0 0 0 0 rgba(91,197,216,0); } }
-  /* 版本徽章 */
-  .ver-badge { display:inline-flex; align-items:center; gap:.4rem; padding:.18rem .65rem; border-radius:9999px; font-size:11px; font-weight:500; letter-spacing:.05em; }
-  .ver-513 { background:rgba(232,199,90,.15); color:#E8C75A; border:1px solid rgba(232,199,90,.35); }
-  .ver-514 { background:rgba(91,197,216,.15); color:#5BC5D8; border:1px solid rgba(91,197,216,.35); }
-  /* 截图卡片 hover 高光 */
-  .shot-card { position:relative; overflow:hidden; border-radius:1rem; }
-  .shot-card::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, transparent 70%, rgba(11,15,28,.85)); pointer-events:none; }
-  .shot-card .label { position:absolute; bottom:0; left:0; right:0; padding:.75rem; z-index:1; }
-  /* 五区对比表 */
-  .compare-col { border-top:2px solid rgba(142,91,216,.4); }
-  /* 系统框 */
-  .sys-card { position:relative; overflow:hidden; }
-  .sys-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg, rgba(142,91,216,.05), transparent 60%); }
-  .code-line { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:11px; }
+/* ================================================================
+   灵境 · 双生 v6.4 — 全局设计规范（UI/UX 文档 V1.0 §一）
+   主色 #1A1A2E · 辅色 #16213E · 强调 #E94560
+   心屿 #6C5CE7 · 世界 #00B894 · 成功 #4ECCA3 · 警告 #FFB347
+   页面边距 16 · 卡片间距 12 · 内边距 12 · 按钮高 48 · 圆角 12
+================================================================ */
+:root{
+  --bg:#1A1A2E;
+  --card:#16213E;
+  --card-2:#1C2542;
+  --accent:#E94560;
+  --text:#EAEAEA;
+  --sub:#A0A0B0;
+  --ok:#4ECCA3;
+  --warn:#FFB347;
+  --xinyu:#6C5CE7;
+  --world:#00B894;
+  --line:rgba(255,255,255,.08);
+  --radius:12px;
+  --gap:12px;
+  --margin:16px;
+  --btn-h:48px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:#0d0d1a;
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:16px;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit}
+
+/* ---------- 手机壳：桌面端居中呈现 ---------- */
+#app{
+  max-width:480px;margin:0 auto;min-height:100vh;
+  background:var(--bg);position:relative;
+  padding-bottom:calc(72px + env(safe-area-inset-bottom));
+}
+@media(min-width:520px){
+  #app{box-shadow:0 0 60px rgba(0,0,0,.6);border-left:1px solid var(--line);border-right:1px solid var(--line)}
+}
+
+/* ---------- 启动页（§2.1） ---------- */
+#splash{
+  position:fixed;inset:0;z-index:100;
+  max-width:480px;margin:0 auto;
+  background:radial-gradient(ellipse 120% 60% at 50% -10%,rgba(108,92,231,.28),transparent 60%),
+             radial-gradient(ellipse 100% 50% at 85% 100%,rgba(0,184,148,.15),transparent 60%),
+             var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .6s ease,visibility .6s;
+}
+#splash.hide{opacity:0;visibility:hidden;pointer-events:none}
+.splash-logo{
+  font-family:Georgia,"Noto Serif SC","Songti SC",serif;
+  font-size:34px;font-weight:700;letter-spacing:4px;
+  background:linear-gradient(120deg,#EAEAEA 20%,#E94560 60%,#6C5CE7 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:splashUp .9s cubic-bezier(.16,1,.3,1) both;
+}
+.splash-slogan{
+  margin-top:14px;font-size:16px;color:var(--sub);letter-spacing:2px;
+  animation:splashUp .9s .15s cubic-bezier(.16,1,.3,1) both;
+}
+.splash-load{
+  margin-top:44px;width:180px;height:3px;border-radius:2px;
+  background:rgba(255,255,255,.08);overflow:hidden;
+  animation:splashUp .9s .3s cubic-bezier(.16,1,.3,1) both;
+}
+.splash-load i{display:block;height:100%;width:0;border-radius:2px;
+  background:linear-gradient(90deg,var(--accent),var(--xinyu));
+  animation:load3s 3s .3s cubic-bezier(.4,0,.2,1) forwards}
+.splash-enter{
+  margin-top:36px;height:var(--btn-h);padding:0 44px;
+  border-radius:var(--radius);font-size:16px;font-weight:600;letter-spacing:6px;
+  color:#fff;background:linear-gradient(135deg,var(--accent),#C73652);
+  box-shadow:0 10px 28px rgba(233,69,96,.35);
+  opacity:0;transform:translateY(12px);pointer-events:none;
+  transition:opacity .5s ease,transform .5s cubic-bezier(.16,1,.3,1);
+}
+.splash-enter.on{opacity:1;transform:none;pointer-events:auto}
+.splash-enter:active{transform:scale(.96)}
+.splash-skip{
+  position:absolute;bottom:28px;right:20px;font-size:12px;color:rgba(255,255,255,.35);
+  padding:6px 10px;
+}
+@keyframes splashUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes load3s{to{width:100%}}
+
+/* ---------- 顶栏（§2.4） ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px var(--margin);
+  background:rgba(26,26,46,.88);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.topbar-title{font-size:18px;font-weight:600;display:flex;align-items:center;gap:8px}
+.topbar-title .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+.topbar-acts{display:flex;gap:10px}
+.icon-btn{
+  position:relative;width:38px;height:38px;border-radius:50%;
+  display:grid;place-items:center;font-size:17px;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);
+  transition:transform .15s ease,background .2s;
+}
+.icon-btn:active{transform:scale(.9)}
+.icon-btn .badge{
+  position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;
+  border-radius:8px;background:var(--accent);color:#fff;
+  font-size:10px;line-height:16px;text-align:center;padding:0 4px;font-weight:700;
+}
+
+/* ---------- 问候卡（§2.4） ---------- */
+.greet-card{
+  margin:var(--margin);padding:20px 16px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(108,92,231,.28),rgba(0,184,148,.10) 60%,rgba(233,69,96,.12)),
+             var(--card);
+  border:1px solid rgba(108,92,231,.25);
+  animation:fadeUp .6s .05s cubic-bezier(.16,1,.3,1) both;
+}
+.greet-hi{font-size:22px;font-weight:600}
+.greet-ask{font-size:14px;color:var(--sub);margin-top:6px}
+.btn-primary{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:16px;width:100%;height:var(--btn-h);
+  border-radius:var(--radius);font-size:16px;font-weight:600;color:#fff;
+  background:linear-gradient(135deg,var(--accent),#C73652);
+  box-shadow:0 8px 20px rgba(233,69,96,.3);
+  transition:transform .15s ease,box-shadow .2s;
+}
+.btn-primary:active{transform:scale(.97);box-shadow:0 4px 12px rgba(233,69,96,.3)}
+.btn-primary.ghost{
+  background:rgba(255,255,255,.06);border:1px solid var(--line);
+  box-shadow:none;color:var(--text);
+}
+
+/* ---------- 3 大快捷入口（§2.4） ---------- */
+.quick-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);
+  margin:0 var(--margin);
+  animation:fadeUp .6s .12s cubic-bezier(.16,1,.3,1) both;
+}
+.quick-card{
+  padding:14px 8px;border-radius:var(--radius);text-align:center;
+  background:var(--card);border:1px solid var(--line);
+  transition:transform .2s cubic-bezier(.16,1,.3,1),border-color .2s;
+}
+.quick-card:active{transform:scale(.95)}
+.quick-card .ico{font-size:26px;line-height:1}
+.quick-card .name{font-size:14px;font-weight:600;margin-top:8px}
+.quick-card .num{font-size:12px;color:var(--sub);margin-top:3px}
+.quick-card .num b{font-weight:600}
+.quick-card.q-world .num b{color:var(--world)}
+.quick-card.q-xinyu .num b{color:#A29BFE}
+.quick-card.q-create .num b{color:var(--accent)}
+.quick-card.q-world{border-top:2px solid var(--world)}
+.quick-card.q-xinyu{border-top:2px solid var(--xinyu)}
+.quick-card.q-create{border-top:2px solid var(--accent)}
+
+/* ---------- 分区标题 ---------- */
+.sec{
+  margin:26px var(--margin) var(--gap);
+  font-size:18px;font-weight:500;color:var(--text);
+  display:flex;align-items:center;gap:8px;
+  animation:fadeUp .6s both;
+}
+.sec::before{content:'';width:4px;height:16px;border-radius:2px;background:var(--accent)}
+
+/* ---------- 继续游玩（§2.4） ---------- */
+.continue-card{
+  margin:0 var(--margin);padding:16px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--line);
+  display:flex;align-items:center;gap:14px;
+  animation:fadeUp .6s .18s cubic-bezier(.16,1,.3,1) both;
+}
+.cc-cover{
+  width:56px;height:72px;border-radius:8px;flex-shrink:0;
+  background:linear-gradient(160deg,#2E3A6E,#4A3A8C);
+  display:grid;place-items:center;font-size:24px;
+}
+.cc-body{flex:1;min-width:0}
+.cc-title{font-size:16px;font-weight:600}
+.cc-sub{font-size:14px;color:var(--sub);margin-top:3px}
+.cc-progress{margin-top:10px;height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}
+.cc-fill{height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--warn));transition:width 1.2s cubic-bezier(.16,1,.3,1)}
+.cc-pct{font-size:12px;color:var(--sub);margin-top:6px;font-variant-numeric:tabular-nums}
+.cc-pct b{color:var(--text)}
+.btn-mini{
+  height:40px;padding:0 20px;border-radius:10px;flex-shrink:0;
+  font-size:14px;font-weight:600;color:#fff;
+  background:linear-gradient(135deg,var(--accent),#C73652);
+  transition:transform .15s ease;
+}
+.btn-mini:active{transform:scale(.94)}
+
+/* ---------- 今日推荐 · 横滑（§2.4） ---------- */
+.rec-scroll{
+  display:flex;gap:var(--gap);overflow-x:auto;
+  padding:2px var(--margin) 6px;
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.rec-scroll::-webkit-scrollbar{display:none}
+.rec-scroll>*{scroll-snap-align:start;flex-shrink:0}
+.rec-card{width:132px;border-radius:var(--radius);padding:10px;
+  background:var(--card);border:1px solid var(--line);
+  transition:transform .2s cubic-bezier(.16,1,.3,1),border-color .2s;}
+.rec-card:active{transform:scale(.96)}
+.rec-card .cov{
+  height:150px;border-radius:8px;margin-bottom:10px;
+  display:grid;place-items:center;font-size:34px;
+}
+.rec-card .t{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rec-card .g{font-size:12px;color:var(--sub);margin-top:3px;
+  display:flex;align-items:center;gap:4px}
+.rec-card .g .star{color:var(--warn)}
+
+/* ---------- 心屿动态（§2.4） ---------- */
+.moment-card{
+  margin:0 var(--margin) var(--gap);padding:14px 16px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--line);
+  display:flex;gap:12px;align-items:flex-start;
+  transition:border-color .2s,transform .2s cubic-bezier(.16,1,.3,1);
+  animation:fadeUp .6s both;
+}
+.moment-card:active{transform:scale(.98)}
+.moment-card .ava{
+  width:44px;height:44px;border-radius:50%;flex-shrink:0;
+  display:grid;place-items:center;font-size:19px;
+  background:linear-gradient(135deg,var(--xinyu),#A29BFE);
+}
+.moment-card .m-body{flex:1;min-width:0}
+.moment-card .m-head{display:flex;align-items:center;gap:8px}
+.moment-card .m-name{font-size:14px;font-weight:600}
+.moment-card .m-stage{
+  font-size:10px;padding:1px 7px;border-radius:6px;
+  background:rgba(108,92,231,.2);color:#A29BFE;font-weight:600;
+}
+.moment-card .m-text{font-size:14px;color:var(--sub);line-height:1.6;margin-top:5px}
+.moment-card .m-time{font-size:12px;color:rgba(160,160,176,.6);margin-top:5px}
+
+/* ---------- 底部 5 Tab 导航（§1.4） ---------- */
+.tabbar{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:480px;z-index:60;
+  display:flex;
+  padding:8px 0 calc(8px + env(safe-area-inset-bottom));
+  background:rgba(22,33,62,.94);backdrop-filter:blur(16px);
+  border-top:1px solid var(--line);
+}
+.tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-size:11px;color:var(--sub);
+  transition:color .2s;
+}
+.tab .ico{font-size:22px;line-height:1;transition:transform .2s cubic-bezier(.16,1,.3,1)}
+.tab:active .ico{transform:scale(.88)}
+.tab.active{color:var(--accent)}
+.tab.active .ico{transform:translateY(-1px)}
+.tab.t-world.active{color:var(--world)}
+.tab.t-xinyu.active{color:#A29BFE}
+.tab.t-create.active{color:var(--warn)}
+
+/* ---------- 页脚（轻量 · 文档入口不丢） ---------- */
+.mini-footer{
+  margin:32px var(--margin) 8px;padding-top:16px;
+  border-top:1px solid var(--line);
+  font-size:11px;color:rgba(160,160,176,.55);text-align:center;line-height:2;
+}
+.mini-footer a{color:rgba(160,160,176,.75);margin:0 6px}
+
+/* ---------- Toast ---------- */
+#toast{
+  position:fixed;bottom:calc(88px + env(safe-area-inset-bottom));left:50%;
+  transform:translateX(-50%);z-index:90;
+  display:flex;flex-direction:column;gap:8px;align-items:center;
+  pointer-events:none;width:max-content;max-width:86vw;
+}
+.toast-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;border-radius:10px;font-size:13px;
+  background:rgba(28,37,66,.96);border:1px solid var(--line);
+  box-shadow:0 10px 30px rgba(0,0,0,.5);
+  animation:toastIn .35s cubic-bezier(.16,1,.3,1) both;
+}
+.toast-item .ti{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.toast-item.ok .ti{background:var(--ok)}
+.toast-item.warn .ti{background:var(--warn)}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 </style>
 </head>
-<body class="scroll-smooth">
+<body data-page-node-id="OHd5Z4Ti0GHRAAA7MCSSk0">
 
-<!-- ============== TOP BAR ============== -->
-<header class="sticky top-0 z-50 glass-strong">
-  <div class="max-w-[1400px] mx-auto px-5 lg:px-8 h-16 flex items-center gap-6">
-    <a href="#top" class="flex items-center gap-2.5 shrink-0">
-      <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background:conic-gradient(from 210deg, #8E5BD8, #5BC5D8, #D85B8E, #8E5BD8);">
-        <span class="font-display text-white text-lg leading-none">∞</span>
-      </div>
-      <div class="leading-tight">
-        <div class="font-han text-[15px] font-bold tracking-wide">灵境 · <span class="text-grad">双生</span></div>
-        <div class="text-[10px] text-white/40 tracking-[0.18em] uppercase">Lingjing · Dual Souls</div>
-      </div>
+<!-- ============ 启动页（§2.1） ============ -->
+<div id="splash" data-page-node-id="ofTGPGXYDHOhLO6vGXc5F9">
+  <div class="splash-logo" data-page-node-id="SrakUDKzHgsPauA6oWNeSL">灵境 · 双生</div>
+  <div class="splash-slogan" data-page-node-id="XvFBmoko0XGAu9HeWHghKx">一个角色，两种人生。</div>
+  <div class="splash-load" data-page-node-id="2RrxaDdbOeRX1ca4F3WRvr"><i data-page-node-id="FbQpkqfkfpyGZL5gfvkxqE"></i></div>
+  <button class="splash-enter" id="splash-btn" onclick="enterLingjing()" data-page-node-id="E6FeLCL3zNWcP5Esjkf8Zb">进入灵境</button>
+  <button class="splash-skip" onclick="enterLingjing()" data-page-node-id="AzyPEd8x6jjpOHiLV31Isi">跳过 ›</button>
+</div>
+
+<!-- ============ 应用 ============ -->
+<div id="app" data-page-node-id="M7KU1c8isEZbrPSgn8lxeZ">
+
+  <!-- 顶栏 -->
+  <header class="topbar" data-page-node-id="4gwy1ByQt07j2BUqAHoEj9">
+    <div class="topbar-title" data-page-node-id="nwHzhb7BXGDWtfa3j0sHFW"><span class="dot" data-page-node-id="ePIWhKVzRxErMJnT1MCW2H"></span>首页</div>
+    <div class="topbar-acts" data-page-node-id="C4rd8fBaOTsjCdtGvhQXr3">
+      <button class="icon-btn" onclick="showToast('ok','3 条未读通知','通知中心即将开放')" title="通知" data-page-node-id="Me27Npp5jG7Ek87ttlcOZT">🔔<span class="badge" data-page-node-id="fMdlQPcCfNOMdjHhkJNRNn">3</span></button>
+      <a class="icon-btn" href="output/preview/me.html" title="我的" data-page-node-id="rlcQ3yE2FCOiygGhsFFUKC">👤</a>
+    </div>
+  </header>
+
+  <!-- 问候卡 -->
+  <section class="greet-card" data-page-node-id="hbso2hN7HBi0FODkkLOqy9">
+    <div class="greet-hi" id="greet-hi" data-page-node-id="qZuWOsLoBYLJsAl8lF8kr4">🌙 晚上好，旅人</div>
+    <div class="greet-ask" data-page-node-id="3RGmaedhoBgceG2Ysx8t9I">今天想做什么？</div>
+    <button class="btn-primary" onclick="location.href='output/preview/plot-runner.html'" data-page-node-id="6yyaUejHLrwMRkqooh2bvL">
+      📖 继续昨天的小说
+    </button>
+  </section>
+
+  <!-- 3 大快捷入口 -->
+  <section class="quick-grid" data-page-node-id="entTCdnjrAsTbGhk1SYdln">
+    <a class="quick-card q-world" href="output/preview/library.html" data-page-node-id="4dG3hzxioo3CREQqSYfEut">
+      <div class="ico" data-page-node-id="Fl09rGqlAGX1EOxa1oaEWj">📖</div>
+      <div class="name" data-page-node-id="sBjN9ZDpgWljp4KKYHhV0f">世界</div>
+      <div class="num" data-page-node-id="PWgJq2027DcgqpdETmbFXX"><b data-page-node-id="W1bkTkWi40tHeufWV8z72D">6</b> 个故事</div>
     </a>
-    <nav class="hidden md:flex items-center gap-7 text-[14px] text-white/70 ml-2">
-      <a class="nav-tab active" href="#top">总览</a>
-      <a class="nav-tab" href="#catalog">30 题材</a>
-      <a class="nav-tab" href="#companions">双生陪伴</a>
-      <a class="nav-tab" href="#v517-creator">创作者中心</a>
-      <a class="nav-tab" href="#discover">发现</a>
-    </nav>
-    <div class="ml-auto flex items-center gap-2.5 text-[13px]">
-      <span class="ver-badge ver-513">v5.13 沉浸剧情 ✦</span>
-      <span class="ver-badge ver-514 hidden sm:inline">v5.17 创作者中心 ⛁</span>
-      <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full glass">
-        <span class="text-amber-300">⛃</span><span class="text-white/85">灵玉 <b class="text-white">50</b></span>
-      </div>
-      <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full glass">
-        <span class="text-cyan-300">◆</span><span class="text-white/85">灵晶 <b class="text-white">120</b></span>
-      </div>
-      <button class="px-3 py-1.5 rounded-full text-[12px] font-medium border border-white/15 text-white/80 hover:bg-white/5">登录</button>
-      <div class="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-cyan-500 flex items-center justify-center text-white text-xs font-bold">U</div>
+    <a class="quick-card q-xinyu" href="output/preview/heart-island.html" data-page-node-id="8AizIcQJ27xZs8BkuI9RDn">
+      <div class="ico" data-page-node-id="u4A93zviEXJTBBsGBdm4J7">💬</div>
+      <div class="name" data-page-node-id="8zyvpDqiJFv4cTiHqMOvbQ">心屿</div>
+      <div class="num" data-page-node-id="VhRusFggSSZh3LYJerb5pN"><b data-page-node-id="vs48RF9WyhEWbjsDOzGoE0">3</b> 个角色</div>
+    </a>
+    <a class="quick-card q-create" href="output/preview/creator-center.html" data-page-node-id="S2AIEXagATZoE85Z0Pst01">
+      <div class="ico" data-page-node-id="K0SyApAiCvgklGAj4M8Cvq">✨</div>
+      <div class="name" data-page-node-id="s3O0ccz38IiUNJfJKA4eY6">创作</div>
+      <div class="num" data-page-node-id="X446WeS65AfHS7LBaWgps5"><b data-page-node-id="kfV2fkJRDODeJBSiDUYTrp">2</b> 部作品</div>
+    </a>
+  </section>
+
+  <!-- 继续游玩 -->
+  <h2 class="sec" style="animation-delay:.22s" data-page-node-id="FH0WIMleTNk3UBVVb2c2AE">继续游玩</h2>
+  <section class="continue-card" data-page-node-id="5Hyd4EzbdhhDRCDEYbsw0e">
+    <div class="cc-cover" data-page-node-id="sNp5u3RLNCCELvkxfHLFlx">🏯</div>
+    <div class="cc-body" data-page-node-id="wHrsT8Wtw2qIBeMGbVLC6A">
+      <div class="cc-title" data-page-node-id="CZFcJ7nXZqRtbvHApQJpb7">《长夜城》</div>
+      <div class="cc-sub" data-page-node-id="LEPaaneL2TG2psXSGAjAPj">第3章 · 初入长夜城</div>
+      <div class="cc-progress" data-page-node-id="dxIo34Ss3zdlDKxOvCRUlt"><div class="cc-fill" id="cc-fill" data-page-node-id="T7vfCl8YspAXVNKqTEqtew"></div></div>
+      <div class="cc-pct" data-page-node-id="QUo6oD0qNGKCmb01vQ9OKp"><b data-page-node-id="WEzRAcfm0tH3mtGyIwxo05">45%</b> · 约 2 小时通关剩余剧情</div>
     </div>
+    <button class="btn-mini" onclick="location.href='output/preview/plot-runner.html'" data-page-node-id="9BvAMVoKaTOAtI42nAjSj9">继续</button>
+  </section>
+
+  <!-- 今日推荐 -->
+  <h2 class="sec" style="animation-delay:.26s" data-page-node-id="neWZzT6tFGVHK0jvuqw8c2">今日推荐</h2>
+  <div class="rec-scroll" data-page-node-id="EgpQpZ0B4SjWHjFgotv9PT">
+    <a class="rec-card" href="output/preview/catalog.html" data-page-node-id="oeyvTQxyl26EhWEoZcbgr1">
+      <div class="cov" style="background:linear-gradient(160deg,#8E5BD8,#C95B9C)" data-page-node-id="x0iLwzToBkps0ZKbFrADBo">🎭</div>
+      <div class="t" data-page-node-id="8SAsPgY9RAAox87QaA2nHu">傲慢与偏见</div>
+      <div class="g" data-page-node-id="IYN4dXBZGzxxPESidQ0Yc3"><span class="star" data-page-node-id="NMdqVB5KbAKRKkGODOHoEM">★</span>4.9 · 豪门</div>
+    </a>
+    <a class="rec-card" href="output/preview/catalog.html" data-page-node-id="I1K3jqqaGXsc07qNGqtGgv">
+      <div class="cov" style="background:linear-gradient(160deg,#B8863B,#8C5A2B)" data-page-node-id="FS8Tn2mrLtpYZ8cqZ9IViC">🎭</div>
+      <div class="t" data-page-node-id="ivIfaEA8SM6hiNcZMIvlGq">三国演义 · 吕布篇</div>
+      <div class="g" data-page-node-id="BqOgnrjgCAyou89VWZMXLY"><span class="star" data-page-node-id="0sBDHXEyGJF9hR8gUbTqPR">★</span>4.8 · 古风</div>
+    </a>
+    <a class="rec-card" href="output/preview/catalog.html" data-page-node-id="FSq5bOoP6CuqCpb4rHmDue">
+      <div class="cov" style="background:linear-gradient(160deg,#3A2E5E,#6C5CE7)" data-page-node-id="De6BP6uBcxEDgVK1VfjzSM">🧛</div>
+      <div class="t" data-page-node-id="Kklxsak8C0pz6t2KbfwoYE">德古拉</div>
+      <div class="g" data-page-node-id="l6TTSzHFyCv3bT18BtiBAx"><span class="star" data-page-node-id="U8jXwVbAXtbP4ehBE3S7kb">★</span>4.7 · 哥特</div>
+    </a>
+    <a class="rec-card" href="output/preview/catalog.html" data-page-node-id="JfO8kASAXRknI74FKL2Lne">
+      <div class="cov" style="background:linear-gradient(160deg,#2E5E56,#00B894)" data-page-node-id="6C7vxis7BSLIigh8WUpBLz">🌊</div>
+      <div class="t" data-page-node-id="PuWfN4eOBG0pQY8LYzhbUA">深海回声</div>
+      <div class="g" data-page-node-id="qOc0HWlcOAwMTWhe9FVk0m"><span class="star" data-page-node-id="n9DoIU2SskS2AJ3GQ2BQKM">★</span>4.8 · 悬疑</div>
+    </a>
+    <a class="rec-card" href="output/preview/catalog.html" data-page-node-id="qC5Bz4EGEACRCERaVVwGwo">
+      <div class="cov" style="background:linear-gradient(160deg,#5E2E3A,#E94560)" data-page-node-id="ZfLO7SNMLFPOpfaxbniRB0">🌸</div>
+      <div class="t" data-page-node-id="VY7WG0pQpERKH8sYSu7GJa">校园物语</div>
+      <div class="g" data-page-node-id="gjHILod8xDEj3yhXwtS0pK"><span class="star" data-page-node-id="xI4EHdEyP7DGlHzfxA6IX3">★</span>4.6 · 青春</div>
+    </a>
   </div>
-</header>
 
-<!-- ============== HERO ============== -->
-<section id="top" class="relative pt-12 pb-16 lg:pt-20 lg:pb-24 overflow-hidden">
-  <div class="absolute -top-40 -left-40 w-[640px] h-[640px] rounded-full animate-aurora" style="background:radial-gradient(circle, rgba(142,91,216,.45), transparent 60%); filter:blur(40px);"></div>
-  <div class="absolute top-20 -right-32 w-[560px] h-[560px] rounded-full animate-aurora" style="background:radial-gradient(circle, rgba(91,197,216,.35), transparent 60%); filter:blur(40px); animation-delay: -4s;"></div>
-  <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px]" style="background:radial-gradient(ellipse, rgba(216,91,142,.25), transparent 70%); filter:blur(50px);"></div>
-
-  <div class="relative max-w-[1400px] mx-auto px-5 lg:px-8 grid lg:grid-cols-[1.1fr_1fr] gap-10 lg:gap-16 items-center">
-    <div>
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-[12px] text-white/75 mb-5">
-        <span class="pulse-dot"></span>
-        <span><b class="text-amber-300">v5.13 + v5.14 + v5.17</b> · 沉浸剧情对话视觉（黑底金边/打字机/选项悬浮/数值跳动）+ 4 大商业化系统（已降级为创作者内部按键） + 小说辅助模拟器（28字段 + 12类提问 + 6维检测）· 17 张数据表</span>
-      </div>
-      <h1 class="font-display text-[44px] sm:text-[58px] lg:text-[76px] leading-[1.05] tracking-tight">
-        一个<span class="text-grad font-han">角色</span><br/>
-        <span class="text-grad font-han">两种人生</span>。
-      </h1>
-      <p class="mt-6 text-[16px] sm:text-[17px] text-white/65 leading-relaxed max-w-xl">
-        TA 在小说世界里经历命运、改变剧情；也走出小说，成为你日常生活里的 AI 伴侣。
-        <span class="text-white/85">沉浸剧情对话的视觉体验 + 30 题材全场景覆盖 + 商业化降级（仅创作者可见）+ 小说辅助模拟器（填表+提问系统）。</span>
-      </p>
-      <div class="mt-8 flex flex-wrap gap-3">
-        <a href="output/preview/plot-runner.html?novelId=demo_palace" class="px-5 py-3 rounded-full text-[14px] font-medium text-white shadow-gold" style="background:linear-gradient(120deg, #E8C75A, #E89B5A);">🎮 试玩剧情对话 · 锦绣未央 →</a>
-        <a href="output/preview/creator-center.html" class="px-5 py-3 rounded-full text-[14px] font-medium text-white shadow-glow" style="background:linear-gradient(120deg, #E8C75A, #D85B8E);">✍️ 创作者中心 →</a>
-        <a href="#v517-creator" class="px-5 py-3 rounded-full text-[14px] font-medium border border-white/15 text-white/85 hover:bg-white/5">看 v5.17 新功能</a>
-        <a href="output/preview/library.html" class="px-5 py-3 rounded-full text-[14px] font-medium text-white/70 hover:text-white">📖 30 题材库 →</a>
-      </div>
-      <div class="mt-10 flex flex-wrap gap-x-8 gap-y-4 text-[12px] text-white/55">
-        <div><b class="text-white/90 font-han text-[18px]">30</b> 题材全场景</div>
-        <div class="w-px h-8 bg-white/15"></div>
-        <div><b class="text-white/90 font-han text-[18px]">5</b> 部 demo 小说</div>
-        <div class="w-px h-8 bg-white/15"></div>
-        <div><b class="text-white/90 font-han text-[18px]">21</b> 结局分支</div>
-        <div class="w-px h-8 bg-white/15"></div>
-        <div><b class="text-white/90 font-han text-[18px]">17</b> 张数据表</div>
-        <div class="w-px h-8 bg-white/15"></div>
-        <div><b class="text-white/90 font-han text-[18px]">28</b> 字段模板 + 12 类提问</div>
-      </div>
+  <!-- 心屿动态 -->
+  <h2 class="sec" style="animation-delay:.3s" data-page-node-id="NdUl1Xvtb3RBWdF5q6nAvo">心屿动态</h2>
+  <a class="moment-card" href="output/preview/chat.html" style="animation-delay:.32s" data-page-node-id="vOAyngb3rFBVnOhvnrSeX5">
+    <div class="ava" data-page-node-id="QYZSFB9wRZZZMi4fowVDr3">❄️</div>
+    <div class="m-body" data-page-node-id="nR1IDvhkL1qq7KjDFYnWY7">
+      <div class="m-head" data-page-node-id="KN84c90D6Pbx4sH42RPAGR"><span class="m-name" data-page-node-id="VOENriSZU1AykJ5hWjZy7j">林清雪</span><span class="m-stage" data-page-node-id="E04phpJPYdwrQ1XA7oUmhH">亲密</span></div>
+      <div class="m-text" data-page-node-id="wFzyZbR5wlQnkBESFZ46kf">“今天路过一家花店，想起你说喜欢向日葵。”</div>
+      <div class="m-time" data-page-node-id="R2ygTgxnbAeTH4jyOq7CUA">2小时前</div>
     </div>
-
-    <!-- Hero 视觉：剧情对话预览 + 双生对照 -->
-    <div class="relative h-[460px] sm:h-[540px]">
-      <!-- 主：沉浸剧情对话样式 -->
-      <div class="absolute left-0 top-0 w-[78%] h-[88%] rounded-3xl overflow-hidden glass-strong shadow-gold">
-        <img src="output/preview/screenshots/v513/02-1-demo_palace-start.png" alt="沉浸剧情对话样式" class="w-full h-full object-cover object-top"/>
-        <div class="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] glass-strong">
-          <span style="color:#E8C75A">✦</span><span>v5.13 沉浸剧情</span>
-        </div>
-        <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[11px] text-white/85">
-          <span>锦绣未央 · 大明宫夜宴</span>
-          <span class="text-amber-300">场景图 + 立绘 + 对话</span>
-        </div>
-      </div>
-
-      <!-- 副：商业化 -->
-      <div class="absolute right-0 bottom-0 w-[55%] h-[60%] rounded-3xl overflow-hidden glass-strong shadow-glow">
-        <img src="output/preview/screenshots/v514/01-overview.png" alt="商业化设置" class="w-full h-full object-cover object-top"/>
-        <div class="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] glass-strong">
-          <span style="color:#5BC5D8">⛁</span><span>v5.14 商业化</span>
-        </div>
-        <div class="absolute bottom-3 left-3 right-3 text-[10px] text-white/85">
-          版权分层 + 收费点 + 质量审核
-        </div>
-      </div>
-
-      <!-- 中间连接 -->
-      <div class="absolute left-[45%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full glass-strong flex items-center justify-center animate-float z-10">
-        <div class="font-display text-[26px] text-grad">∞</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="hairline max-w-[1400px] mx-auto"></div>
-
-<!-- ============== 3D 世界视觉参考（内嵌于总览体验，不作为独立顶级入口） ============== -->
-<section id="visual-immersive" class="py-16 lg:py-24" style="background:linear-gradient(180deg, transparent 0%, rgba(232,199,90,.04) 50%, transparent 100%);">
-  <div class="max-w-[1400px] mx-auto px-5 lg:px-8">
-    <div class="flex items-end justify-between mb-3 flex-wrap gap-3">
-      <div>
-        <div class="flex items-center gap-2 mb-2">
-          <span class="ver-badge ver-513">3D 世界视觉</span>
-          <span class="text-[11px] text-white/45">5 题材 · 21 结局 · 40 张真机截图 · 0 console error</span>
-        </div>
-        <h2 class="font-display text-[34px] sm:text-[42px] mt-1">
-          沉浸<span class="text-grad-gold">剧情对话</span>视觉
-        </h2>
-        <p class="mt-2 text-[14px] text-white/55 max-w-3xl leading-relaxed">
-          全屏场景 + 角色立绘 + 底部半透明对话框 + 角色名字条 + 打字机效果 + 蓝绿色选项按钮 + 数值实时跳动 + 稀有度结局模态 + 存档/历史/快进/自动一应俱全。
-          <span class="text-white/85">不是聊天气泡界面，是真正的视觉小说体验</span>。
-        </p>
-      </div>
-      <a href="output/preview/plot-runner.html?novelId=demo_palace" class="hidden md:inline-block px-5 py-3 rounded-full text-[13px] font-medium text-white shadow-gold" style="background:linear-gradient(120deg, #E8C75A, #E89B5A);">🎮 立刻试玩 →</a>
-    </div>
-
-    <!-- 核心特性 -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-9">
-      <div class="rounded-2xl p-4 glass-strong" style="border:1px solid rgba(232,199,90,.3);">
-        <div class="text-[22px]">🎬</div>
-        <div class="mt-2 font-han text-[14px] font-bold text-amber-200">全屏场景</div>
-        <div class="mt-1 text-[11px] text-white/55 leading-relaxed">9 张 SD 场景图 + 淡入淡出切换</div>
-      </div>
-      <div class="rounded-2xl p-4 glass-strong" style="border:1px solid rgba(142,91,216,.3);">
-        <div class="text-[22px]">👤</div>
-        <div class="mt-2 font-han text-[14px] font-bold text-violet-200">角色立绘</div>
-        <div class="mt-1 text-[11px] text-white/55 leading-relaxed">9 张 SD 立绘 · 居中/双人布局 · 名字条</div>
-      </div>
-      <div class="rounded-2xl p-4 glass-strong" style="border:1px solid rgba(91,197,216,.3);">
-        <div class="text-[22px]">💬</div>
-        <div class="mt-2 font-han text-[14px] font-bold text-cyan-200">底部对话框</div>
-        <div class="mt-1 text-[11px] text-white/55 leading-relaxed">半透明黑底 · 打字机 30ms/字 · 快进/自动</div>
-      </div>
-      <div class="rounded-2xl p-4 glass-strong" style="border:1px solid rgba(216,91,142,.3);">
-        <div class="text-[22px]">🎯</div>
-        <div class="mt-2 font-han text-[14px] font-bold text-rose-200">悬浮选项</div>
-        <div class="mt-1 text-[11px] text-white/55 leading-relaxed">2-4 选项 + 信任/亲密/声望数值标签</div>
-      </div>
-    </div>
-
-    <!-- 5 题材截图 -->
-    <div class="mt-10">
-      <div class="text-[12px] text-white/45 tracking-[0.2em] uppercase mb-5">5 题材开篇画面 · 全屏场景 + 居中/双人立绘</div>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        <div class="shot-card glass">
-          <img src="output/preview/screenshots/v513/02-1-demo_palace-start.png" class="w-full aspect-[16/10] object-cover object-top" alt="古言"/>
-          <div class="label">
-            <div class="font-han text-[13px] font-bold text-amber-200">古言 · 锦绣未央</div>
-            <div class="text-[10px] text-white/55">大明宫夜宴</div>
-          </div>
-        </div>
-        <div class="shot-card glass">
-          <img src="output/preview/screenshots/v513/02-2-demo_study-start.png" class="w-full aspect-[16/10] object-cover object-top" alt="悬疑"/>
-          <div class="label">
-            <div class="font-han text-[13px] font-bold text-violet-200">悬疑 · 雾锁民国</div>
-            <div class="text-[10px] text-white/55">书房密电</div>
-          </div>
-        </div>
-        <div class="shot-card glass">
-          <img src="output/preview/screenshots/v513/02-3-demo_forest-start.png" class="w-full aspect-[16/10] object-cover object-top" alt="奇幻"/>
-          <div class="label">
-            <div class="font-han text-[13px] font-bold text-green-200">奇幻 · 月森林</div>
-            <div class="text-[10px] text-white/55">古树约定</div>
-          </div>
-        </div>
-        <div class="shot-card glass">
-          <img src="output/preview/screenshots/v513/02-4-demo_starship-start.png" class="w-full aspect-[16/10] object-cover object-top" alt="科幻"/>
-          <div class="label">
-            <div class="font-han text-[13px] font-bold text-cyan-200">科幻 · 银河纪元</div>
-            <div class="text-[10px] text-white/55">星舰舰桥</div>
-          </div>
-        </div>
-        <div class="shot-card glass">
-          <img src="output/preview/screenshots/v513/02-5-demo_campus-start.png" class="w-full aspect-[16/10] object-cover object-top" alt="校园"/>
-          <div class="label">
-            <div class="font-han text-[13px] font-bold text-pink-200">校园 · 春风不及</div>
-            <div class="text-[10px] text-white/55">阳光走廊</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 选项+结局+存档 -->
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="shot-card glass">
-        <img src="output/preview/screenshots/v513/04-3-demo_forest-option-hover.png" class="w-full aspect-[16/9] object-cover object-top" alt="选项悬停"/>
-        <div class="label">
-          <div class="font-han text-[13px] font-bold">选项悬停 · 数值实时跳动</div>
-          <div class="text-[10px] text-white/55">信任 +5 / 亲密 +3 标签</div>
-        </div>
-      </div>
-      <div class="shot-card glass">
-        <img src="output/preview/screenshots/v513/10-palace-ending-modal.png" class="w-full aspect-[16/9] object-cover object-top" alt="结局模态"/>
-        <div class="label">
-          <div class="font-han text-[13px] font-bold">结局模态 · LEGENDARY 限定</div>
-          <div class="text-[10px] text-white/55">21 个结局分支 · 4 稀有度</div>
-        </div>
-      </div>
-      <div class="shot-card glass">
-        <img src="output/preview/screenshots/v513/06-1-demo_palace-history.png" class="w-full aspect-[16/9] object-cover object-top" alt="历史"/>
-        <div class="label">
-          <div class="font-han text-[13px] font-bold">历史/存档/快进/自动</div>
-          <div class="text-[10px] text-white/55">最近 50 句对话 + 5 槽位</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 移动端 -->
-    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
-      <div class="shot-card glass">
-        <img src="output/preview/screenshots/v513/11-mobile-palace.png" class="w-full aspect-[9/16] object-cover object-top" alt="移动端古言"/>
-        <div class="label text-center">
-          <div class="font-han text-[12px] font-bold">移动端 · 古言</div>
-          <div class="text-[9px] text-white/55">390×844</div>
-        </div>
-      </div>
-      <div class="shot-card glass">
-        <img src="output/preview/screenshots/v513/12-mobile-options.png" class="w-full aspect-[9/16] object-cover object-top" alt="移动端选项"/>
-        <div class="label text-center">
-          <div class="font-han text-[12px] font-bold">移动端 · 选项展开</div>
-          <div class="text-[9px] text-white/55">触摸点击</div>
-        </div>
-      </div>
-      <div class="shot-card glass">
-        <img src="output/preview/screenshots/v513/13-landscape-forest.png" class="w-full aspect-[9/16] object-cover object-top" alt="横屏"/>
-        <div class="label text-center">
-          <div class="font-han text-[12px] font-bold">横屏 · 奇幻</div>
-          <div class="text-[9px] text-white/55">812×375</div>
-        </div>
-      </div>
-      <div class="shot-card glass">
-        <img src="output/preview/screenshots/v513/08-3-demo_forest-save.png" class="w-full aspect-[9/16] object-cover object-top" alt="存档"/>
-        <div class="label text-center">
-          <div class="font-han text-[12px] font-bold">5 槽位存档系统</div>
-          <div class="text-[9px] text-white/55">自动存 + 手动存</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 颜色 vs 错误做法 -->
-    <div class="mt-12 grid lg:grid-cols-2 gap-4">
-      <div class="rounded-2xl p-6 glass-strong" style="border:2px solid rgba(232,199,90,.35);">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="text-amber-300 text-[18px]">✓</span>
-          <div class="font-han text-[15px] font-bold text-amber-200">正确 · 沉浸剧情对话</div>
-        </div>
-        <ul class="space-y-1.5 text-[12px] text-white/75 leading-relaxed">
-          <li>✓ 全屏场景图占满整个游戏画面</li>
-          <li>✓ 角色立绘 40-60% 高度，居中/左右</li>
-          <li>✓ 底部 25% 半透明黑底对话框</li>
-          <li>✓ 角色名字条 + 打字机逐字显示</li>
-          <li>✓ 选项浮现在画面中央/底部，带 fx 数值标签</li>
-          <li>✓ 右上角剧情进度面板（信任/亲密/声望）</li>
-          <li>✓ 关键剧情触发稀有度结局模态</li>
-          <li>✓ 顶部功能栏 7 按钮：自动/快进/历史/存档/读档/设置/编辑</li>
-          <li>✓ 章节标题过场 + 古风字效</li>
-          <li>✓ BGM + SFX + 环境音完整音频模块</li>
-        </ul>
-      </div>
-      <div class="rounded-2xl p-6 glass-strong" style="border:2px solid rgba(216,91,142,.25);">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="text-rose-300 text-[18px]">✗</span>
-          <div class="font-han text-[15px] font-bold text-rose-200">错误 · 聊天气泡界面</div>
-        </div>
-        <ul class="space-y-1.5 text-[12px] text-white/55 leading-relaxed">
-          <li>✗ 聊天列表 + 气泡 + 输入框打字</li>
-          <li>✗ 角色只显示头像（不是立绘）</li>
-          <li>✗ 选项做成下拉菜单/按钮列表</li>
-          <li>✗ 数值显示在侧边栏（不是屏幕边缘跳动）</li>
-          <li>✗ 需要点"下一步"按钮推进</li>
-          <li>✗ 每章是一个页面（有页面切换感）</li>
-          <li>✗ 立绘静态不变，不切表情</li>
-          <li>✗ 没有 CG 触发，没有结局稀有度</li>
-          <li>✗ 没有自动存档/快进模式</li>
-          <li>✗ 没有章节标题过场动画</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="hairline max-w-[1400px] mx-auto"></div>
-
-<!-- ============== v5.14 商业化 4 大系统（已被 v5.17 降级为创作者中心子功能） ============== -->
-<section id="v514-commerce" class="py-16 lg:py-24" style="background:linear-gradient(180deg, transparent 0%, rgba(91,197,216,.04) 50%, transparent 100%);">
-  <div class="max-w-[1400px] mx-auto px-5 lg:px-8">
-    <div class="flex items-end justify-between mb-3 flex-wrap gap-3">
-      <div>
-        <div class="flex items-center gap-2 mb-2">
-          <span class="ver-badge ver-514">v5.14 → v5.17 降级 · 仅作者可见</span>
-          <span class="text-[11px] text-white/45">11 张数据表 · 14 张真机截图 · 0 console error</span>
-        </div>
-        <h2 class="font-display text-[34px] sm:text-[42px] mt-1">
-          商业化<span class="text-grad"> 4 大系统</span> <span class="text-[20px] text-white/45">（已降级）</span>
-        </h2>
-        <p class="mt-2 text-[14px] text-white/55 max-w-3xl leading-relaxed">
-          一站式管 5 件事：<span class="text-white/85"><b>① 版权分层</b>（L1-L4 自动判定）</span> · <b class="text-white/85">② 收费点</b>（22 种）· <b class="text-white/85">③ 收益分成</b>（5 档作者等级）· <b class="text-white/85">④ 质量审核</b>（5 维度 S/A/B/C/D）· <b class="text-white/85">⑤ 改编授权</b>（A/B/C 三级）。
-          配合 <b class="text-violet-200">AI 辅助填表</b>（🤖 帮我写 + 换一批 + 我来说），作者选得越多、改得越多，版权越清晰、收益越高。
-        </p>
-      </div>
-      <a href="output/preview/commerce.html?novelId=demo_palace" class="hidden md:inline-block px-5 py-3 rounded-full text-[13px] font-medium text-white shadow-glow" style="background:linear-gradient(120deg, #5BC5D8, #5B6BD8);">💰 打开上架与定价 →</a>
-    </div>
-
-    <!-- v5.17 降级说明 -->
-    <div class="mt-4 mb-9 rounded-xl p-4" style="background:rgba(232,199,90,.08);border:1px solid rgba(232,199,90,.3);">
-      <div class="text-[12px] text-white/75 leading-relaxed">
-        <b style="color:#E8C75A;">⚠️ v5.17 架构变更</b> · 商业化已从顶级功能区降级为<b>创作者中心内部按键"上架与定价"</b>。
-        客户（玩家）打开 App 不再看到商业化相关界面——它只对想当作者的人开放。v5.14 实现的 4 大系统（版权分层 / 收费点 / 收益分成 / 质量审核 + 改编授权）功能不变，<b>仅入口位置改变</b>。
-      </div>
-    </div>
-
-    <!-- 4 大系统卡片 -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-9">
-      <!-- 系统 1：版权分层 -->
-      <div class="rounded-2xl p-5 glass-strong sys-card" style="border:1px solid rgba(232,199,90,.35);">
-        <div class="flex items-center justify-between mb-3">
-          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(120deg,#E8C75A,#E89B5A);">
-            <span class="text-[18px]">①</span>
-          </div>
-          <span class="text-[10px] text-white/45">COPYRIGHT TIER</span>
-        </div>
-        <div class="font-han text-[15px] font-bold text-amber-200">版权分层自动判定</div>
-        <div class="mt-1 text-[11px] text-white/55 leading-relaxed">根据 AI 生成占比/修改率/表格完整度自动判定 L1-L4，生成对应证书文本。</div>
-        <div class="mt-3 space-y-1 text-[10px]">
-          <div class="flex items-center justify-between text-white/45"><span>L1 · AI 辅助 (&gt;70%)</span><span class="text-amber-200">50/2000</span></div>
-          <div class="flex items-center justify-between text-white/45"><span>L2 · 人机协作 (40-70%)</span><span class="text-amber-200">30/1000</span></div>
-          <div class="flex items-center justify-between text-white/45"><span>L3 · 作者主导 (&lt;40%)</span><span class="text-amber-200">免费/500</span></div>
-          <div class="flex items-center justify-between text-white/45"><span>L4 · 纯人工 (&lt;10%)</span><span class="text-amber-200">免费/免费</span></div>
-        </div>
-      </div>
-
-      <!-- 系统 2：收费点 -->
-      <div class="rounded-2xl p-5 glass-strong sys-card" style="border:1px solid rgba(216,91,142,.35);">
-        <div class="flex items-center justify-between mb-3">
-          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(120deg,#D85B8E,#E89B5A);">
-            <span class="text-[18px]">②</span>
-          </div>
-          <span class="text-[10px] text-white/45">MONETIZATION</span>
-        </div>
-        <div class="font-han text-[15px] font-bold text-rose-200">22 种收费点</div>
-        <div class="mt-1 text-[11px] text-white/55 leading-relaxed">作者自定义收费点，价格 10-5000 灵晶，触发条件 + 效果自由配置。</div>
-        <div class="mt-3 flex flex-wrap gap-1 text-[10px]">
-          <span class="px-2 py-0.5 rounded-full glass">剧情锁 5</span>
-          <span class="px-2 py-0.5 rounded-full glass">属性道具 5</span>
-          <span class="px-2 py-0.5 rounded-full glass">卡牌 4</span>
-          <span class="px-2 py-0.5 rounded-full glass">外观 5</span>
-          <span class="px-2 py-0.5 rounded-full glass">功能 3</span>
-        </div>
-      </div>
-
-      <!-- 系统 3：收益分成 -->
-      <div class="rounded-2xl p-5 glass-strong sys-card" style="border:1px solid rgba(91,197,216,.35);">
-        <div class="flex items-center justify-between mb-3">
-          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(120deg,#5BC5D8,#5B6BD8);">
-            <span class="text-[18px]">③</span>
-          </div>
-          <span class="text-[10px] text-white/45">EARNINGS</span>
-        </div>
-        <div class="font-han text-[15px] font-bold text-cyan-200">5 档作者等级分成</div>
-        <div class="mt-1 text-[11px] text-white/55 leading-relaxed">基础分成 + 月收入阶梯加成，从青铜 50% 到传奇 80%，按作品质量分级。</div>
-        <div class="mt-3 space-y-1 text-[10px]">
-          <div class="flex items-center justify-between text-white/45"><span>L1·青铜</span><span class="text-cyan-200">50%</span></div>
-          <div class="flex items-center justify-between text-white/45"><span>L2·白银</span><span class="text-cyan-200">60%</span></div>
-          <div class="flex items-center justify-between text-white/45"><span>L3·黄金</span><span class="text-cyan-200">70%</span></div>
-          <div class="flex items-center justify-between text-white/45"><span>L4·钻石</span><span class="text-cyan-200">75%</span></div>
-          <div class="flex items-center justify-between text-white/45"><span>L5·传奇</span><span class="text-cyan-200">80%</span></div>
-        </div>
-      </div>
-
-      <!-- 系统 4：质量审核 -->
-      <div class="rounded-2xl p-5 glass-strong sys-card" style="border:1px solid rgba(142,91,216,.35);">
-        <div class="flex items-center justify-between mb-3">
-          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(120deg,#8E5BD8,#5B6BD8);">
-            <span class="text-[18px]">④</span>
-          </div>
-          <span class="text-[10px] text-white/45">QUALITY REVIEW</span>
-        </div>
-        <div class="font-han text-[15px] font-bold text-violet-200">5 维度质量审核</div>
-        <div class="mt-1 text-[11px] text-white/55 leading-relaxed">叙事 30% + 角色 25% + 文学 20% + AI 味 15% + 合规 10%，自动判定 S/A/B/C/D。</div>
-        <div class="mt-3 space-y-1 text-[10px]">
-          <div class="flex items-center justify-between text-white/45"><span>S · ≥4.5</span><span class="text-violet-200">优先推荐</span></div>
-          <div class="flex items-center justify-between text-white/45"><span>A · 4.0-4.4</span><span class="text-violet-200">正常上架</span></div>
-          <div class="flex items-center justify-between text-white/45"><span>B · 3.5-3.9</span><span class="text-violet-200">限制推荐</span></div>
-          <div class="flex items-center justify-between text-white/45"><span>C · 3.0-3.4</span><span class="text-violet-200">需修改</span></div>
-          <div class="flex items-center justify-between text-white/45"><span>D · &lt;3.0</span><span class="text-violet-200">禁止上架</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- AI 辅助填表 -->
-    <div class="mt-6 rounded-2xl p-5 glass-strong sys-card" style="border:1px solid rgba(142,91,216,.35);">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(120deg,#8E5BD8,#5B6BD8);">
-          <span class="text-[18px]">⑤</span>
-        </div>
-        <div>
-          <div class="font-han text-[15px] font-bold text-violet-200">AI 辅助填表</div>
-          <div class="text-[11px] text-white/55">AI 给选项，作者做选择 + 修改 + 自定义。选得越多，版权越清晰。</div>
-        </div>
-        <div class="ml-auto flex gap-2 text-[10px] text-white/55">
-          <span class="px-2.5 py-1 rounded-full glass">🤖 帮我写</span>
-          <span class="px-2.5 py-1 rounded-full glass">换一批</span>
-          <span class="px-2.5 py-1 rounded-full glass">我来说</span>
-        </div>
-      </div>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-[11px]">
-        <div class="rounded-lg p-3 glass">
-          <div class="text-amber-200 font-medium mb-1">书名生成</div>
-          <div class="text-white/55">《长夜将明》《记忆残卷》《剑与谎》</div>
-        </div>
-        <div class="rounded-lg p-3 glass">
-          <div class="text-amber-200 font-medium mb-1">力量体系</div>
-          <div class="text-white/55">炼气→筑基→金丹→元婴→化神</div>
-        </div>
-        <div class="rounded-lg p-3 glass">
-          <div class="text-amber-200 font-medium mb-1">性格特点</div>
-          <div class="text-white/55">高智商/重义气/理想主义者/偏执型</div>
-        </div>
-        <div class="rounded-lg p-3 glass">
-          <div class="text-amber-200 font-medium mb-1">情绪曲线</div>
-          <div class="text-white/55">平静好奇→震惊警惕 / 骤然紧张</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 商业化截图 -->
-    <div class="mt-10">
-      <div class="text-[12px] text-white/45 tracking-[0.2em] uppercase mb-5">Commerce Page 截图 · 4 大系统一站式管理 · 5 题材 demo 全跑通</div>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        <div class="shot-card glass">
-          <img src="output/preview/screenshots/v514/01-overview.png" class="w-full aspect-[9/16] object-cover object-top" alt="总览"/>
-          <div class="label"><div class="text-[10px] font-medium">总览</div><div class="text-[9px] text-white/55">5 大系统一屏</div></div>
-        </div>
-        <div class="shot-card glass">
-          <img src="output/preview/screenshots/v514/03-copyright-eval.png" class="w-full aspect-[9/16] object-cover object-top" alt="版权评估"/>
-          <div class="label"><div class="text-[10px] font-medium">版权评估</div><div class="text-[9px] text-white/55">4 级分层 + 证书</div></div>
-        </div>
-        <div class="shot-card glass">
-          <img src="output/preview/screenshots/v514/06-ai-helper-modal.png" class="w-full aspect-[9/16] object-cover object-top" alt="AI 帮我写"/>
-          <div class="label"><div class="text-[10px] font-medium">🤖 帮我写</div><div class="text-[9px] text-white/55">3 选项 + 我来说</div></div>
-        </div>
-        <div class="shot-card glass">
-          <img src="output/preview/screenshots/v514/09-with-points-and-earnings.png" class="w-full aspect-[9/16] object-cover object-top" alt="收费点 + 收益"/>
-          <div class="label"><div class="text-[10px] font-medium">收费点 + 收益</div><div class="text-[9px] text-white/55">C 级质量 · 可上架</div></div>
-        </div>
-        <div class="shot-card glass">
-          <img src="output/preview/screenshots/v514/11-license-saved.png" class="w-full aspect-[9/16] object-cover object-top" alt="改编授权"/>
-          <div class="label"><div class="text-[10px] font-medium">改编授权</div><div class="text-[9px] text-white/55">A/B/C 三级</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 数据表架构 -->
-    <div class="mt-12 grid lg:grid-cols-[1fr_2fr] gap-5">
-      <div class="rounded-2xl p-6 glass-strong">
-        <div class="text-[12px] text-white/45 tracking-[0.2em] uppercase">DATA SCHEMA · 11 TABLES</div>
-        <h3 class="font-han text-[20px] font-bold mt-1">11 张数据表</h3>
-        <p class="mt-2 text-[12px] text-white/55 leading-relaxed">统一通过 <code class="code-line px-1 rounded bg-white/5">window.DB</code> 抽象层访问，localStorage 持久化，保留接真后端钩子。</p>
-        <div class="mt-4 grid grid-cols-2 gap-2 text-[11px]">
-          <div class="rounded-lg p-2.5 glass"><div class="text-white/85">novel_copyright_tiers</div><div class="text-white/45">版权分层</div></div>
-          <div class="rounded-lg p-2.5 glass"><div class="text-white/85">creator_monetization_points</div><div class="text-white/45">收费点</div></div>
-          <div class="rounded-lg p-2.5 glass"><div class="text-white/85">creator_earnings</div><div class="text-white/45">作者收益</div></div>
-          <div class="rounded-lg p-2.5 glass"><div class="text-white/85">novel_quality_reports</div><div class="text-white/45">质量报告</div></div>
-          <div class="rounded-lg p-2.5 glass"><div class="text-white/85">novel_review_records</div><div class="text-white/45">审核记录</div></div>
-          <div class="rounded-lg p-2.5 glass"><div class="text-white/85">adaptation_licenses</div><div class="text-white/45">改编授权</div></div>
-          <div class="rounded-lg p-2.5 glass"><div class="text-white/85">adaptation_revenue_records</div><div class="text-white/45">改编收益</div></div>
-          <div class="rounded-lg p-2.5 glass"><div class="text-white/85">content_reports</div><div class="text-white/45">侵权举报</div></div>
-          <div class="rounded-lg p-2.5 glass"><div class="text-white/85">tax_records</div><div class="text-white/45">税务记录</div></div>
-          <div class="rounded-lg p-2.5 glass"><div class="text-white/85">aml_monitoring</div><div class="text-white/45">反洗钱</div></div>
-          <div class="rounded-lg p-2.5 glass"><div class="text-white/85">ai_helper_usage</div><div class="text-white/45">AI 提问记录</div></div>
-        </div>
-      </div>
-
-      <div class="rounded-2xl p-6 glass-strong">
-        <div class="text-[12px] text-white/45 tracking-[0.2em] uppercase">JUDGMENT RULES · 判定规则</div>
-        <h3 class="font-han text-[20px] font-bold mt-1">版权分层 + 质量审核 判定</h3>
-
-        <div class="mt-4">
-          <div class="text-[11px] text-amber-200 tracking-widest mb-2">COPYRIGHT TIER 判定</div>
-          <table class="w-full text-[11px]">
-            <thead><tr class="text-white/45 border-b border-white/10">
-              <th class="text-left py-2">层级</th><th class="text-left">定义</th><th class="text-right">导出</th><th class="text-right">商用</th>
-            </tr></thead>
-            <tbody class="text-white/75">
-              <tr class="border-b border-white/5"><td class="py-2"><span class="px-2 py-0.5 rounded text-[10px] bg-amber-500/15 text-amber-200">L1</span></td><td>AI 生成 &gt; 70%，修改 &lt; 20%</td><td class="text-right">50 灵晶</td><td class="text-right">2000</td></tr>
-              <tr class="border-b border-white/5"><td class="py-2"><span class="px-2 py-0.5 rounded text-[10px] bg-violet-500/15 text-violet-200">L2</span></td><td>AI 生成 40-70%，修改 20-50%</td><td class="text-right">30 灵晶</td><td class="text-right">1000</td></tr>
-              <tr class="border-b border-white/5"><td class="py-2"><span class="px-2 py-0.5 rounded text-[10px] bg-cyan-500/15 text-cyan-200">L3</span></td><td>AI 生成 &lt; 40%，修改 &gt; 50%</td><td class="text-right text-amber-300">免费</td><td class="text-right">500</td></tr>
-              <tr><td class="py-2"><span class="px-2 py-0.5 rounded text-[10px] bg-green-500/15 text-green-200">L4</span></td><td>纯人工，AI 生成 &lt; 10%</td><td class="text-right text-amber-300">免费</td><td class="text-right text-amber-300">免费</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="mt-5">
-          <div class="text-[11px] text-violet-200 tracking-widest mb-2">QUALITY REVIEW 维度</div>
-          <div class="space-y-2">
-            <div>
-              <div class="flex items-center justify-between text-[11px] mb-1"><span class="text-white/75">叙事质量</span><span class="text-white/55">30%</span></div>
-              <div class="h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full rounded-full" style="width:80%; background:linear-gradient(90deg,#5BC5D8,#8E5BD8)"></div></div>
-            </div>
-            <div>
-              <div class="flex items-center justify-between text-[11px] mb-1"><span class="text-white/75">角色质量</span><span class="text-white/55">25%</span></div>
-              <div class="h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full rounded-full" style="width:65%; background:linear-gradient(90deg,#5BC5D8,#8E5BD8)"></div></div>
-            </div>
-            <div>
-              <div class="flex items-center justify-between text-[11px] mb-1"><span class="text-white/75">文学质量</span><span class="text-white/55">20%</span></div>
-              <div class="h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full rounded-full" style="width:75%; background:linear-gradient(90deg,#5BC5D8,#8E5BD8)"></div></div>
-            </div>
-            <div>
-              <div class="flex items-center justify-between text-[11px] mb-1"><span class="text-white/75">AI 味检测</span><span class="text-white/55">15%</span></div>
-              <div class="h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full rounded-full" style="width:40%; background:linear-gradient(90deg,#E89B5A,#D85B8E)"></div></div>
-            </div>
-            <div>
-              <div class="flex items-center justify-between text-[11px] mb-1"><span class="text-white/75">合规性</span><span class="text-white/55">10%</span></div>
-              <div class="h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full rounded-full" style="width:100%; background:linear-gradient(90deg,#5BD88E,#5BC5D8)"></div></div>
-            </div>
-          </div>
-          <div class="mt-3 text-[10px] text-white/45">硬性门槛：合规 ✓ · AI 味 ≤ 40 · 伏笔兑现率 ≥ 60% · 字数 ≥ 8,000</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 改编授权 -->
-    <div class="mt-6 rounded-2xl p-6 glass-strong">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="font-han text-[20px] font-bold">⑥ 改编授权</div>
-        <span class="text-[11px] text-white/55">A/B/C 三级 · 5 种类型（影视/动漫/游戏/有声/海外）</span>
-        <div class="ml-auto">
-          <img src="output/preview/screenshots/v514/11-license-saved.png" class="w-24 h-auto rounded-lg border border-white/10" alt="改编授权截图"/>
-        </div>
-      </div>
-      <div class="grid grid-cols-3 gap-3">
-        <div class="rounded-xl p-4 glass" style="border-top:2px solid #E8C75A">
-          <div class="font-han text-[14px] font-bold text-amber-200">A级 · 全版权</div>
-          <div class="mt-1 text-[11px] text-white/55">影视+动漫+游戏+有声+海外，平台代理谈判</div>
-          <div class="mt-3 flex items-center justify-between text-[11px]">
-            <span class="text-white/45">创作者分成</span>
-            <span class="text-amber-200 font-bold">60%</span>
-          </div>
-        </div>
-        <div class="rounded-xl p-4 glass" style="border-top:2px solid #8E5BD8">
-          <div class="font-han text-[14px] font-bold text-violet-200">B级 · 单品类</div>
-          <div class="mt-1 text-[11px] text-white/55">仅影视（或仅动漫），平台代理谈判</div>
-          <div class="mt-3 flex items-center justify-between text-[11px]">
-            <span class="text-white/45">创作者分成</span>
-            <span class="text-violet-200 font-bold">70%</span>
-          </div>
-        </div>
-        <div class="rounded-xl p-4 glass" style="border-top:2px solid #5BC5D8">
-          <div class="font-han text-[14px] font-bold text-cyan-200">C级 · 自主授权</div>
-          <div class="mt-1 text-[11px] text-white/55">创作者自行对接，平台仅提供版权确权证明</div>
-          <div class="mt-3 flex items-center justify-between text-[11px]">
-            <span class="text-white/45">创作者分成</span>
-            <span class="text-cyan-200 font-bold">90%</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 演示 stats -->
-    <div class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3">
-      <div class="rounded-2xl p-5 glass-strong text-center">
-        <div class="font-display text-[44px] text-grad">22</div>
-        <div class="mt-1 text-[12px] text-white/55">收费点类型</div>
-      </div>
-      <div class="rounded-2xl p-5 glass-strong text-center">
-        <div class="font-display text-[44px] text-grad-gold">4</div>
-        <div class="mt-1 text-[12px] text-white/55">版权分层 + 5档作者等级</div>
-      </div>
-      <div class="rounded-2xl p-5 glass-strong text-center">
-        <div class="font-display text-[44px] text-grad">5</div>
-        <div class="mt-1 text-[12px] text-white/55">质量维度 + S/A/B/C/D 等级</div>
-      </div>
-      <div class="rounded-2xl p-5 glass-strong text-center">
-        <div class="font-display text-[44px] text-grad-gold">3</div>
-        <div class="mt-1 text-[12px] text-white/55">改编授权等级</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="hairline max-w-[1400px] mx-auto"></div>
-
-<!-- ============== v5.9 重设计（保留作为历史） ============== -->
-<section id="v59" class="py-16 lg:py-20">
-  <div class="max-w-[1400px] mx-auto px-5 lg:px-8">
-    <div class="flex items-end justify-between mb-3 flex-wrap gap-3">
-      <div>
-        <div class="text-[12px] text-white/45 tracking-[0.2em] uppercase">v5.9 · Historical</div>
-        <h2 class="font-display text-[28px] sm:text-[36px] mt-1">新版 App · 沉浸剧情对话 <span class="text-white/45 text-[18px]">（v5.13 已完整升级）</span></h2>
-        <p class="mt-2 text-[14px] text-white/55 max-w-3xl leading-relaxed">
-          每个功能区都是完整独立的页面。小说世界：题材筛选 → 沉浸式作品卡 → 章节详情 → 2D 视觉小说玩法；双生陪伴：角色聊天 + 好感度 + 每日签到；创作中心：节点编辑器 + 一键发布；发现：搜索 / 排行 / 成就墙。
-        </p>
-      </div>
-      <a href="output/preview/redesign.html" class="hidden md:inline-block px-5 py-3 rounded-full text-[13px] font-medium border border-white/15 text-white/80 hover:bg-white/5">打开 v5.9 →</a>
-    </div>
-
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-7">
-      <a href="output/preview/redesign.html" class="rounded-2xl p-5 glass-strong hover:-translate-y-1 transition-transform" style="border:1px solid rgba(142,91,216,.35)">
-        <div class="text-[26px]">📖</div>
-        <div class="mt-2 font-han text-[17px] font-bold">小说世界</div>
-        <div class="mt-1 text-[12px] text-white/55 leading-relaxed">9 题材 · 20+ 部作品 · 6 部公版名著完整可玩</div>
-      </a>
-      <a href="output/preview/redesign.html" class="rounded-2xl p-5 glass-strong hover:-translate-y-1 transition-transform" style="border:1px solid rgba(91,197,216,.35)">
-        <div class="text-[26px]">💞</div>
-        <div class="mt-2 font-han text-[17px] font-bold">双生陪伴</div>
-        <div class="mt-1 text-[12px] text-white/55 leading-relaxed">点角色卡进入聊天：消息气泡 + 快捷话题 + 性格化回复 + 好感度成长</div>
-      </a>
-      <a href="output/preview/redesign.html" class="rounded-2xl p-5 glass-strong hover:-translate-y-1 transition-transform" style="border:1px solid rgba(216,91,142,.35)">
-        <div class="text-[26px]">✍️</div>
-        <div class="mt-2 font-han text-[17px] font-bold">创作中心</div>
-        <div class="mt-1 text-[12px] text-white/55 leading-relaxed">作品管理 + 对话节点编辑器 + 预览试玩 + 发布到小说世界 + JSON 导入导出</div>
-      </a>
-      <a href="output/preview/library.html" class="rounded-2xl p-5 glass-strong hover:-translate-y-1 transition-transform" style="border:1px solid rgba(91,216,141,.35)">
-        <div class="text-[26px]">🧭</div>
-        <div class="mt-2 font-han text-[17px] font-bold">30 题材库</div>
-        <div class="mt-1 text-[12px] text-white/55 leading-relaxed">搜索/筛选/已上传展示/空仓提示/上传入口</div>
-      </a>
-    </div>
-  </div>
-</section>
-
-<div class="hairline max-w-[1400px] mx-auto"></div>
-
-<!-- ============== 30 题材小说世界目录 ============== -->
-<section id="catalog" class="py-16 lg:py-24">
-  <div class="max-w-[1400px] mx-auto px-5 lg:px-8">
-    <div class="flex items-end justify-between mb-9 flex-wrap gap-3">
-      <div>
-        <div class="text-[12px] text-white/45 tracking-[0.2em] uppercase">Catalog · 30 GENRES</div>
-        <h2 class="font-display text-[34px] sm:text-[42px] mt-1"><span class="text-grad">小说世界</span> 目录</h2>
-        <p class="mt-2 text-[14px] text-white/55 max-w-xl">按市面上所有的小说题材划分。内容双通道：<b class="text-white/80">公版名著直接可玩</b>（西游记/三国/水浒/红楼/聊斋/封神），其余题材由创作者通过创作中心人工创作或上传填充。</p>
-      </div>
-      <div class="hidden md:flex gap-2 text-[12px] text-white/55">
-        <button class="chip px-3 py-1.5 rounded-full glass">最新</button>
-        <button class="chip px-3 py-1.5 rounded-full glass">最热</button>
-        <button class="chip px-3 py-1.5 rounded-full glass" style="background:rgba(142,91,216,.25); color:#c9a8ff">推荐</button>
-      </div>
-    </div>
-
-    <div class="scroll-x overflow-x-auto pb-3 mb-8 -mx-1">
-      <div class="flex gap-2 px-1 min-w-max text-[13px]">
-        <button class="chip px-4 py-2 rounded-full glass text-white font-medium" style="background:linear-gradient(120deg, rgba(142,91,216,.35), rgba(91,107,216,.35));">全部 30</button>
-        <button class="chip px-4 py-2 rounded-full glass">📜 公版名著</button>
-        <button class="chip px-4 py-2 rounded-full glass">玄幻 · 3</button>
-        <button class="chip px-4 py-2 rounded-full glass">仙侠 · 2</button>
-        <button class="chip px-4 py-2 rounded-full glass">言情 · 4</button>
-        <button class="chip px-4 py-2 rounded-full glass">悬疑 · 2</button>
-        <button class="chip px-4 py-2 rounded-full glass">穿越 · 2</button>
-        <button class="chip px-4 py-2 rounded-full glass">科幻 · 2</button>
-        <button class="chip px-4 py-2 rounded-full glass">校园 · 2</button>
-        <button class="chip px-4 py-2 rounded-full glass">军事 · 2</button>
-        <button class="chip px-4 py-2 rounded-full glass">同人 · 2</button>
-        <button class="chip px-4 py-2 rounded-full glass">+ 14 更多</button>
-      </div>
-    </div>
-
-    <div id="genreGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"></div>
-
-    <div class="mt-8 text-center">
-      <a href="output/preview/library.html" class="px-6 py-3 rounded-full text-[14px] text-white font-medium" style="background:linear-gradient(120deg, #D85B8E, #8E5BD8); display:inline-block; margin-right:8px;">📖 打开 30 题材库</a>
-      <a href="output/preview/plot-runner.html?novelId=demo_palace" class="px-6 py-3 rounded-full glass text-[13px] text-white/75 hover:text-white" style="display:inline-block; margin-right:8px;">🎮 剧情模式试玩</a>
-      <button class="px-6 py-3 rounded-full glass text-[13px] text-white/75 hover:text-white">+ 申请新题材</button>
-    </div>
-  </div>
-</section>
-
-<div class="hairline max-w-[1400px] mx-auto"></div>
-
-<!-- ============== 双生陪伴 ============== -->
-<section id="companions" class="py-16 lg:py-24">
-  <div class="max-w-[1400px] mx-auto px-5 lg:px-8">
-    <div class="flex items-end justify-between mb-9 flex-wrap gap-3">
-      <div>
-        <div class="text-[12px] text-white/45 tracking-[0.2em] uppercase">Dual Souls · 双生</div>
-        <h2 class="font-display text-[34px] sm:text-[42px] mt-1"><span class="text-grad">双生陪伴</span></h2>
-        <p class="mt-2 text-[14px] text-white/55 max-w-xl">把小说里攻略下来的 TA 带出故事，做你日常生活的 AI 伴侣。一个角色，两种存在形态。</p>
-      </div>
-      <button class="hidden md:block px-4 py-2 rounded-full text-[13px] text-white" style="background:linear-gradient(120deg,#D85B8E,#8E5BD8);">+ 新建角色</button>
-    </div>
-
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-      <div class="genrecard glass-strong rounded-2xl overflow-hidden">
-        <div class="relative aspect-[3/4] ph-portrait" style="--ph-a:#8E5BD8; --ph-b:#5B3553; --ph-c:#0b0f1c;">
-          <div class="absolute top-3 left-3 flex gap-1.5">
-            <span class="px-2 py-0.5 rounded-full text-[10px] glass-strong" style="color:#D85B8E">双界</span>
-            <span class="px-2 py-0.5 rounded-full text-[10px] glass-strong">亲密度 92</span>
-          </div>
-          <div class="absolute bottom-3 left-3 right-3">
-            <div class="font-han text-[18px] font-bold">林霜晚</div>
-            <div class="text-[11px] text-white/55 mt-0.5">冷面剑客 · 长夜城</div>
-          </div>
-        </div>
-        <div class="p-3">
-          <div class="text-[11px] text-white/45 leading-relaxed line-clamp-2">她说自己不喜欢人群。但你半夜走过凉亭，她还在那里。</div>
-          <div class="mt-2 flex items-center justify-between text-[11px]">
-            <span class="text-white/45">已带出 · 87 天</span>
-            <a href="output/preview/plot-runner.html?novelId=demo_palace" class="text-violet-300">进入世界 →</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="genrecard glass-strong rounded-2xl overflow-hidden">
-        <div class="relative aspect-[3/4] ph-portrait" style="--ph-a:#5B9CD8; --ph-b:#2a3358; --ph-c:#0b0f1c;">
-          <div class="absolute top-3 left-3 flex gap-1.5">
-            <span class="px-2 py-0.5 rounded-full text-[10px] glass-strong" style="color:#5BC5D8">陪伴中</span>
-          </div>
-          <div class="absolute bottom-3 left-3 right-3">
-            <div class="font-han text-[18px] font-bold">白鹿笙</div>
-            <div class="text-[11px] text-white/55 mt-0.5">校园 · 治愈系</div>
-          </div>
-        </div>
-        <div class="p-3">
-          <div class="text-[11px] text-white/45 leading-relaxed line-clamp-2">你说过她讲题声音好听，她三天没换过这个说话语调。</div>
-          <div class="mt-2 flex items-center justify-between text-[11px]">
-            <span class="text-white/45">已带出 · 42 天</span>
-            <a href="output/preview/plot-runner.html?novelId=demo_campus" class="text-violet-300">继续聊天 →</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="genrecard glass-strong rounded-2xl overflow-hidden">
-        <div class="relative aspect-[3/4] ph-portrait" style="--ph-a:#E89B5A; --ph-b:#5B3553; --ph-c:#0b0f1c;">
-          <div class="absolute top-3 left-3 flex gap-1.5">
-            <span class="px-2 py-0.5 rounded-full text-[10px] glass-strong" style="color:#E89B5A">故事中</span>
-          </div>
-          <div class="absolute bottom-3 left-3 right-3">
-            <div class="font-han text-[18px] font-bold">沈昼</div>
-            <div class="text-[11px] text-white/55 mt-0.5">赛博 · 黑客</div>
-          </div>
-        </div>
-        <div class="p-3">
-          <div class="text-[11px] text-white/45 leading-relaxed line-clamp-2">霓虹灯从二十三层倾泻而下，她的手指在键盘上停下来。</div>
-          <div class="mt-2 flex items-center justify-between text-[11px]">
-            <span class="text-white/45">亲密度 78 · 个人线 1/3</span>
-            <a href="output/preview/plot-runner.html?novelId=demo_starship" class="text-violet-300">攻略 →</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="genrecard glass-strong rounded-2xl overflow-hidden">
-        <div class="relative aspect-[3/4] ph-portrait" style="--ph-a:#5BC5D8; --ph-b:#2a5B58; --ph-c:#0b0f1c;">
-          <div class="absolute top-3 left-3 flex gap-1.5">
-            <span class="px-2 py-0.5 rounded-full text-[10px] glass-strong" style="color:#5BC5D8">陪伴中</span>
-          </div>
-          <div class="absolute bottom-3 left-3 right-3">
-            <div class="font-han text-[18px] font-bold">顾衍</div>
-            <div class="text-[11px] text-white/55 mt-0.5">现代 · 兄长</div>
-          </div>
-        </div>
-        <div class="p-3">
-          <div class="text-[11px] text-white/45 leading-relaxed line-clamp-2">他说加班晚归会给你留灯，今天他真的留了。</div>
-          <div class="mt-2 flex items-center justify-between text-[11px]">
-            <span class="text-white/45">已带出 · 156 天</span>
-            <a href="output/preview/library.html" class="text-violet-300">回家 →</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mt-10 glass-strong rounded-2xl p-6 flex flex-col md:flex-row gap-6 items-start md:items-center">
-      <div class="flex-1">
-        <div class="font-han text-[18px] font-bold">双界切换 · 一个角色，两个世界</div>
-        <div class="mt-1 text-[13px] text-white/55 leading-relaxed">小说里攻略的 NPC，亲密度 ≥ 80 + 完成个人线 + 付费带出 → 立即获得"现实陪伴"形态。共享记忆，双向穿梭。</div>
-      </div>
-      <div class="flex gap-3">
-        <a href="output/preview/plot-runner.html?novelId=demo_palace" class="px-4 py-2.5 rounded-full text-[13px] text-white" style="background:linear-gradient(120deg,#5B9CD8,#5B6BD8)">⌖ 进入 TA 的世界</a>
-        <button class="px-4 py-2.5 rounded-full text-[13px] border border-white/15 text-white/85">✦ 带 TA 回到身边</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="hairline max-w-[1400px] mx-auto"></div>
-
-<!-- ============== v5.17 创作者中心（核心新增） ============== -->
-<section id="v517-creator" class="py-16 lg:py-24" style="background:linear-gradient(180deg, transparent 0%, rgba(232,199,90,.04) 30%, rgba(216,91,142,.04) 70%, transparent 100%);">
-  <div class="max-w-[1400px] mx-auto px-5 lg:px-8">
-    <div class="flex items-end justify-between mb-3 flex-wrap gap-3">
-      <div>
-        <div class="flex items-center gap-2 mb-2">
-          <span class="ver-badge ver-514">v5.17 · CREATOR CENTER & NOVEL SIMULATOR</span>
-          <span class="text-[11px] text-white/45">商业化降级为创作者内部按键 · 新增小说辅助模拟器 · 6 张新表 · 12 类提问模板</span>
-        </div>
-        <h2 class="font-display text-[34px] sm:text-[42px] mt-1">
-          <span class="text-grad-gold">创作者中心</span> + <span class="text-grad">小说辅助模拟器</span>
-        </h2>
-        <p class="mt-2 text-[14px] text-white/55 max-w-3xl leading-relaxed">
-          客户打开 App 是为了<b class="text-white/85">玩游戏和陪伴</b>，不是研究商业规则——所以 v5.17 起，<b class="text-amber-200">商业化已降级为创作者中心内部按键</b>（对玩家不可见）。
-          同时新增<b class="text-amber-200">小说辅助模拟器</b>——用"<b>填表</b>"和"<b>提问</b>"让不懂写作的人也能产出有质量的内容。
-          选得越多、改得越多，版权越清晰、收益越高。
-        </p>
-      </div>
-      <a href="output/preview/creator-center.html" class="hidden md:inline-block px-5 py-3 rounded-full text-[13px] font-medium text-white" style="background:linear-gradient(120deg,#E8C75A,#D85B8E);">✍️ 打开创作者中心 →</a>
-    </div>
-
-    <!-- 3 大核心按键 -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-9">
-      <a href="output/preview/creator-create.html" class="block rounded-2xl p-5 glass-strong" style="border:1px solid rgba(139,124,246,.4);">
-        <div class="flex items-center justify-between mb-3">
-          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#8b7cf6,#6ec6ff);">
-            <span class="text-[18px]">🌍</span>
-          </div>
-          <span class="text-[10px] text-white/45">CREATE WORLD</span>
-        </div>
-        <div class="font-han text-[15px] font-bold text-violet-200">创建新世界</div>
-        <div class="mt-1 text-[11px] text-white/55 leading-relaxed">三条路径：AI 辅助 / 自己写 / 上传 TXT</div>
-        <div class="mt-3 flex flex-wrap gap-1 text-[10px]">
-          <span class="px-2 py-0.5 rounded-full glass">🤖 AI 辅助</span>
-          <span class="px-2 py-0.5 rounded-full glass">✍️ 纯人工</span>
-          <span class="px-2 py-0.5 rounded-full glass">📤 上传</span>
-        </div>
-      </a>
-
-      <a href="output/preview/novel-ai-helper.html" class="block rounded-2xl p-5 glass-strong" style="border:1px solid rgba(232,199,90,.4);background:linear-gradient(180deg,rgba(232,199,90,.08),rgba(216,91,142,.04));">
-        <div class="flex items-center justify-between mb-3">
-          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#E8C75A,#E89B5A);">
-            <span class="text-[18px]">📋</span>
-          </div>
-          <span class="text-[10px]" style="color:#E8C75A;font-weight:600;">v5.17 NEW</span>
-        </div>
-        <div class="font-han text-[15px] font-bold text-amber-200">小说辅助模拟器</div>
-        <div class="mt-1 text-[11px] text-white/55 leading-relaxed">28 字段模板 + 12 类提问 + 6 维度自动检测 — 填表 + 提问 = 高质量小说</div>
-        <div class="mt-3 flex flex-wrap gap-1 text-[10px]">
-          <span class="px-2 py-0.5 rounded-full glass">📑 4 大类 28 字段</span>
-          <span class="px-2 py-0.5 rounded-full glass">🎭 10 要素人物</span>
-          <span class="px-2 py-0.5 rounded-full glass">🗣️ 12 类提问</span>
-          <span class="px-2 py-0.5 rounded-full glass">✅ 6 维检测</span>
-        </div>
-      </a>
-
-      <a href="output/preview/commerce.html" class="block rounded-2xl p-5 glass-strong" style="border:1px solid rgba(110,198,255,.4);">
-        <div class="flex items-center justify-between mb-3">
-          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#6ec6ff,#5BC5D8);">
-            <span class="text-[18px]">💰</span>
-          </div>
-          <span class="text-[10px] text-white/45">v5.14 → v5.17 降级</span>
-        </div>
-        <div class="font-han text-[15px] font-bold text-cyan-200">上架与定价</div>
-        <div class="mt-1 text-[11px] text-white/55 leading-relaxed">版权分层 + 22 收费点 + 5 档分成 + 3 级改编授权 + 作品审核</div>
-        <div class="mt-3 flex flex-wrap gap-1 text-[10px]">
-          <span class="px-2 py-0.5 rounded-full glass">🏷️ L1-L4 分层</span>
-          <span class="px-2 py-0.5 rounded-full glass">🎁 22 收费点</span>
-          <span class="px-2 py-0.5 rounded-full glass">💎 5 档分成</span>
-        </div>
-      </a>
-    </div>
-
-    <!-- 小说辅助模拟器 · 4 大表预览 -->
-    <div class="mt-10">
-      <div class="text-[12px] text-white/45 tracking-[0.2em] uppercase mb-5">小说辅助模拟器 · 4 大类 28 字段模板（v5.17 核心）</div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="rounded-2xl p-5 glass-strong" style="border-top:3px solid #8b7cf6;">
-          <div class="text-[24px]">📖</div>
-          <div class="mt-2 font-han text-[14px] font-bold text-violet-200">基础信息表</div>
-          <div class="text-[11px] text-white/55 mt-1">7 字段</div>
-          <div class="mt-3 space-y-1 text-[10px] text-white/70">
-            <div>· 书名 / 类型 / 主题 / 基调</div>
-            <div>· 字数 / 一句话简介 / 目标读者</div>
-          </div>
-        </div>
-
-        <div class="rounded-2xl p-5 glass-strong" style="border-top:3px solid #6ec6ff;">
-          <div class="text-[24px]">🌍</div>
-          <div class="mt-2 font-han text-[14px] font-bold text-cyan-200">世界格局表</div>
-          <div class="text-[11px] text-white/55 mt-1">7 字段</div>
-          <div class="mt-3 space-y-1 text-[10px] text-white/70">
-            <div>· 世界类型 / 时代 / 力量体系</div>
-            <div>· 主要势力 / 阶层 / 冲突 / 地理</div>
-          </div>
-        </div>
-
-        <div class="rounded-2xl p-5 glass-strong" style="border-top:3px solid #E8C75A;">
-          <div class="text-[24px]">🎬</div>
-          <div class="mt-2 font-han text-[14px] font-bold text-amber-200">主线情节表</div>
-          <div class="text-[11px] text-white/55 mt-1">6 字段</div>
-          <div class="mt-3 space-y-1 text-[10px] text-white/70">
-            <div>· 主线 / 起点 / 终点</div>
-            <div>· 三个关键事件 / 辅线 / 感情线</div>
-          </div>
-        </div>
-
-        <div class="rounded-2xl p-5 glass-strong" style="border-top:3px solid #D85B8E;">
-          <div class="text-[24px]">📑</div>
-          <div class="mt-2 font-han text-[14px] font-bold text-rose-200">章节细纲表</div>
-          <div class="text-[11px] text-white/55 mt-1">8 字段</div>
-          <div class="mt-3 space-y-1 text-[10px] text-white/70">
-            <div>· 事件编号 / 起因 / 发展</div>
-            <div>· 高潮 / 尾声 / 伏笔 / 角色 / 地点</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 人物小传 + 12 类提问 + 6 维检测 -->
-    <div class="mt-10 grid lg:grid-cols-3 gap-4">
-      <div class="rounded-2xl p-5 glass-strong">
-        <div class="font-han text-[14px] font-bold text-violet-200">🎭 人物小传（10 要素 + 语言指纹）</div>
-        <div class="mt-2 text-[11px] text-white/55">姓名/性别/年龄/外形/性格/家庭/感情/阶层/习惯/成长 + 风格/口癖/句长/常用词/绝不说的词</div>
-        <div class="mt-3 text-[10px] text-white/45">验收：读者不看名字，只看台词，就能知道是谁在说话</div>
-      </div>
-      <div class="rounded-2xl p-5 glass-strong">
-        <div class="font-han text-[14px] font-bold text-amber-200">🗣️ AI 格外提问（12 类模板）</div>
-        <div class="mt-2 text-[11px] text-white/55">场景类 3（描写/过渡/氛围）+ 角色类 4（出场/内心/成长/关系）+ 对话类 3（重写/设计/金句）+ 情节类 4（转折/伏笔/升级/节奏）</div>
-        <div class="mt-3 text-[10px] text-white/45">每类返回 3 版本选项 + 推荐版本 + 区别说明</div>
-      </div>
-      <div class="rounded-2xl p-5 glass-strong">
-        <div class="font-han text-[14px] font-bold text-cyan-200">✅ 6 维度自动检测</div>
-        <div class="mt-2 text-[11px] text-white/55">角色一致性 + 语言指纹 + 伏笔状态 + 时间线 + 世界规则 + 场景完整度</div>
-        <div class="mt-3 text-[10px] text-white/45">报告：pass / warn / fail + 具体位置 + 修复建议</div>
-      </div>
-    </div>
-
-    <!-- 数据表升级 11 → 17 -->
-    <div class="mt-10 rounded-2xl p-6 glass-strong">
-      <div class="text-[12px] text-white/45 tracking-[0.2em] uppercase">DATA SCHEMA · 17 TABLES (v5.14 11 + v5.17 6)</div>
-      <h3 class="font-han text-[20px] font-bold mt-1">数据表 11 → 17 张</h3>
-      <p class="mt-2 text-[12px] text-white/55">统一通过 <code class="code-line px-1 rounded bg-white/5">window.DB</code> 抽象层访问，localStorage 持久化（key 前缀 lingjing_v517_）。</p>
-      <div class="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 text-[11px]">
-        <div class="rounded-lg p-2.5 glass"><div class="text-white/85">novel_copyright_tiers</div><div class="text-white/45">版权分层</div></div>
-        <div class="rounded-lg p-2.5 glass"><div class="text-white/85">creator_monetization_points</div><div class="text-white/45">收费点</div></div>
-        <div class="rounded-lg p-2.5 glass"><div class="text-white/85">creator_earnings</div><div class="text-white/45">作者收益</div></div>
-        <div class="rounded-lg p-2.5 glass"><div class="text-white/85">novel_quality_reports</div><div class="text-white/45">质量报告</div></div>
-        <div class="rounded-lg p-2.5 glass"><div class="text-white/85">novel_review_records</div><div class="text-white/45">审核记录</div></div>
-        <div class="rounded-lg p-2.5 glass"><div class="text-white/85">adaptation_licenses</div><div class="text-white/45">改编授权</div></div>
-        <div class="rounded-lg p-2.5 glass"><div class="text-white/85">adaptation_revenue_records</div><div class="text-white/45">改编收益</div></div>
-        <div class="rounded-lg p-2.5 glass"><div class="text-white/85">content_reports</div><div class="text-white/45">侵权举报</div></div>
-        <div class="rounded-lg p-2.5 glass"><div class="text-white/85">tax_records</div><div class="text-white/45">税务记录</div></div>
-        <div class="rounded-lg p-2.5 glass"><div class="text-white/85">aml_monitoring</div><div class="text-white/45">反洗钱</div></div>
-        <div class="rounded-lg p-2.5 glass"><div class="text-white/85">ai_helper_usage</div><div class="text-white/45">AI 提问记录</div></div>
-        <div class="rounded-lg p-2.5 glass" style="border:1px solid rgba(232,199,90,.4);background:rgba(232,199,90,.06);"><div class="text-amber-200">novel_outline</div><div class="text-white/45">大纲要素表 ⭐</div></div>
-        <div class="rounded-lg p-2.5 glass" style="border:1px solid rgba(232,199,90,.4);background:rgba(232,199,90,.06);"><div class="text-amber-200">character_profiles</div><div class="text-white/45">人物小传 ⭐</div></div>
-        <div class="rounded-lg p-2.5 glass" style="border:1px solid rgba(232,199,90,.4);background:rgba(232,199,90,.06);"><div class="text-amber-200">scene_cards</div><div class="text-white/45">场景卡 ⭐</div></div>
-        <div class="rounded-lg p-2.5 glass" style="border:1px solid rgba(232,199,90,.4);background:rgba(232,199,90,.06);"><div class="text-amber-200">dialogue_cards</div><div class="text-white/45">对话卡 ⭐</div></div>
-        <div class="rounded-lg p-2.5 glass" style="border:1px solid rgba(232,199,90,.4);background:rgba(232,199,90,.06);"><div class="text-amber-200">ai_questions</div><div class="text-white/45">AI 提问记录 ⭐</div></div>
-        <div class="rounded-lg p-2.5 glass" style="border:1px solid rgba(232,199,90,.4);background:rgba(232,199,90,.06);"><div class="text-amber-200">foreshadowing_tracker</div><div class="text-white/45">伏笔台账 ⭐</div></div>
-      </div>
-    </div>
-
-    <!-- 架构降级说明 -->
-    <div class="mt-8 rounded-2xl p-6 glass-strong" style="border:1px solid rgba(216,91,142,.35);">
-      <div class="font-han text-[18px] font-bold text-rose-200">📐 架构降级说明（v5.17）</div>
-      <div class="mt-3 grid md:grid-cols-2 gap-4 text-[12px] text-white/70 leading-relaxed">
-        <div>
-          <div class="font-han text-[14px] font-bold text-amber-200 mb-2">❌ v5.14 错误做法</div>
-          <ul class="space-y-1.5">
-            <li>· 商业化作为顶级功能区与"小说世界""双生陪伴""创作中心"并列</li>
-            <li>· 客户（玩家）打开 App 看到商业化功能按钮</li>
-            <li>· 没有"小说辅助模拟器"作为独立功能</li>
-            <li>· 创作者中心缺少统一的 AI 辅助填表入口</li>
-          </ul>
-        </div>
-        <div>
-          <div class="font-han text-[14px] font-bold text-green-200 mb-2">✓ v5.17 正确做法</div>
-          <ul class="space-y-1.5">
-            <li>· 商业化降级为<b style="color:#E8C75A;">创作者中心内部按键"上架与定价"</b></li>
-            <li>· 客户（玩家）<b style="color:#E8C75A;">看不到</b>任何商业化相关界面</li>
-            <li>· 新增"<b style="color:#E8C75A;">小说辅助模拟器</b>"作为创作者三大按键之一</li>
-            <li>· 28 字段 + 12 类提问 + 6 维检测形成完整辅助闭环</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="hairline max-w-[1400px] mx-auto"></div>
-
-<!-- ============== 创作中心 ============== -->
-<section id="studio" class="py-16 lg:py-24">
-  <div class="max-w-[1400px] mx-auto px-5 lg:px-8">
-    <div class="flex items-end justify-between mb-9 flex-wrap gap-3">
-      <div>
-        <div class="text-[12px] text-white/45 tracking-[0.2em] uppercase">Creator Studio</div>
-        <h2 class="font-display text-[34px] sm:text-[42px] mt-1"><span class="text-grad">创作中心</span></h2>
-        <p class="mt-2 text-[14px] text-white/55 max-w-xl">三栏编辑器。世界 DNA · 角色卡 · 章节大纲 · AI 生成 · 伏笔管理 · 出版合规，一个屏幕搞定。</p>
-      </div>
-      <a href="output/preview/library.html" class="hidden md:block px-4 py-2 rounded-full text-[13px] text-white" style="background:linear-gradient(120deg,#5BC5D8,#5B6BD8);">+ 创建新世界</a>
-    </div>
-
-    <div class="glass-strong rounded-2xl overflow-hidden">
-      <div class="px-4 py-2.5 flex items-center gap-2 border-b border-white/8 text-[11px] text-white/45">
-        <span class="pulse-dot"></span><span>自动保存 · 3 秒前</span>
-        <span class="ml-4">章节 6 · 共通路線 · 事件篇</span>
-        <div class="ml-auto flex items-center gap-3">
-          <button class="hover:text-white">预览</button>
-          <button class="hover:text-white">保存</button>
-          <button class="px-2.5 py-1 rounded text-[11px] text-white" style="background:linear-gradient(120deg,#8E5BD8,#5B6BD8)">发布</button>
-        </div>
-      </div>
-      <div class="grid grid-cols-12 min-h-[520px]">
-        <aside class="col-span-3 border-r border-white/8 p-4">
-          <div class="text-[11px] text-white/40 tracking-widest mb-3">STRUCTURE</div>
-          <ul class="space-y-1 text-[13px]">
-            <li class="px-2 py-1.5 rounded text-white/45">世界 DNA</li>
-            <li class="px-2 py-1.5 rounded text-white/45">角色卡</li>
-            <li class="px-2 py-1.5 rounded text-white/45">势力地图</li>
-            <li class="px-2 py-1.5 rounded text-white/85" style="background:rgba(142,91,216,.18)">章节大纲</li>
-            <li class="px-2 py-1.5 rounded text-white/45">伏笔追踪</li>
-            <li class="px-2 py-1.5 rounded text-white/45">时间线分支</li>
-            <li class="px-2 py-1.5 rounded text-white/45">出版合规</li>
-          </ul>
-          <div class="mt-5 text-[11px] text-white/40 tracking-widest mb-2">CHAPTERS</div>
-          <ul class="space-y-1 text-[12px]">
-            <li class="px-2 py-1 rounded text-white/45">Ch.1 · 序章</li>
-            <li class="px-2 py-1 rounded text-white/45">Ch.2 · 日常篇</li>
-            <li class="px-2 py-1 rounded text-white/45">Ch.3 · 事件篇</li>
-            <li class="px-2 py-1 rounded text-white/45">Ch.4 · 事件篇</li>
-            <li class="px-2 py-1 rounded text-white/85" style="background:rgba(91,197,216,.15)">Ch.5 · 事件篇 ✎</li>
-            <li class="px-2 py-1 rounded text-white/45">Ch.6 · 分歧点</li>
-          </ul>
-        </aside>
-
-        <main class="col-span-6 p-6 border-r border-white/8">
-          <div class="text-[11px] text-white/40 tracking-widest mb-2">CHAPTER 5 · 事件篇 · 夜宴</div>
-          <h3 class="font-han text-[22px] font-bold mb-3">第三杯酒，她没喝。</h3>
-          <p class="text-[14px] text-white/80 leading-[1.9]">
-            <span class="bg-violet-500/20 px-0.5 rounded">席间有人笑</span>，她也笑。灯火映在她脸上，你看不清她到底开不开心。第三杯酒端上来的时候，她把它推给了身侧的侍女。
-            <br/><br/>
-            你知道这个动作。
-            <br/><br/>
-            上一次她这样，是在那座<span class="bg-cyan-500/20 px-0.5 rounded">被烧毁的驿站</span>。她用同样的手势，把一柄匕首递给了另一个人。
-            <br/><br/>
-            <span class="text-white/45">—— AI 续写建议（点击采纳）</span><br/>
-            <span class="text-violet-300/90 italic">她没有回头看你。她知道你在看她。</span>
-          </p>
-          <div class="mt-5 flex flex-wrap gap-2">
-            <button class="px-3 py-1.5 rounded-full text-[11px] text-white" style="background:rgba(142,91,216,.25)">✦ 续写</button>
-            <button class="px-3 py-1.5 rounded-full text-[11px] glass">润色</button>
-            <button class="px-3 py-1.5 rounded-full text-[11px] glass">改写</button>
-            <button class="px-3 py-1.5 rounded-full text-[11px] glass">伏笔检测</button>
-            <button class="px-3 py-1.5 rounded-full text-[11px] glass">OOC 检查</button>
-            <button class="px-3 py-1.5 rounded-full text-[11px] glass">质量打分</button>
-          </div>
-        </main>
-
-        <aside class="col-span-3 p-4">
-          <div class="text-[11px] text-white/40 tracking-widest mb-3">CHARACTERS</div>
-          <div class="space-y-3">
-            <div class="flex items-center gap-2.5">
-              <div class="w-9 h-9 rounded-full ph-portrait shrink-0" style="--ph-a:#8E5BD8;--ph-b:#2a3358;--ph-c:#0b0f1c"></div>
-              <div class="min-w-0">
-                <div class="text-[12px] font-medium truncate">林霜晚</div>
-                <div class="text-[10px] text-white/45">亲密度 92 · 双界</div>
-              </div>
-            </div>
-            <div class="flex items-center gap-2.5">
-              <div class="w-9 h-9 rounded-full ph-portrait shrink-0" style="--ph-a:#5B9CD8;--ph-b:#2a3358;--ph-c:#0b0f1c"></div>
-              <div class="min-w-0">
-                <div class="text-[12px] font-medium truncate">裴长缨</div>
-                <div class="text-[10px] text-white/45">重要 NPC · 亲密度 64</div>
-              </div>
-            </div>
-            <div class="flex items-center gap-2.5">
-              <div class="w-9 h-9 rounded-full ph-portrait shrink-0" style="--ph-a:#E89B5A;--ph-b:#5B3553;--ph-c:#0b0f1c"></div>
-              <div class="min-w-0">
-                <div class="text-[12px] font-medium truncate">沈昼</div>
-                <div class="text-[10px] text-white/45">攻略中 · 个人线 1/3</div>
-              </div>
-            </div>
-          </div>
-          <div class="mt-6 text-[11px] text-white/40 tracking-widest mb-3">FOILS · 伏笔</div>
-          <ul class="space-y-1.5 text-[12px] text-white/65">
-            <li class="flex items-start gap-1.5"><span style="color:#E89B5A">●</span>第三杯酒 [Ch.5·未揭晓]</li>
-            <li class="flex items-start gap-1.5"><span style="color:#5BC5D8">●</span>被烧毁的驿站 [Ch.2·已铺]</li>
-            <li class="flex items-start gap-1.5"><span style="color:#8E5BD8">●</span>那柄匕首 [Ch.4·关键道具]</li>
-            <li class="flex items-start gap-1.5"><span style="color:#D85B8E">●</span>她的左手 [全线·贯穿]</li>
-          </ul>
-          <div class="mt-6 text-[11px] text-white/40 tracking-widest mb-2">QUALITY</div>
-          <div class="flex items-center gap-2">
-            <div class="flex-1 h-1.5 rounded-full bg-white/10 overflow-hidden">
-              <div class="h-full rounded-full" style="width:87%; background:linear-gradient(90deg,#5BC5D8,#8E5BD8)"></div>
-            </div>
-            <span class="text-[12px] text-white/75">87</span>
-          </div>
-          <div class="mt-2 text-[10px] text-white/45">十维质量 · L1·张力 92 · L4·OOC 98</div>
-        </aside>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="hairline max-w-[1400px] mx-auto"></div>
-
-<!-- ============== 发现 / 推荐 ============== -->
-<section id="discover" class="py-16 lg:py-24">
-  <div class="max-w-[1400px] mx-auto px-5 lg:px-8">
-    <div class="flex items-end justify-between mb-9 flex-wrap gap-3">
-      <div>
-        <div class="text-[12px] text-white/45 tracking-[0.2em] uppercase">Discover</div>
-        <h2 class="font-display text-[34px] sm:text-[42px] mt-1"><span class="text-grad">发现</span> · 命运卡墙</h2>
-        <p class="mt-2 text-[14px] text-white/55">每一个选择生成一张命运卡。收藏、分享、交易。</p>
-      </div>
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4" id="cards"></div>
-  </div>
-</section>
-
-<div class="hairline max-w-[1400px] mx-auto"></div>
-
-<!-- ============== 经济 / 钱包 ============== -->
-<section id="wallet" class="py-16 lg:py-24">
-  <div class="max-w-[1400px] mx-auto px-5 lg:px-8">
-    <div class="flex items-end justify-between mb-9 flex-wrap gap-3">
-      <div>
-        <div class="text-[12px] text-white/45 tracking-[0.2em] uppercase">Wallet</div>
-        <h2 class="font-display text-[34px] sm:text-[42px] mt-1"><span class="text-grad">双货币</span> · 订阅 · 充值</h2>
-        <p class="mt-2 text-[14px] text-white/55">生存免费，体验付费。活下去不花钱，活得好才花钱。<br/><span class="text-amber-200/80">注：v5.14 起新增灵晶（创作者收益）+ 月流水 10 万后接入正式提现。</span></p>
-      </div>
-    </div>
-    <div class="grid lg:grid-cols-3 gap-5">
-      <div class="glass-strong rounded-2xl p-6">
-        <div class="text-[12px] text-white/45 tracking-widest mb-3">FREE CURRENCY</div>
-        <div class="flex items-end gap-2"><div class="font-han text-[44px] font-bold text-amber-300">50</div><span class="text-white/45 pb-2">灵玉 · 每日签到</span></div>
-        <div class="mt-1 text-[11px] text-white/45">基础功能消耗 · 不可充值</div>
-        <div class="mt-5 grid grid-cols-7 gap-1">
-          <div class="aspect-square rounded-full" style="background:#E89B5A"></div>
-          <div class="aspect-square rounded-full bg-white/10"></div>
-          <div class="aspect-square rounded-full" style="background:#E89B5A"></div>
-          <div class="aspect-square rounded-full bg-white/10"></div>
-          <div class="aspect-square rounded-full" style="background:#E89B5A"></div>
-          <div class="aspect-square rounded-full bg-white/10"></div>
-          <div class="aspect-square rounded-full bg-white/10"></div>
-        </div>
-      </div>
-      <div class="glass-strong rounded-2xl p-6">
-        <div class="text-[12px] text-white/45 tracking-widest mb-3">PAID CURRENCY</div>
-        <div class="flex items-end gap-2"><div class="font-han text-[44px] font-bold text-cyan-300">120</div><span class="text-white/45 pb-2">灵晶 · 充值 + 创收</span></div>
-        <div class="mt-1 text-[11px] text-white/45">高级功能 / 抽卡 / 道具 / 个人线 / 收费点解锁</div>
-        <div class="mt-5 grid grid-cols-3 gap-2">
-          <button class="px-3 py-2 rounded-lg glass text-[12px]"><div class="text-cyan-300 font-bold">600</div><div class="text-white/55 text-[10px]">¥6</div></button>
-          <button class="px-3 py-2 rounded-lg glass text-[12px]" style="background:rgba(91,197,216,.15)"><div class="text-cyan-300 font-bold">3000</div><div class="text-white/55 text-[10px]">¥30</div></button>
-          <button class="px-3 py-2 rounded-lg glass text-[12px]"><div class="text-cyan-300 font-bold">6800</div><div class="text-white/55 text-[10px]">¥68</div></button>
-        </div>
-      </div>
-      <div class="glass-strong rounded-2xl p-6 relative overflow-hidden">
-        <div class="absolute top-0 right-0 px-3 py-1 rounded-bl-lg text-[10px]" style="background:linear-gradient(120deg,#8E5BD8,#D85B8E); color:white">推荐</div>
-        <div class="text-[12px] text-white/45 tracking-widest mb-3">SUBSCRIPTION</div>
-        <div class="font-han text-[26px] font-bold">灵境月卡</div>
-        <div class="text-[12px] text-white/45 mt-1">¥18/月 · 一杯奶茶钱</div>
-        <ul class="mt-4 space-y-1.5 text-[12px] text-white/75">
-          <li>✦ 无限对话</li>
-          <li>✦ 每日 200 灵玉</li>
-          <li>✦ 高级记忆容量</li>
-          <li>✦ 去广告</li>
-          <li>✦ 语音每日 30 分钟</li>
-        </ul>
-        <button class="mt-5 w-full py-2.5 rounded-full text-[13px] text-white" style="background:linear-gradient(120deg,#8E5BD8,#5B6BD8)">立即开通</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="hairline max-w-[1400px] mx-auto"></div>
-
-<!-- ============== 五大系统架构 ============== -->
-<section class="py-16 lg:py-24">
-  <div class="max-w-[1400px] mx-auto px-5 lg:px-8">
-    <div class="text-center mb-12">
-      <div class="text-[12px] text-white/45 tracking-[0.2em] uppercase">Tech Core</div>
-      <h2 class="font-display text-[34px] sm:text-[42px] mt-1">五大<span class="text-grad">引擎</span> · 让角色真正"活着"</h2>
-    </div>
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-      <div class="glass-strong rounded-2xl p-5">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style="background:linear-gradient(120deg,#8E5BD8,#5B6BD8)"><span class="text-[18px]">✦</span></div>
-        <div class="font-han font-bold">Character DNA</div>
-        <div class="mt-1 text-[11px] text-white/55">8 维人格向量 · 大五人格 + 6 扩展 · 行为漂移检测</div>
-      </div>
-      <div class="glass-strong rounded-2xl p-5">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style="background:linear-gradient(120deg,#5B9CD8,#5BC5D8)"><span class="text-[18px]">⌛</span></div>
-        <div class="font-han font-bold">Memory</div>
-        <div class="mt-1 text-[11px] text-white/55">4 层记忆 · 衰减与访问 · pgvector · 1 年遗忘</div>
-      </div>
-      <div class="glass-strong rounded-2xl p-5">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style="background:linear-gradient(120deg,#D85B8E,#E89B5A)"><span class="text-[18px]">♡</span></div>
-        <div class="font-han font-bold">Emotion</div>
-        <div class="mt-1 text-[11px] text-white/55">效价-唤醒-强度 · 7 大类 21 微表情 · 行为修正</div>
-      </div>
-      <div class="glass-strong rounded-2xl p-5">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style="background:linear-gradient(120deg,#5BC5D8,#5B9CD8)"><span class="text-[18px]">∞</span></div>
-        <div class="font-han font-bold">Relationship</div>
-        <div class="mt-1 text-[11px] text-white/55">6 维关系 + 依赖监测 · 事件溯源 · 健康指标</div>
-      </div>
-      <div class="glass-strong rounded-2xl p-5">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style="background:linear-gradient(120deg,#8E5BD8,#D85B8E)"><span class="text-[18px]">⌖</span></div>
-        <div class="font-han font-bold">Story / World</div>
-        <div class="mt-1 text-[11px] text-white/55">8 步 AI 调用链 · 30 题材 · 5-21 结局 · 双界同步</div>
-      </div>
-    </div>
-
-    <div class="mt-10 glass-strong rounded-2xl p-6">
-      <div class="text-[11px] text-white/45 tracking-widest mb-3">AI ORCHESTRATOR · 8-STEP CHAIN</div>
-      <div class="flex flex-wrap items-center gap-2 text-[11px]">
-        <span class="px-3 py-1.5 rounded-full glass">用户输入</span>
-        <span class="text-white/35">→</span>
-        <span class="px-3 py-1.5 rounded-full" style="background:rgba(91,197,216,.15); color:#5BC5D8">Action Parser · cheap</span>
-        <span class="text-white/35">→</span>
-        <span class="px-3 py-1.5 rounded-full glass">World Rule Check</span>
-        <span class="text-white/35">→</span>
-        <span class="px-3 py-1.5 rounded-full glass">Probability</span>
-        <span class="text-white/35">→</span>
-        <span class="px-3 py-1.5 rounded-full glass">Event Engine</span>
-        <span class="text-white/35">→</span>
-        <span class="px-3 py-1.5 rounded-full" style="background:rgba(142,91,216,.18); color:#c9a8ff">Story Director · medium</span>
-        <span class="text-white/35">→</span>
-        <span class="px-3 py-1.5 rounded-full" style="background:rgba(142,91,216,.18); color:#c9a8ff">Narrative · medium</span>
-        <span class="text-white/35">→</span>
-        <span class="px-3 py-1.5 rounded-full" style="background:rgba(91,197,216,.15); color:#5BC5D8">Editor · cheap</span>
-        <span class="text-white/35">→</span>
-        <span class="px-3 py-1.5 rounded-full glass">用户可见</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="hairline max-w-[1400px] mx-auto"></div>
-
-<!-- ============== 法律 / 合规 ============== -->
-<section id="legal" class="py-16 lg:py-20">
-  <div class="max-w-[1400px] mx-auto px-5 lg:px-8">
-    <div class="grid lg:grid-cols-[1fr_2fr] gap-10">
-      <div>
-        <div class="text-[12px] text-white/45 tracking-[0.2em] uppercase">Legal</div>
-        <h2 class="font-display text-[28px] sm:text-[34px] mt-1"><span class="text-grad">法律中心</span></h2>
-        <p class="mt-3 text-[13px] text-white/55 leading-relaxed">
-          <b class="text-amber-200">v5.14 新增：</b>14 项法务入口已建草稿（含版权分层证书 / 改编授权合同 / AI 训练撤回机制 / 侵权投诉分级处理）。<br/>
-          9 项基础法务（隐私 / 用户协议 / 未成年人保护 / AI 内容声明 / 付费退款 / 数据删除 / 投诉举报 / UGC 版权 / 紧急援助热线）保留。
-        </p>
-        <div class="mt-4 text-[11px] text-white/45">状态：草稿待审 · LEG-01 ~ LEG-23</div>
-      </div>
-      <div class="grid sm:grid-cols-2 gap-3">
-        <a class="glass rounded-xl px-4 py-3 hover:bg-white/5"><div class="text-[13px] font-medium">隐私政策</div><div class="text-[10px] text-white/45 mt-0.5">LEG-01</div></a>
-        <a class="glass rounded-xl px-4 py-3 hover:bg-white/5"><div class="text-[13px] font-medium">用户协议</div><div class="text-[10px] text-white/45 mt-0.5">LEG-02</div></a>
-        <a class="glass rounded-xl px-4 py-3 hover:bg-white/5"><div class="text-[13px] font-medium">未成年人保护</div><div class="text-[10px] text-white/45 mt-0.5">LEG-03</div></a>
-        <a class="glass rounded-xl px-4 py-3 hover:bg-white/5"><div class="text-[13px] font-medium">AI 内容声明</div><div class="text-[10px] text-white/45 mt-0.5">LEG-04</div></a>
-        <a class="glass rounded-xl px-4 py-3 hover:bg-white/5"><div class="text-[13px] font-medium">付费与退款</div><div class="text-[10px] text-white/45 mt-0.5">LEG-05</div></a>
-        <a class="glass rounded-xl px-4 py-3 hover:bg-white/5"><div class="text-[13px] font-medium">数据删除</div><div class="text-[10px] text-white/45 mt-0.5">LEG-06</div></a>
-        <a class="glass rounded-xl px-4 py-3 hover:bg-white/5"><div class="text-[13px] font-medium">投诉举报</div><div class="text-[10px] text-white/45 mt-0.5">LEG-07</div></a>
-        <a class="glass rounded-xl px-4 py-3 hover:bg-white/5"><div class="text-[13px] font-medium">UGC 版权</div><div class="text-[10px] text-white/45 mt-0.5">LEG-08</div></a>
-        <a class="glass rounded-xl px-4 py-3 hover:bg-white/5"><div class="text-[13px] font-medium">紧急援助热线</div><div class="text-[10px] text-white/45 mt-0.5">LEG-09</div></a>
-        <a class="glass rounded-xl px-4 py-3 hover:bg-white/5" style="border:1px solid rgba(232,199,90,.3)"><div class="text-[13px] font-medium text-amber-200">🆕 版权分层证书</div><div class="text-[10px] text-white/45 mt-0.5">LEG-10 · v5.14</div></a>
-        <a class="glass rounded-xl px-4 py-3 hover:bg-white/5" style="border:1px solid rgba(232,199,90,.3)"><div class="text-[13px] font-medium text-amber-200">🆕 改编授权合同</div><div class="text-[10px] text-white/45 mt-0.5">LEG-11 · v5.14</div></a>
-        <a class="glass rounded-xl px-4 py-3 hover:bg-white/5" style="border:1px solid rgba(232,199,90,.3)"><div class="text-[13px] font-medium text-amber-200">🆕 AI 训练撤回机制</div><div class="text-[10px] text-white/45 mt-0.5">LEG-12 · v5.14</div></a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============== FOOTER ============== -->
-<footer class="border-t border-white/8 py-10">
-  <div class="max-w-[1400px] mx-auto px-5 lg:px-8 flex flex-col md:flex-row gap-6 md:items-center">
-    <div class="flex items-center gap-2.5">
-      <div class="w-7 h-7 rounded-xl flex items-center justify-center" style="background:conic-gradient(from 210deg, #8E5BD8, #5BC5D8, #D85B8E, #8E5BD8);">
-        <span class="font-display text-white text-[15px] leading-none">∞</span>
-      </div>
-      <div class="font-han text-[14px] font-bold tracking-wide">灵境 · <span class="text-grad">双生</span></div>
-    </div>
-    <div class="text-[12px] text-white/45">
-      v5.13 + v5.14 + v5.17 · 沉浸剧情对话 UI + 商业化降级为创作者内部按键 + 小说辅助模拟器（28字段+12类提问+6维检测）· 30 题材全场景 · 5 部 demo · 17 张表 · 22 收费点 · 5 维审核 · 4 级版权 · 3 级改编
-    </div>
-    <div class="md:ml-auto text-[12px] text-white/45">© 2026 Lingjing · Dual Souls. 一个角色，两种人生。</div>
-  </div>
-</footer>
-
-<!-- ============== DATA + RENDER ============== -->
-<script>
-/* 30 主类题材 */
-const genres = [
-  { slug:'gongkai',       name:'📜 公版名著',   sub:['西游记','三国','水浒','红楼','聊斋','封神'], color:'#E8C75A', icon:'✦', hot:'100%' },
-  { slug:'xuanhuan',      name:'玄幻·武幻',     sub:['东方玄幻','高武','异世大陆','王朝争霸','东方仙缘'], color:'#8E5BD8', icon:'⚡', hot:'92%' },
-  { slug:'xianxia',       name:'仙侠·修真',     sub:['修真','古典仙侠','洪荒','仙侠言情','灵根','道侣'], color:'#5B9CD8', icon:'☁', hot:'89%' },
-  { slug:'xiuxian',       name:'修真·渡劫',     sub:['逆袭修真','天才流','凡人流','无敌流','长生'], color:'#5BC5D8', icon:'✧', hot:'85%' },
-  { slug:'dushi',         name:'都市·职场',     sub:['职场商战','都市日常','现实百态','重生都市','年代文'], color:'#E89B5A', icon:'⌂', hot:'86%' },
-  { slug:'xiandaiyan',    name:'现代言情',       sub:['甜文','暗恋','破镜重圆','契约婚姻','久别重逢','姐弟恋'], color:'#D85B8E', icon:'♡', hot:'94%' },
-  { slug:'gudaiyan',      name:'古代言情',       sub:['宫斗','宅斗','古言甜宠','古言权谋','种田文','嫡女'], color:'#C25BA8', icon:'❀', hot:'91%' },
-  { slug:'xuanhuan2',     name:'玄幻言情',       sub:['女强玄幻','驭兽','炼丹','凤傲天','双修'], color:'#A85BD8', icon:'✿', hot:'83%' },
-  { slug:'kehuan',        name:'科幻空间',       sub:['星际','末世废土','时空','基因','穿越重生'], color:'#5BC5D8', icon:'⌖', hot:'82%' },
-  { slug:'saibo',         name:'赛博朋克',       sub:['霓虹','AI 觉醒','义体','黑客','公司'], color:'#5BD8D8', icon:'⚡', hot:'87%' },
-  { slug:'xuanyi',        name:'悬疑推理',       sub:['本格推理','社会派','刑侦','心理悬疑','密室','暴风雪'], color:'#5B3553', icon:'?', hot:'78%' },
-  { slug:'lingyi',        name:'灵异怪谈',       sub:['中式恐怖','都市怪谈','玄幻灵异','鬼故事','降妖','阴阳'], color:'#8E5B5B', icon:'☽', hot:'79%' },
-  { slug:'youxi',         name:'游戏异界',       sub:['数据流','副本','系统','闯关','电竞'], color:'#5B6BD8', icon:'◈', hot:'80%' },
-  { slug:'wuxianliu',     name:'无限流副本',     sub:['恐怖无限流','逃生','任务','奖励','惩罚','轮回'], color:'#D85B5B', icon:'∞', hot:'90%' },
-  { slug:'xiaoyuan',      name:'校园青春',       sub:['校园日常','青春群像','学霸','青梅竹马','暗恋','社团'], color:'#8BD85B', icon:'✎', hot:'85%' },
-  { slug:'chunxiao',      name:'青春校园',       sub:['暗恋','治愈','甜文','群像','成长'], color:'#5BD88E', icon:'☺', hot:'82%' },
-  { slug:'lishi',         name:'历史穿越',       sub:['穿越','架空历史','三国','明朝','清朝','宋穿'], color:'#A88E5B', icon:'⌘', hot:'76%' },
-  { slug:'chuanyue',      name:'穿越重生',       sub:['现代穿古代','古代穿现代','重生回到过去','穿越异世界'], color:'#D8A85B', icon:'↺', hot:'85%' },
-  { slug:'wuxia',         name:'武侠江湖',       sub:['传统武侠','新派武侠','江湖恩怨','门派','大侠','复仇'], color:'#5B8E5B', icon:'⚔', hot:'83%' },
-  { slug:'guwuxia',       name:'古武仙侠',       sub:['传统仙侠','古典武侠','江湖奇缘','修仙门派'], color:'#5B8EA8', icon:'☯', hot:'75%' },
-  { slug:'junshi',        name:'军事抗战',       sub:['抗战','谍战','军旅','现代军旅','特种兵','海陆空'], color:'#5B5B8E', icon:'★', hot:'72%' },
-  { slug:'diezhan',       name:'谍战悬疑',       sub:['民国谍战','军统','中统','情报','卧底','博弈'], color:'#8E5B5B', icon:'✧', hot:'70%' },
-  { slug:'erciyuan',      name:'二次元同人',     sub:['综漫','综影视','ACGN','同人衍生','梦女','CP'], color:'#D88E5B', icon:'✿', hot:'88%' },
-  { slug:'tongren',       name:'同人衍生',       sub:['电视剧同人','小说同人','明星同人','历史同人'], color:'#D85B8E', icon:'♕', hot:'80%' },
-  { slug:'baihe',         name:'百合姬圈',       sub:['百合','GL','姬圈','暧昧','治愈','青春'], color:'#D85B8E', icon:'❀', hot:'74%' },
-  { slug:'qihuan',        name:'奇幻西幻',       sub:['剑与魔法','龙与地下城','精灵','矮人','中世纪','魔法学院'], color:'#5B5BD8', icon:'☥', hot:'84%' },
-  { slug:'mori',          name:'末日废土',       sub:['末日','废土','变异','辐射','生存','重建'], color:'#8E8E5B', icon:'☢', hot:'75%' },
-  { slug:'qingxiaoshuo',  name:'轻小说日常',     sub:['恋爱喜剧','校园轻小说','异世界','龙傲天','系统','轻松'], color:'#5BD88E', icon:'☺', hot:'89%' },
-  { slug:'juben',         name:'剧本杀',         sub:['推理剧本','情感剧本','阵营对抗','机制本','独家本'], color:'#D85B5B', icon:'⚗', hot:'71%' },
-  { slug:'tonghua',       name:'童话儿童',       sub:['睡前故事','公主故事','王子冒险','小动物','亲子'], color:'#FFD5A5', icon:'✿', hot:'68%' },
-];
-
-const cards = [
-  { title:'雨夜凉亭',   sub:'长夜城 · 第三纪',   r:'legendary', tag:'限定' },
-  { title:'雪落无声',   sub:'白鹿笙 · 校园',     r:'epic',      tag:'EP' },
-  { title:'霓虹二十三', sub:'沈昼 · 赛博',       r:'rare',      tag:'稀有' },
-  { title:'第三杯酒',   sub:'林霜晚 · 古代',     r:'legendary', tag:'限定' },
-  { title:'回家',       sub:'顾衍 · 现代',       r:'epic',      tag:'EP' },
-  { title:'副本·镜',    sub:'无限流 · 第七关',   r:'rare',      tag:'稀有' },
-];
-
-const rc = { common:'#9faec2', uncommon:'#5BC5D8', rare:'#5B6BD8', epic:'#8E5BD8', legendary:'#E89B5A', limited:'#D85B8E' };
-
-const grid = document.getElementById('genreGrid');
-grid.innerHTML = genres.map(g => `
-  <a href="output/preview/library.html#${g.slug}" class="genrecard relative rounded-2xl overflow-hidden aspect-[4/5] block group">
-    <div class="absolute inset-0" style="background:
-      radial-gradient(circle at 30% 25%, ${g.color}55, transparent 55%),
-      radial-gradient(circle at 80% 80%, ${g.color}33, transparent 55%),
-      linear-gradient(180deg, #111733, #070912);
-    "></div>
-    <div class="absolute inset-0" style="background:linear-gradient(180deg, transparent 40%, rgba(0,0,0,.6))"></div>
-    <div class="absolute top-3 left-3 right-3 flex items-center justify-between">
-      <span class="text-[11px] px-2 py-0.5 rounded-full" style="background:rgba(0,0,0,.35); color:#fff">${g.icon} ${g.sub.length} 子类</span>
-      <span class="text-[10px] px-2 py-0.5 rounded-full" style="background:${g.color}; color:#0b0f1c">热度 ${g.hot}</span>
-    </div>
-    <div class="absolute bottom-3 left-3 right-3">
-      <div class="font-han text-[16px] font-bold leading-tight">${g.name}</div>
-      <div class="mt-1 text-[10px] text-white/60 truncate">${g.sub.join(' · ')}</div>
-    </div>
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[80px] opacity-0 group-hover:opacity-30 transition" style="color:${g.color}">${g.icon}</div>
   </a>
-`).join('');
-
-const cardWall = document.getElementById('cards');
-cardWall.innerHTML = cards.map(c => `
-  <div class="genrecard glass-strong rounded-2xl p-4 aspect-[3/4] flex flex-col justify-between relative overflow-hidden" style="background:linear-gradient(180deg, ${rc[c.r]}22, transparent 70%), linear-gradient(180deg,#111733,#070912); border-color:${rc[c.r]}55">
-    <div class="absolute top-0 right-0 px-2 py-0.5 rounded-bl-lg text-[10px]" style="background:${rc[c.r]}; color:#0b0f1c">${c.tag}</div>
-    <div class="flex-1 flex items-center justify-center">
-      <div class="font-display text-[40px]" style="color:${rc[c.r]}; opacity:.5">∞</div>
+  <a class="moment-card" href="output/preview/chat.html" style="animation-delay:.38s" data-page-node-id="nLmYxAkJ7Z6VB9RQVpT10R">
+    <div class="ava" style="background:linear-gradient(135deg,#E94560,#FF8A5B)" data-page-node-id="A0GvG1kXfSCma70dvasGEt">🏮</div>
+    <div class="m-body" data-page-node-id="DSstpw78dCbkllp5BIdnWR">
+      <div class="m-head" data-page-node-id="jNqvMAKHBgSrACksXW8h2A"><span class="m-name" data-page-node-id="kJnjiHaovqF0OBV3H8hNDT">阿岁</span><span class="m-stage" data-page-node-id="7l0N8iDiUqRaDdOCnV2QkF">知己</span></div>
+      <div class="m-text" data-page-node-id="3nf9TJFjQq08TitSetwGiO">“昨晚你没说完的那句话，我等到现在。要不要接着讲？”</div>
+      <div class="m-time" data-page-node-id="LHphEBRsQxCbqe3k83DZJg">5小时前</div>
     </div>
-    <div>
-      <div class="font-han text-[14px] font-bold">${c.title}</div>
-      <div class="text-[10px] text-white/45 mt-0.5">${c.sub}</div>
-    </div>
-  </div>
-`).join('');
+  </a>
 
-const navMap = ['top','v517-creator','v514-commerce','catalog','companions','discover'];
-const tabs = document.querySelectorAll('.nav-tab');
-const obs = new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      const id = e.target.id;
-      tabs.forEach(t => t.classList.toggle('active', t.getAttribute('href')==='#'+id));
-    }
-  });
-},{threshold:.35});
-navMap.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el); });
+  <!-- 轻量页脚：文档与站点入口 -->
+  <footer class="mini-footer" data-page-node-id="IiiIgY8EDysCQz4BVvSstL">
+    灵境 · 双生 © 2026 · v6.4<br data-page-node-id="kicGGXmfCe586WoFGGjM7S"/>
+    <a href="docs/SITE_MAP.md" data-page-node-id="KkJUNQAOP2BEULELBwp7ny">站点目录</a>·<a href="docs/ALL_FUNCTIONS.md" data-page-node-id="ezTqXO2sSkFHLMavEGfXU9">完整功能清单</a>·<a href="docs/DESIGN_LANGUAGE.md" data-page-node-id="B2iD8rM0SSquNwoPpYowEO">设计语言</a>
+  </footer>
+
+  <!-- 底部 5 Tab 导航（§1.4） -->
+  <nav class="tabbar" data-page-node-id="rUrBXak2UK5x6AJBM4awwl">
+    <a class="tab active" href="product-preview.html" data-page-node-id="0J4xE3IAXuDFFAGAQgRYqM"><span class="ico" data-page-node-id="kpzBCMvBkNJwubA5Qz2aBC">🏠</span><span data-page-node-id="uu95icrXn4TCvZumJDdw9c">首页</span></a>
+    <a class="tab t-world" href="output/preview/library.html" data-page-node-id="pEwTWDJgQR4vuIsTRwXKqM"><span class="ico" data-page-node-id="B4WfwMrYe5DL6HgPK9PDDs">📖</span><span data-page-node-id="6b87qCNsRW4MjnlXJkETeY">世界</span></a>
+    <a class="tab t-xinyu" href="output/preview/heart-island.html" data-page-node-id="RHqCbrXReFS6H8Rh8Pk6OW"><span class="ico" data-page-node-id="7zX8OZlwywKaefc5om0Ohy">💬</span><span data-page-node-id="N5y7igYt4H6rR0w5oqdHEh">心屿</span></a>
+    <a class="tab t-create" href="output/preview/creator-center.html" data-page-node-id="UZYeOs8QXReFoUI2ozftoZ"><span class="ico" data-page-node-id="NSEC1XxO5HBGKmKc9Qc8eb">✨</span><span data-page-node-id="PtsdtKlel1yX3PkBbWJElx">创作</span></a>
+    <a class="tab" href="output/preview/me.html" data-page-node-id="QtJK3WAB62r30Hr13cS3wg"><span class="ico" data-page-node-id="pWPHx3aPNx84jeEpvHKv5N">👤</span><span data-page-node-id="WowEJwOa69VYYA0YkqO3CT">我的</span></a>
+  </nav>
+</div>
+
+<!-- Toast -->
+<div id="toast" data-page-node-id="EmfHESbQpnEYZ4vheZWvLY"></div>
+
+<script>
+/* ============ 启动页：3 秒品牌动画后亮出按钮（§2.1） ============ */
+var splashBtn = document.getElementById('splash-btn');
+setTimeout(function(){ splashBtn.classList.add('on'); }, 3000);
+
+function enterLingjing(){
+  var s = document.getElementById('splash');
+  if (s) { s.classList.add('hide'); }
+}
+
+/* ============ 时间问候（§2.4 🌙 晚上好，{用户名}） ============ */
+function greet(){
+  var h = new Date().getHours();
+  var hi = document.getElementById('greet-hi');
+  if (!hi) return;
+  if (h >= 5 && h < 11)      hi.textContent = '🌅 早上好，旅人';
+  else if (h >= 11 && h < 14) hi.textContent = '☀️ 中午好，旅人';
+  else if (h >= 14 && h < 18) hi.textContent = '🌤 下午好，旅人';
+  else if (h >= 18 && h < 23) hi.textContent = '🌙 晚上好，旅人';
+  else                        hi.textContent = '🌌 夜深了，旅人';
+}
+greet();
+
+/* ============ 继续游玩进度条入场动画（45%） ============ */
+setTimeout(function(){
+  var f = document.getElementById('cc-fill');
+  if (f) f.style.width = '45%';
+}, 400);
+
+/* ============ Toast ============ */
+function showToast(kind, title, msg){
+  var c = document.getElementById('toast');
+  var t = document.createElement('div');
+  t.className = 'toast-item ' + (kind || 'ok');
+  t.innerHTML = '<span class="ti"></span><span><b>' + title + '</b>' +
+    (msg ? '<span style="opacity:.65"> · ' + msg + '</span>' : '') + '</span>';
+  c.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 3200);
+}
 </script>
 </body>
 </html>

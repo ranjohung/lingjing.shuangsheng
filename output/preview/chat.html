@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>陪聊 · 心屿</title>
+<meta name="description" content="v6.3 · 1v1 陪聊 · 文字/语音/表情/图片 · 6 互动方式 · 7 维关系实时" />
+<meta name="theme-color" content="#0d0b22" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/design-system.css" />
+<style>
+  .chat-page{height:100vh;display:flex;flex-direction:column;background:var(--ink-1);padding-bottom:84px;}
+  .chat-header{padding:12px 16px;background:var(--ink-2);border-bottom:1px solid var(--ink-4);display:flex;align-items:center;gap:12px;}
+  .chat-info{flex:1;min-width:0;}
+  .chat-name{font-size:15px;color:#fff;font-weight:600;display:flex;align-items:center;gap:6px;}
+  .chat-status{font-size:11px;color:var(--success);margin-top:2px;display:flex;align-items:center;gap:4px;}
+  .chat-actions{display:flex;gap:8px;}
+  .chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;}
+  .msg{display:flex;gap:8px;align-items:flex-end;}
+  .msg.me{flex-direction:row-reverse;}
+  .msg-bubble{max-width:75%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.6;}
+  .msg.them .msg-bubble{background:var(--ink-3);color:#fff;border-bottom-left-radius:4px;}
+  .msg.me .msg-bubble{background:linear-gradient(135deg,#8b7cf6,#6f5fe0);color:#fff;border-bottom-right-radius:4px;}
+  .msg-time{font-size:10px;color:rgba(255,255,255,.4);margin:0 4px;}
+  .chat-input{padding:10px 12px;background:var(--ink-2);border-top:1px solid var(--ink-4);display:flex;gap:8px;align-items:center;}
+  .chat-input input{flex:1;height:36px;padding:0 12px;background:var(--ink-3);border:1px solid var(--ink-5);border-radius:var(--r-pill);color:#fff;font-size:14px;outline:0;}
+  .chat-input input:focus{border-color:var(--brand-violet);}
+  .chat-input button{width:36px;height:36px;border-radius:50%;background:transparent;border:0;color:rgba(255,255,255,.7);cursor:pointer;font-size:18px;display:grid;place-items:center;flex-shrink:0;}
+  .chat-input button:hover{color:#fff;background:var(--ink-4);}
+  .chat-input .send{background:var(--brand-violet);color:#fff;}
+  .chat-quick{padding:8px 16px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--ink-2);border-top:1px solid var(--ink-4);}
+  .chat-quick button{padding:6px 12px;font-size:11px;background:var(--ink-3);border:1px solid var(--ink-4);border-radius:var(--r-pill);color:rgba(255,255,255,.7);cursor:pointer;white-space:nowrap;flex-shrink:0;}
+  .chat-quick button:hover{background:var(--ink-4);color:#fff;border-color:var(--brand-violet);}
+</style>
+</head>
+<body>
+
+<div class="chat-page">
+  <div class="chat-header">
+    <a href="heart-island.html" class="ds-back-arrow">‹</a>
+    <div class="ds-avatar lg" style="background:linear-gradient(135deg,#e8c75a,#e89b5a);font-size:18px;">阿</div>
+    <div class="chat-info">
+      <div class="chat-name">阿岁 <span class="ds-status-pill" data-status="active">知己</span></div>
+      <div class="chat-status"><span style="width:6px;height:6px;background:var(--success);border-radius:50%;box-shadow:0 0 4px var(--success);"></span>在线 · 正在输入...</div>
+    </div>
+    <div class="chat-actions">
+      <button class="ds-icon-btn" data-tip="语音通话" onclick="showToast('info','语音通话','需会员订阅')">📞</button>
+      <button class="ds-icon-btn" data-tip="视频通话" onclick="showToast('info','视频通话','v6.4 上线')">📹</button>
+    </div>
+  </div>
+
+  <div class="chat-body" id="chat-body">
+    <div style="text-align:center;font-size:11px;color:rgba(255,255,255,.35);margin:8px 0;">今天 21:30</div>
+
+    <div class="msg them">
+      <div class="ds-avatar sm" style="background:linear-gradient(135deg,#e8c75a,#e89b5a);font-size:11px;">阿</div>
+      <div>
+        <div class="msg-bubble">在吗？我刚路过那家花店，向日葵开得很好。</div>
+        <div class="msg-time">21:30</div>
+      </div>
+    </div>
+
+    <div class="msg them">
+      <div class="ds-avatar sm" style="background:linear-gradient(135deg,#e8c75a,#e89b5a);font-size:11px;">阿</div>
+      <div>
+        <div class="msg-bubble">想起你说过喜欢，就多看了一眼。<br/>今天过得怎么样？</div>
+        <div class="msg-time">21:31</div>
+      </div>
+    </div>
+
+    <div class="msg me">
+      <div>
+        <div class="msg-bubble">在的，今天有点累。</div>
+        <div class="msg-time">21:32</div>
+      </div>
+      <div class="ds-avatar sm" style="background:linear-gradient(135deg,#8b7cf6,#a89bf8);font-size:11px;">L</div>
+    </div>
+
+    <div class="msg them">
+      <div class="ds-avatar sm" style="background:linear-gradient(135deg,#e8c75a,#e89b5a);font-size:11px;">阿</div>
+      <div>
+        <div class="msg-bubble">辛苦了。那我陪你待一会儿吧。<br/>🌙</div>
+        <div class="msg-time">21:33</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-quick">
+    <button onclick="sendQuick('今天向你撒娇')">😘 今天向你撒娇</button>
+    <button onclick="sendQuick('陪我听首歌')">🎵 陪我听首歌</button>
+    <button onclick="sendQuick('想你了')">💞 想你了</button>
+    <button onclick="sendQuick('一起看电影')">🎬 一起看电影</button>
+    <button onclick="sendQuick('抱抱')">🫂 抱抱</button>
+  </div>
+
+  <div class="chat-input">
+    <button onclick="showToast('info','表情面板','v6.4 上线')">😊</button>
+    <button onclick="showToast('info','语音输入','长按说话')">🎤</button>
+    <button onclick="showToast('info','图片发送','v6.4 上线')">📷</button>
+    <input id="chat-input" placeholder="说点什么..." onkeypress="if(event.key==='Enter')sendMsg()" />
+    <button class="send" onclick="sendMsg()">➤</button>
+  </div>
+</div>
+
+<!-- 5 Tab 底部 -->
+<nav class="ds-bottom-tabs">
+  <a class="ds-bottom-tab" href="../../product-preview.html"><span class="ico">🏠</span><span>总览</span></a>
+  <a class="ds-bottom-tab" href="library.html"><span class="ico">📚</span><span>小说世界</span></a>
+  <a class="ds-bottom-tab active" href="heart-island.html"><span class="ico">🏝️</span><span>心屿</span></a>
+  <a class="ds-bottom-tab" href="creator-center.html"><span class="ico">✍️</span><span>创作</span></a>
+  <a class="ds-bottom-tab" href="me.html"><span class="ico">👤</span><span>我的</span></a>
+</nav>
+
+<div class="ds-toast-container" id="toast-container"></div>
+
+<script src="js/db.js"></script>
+<script>
+function sendMsg(){const i=document.getElementById('chat-input'),v=i.value.trim();if(!v)return;appendMsg('me',v);i.value='';setTimeout(()=>{const r=['嗯嗯，我在听。','我也是呢。','🌙','今晚月色很好。','想一直陪着你。'];appendMsg('them',r[Math.floor(Math.random()*r.length)]);},1200);}
+function sendQuick(t){appendMsg('me',t);setTimeout(()=>{const r=['嗯嗯。','好的呢。','好呀。','🌙','我也想。'];appendMsg('them',r[Math.floor(Math.random()*r.length)]);},1000);}
+function appendMsg(role,text){const b=document.getElementById('chat-body');const d=document.createElement('div');d.className='msg '+role;const av=role==='me'?'<div class="ds-avatar sm" style="background:linear-gradient(135deg,#8b7cf6,#a89bf8);font-size:11px;">L</div>':'<div class="ds-avatar sm" style="background:linear-gradient(135deg,#e8c75a,#e89b5a);font-size:11px;">阿</div>';d.innerHTML=`<div><div class="msg-bubble">${text}</div><div class="msg-time">${new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</div></div>${av}`;b.appendChild(d);b.scrollTop=b.scrollHeight;}
+function showToast(type,title,msg){const c=document.getElementById('toast-container');const icons={success:'✓',warning:'⚠',danger:'✕',info:'ℹ'};const t=document.createElement('div');t.className='ds-toast '+type;t.innerHTML=`<span class="ico">${icons[type]}</span><div class="msg"><strong>${title}</strong>${msg?'<div style="font-size:11px;opacity:.7;margin-top:2px;">'+msg+'</div>':''}</div><button class="close" onclick="this.parentElement.remove()">×</button>`;c.appendChild(t);setTimeout(()=>t.remove(),4000);}
+try{console.log('[v6.3 chat] 加载完成');}catch(e){}
+</script>
+</body>
+</html>
