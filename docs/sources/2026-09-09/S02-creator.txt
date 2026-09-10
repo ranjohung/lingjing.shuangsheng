@@ -1,0 +1,287 @@
+这个思路非常关键，它直接决定了你的产品从“AI玩具”升级为“创作者工具”的可能性。你的判断很准——AI生成是效率，人工矫正是灵魂，用户上传是生态。
+
+下面我把这三个功能整合成一个完整的“小说内容与编辑系统”设计方案。
+
+---
+
+一、小说内容的三种来源
+
+对标橙光、易次元、AI写作工具的做法，设计三种来源：
+
+模式A：系统预置（官方内容）
+
+类型 说明 数量（首发）
+官方小说模板 平台预先制作的小说世界 10-20个
+公版作品改编 基于公版白名单的AI增强版 13个（已定）
+官方角色包 预设角色+专属剧情线 30-50个
+
+用户入口：“官方精选”标签页，一键开始体验。
+
+模式B：AI生成（用户创作）
+
+用户输入想法，AI生成完整小说世界：
+
+步骤 内容 用户可干预点
+1 输入创意/题材/设定 全程
+2 AI生成World Bible 可修改
+3 AI生成角色列表 可增删改
+4 AI生成章节大纲 可调整顺序/内容
+5 AI生成正文 每章可校正
+
+模式C：用户上传（UGC生态）
+
+这是创作者生态的核心入口：
+
+上传类型 格式支持 说明
+完整小说 .txt / .md / .docx 用户已有完整作品
+小说草稿 .txt / .md 未完成作品，AI辅助完善
+设定文档 .txt / .md / .json 世界观+角色设定，AI生成互动版本
+橙光/易次元导出 兼容格式（后期） 降低创作者迁移成本
+
+上传后的处理流程：
+
+```
+用户上传文件
+    ↓
+AI解析：提取角色/场景/事件/关系
+    ↓
+生成可视化预览（角色画廊/关系图谱/时间线）
+    ↓
+用户确认/修正解析结果
+    ↓
+生成互动版本（可进入世界游玩）
+    ↓
+发布到平台（可选）
+```
+
+二、核心功能：AI生成内容的“人工矫正”系统
+
+对标“唐库小说调校工具”的“AI主导生成，人类主导审美”理念，以及橙光的可视化编辑体验，设计以下矫正功能：
+
+2.1 大纲层矫正（写前）
+
+矫正功能 说明
+修改世界观 调整世界规则、历史、地理等
+增删角色 添加新角色/删除不需要的角色
+调整角色设定 修改角色性格、目标、关系
+重排章节顺序 拖拽调整章节结构
+修改章节目标 每章要达成的剧情目标
+添加伏笔 指定在哪些章节埋下伏笔
+AI建议 点击“AI建议”获取优化方案
+
+2.2 正文层矫正（写中）
+
+矫正功能 说明 对标
+逐句修改 直接在编辑器中修改任何文字 橙光编辑器
+AI润色 选中段落 → AI重写/润色/扩写 创飞写作
+AI续写 在光标位置让AI继续写 彩云小梦
+AI重写 不满意当前内容，让AI重新生成 FablePilot
+风格转换 改变文风（轻小说/严肃/幽默等） -
+去AI味 消除AI生成的典型痕迹 定点纠偏工具
+剧情重写 重新生成某段剧情 剧情重写功能
+
+2.3 质量检测与修正（写后）
+
+对标阿里云AI编剧助手的“生成→检测→修复”闭环：
+
+检测维度 说明 自动修复
+角色一致性 角色是否OOC（脱离人设） ✅ 可一键修复
+逻辑一致性 剧情是否有逻辑漏洞 ✅ 可一键修复
+时间线一致性 时间顺序是否正确 ✅ 可一键修复
+伏笔管理 伏笔是否已回收 提示建议
+节奏检测 剧情是否太平淡/太急促 提示建议
+语言质量 语法/用词问题 ✅ 可一键修复
+世界规则冲突 是否违反世界规则 ✅ 可一键修复
+
+用户操作：点击“质量检测” → 系统列出所有问题 → 用户选择“一键修复”或“逐条确认”
+
+2.4 版本管理
+
+对标Nova的版本管理功能：
+
+功能 说明
+自动保存 每次修改自动保存版本
+手动存档 用户主动创建里程碑版本
+版本对比 对比两个版本的差异（Diff视图）
+版本回滚 一键恢复到任意历史版本
+分支创作 从某个版本分支出不同的故事走向
+
+三、创作者工作台完整界面设计
+
+3.1 小说编辑器界面
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  📖 长夜城 · 编辑模式                        [保存] [预览] │
+├──────────┬──────────────────────────────────┬───────────────┤
+│  大纲    │  正文编辑器                       │  质量面板    │
+│          │                                  │              │
+│  📚 卷1  │  第一章：初入长夜城              │  ✅ 角色一致 │
+│   ├─ 章1 │                                  │  ⚠️ 伏笔未收 │
+│   ├─ 章2 │  我推开酒馆的木门，一股暖意      │  ✅ 时间线   │
+│   ├─ 章3 │  扑面而来。柜台后的女人抬起头    │  ✅ 世界规则 │
+│  📚 卷2  │  看了我一眼。                    │              │
+│   ├─ 章4 │                                  │  [一键修复]  │
+│   ├─ 章5 │  “新面孔啊。”她说。             │              │
+│          │                                  │              │
+│  [+ 添加]│  [AI润色] [AI续写] [AI重写]      │  角色面板    │
+│          │                                  │  👤 林清雪   │
+│          │                                  │  👤 顾长夜   │
+│          │                                  │  👤 苏晚    │
+├──────────┴──────────────────────────────────┴───────────────┤
+│  状态：已保存  |  字数：12,847  |  版本：v0.3              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+3.2 创作者后台功能清单
+
+模块 功能 说明
+作品管理 创建/编辑/删除作品 橙光同款
+章节管理 新建/排序/编辑/删除章节 橙光同款
+角色管理 增删改角色+关系图 -
+设定管理 世界观/规则/地图编辑 -
+发布管理 审核/定时发布/更新日志 橙光同款
+数据看板 阅读量/进入世界次数/用户反馈 -
+版本管理 历史版本/回滚/分支 -
+
+四、数据表设计
+
+```sql
+-- 用户创作的小说
+CREATE TABLE user_novels (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id),
+    title VARCHAR(255) NOT NULL,
+    genre VARCHAR(50)[],
+    description TEXT,
+    -- 来源
+    source_type VARCHAR(20) NOT NULL,  -- ai_generated / user_uploaded / template
+    source_file_url TEXT,  -- 用户上传的原始文件
+    -- 状态
+    status VARCHAR(20) DEFAULT 'draft',  -- draft/editing/review/published
+    is_public BOOLEAN DEFAULT false,
+    -- 统计
+    word_count INT DEFAULT 0,
+    view_count INT DEFAULT 0,
+    play_count INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- 小说章节
+CREATE TABLE novel_chapters (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    novel_id UUID NOT NULL REFERENCES user_novels(id) ON DELETE CASCADE,
+    chapter_number INT NOT NULL,
+    title VARCHAR(255),
+    -- 内容
+    content TEXT,  -- 正文
+    outline TEXT,  -- 大纲
+    -- 元数据
+    word_count INT DEFAULT 0,
+    status VARCHAR(20) DEFAULT 'draft',
+    -- 质量检测结果
+    quality_report JSONB,  -- {character_consistency: true, plot_logic: false, ...}
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(novel_id, chapter_number)
+);
+
+-- 小说角色（用户创作/修改的角色）
+CREATE TABLE novel_characters (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    novel_id UUID NOT NULL REFERENCES user_novels(id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL,
+    role_type VARCHAR(20),  -- protagonist/antagonist/supporting
+    personality JSONB,
+    goals TEXT[],
+    secrets TEXT[],
+    relationships JSONB,  -- {target_character_id: relationship_type}
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- 版本历史
+CREATE TABLE novel_versions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    novel_id UUID NOT NULL REFERENCES user_novels(id) ON DELETE CASCADE,
+    version_number INT NOT NULL,
+    snapshot JSONB,  -- 完整快照
+    change_log TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+五、与现有系统的融合
+
+5.1 用户上传 → World OS
+
+```
+用户上传小说文件
+    ↓
+AI解析 → 提取角色/场景/事件/关系
+    ↓
+生成World Bible + 角色设定
+    ↓
+用户确认/修正
+    ↓
+一键生成“可进入的小说世界”
+    ↓
+用户可进入游玩（Live Your Novel）
+```
+
+5.2 AI生成小说 → 人工矫正 → 发布
+
+```
+用户输入创意
+    ↓
+AI生成完整小说（初稿）
+    ↓
+用户在编辑器中逐章矫正
+    ↓
+质量检测 → 修复问题
+    ↓
+发布到平台
+    ↓
+其他用户可以：阅读 / 进入世界 / 带出角色
+```
+
+5.3 小说角色 → 双界陪伴
+
+```
+用户在小说中创建/遇到一个角色
+    ↓
+用户喜欢这个角色
+    ↓
+在角色详情页点击“带出”
+    ↓
+（需满足条件：亲密度≥80 + 完成个人线 + 付费）
+    ↓
+角色成为双界角色
+    ↓
+可在陪伴模式中互动
+```
+
+六、这个设定的商业价值
+
+功能 对用户的价值 对平台的商业价值
+系统预置 零门槛体验 降低流失率
+AI生成 快速创作 内容供给（低成本）
+用户上传 已有作品变现 UGC生态、创作者留存
+人工矫正 创作自主权 提高付费意愿
+质量检测 作品质量保障 平台内容质量
+
+创作者付费点：
+
+付费点 价格（灵晶）
+AI生成小说（高级版） 200/次
+AI润色/重写 50/次
+质量检测与修复 100/次
+发布到平台（审核费） 50/次
+更多作品槽位 200/个
+
+七、一句话总结
+
+AI生成是效率，人工矫正是灵魂，用户上传是生态。
+
+系统预置让用户零门槛上手，AI生成让创作效率提升百倍，人工矫正让创作者保有完全的自主权，用户上传则构建了UGC生态的根基——四者结合，你的产品才能从“AI玩具”升级为“创作者工具”，而创作者生态才是长期留存和商业化的核心。

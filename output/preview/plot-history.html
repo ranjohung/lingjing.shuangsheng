@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>对话历史 · 灵境 · 双生</title>
+<style>
+:root { color-scheme: dark; }
+html, body { margin: 0; padding: 0; min-height: 100vh; background: linear-gradient(180deg, #0d1326 0%, #1c1939 60%, #0a0d1a 100%); color: #e8ecf4; font-family: "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif; }
+* { box-sizing: border-box; }
+
+.back-arrow { position: fixed; top: 14px; left: 14px; z-index: 60;
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px 8px 12px; border-radius: 999px;
+  background: rgba(20,18,46,.75); backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,.15); color: #fff;
+  font-size: 13px; cursor: pointer; font-family: inherit; text-decoration: none;
+  transition: all .2s;
+}
+.back-arrow:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.35); transform: translateX(-2px); }
+.back-arrow .icon { font-size: 18px; line-height: 1; font-weight: 700; }
+
+.page { max-width: 720px; margin: 0 auto; padding: 70px 22px 60px; }
+.head { text-align: center; margin-bottom: 24px; }
+.head h1 { margin: 0 0 6px; font-size: 22px; font-weight: 600; color: #fff; }
+.head p { margin: 0; font-size: 12px; color: #9faec2; letter-spacing: .2em; }
+
+.list { display: flex; flex-direction: column; gap: 12px; }
+.item {
+ background: linear-gradient(180deg, rgba(28,24,56,.7), rgba(11,8,28,.7));
+ border: 1px solid rgba(255,255,255,.10); border-radius: 12px;
+ padding: 14px 18px; position: relative;
+}
+.item-time { font-size: 10px; color: #9faec2; letter-spacing: .15em; }
+.item-speaker { font-size: 13px; color: #ffd180; margin-top: 4px; font-weight: 600; letter-spacing: .12em; }
+.item-text { font-size: 13px; color: #e8ecf4; line-height: 1.7; margin-top: 6px; }
+.item-text .choice { color: #f6a6d8; }
+.item-choice { font-size: 11px; color: #9faec2; margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,.1); }
+.item-choice b { color: #f6a6d8; }
+
+.empty { padding: 60px 20px; text-align: center; color: #6e7d96; }
+.empty .ico { font-size: 48px; opacity: .4; margin-bottom: 12px; }
+.empty .msg { font-size: 14px; }
+.empty .sub { font-size: 11px; margin-top: 6px; color: #6e7d96; }
+
+.toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 4px; margin-bottom: 16px;
+}
+.toolbar .info { font-size: 11px; color: #9faec2; letter-spacing: .12em; }
+.toolbar .actions { display: flex; gap: 8px; }
+.btn { padding: 7px 14px; border-radius: 8px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.14); color: #e8ecf4; font-size: 12px; cursor: pointer; font-family: inherit; text-decoration: none; display: inline-block; transition: all .15s; }
+.btn:hover { background: rgba(255,255,255,.08); }
+.btn.danger { color: #ff9eb8; border-color: rgba(216,91,142,.35); }
+
+@media (max-width: 768px) {
+  .page { padding: 60px 14px 40px; }
+  .head h1 { font-size: 18px; }
+  .item { padding: 12px 14px; }
+  .item-text { font-size: 12.5px; }
+}
+</style>
+</head>
+<body>
+<a class="back-arrow" href="plot-runner.html" id="backArrow"><span class="icon">◀</span><span>返回游戏</span></a>
+
+<div class="page">
+  <div class="head">
+    <h1>📜 对话历史</h1>
+    <p>HISTORY · 最近 50 条</p>
+  </div>
+
+  <div class="toolbar">
+    <div class="info" id="counter">—</div>
+    <div class="actions">
+      <button class="btn danger" id="clearBtn">🗑 清空</button>
+    </div>
+  </div>
+
+  <div id="content"></div>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const novelId = params.get('novelId') || 'demo_palace';
+const KEY = `plotrunner.history.${novelId}`;
+const RUNNER_KEY = `plotrunner.last.${novelId}`;
+
+document.getElementById('backArrow').href = `plot-runner.html?novelId=${novelId}`;
+
+function loadHist() {
+  try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; }
+}
+function saveHist(arr) { localStorage.setItem(KEY, JSON.stringify(arr)); }
+
+let hist = loadHist();
+// 也合并 plotrunner 内的 session history（如有）
+try {
+  const sess = JSON.parse(localStorage.getItem(RUNNER_KEY) || '{}').history || [];
+  if (Array.isArray(sess)) hist = hist.concat(sess);
+} catch {}
+
+document.getElementById('counter').textContent = `共 ${hist.length} 条`;
+
+const content = document.getElementById('content');
+if (hist.length === 0) {
+  content.innerHTML = `
+    <div class="empty">
+      <div class="ico">📭</div>
+      <div class="msg">暂无历史记录</div>
+      <div class="sub">在游戏中做出选择后会显示在这里</div>
+    </div>`;
+} else {
+  const html = '<div class="list">' + hist.slice(-50).reverse().map(h => `
+    <div class="item">
+      <div class="item-time">${new Date(h.ts).toLocaleTimeString('zh-CN')}</div>
+      <div class="item-speaker">${escapeHtml(h.speaker || '旁白')}</div>
+      <div class="item-text">${escapeHtml(h.text || '')}${h.choiceLabel ? ` <span class="choice">→ ${escapeHtml(h.choiceLabel)}</span>` : ''}</div>
+      ${h.chapter ? `<div class="item-choice">📖 章节：<b>${escapeHtml(h.chapter)}</b></div>` : ''}
+    </div>
+  `).join('') + '</div>';
+  content.innerHTML = html;
+}
+
+document.getElementById('clearBtn').onclick = () => {
+  if (!confirm('确认清空当前小说的历史记录？')) return;
+  saveHist([]);
+  location.reload();
+};
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+</script>
+</body>
+</html>

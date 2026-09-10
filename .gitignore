@@ -1,0 +1,85 @@
+# ---- 密钥与环境变量（严禁入库）----
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ---- Node / Next.js / pnpm ----
+node_modules/
+.pnpm-store/
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# ---- Python / FastAPI ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# ---- 日志与临时文件 ----
+*.log
+logs/
+.DS_Store
+Thumbs.db
+
+# ---- IDE ----
+.idea/
+.vscode/
+
+# Local narrative test/runtime data
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+.playwright-cli/
+
+# 个人/会话级工作记忆（不入库）
+.workbuddy/memory/
+
+# 早期版本真机截图（保留最新 3 版作为测试证据）
+output/playwright/
+output/preview/screenshots/audit/
+output/preview/screenshots/preview/
+output/preview/screenshots/v510/
+output/preview/screenshots/v511/
+output/preview/screenshots/v512/
+output/preview/screenshots/v57*/
+output/preview/screenshots/v58/
+output/preview/screenshots/v513/
+output/preview/screenshots/v514/
+
+# ============================================================
+# 项目特定 — 灵境 · 双生 (v5.18)
+# ============================================================
+
+# 早期版本真机截图（保留最新 3 版作为测试证据）
+output/preview/screenshots/audit/
+output/preview/screenshots/preview/
+output/preview/screenshots/v510/
+output/preview/screenshots/v511/
+output/preview/screenshots/v512/
+output/preview/screenshots/v57*/
+output/preview/screenshots/v58/
+output/preview/screenshots/v513/
+output/preview/screenshots/v514/
+
+# Blender / Stable Diffusion 中间产物
+*.blend1
+*.blend2
+**/sd_temp/
+**/sd_logs/
+
+# 临时工作区遗留
+"·"
+"双生"
+"F:"

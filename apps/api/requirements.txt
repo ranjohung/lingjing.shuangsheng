@@ -1,0 +1,12 @@
+fastapi==0.141.1
+uvicorn[standard]==0.34.3
+pydantic==2.13.5
+pydantic-settings==2.10.1
+redis==6.2.0
+httpx==0.28.1
+# 后续阶段启用：
+# sqlalchemy alembic pgvector psycopg[binary] celery openai
+
+SQLAlchemy==2.0.52
+alembic==1.19.2
+psycopg[binary]==3.3.5

@@ -1,0 +1,12 @@
+{
+  "name": "mirai-companion",
+  "private": true,
+  "version": "0.1.0",
+  "description": "AI 3D 数字人陪伴应用（Monorepo 根）",
+  "packageManager": "pnpm@11.8.0",
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "build:web": "pnpm --filter web build",
+    "dev:api": "cd apps/api && .venv/Scripts/python -m uvicorn src.main:app --reload --host 0.0.0.0 --port 8000"
+  }
+}

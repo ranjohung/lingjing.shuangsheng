@@ -1,0 +1,29 @@
+{
+  "results": [
+    {
+      "page": "quality",
+      "report_visible": true,
+      "grade": "D",
+      "stats": [
+        "4",
+        "1",
+        "1"
+      ],
+      "dims": 6,
+      "ok": true
+    },
+    {
+      "page": "ai-question",
+      "versions": 3,
+      "recommendation": 1,
+      "ok": true
+    },
+    {
+      "page": "foreshadow",
+      "reminders": 1,
+      "ok": true
+    }
+  ],
+  "errors": [],
+  "pass": true
+}

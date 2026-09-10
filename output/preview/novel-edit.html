@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="5xQ5b47q3WpQ506vmJW2o5">
+<head data-page-node-id="oT2eJIxNMXjUwFcw6lIUO6">
+<meta charset="UTF-8" data-page-node-id="ENy2kvfPNbHyLpFB4DECoO" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="4HTKHTAs6msrenvoXpKRAZ" />
+<title>剧情编辑器 · 创作者中心 · 灵境 · 双生</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" data-page-node-id="PWDe2pFmnLUoHfjdDcZd01" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin data-page-node-id="6kQwKhBJtmBHHtQV7yDgbt" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" data-page-node-id="B1jJnJRAJxyvFlwA73UsH0" />
+<link rel="stylesheet" href="css/design-system.css" data-page-node-id="q5VhVCLYNzkGYJGFc5hul6" />
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;min-height:100%;background:#0d0b22;color:#edf1f6;font-family:'Noto Sans SC','Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+  .layout{display:grid;grid-template-columns:200px 1fr 360px;height:100vh;}
+  @media(max-width:900px){.layout{grid-template-columns:1fr;height:auto;}.preview-col{display:none;}}
+  .col{background:rgba(20,18,46,.4);border-right:1px solid rgba(255,255,255,.05);overflow-y:auto;}
+  .col:last-child{border-right:none;border-left:1px solid rgba(255,255,255,.05);}
+  .top-bar{padding:10px 18px;background:rgba(13,11,34,.85);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:12px;}
+  .tab-btn{padding:8px 14px;border-radius:10px;font-size:13px;color:rgba(255,255,255,.7);cursor:pointer;border:1px solid transparent;}
+  .tab-btn.sel{background:rgba(139,124,246,.18);border-color:rgba(139,124,246,.5);color:#fff;}
+  .audit{padding:8px 12px;background:rgba(8,7,26,.6);border-radius:10px;font:11px;color:rgba(255,255,255,.7);margin:8px 18px;}
+  .audit .ok{color:#7cf6c0;}
+  .audit .warn{color:#f6a6d8;}
+  .item-row{padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;font-size:13px;}
+  .item-row:hover{background:rgba(255,255,255,.04);}
+  .item-row.sel{background:rgba(139,124,246,.18);border-left:3px solid #8b7cf6;}
+  .field{padding:8px 14px;font-size:12px;color:rgba(255,255,255,.7);border-bottom:1px dashed rgba(255,255,255,.04);}
+  .field label{display:block;font-size:11px;color:rgba(255,255,255,.5);margin-bottom:4px;}
+  .field input,.field select,.field textarea{width:100%;background:rgba(8,7,26,.6);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:6px 10px;color:#fff;font:12px 'Noto Sans SC';}
+  .field textarea{min-height:80px;resize:vertical;}
+  .pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:9999px;background:rgba(255,255,255,.08);font-size:11px;margin:2px;}
+  .pill.main{background:rgba(110,198,255,.16);color:#6ec6ff;}
+  .pill.support{background:rgba(124,246,192,.16);color:#7cf6c0;}
+  .pill.antag{background:rgba(246,166,216,.16);color:#f6a6d8;}
+  .pill.highlight{background:rgba(255,217,160,.16);color:#ffd980;}
+  .btn{padding:8px 16px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:#fff;cursor:pointer;font-size:12px;}
+  .btn.primary{background:linear-gradient(120deg,#8b7cf6,#6ec6ff);color:#08071a;border:none;}
+  .preview{padding:20px;color:#fff;height:100%;}
+  .preview .preview-scene{height:140px;border-radius:14px;margin-bottom:14px;}
+  .preview .preview-char{display:flex;gap:14px;margin-bottom:14px;}
+  .preview .preview-dlg{background:rgba(11,9,31,.86);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:18px;}
+  .opt-preview{display:block;width:100%;text-align:left;margin:6px 0;padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(139,124,246,.15);color:#fff;font:13px 'Noto Sans SC';}
+</style>
+</head>
+<body data-page-node-id="RdY7CIBqHSY0dAH2aJUto2">
+
+<!-- v5.18: 新 PageHeader（编辑器 top-bar 保留，但顶部 logo + 返回用 ds-page-header） -->
+<header class="ds-page-header" data-page-node-id="LN70p1BqNJvaGsgInIike0">
+  <div class="ds-page-header-inner" data-page-node-id="oiKXFwLSVbJNS6AmRAwzWZ">
+    <a href="creator-center.html" class="ds-back" data-page-node-id="eOt6EIvg79oqKYU46B93jZ"><span class="arrow" data-page-node-id="0iKmmDEWB2beTWqZDsRlqF">←</span> 返回创作者中心</a>
+    <span class="ds-font-display" id="top-title" style="font-size:16px;color:var(--text-primary);" data-page-node-id="Pk3wHRRs8Mivb1qIPR41zw">— 编辑器 —</span>
+    <div class="ds-page-header-right" data-page-node-id="zyWkpVCPos7Cj7UkqP0sQr">
+      <span id="dirty-flag" style="display:none;color:var(--brand-rose-soft);font-size:12px;" data-page-node-id="7BXUAQikqsH5XCyGGfMzb0">● 未保存</span>
+      <button class="ds-btn ds-btn-ghost ds-btn-sm" id="btn-reset" data-page-node-id="JyCMS1Zeew9Q8E3GKHkGrg">放弃改动</button>
+      <button class="ds-btn ds-btn-secondary ds-btn-sm" id="btn-save" data-page-node-id="HHtmGjUy3xmVoIVVFWczQA">💾 保存</button>
+      <button class="ds-btn ds-btn-primary ds-btn-sm" id="btn-run" data-page-node-id="Zef59xErkmz42vv6lyRlGn">▶ 进入游戏</button>
+      <div class="ds-user-chip" data-page-node-id="GZu1rsDWmPYAdlteEXIlco">
+        <div class="ds-user-avatar" data-page-node-id="uNsUno9IDsnLV8ujZx5nWO">L</div>
+        <span data-page-node-id="4xEd17fO0DEyUIRNn1upoi">灵境作者</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="layout" data-page-node-id="GF4f6czXWwnAbiKWTXnbRh">
+  <!-- 左侧：标签 + 列表 -->
+  <div class="col side-col" data-page-node-id="ME7SJQ7Ehx1GGDBNsYqHDW">
+    <div style="display:flex;flex-wrap:wrap;gap:4px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06);" data-page-node-id="IIVPKTxReiuG6hQmCJFNxF">
+      <span class="tab-btn sel" data-tab="nodes" data-page-node-id="XVHFfuO4xoI5gCJuO8W5hP">🔀 节点</span>
+      <span class="tab-btn" data-tab="chars" data-page-node-id="cR8JoiUWvHlwf7O6bSQ3k8">👤 角色</span>
+      <span class="tab-btn" data-tab="chapters" data-page-node-id="5OBj9s5gHgFU2f1s1gi0EG">📑 章节</span>
+      <span class="tab-btn" data-tab="highlights" data-page-node-id="HAJvNYDwGFbQpgGwM2jCxF">✦ 高光</span>
+      <span class="tab-btn" data-tab="endings" data-page-node-id="hSoNOsjbCq3zW9FzOhU16c">🎬 结局</span>
+    </div>
+    <div class="audit" id="audit-box" data-page-node-id="iuGbiLAyMiQBNxkjhybD1Y">加载中...</div>
+    <div id="side-list" data-page-node-id="YkaAwE0JSEHE7GAhO5BYJa"></div>
+  </div>
+
+  <!-- 中央：编辑器 -->
+  <div class="col" data-page-node-id="WijzRirBLCN3KfBEK4QHxP">
+    <div id="editor-panel" style="padding:20px;" data-page-node-id="v6W8V56bONJFHIIhUZ0bTd">
+      <p style="text-align:center;color:rgba(255,255,255,.55);margin:40px 0;" data-page-node-id="AkOXD3u5qSwKBHnYK5uaZs">从左侧选择一个节点开始编辑</p>
+    </div>
+  </div>
+
+  <!-- 右侧：实时预览 -->
+  <div class="col preview-col" data-page-node-id="qAzrAwAUCh5DqPMQo5mv7h">
+    <div class="preview" data-page-node-id="kCOyv5qzhUYCnoXFukrsHU">
+      <p class="text-xs text-white/55 mb-2" data-page-node-id="CUa50Y18Ug6ZvXCrRBvqHM">实时预览（与编辑同步）</p>
+      <div class="preview-scene" id="pv-scene" data-page-node-id="MjLFAJQjF6nNpKaSmHMxZy"></div>
+      <div class="preview-char" id="pv-char" data-page-node-id="3BFKf50PsLHEtQugKA4mTn"></div>
+      <div class="preview-dlg" id="pv-dlg" data-page-node-id="5EDcF4lq550ickphnuyTrR"></div>
+    </div>
+  </div>
+</div>
+
+<script src="js/genres.js"></script>
+<script src="js/novel-store.js"></script>
+<script src="js/novel-parser.js"></script>
+<script src="js/plot-schema.js"></script>
+<script src="js/demo-seed.js"></script>
+<script>
+(function () {
+  const params = new URLSearchParams(location.search);
+  const novelId = params.get('novelId');
+  if (!novelId) { location.href = 'library.html'; return; }
+  DemoSeed.ensure();
+  let original = NovelStore.loadNovel(novelId);
+  if (!original) { alert('没找到这本小说'); location.href='library.html'; return; }
+  // 深拷贝（编辑全程)
+  let plot = JSON.parse(JSON.stringify(original));
+  let currentTab = 'nodes';
+  let currentSelection = null;
+  let dirty = false;
+
+  document.getElementById('top-title').textContent = `编辑：${plot.novel.title}`;
+
+  // ===== Tabs =====
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('sel'));
+      b.classList.add('sel');
+      currentTab = b.dataset.tab;
+      renderSide();
+    };
+  });
+
+  function setDirty() {
+    dirty = true;
+    document.getElementById('dirty-flag').style.display = '';
+  }
+
+  function updateAudit() {
+    plot.audit = NovelParser.runAudit({
+      chars: plot.chars, chapters: plot.novel.chapters, highlights: plot.highlights || [],
+      nodes: Object.values(plot.nodes), endings: plot.endings
+    });
+    const a = plot.audit;
+    const lines = [
+      { l: '章节', t: a.total.chapters, c: a.covered.chapters },
+      { l: '角色', t: a.total.chars, c: a.covered.chars },
+      { l: '高光', t: a.total.highlights, c: a.covered.highlights }
+    ];
+    const html = lines.map(x => {
+      const ok = x.c === x.t;
+      return `<div class="${ok?'ok':'warn'}">${x.l}：${x.c}/${x.t} ${ok?'✅':'⚠️'}</div>`;
+    }).join('');
+    document.getElementById('audit-box').innerHTML = html;
+  }
+  updateAudit();
+
+  // ===== Side list =====
+  function renderSide() {
+    const list = document.getElementById('side-list');
+    list.innerHTML = '';
+    if (currentTab === 'nodes') {
+      const sorted = Object.values(plot.nodes).sort((a,b)=> a.chapterId.localeCompare(b.chapterId));
+      sorted.forEach(n => {
+        const row = document.createElement('div');
+        row.className = 'item-row' + (currentSelection===n.id?' sel':'');
+        row.innerHTML = `
+          <div style="font-weight:600;">${escape(n.speaker||'旁白')} · ${escape(n.id)}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;">${escape((n.text||'').slice(0,40))}</div>
+          <div style="margin-top:4px;">
+            ${n.isMain?'<span class="pill" style="background:rgba(110,198,255,.16);color:#6ec6ff;">主线</span>':''}
+            ${n.isHighlight?'<span class="pill highlight">高光</span>':''}
+          </div>`;
+        row.onclick = () => { currentSelection = n.id; renderSide(); renderEditor(); renderPreview(); };
+        list.appendChild(row);
+      });
+    } else if (currentTab === 'chars') {
+      plot.chars.forEach(c => {
+        const row = document.createElement('div');
+        row.className = 'item-row' + (currentSelection===c.id?' sel':'');
+        row.innerHTML = `
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="pill ${c.role}">${c.role==='main'?'主角':c.role==='antag'?'反派':'配角'}</span>
+            <span style="font-weight:600;">${escape(c.name)}</span>
+            <span style="margin-left:auto;color:rgba(255,255,255,.5);font-size:11px;">${c.mentions}次</span>
+          </div>`;
+        row.onclick = () => { currentSelection = c.id; renderSide(); renderEditor(); };
+        list.appendChild(row);
+      });
+    } else if (currentTab === 'chapters') {
+      plot.novel.chapters.forEach(c => {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        row.innerHTML = `<div style="font-weight:600;">第${c.index}章</div><div style="font-size:11px;color:rgba(255,255,255,.5);">${escape(c.title)}</div>`;
+        list.appendChild(row);
+      });
+    } else if (currentTab === 'highlights') {
+      (plot.highlights || []).forEach(h => {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        row.innerHTML = `
+          <span class="pill highlight">${escape(h.badge)}</span>
+          <div style="margin-top:6px;font-size:12px;color:rgba(255,255,255,.85);">"${escape(h.excerpt)}"</div>`;
+        list.appendChild(row);
+      });
+    } else if (currentTab === 'endings') {
+      Object.values(plot.endings).forEach(e => {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        const colorMap = { legendary:'#f6a6d8', epic:'#8b7cf6', rare:'#6ec6ff', common:'#7cf6c0' };
+        row.innerHTML = `
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span class="pill" style="background:${colorMap[e.rarity]}22;color:${colorMap[e.rarity]};">${escape(e.rarity)}</span>
+            <span style="font-weight:600;">${escape(e.title)}</span>
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;font-style:italic;">${escape(e.quote)}</div>`;
+        list.appendChild(row);
+      });
+    }
+  }
+
+  // ===== Editor =====
+  function renderEditor() {
+    const panel = document.getElementById('editor-panel');
+    if (!currentSelection) { panel.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,.55);margin:40px 0;">从左侧选择一个项目开始编辑</p>'; return; }
+    if (currentTab === 'nodes') {
+      const n = plot.nodes[currentSelection];
+      if (!n) return panel.innerHTML = '<p>找不到此节点</p>';
+      const nextOpts = Object.values(plot.nodes).filter(x => x.id !== n.id).map(x => `<option value="${x.id}" ${n.choices && n.choices.some(c => c.next === x.id) ? 'selected':''}>${escape(x.speaker)} · ${escape(x.id)}</option>`).join('');
+      const endingOpts = Object.values(plot.endings).map(e => `<option value="${e.id}" ${n.choices && n.choices.some(c => c.next === e.id) ? 'selected':''}>[结局] ${escape(e.title)}</option>`).join('');
+      panel.innerHTML = `
+        <h3 style="font:18px 'Noto Serif SC',serif;font-weight:600;margin-bottom:12px;">编辑节点：${escape(n.id)}</h3>
+        <div class="field"><label>说话者</label><input id="ed-speaker" value="${escape(n.speaker||'')}" /></div>
+        <div class="field"><label>正文</label><textarea id="ed-text" rows="5">${escape(n.text||'')}</textarea></div>
+        <div class="field"><label>章节</label><input id="ed-chapter" value="${escape(n.chapterId)}" /></div>
+        <div class="field"><label>场景</label>
+          <select id="ed-scene">
+            <option value="">— 未指定 —</option>
+            ${['pavilion_night','classroom_sunny','neon_street','livingroom_warm','xianxia_peak','palace_tang','study_republic','elf_forest','starship_bridge','cafe_dusk','graveyard_night','battle_field','magic_academy','space_cabin'].map(s => `<option value="${s}" ${n.sceneKey===s?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field"><label><input type="checkbox" id="ed-ismain" ${n.isMain?'checked':''}/> 标记为主线节点</label></div>
+        <div class="field"><label><input type="checkbox" id="ed-ishl" ${n.isHighlight?'checked':''}/> 标记为高光节点</label></div>
+        <h4 style="margin-top:18px;font:14px;color:#8b7cf6;">选项 (${(n.choices||[]).length})</h4>
+        <div id="choices-editor">${(n.choices||[]).map((c,i)=>`
+          <div style="border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px;margin-bottom:8px;">
+            <div class="field"><label>选项 ${i+1}</label><input data-cidx="${i}" data-key="label" value="${escape(c.label)}" /></div>
+            <div class="field"><label>跳转 →</label>
+              <select data-cidx="${i}" data-key="next">
+                <option value="">— 兜底下一节点 —</option>
+                <optgroup label="剧情节点">${nextOpts.replace(`value="${c.next}"`, `value="${c.next}" selected`)}</optgroup>
+                <optgroup label="结局">${endingOpts}</optgroup>
+              </select>
+            </div>
+            <div class="field"><label>信任变化</label><input type="number" data-cidx="${i}" data-key="trust" value="${c.effects?.trust||0}" /></div>
+            <div class="field"><label>亲密变化</label><input type="number" data-cidx="${i}" data-key="intimacy" value="${c.effects?.intimacy||0}" /></div>
+          </div>`).join('')}
+        </div>
+        <div style="margin-top:12px;"><button class="btn" id="btn-del-node" style="border-color:#f6a6d8;color:#f6a6d8;">🗑 删除此节点</button></div>
+      `;
+      // 绑定
+      ['speaker','text','chapterId','sceneKey','isMain','isHighlight'].forEach(k => {
+        const el = document.getElementById('ed-' + k.replace('isMain','ismain').replace('isHighlight','ishl').replace('text','text').replace('chapterId','chapter').replace('sceneKey','scene'));
+        if (!el) return;
+        el.oninput = el.onchange = () => {
+          const v = el.type === 'checkbox' ? el.checked : el.value;
+          plot.nodes[n.id][k] = v;
+          setDirty();
+          renderPreview();
+        };
+      });
+      // choices
+      document.querySelectorAll('#choices-editor input, #choices-editor select').forEach(el => {
+        el.oninput = el.onchange = () => {
+          const i = parseInt(el.dataset.cidx);
+          const k = el.dataset.key;
+          if (!plot.nodes[n.id].choices[i].effects) plot.nodes[n.id].choices[i].effects = {};
+          if (k === 'label' || k === 'next') plot.nodes[n.id].choices[i][k] = el.value;
+          else plot.nodes[n.id].choices[i].effects[k] = parseInt(el.value || 0);
+          setDirty();
+          renderPreview();
+        };
+      });
+      // 删除
+      const delBtn = document.getElementById('btn-del-node');
+      if (delBtn) delBtn.onclick = () => { if (!confirm('删除此节点？')) return; delete plot.nodes[n.id]; currentSelection = null; renderSide(); renderEditor(); renderPreview(); setDirty(); updateAudit(); };
+    } else if (currentTab === 'chars') {
+      const c = plot.chars.find(x => x.id === currentSelection);
+      if (!c) return panel.innerHTML = '<p>找不到此角色</p>';
+      panel.innerHTML = `
+        <h3 style="font:18px 'Noto Serif SC',serif;font-weight:600;margin-bottom:12px;">编辑角色：${escape(c.name)}</h3>
+        <div class="field"><label>姓名</label><input id="ed-cname" value="${escape(c.name)}" /></div>
+        <div class="field"><label>角色定位</label>
+          <select id="ed-crole">
+            <option value="main" ${c.role==='main'?'selected':''}>主角</option>
+            <option value="support" ${c.role==='support'?'selected':''}>配角</option>
+            <option value="antag" ${c.role==='antag'?'selected':''}>反派</option>
+          </select>
+        </div>
+        <div class="field"><label>亲密度（初始）</label><input type="number" id="ed-caff" value="${c.affinity||50}" /></div>
+        <div class="field"><label>立绘 URL（可选）</label><input id="ed-cport" value="${escape(c.portrait||'')}" placeholder="portraits/xxx.png" /></div>
+      `;
+      document.getElementById('ed-cname').oninput = () => { c.name = document.getElementById('ed-cname').value; setDirty(); renderSide(); renderPreview(); };
+      document.getElementById('ed-crole').onchange = () => { c.role = document.getElementById('ed-crole').value; setDirty(); renderSide(); renderPreview(); };
+      document.getElementById('ed-caff').oninput = () => { c.affinity = parseInt(document.getElementById('ed-caff').value||50); setDirty(); };
+      document.getElementById('ed-cport').oninput = () => { c.portrait = document.getElementById('ed-cport').value; setDirty(); renderPreview(); };
+    }
+  }
+
+  // ===== 预览 =====
+  function renderPreview() {
+    const n = plot.nodes[currentSelection];
+    if (!n) {
+      document.getElementById('pv-scene').style.background = 'transparent';
+      document.getElementById('pv-char').innerHTML = '<div style="color:rgba(255,255,255,.4);font-size:12px;">— 选一个节点看预览 —</div>';
+      document.getElementById('pv-dlg').innerHTML = '<div style="color:rgba(255,255,255,.4);font-size:12px;">—</div>';
+      return;
+    }
+    const sceneColors = {
+      pavilion_night: 'linear-gradient(180deg, #0d1326, #1c1939 70%, #2a1f4e)',
+      classroom_sunny: 'linear-gradient(180deg, #f6dca6, #fff5d6 70%, #b3c8ff)',
+      neon_street: 'linear-gradient(180deg, #2a1a4a, #1c1939 70%, #5b3a9e)',
+      palace_tang: 'radial-gradient(60% 60% at 50% 30%, #5b2026, #2a1019 70%)',
+      study_republic: 'radial-gradient(60% 60% at 30% 30%, #3a2a1a, #2a1f0a 70%)',
+      elf_forest: 'radial-gradient(80% 80% at 50% 60%, #1a4e2a, #0a1f14 70%)',
+      starship_bridge: 'radial-gradient(60% 60% at 50% 30%, #0a1a4e, #050a1a 70%)'
+    };
+    document.getElementById('pv-scene').style.background = sceneColors[n.sceneKey] || 'linear-gradient(180deg, #1c1939, #08071a 70%)';
+    const char = plot.chars.find(c => n.charIds && n.charIds.includes(c.id));
+    document.getElementById('pv-char').innerHTML = char
+      ? `<div style="width:80px;height:110px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);">${escape(char.name)}</div>
+         <div>
+           <div style="font-weight:600;color:#fff;">${escape(char.name)}</div>
+           <div style="font-size:11px;color:rgba(255,255,255,.55);">${char.role==='main'?'主角':char.role==='antag'?'反派':'配角'} · ${char.mentions}次提及</div>
+         </div>`
+      : '<div style="color:rgba(255,255,255,.4);font-size:12px;">无人立绘</div>';
+    document.getElementById('pv-dlg').innerHTML = `
+      <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px;">
+        <span style="font-family:'Cormorant Garamond',serif;color:#f6a6d8;">${escape(n.speaker||'旁白')}</span>
+        ${n.isHighlight?'<span class="pill highlight">✦ 高光</span>':''}
+        ${n.isMain?'<span class="pill" style="background:rgba(110,198,255,.16);color:#6ec6ff;">主线</span>':''}
+      </div>
+      <div style="white-space:pre-wrap;color:#fff;font:13px/1.7 'Noto Sans SC';">${escape(n.text||'')}</div>
+      <div style="margin-top:14px;">
+        ${(n.choices||[]).map((c,i)=>`<button class="opt-preview">${i+1}. ${escape(c.label)}</button>`).join('')}
+      </div>`;
+  }
+
+  // ===== 操作按钮 =====
+  document.getElementById('btn-save').onclick = () => {
+    NovelStore.saveNovel(plot);
+    dirty = false;
+    document.getElementById('dirty-flag').style.display = 'none';
+    // toast
+    const t = document.createElement('div');
+    t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:999;background:#7cf6c0;color:#08071a;padding:10px 18px;border-radius:10px;font-size:13px;';
+    t.textContent = '✅ 已保存到 localStorage';
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 1800);
+  };
+  document.getElementById('btn-reset').onclick = () => {
+    if (!confirm('放弃当前所有改动，恢复到加载时的版本？')) return;
+    plot = JSON.parse(JSON.stringify(original));
+    dirty = false;
+    document.getElementById('dirty-flag').style.display = 'none';
+    renderSide(); renderEditor(); renderPreview(); updateAudit();
+  };
+  document.getElementById('btn-run').onclick = () => {
+    if (dirty && !confirm('有未保存的改动，是否先保存再进入游戏？')) return;
+    if (dirty) NovelStore.saveNovel(plot);
+    location.href = `plot-runner.html?novelId=${plot.novel.id}`;
+  };
+
+  function escape(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+  // 初始化：自动选第一个节点
+  currentSelection = Object.keys(plot.nodes)[0];
+  renderSide();
+  renderEditor();
+  renderPreview();
+})();
+</script>
+</body>
+</html>

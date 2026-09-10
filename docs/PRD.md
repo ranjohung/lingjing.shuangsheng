@@ -1,0 +1,291 @@
+# 灵境 · 双生 — 产品需求文档 v5.1 + v5.6~v5.17 增量登记
+
+> **当前最新版本**：v5.17（商业化降级 + 小说辅助模拟器）/ v5.16（UX 修复）/ v5.15（代码审查）/ v5.14（商业化 4 大系统）/ v5.13（沉浸剧情 UI）/ v5.12（30 题材库）
+>
+> **v5.17 关键变更**：
+> - 商业化从顶级功能区降级为<b>创作者中心内部按键"上架与定价"</b>（只对作者可见）
+> - 新增<b>小说辅助模拟器</b>（28 字段模板 + 12 类提问 + 6 维度自动检测）
+> - 数据表 11 → 17 张
+>
+> **完整使用说明书**：[READING_GUIDE.md](READING_GUIDE.md)
+>
+> **代码审查报告**：[AUDIT_2026-09-10.md](AUDIT_2026-09-10.md)
+>
+> **更新登记**：[UPDATE_2026-09-10.md](UPDATE_2026-09-10.md)
+
+## 更新日志（2026-09-09 → 2026-09-10）
+
+| 版本 | 日期 | 主要交付 | 关联文档 |
+|---|---|---|---|
+| v5.6 | 09-09 晚 | 5 题材 3D 真机可测版 + 11 结局 | [v5.6-TEST-REPORT.md](v5.6-TEST-REPORT.md) |
+| v5.7 | 09-09 晚 | 移动端适配 + FPS 监控 + 设置面板 | [v5.7-TEST-REPORT.md](v5.7-TEST-REPORT.md) |
+| v5.8 | 09-09 晚 | 重设计（聊天视图）— 历史归档 | [v5.8-TEST-REPORT.md](v5.8-TEST-REPORT.md) |
+| v5.10 | 09-09 末 | SD 真实立绘 + Blender .glb 模型 | [v5.10-TEST-REPORT.md](v5.10-TEST-REPORT.md) |
+| v5.11 | 09-10 凌晨 | 9 题材 + GLTFLoader + AudioFX 重建 | [v5.11-TEST-REPORT.md](v5.11-TEST-REPORT.md) |
+| v5.12 | 09-10 上午 | 30 题材库 + 上传即生成 + 5 demo | [v5.12-TEST-REPORT.md](v5.12-TEST-REPORT.md) |
+| v5.13 | 09-10 下午 | 经典沉浸剧情对话样式（全屏场景+立绘+对话框） | （代码 review） |
+| v5.14 | 09-10 晚 | 商业化 4 大系统（AI辅助/版权分层/收费点/质量审核） | [v5.14-TEST-REPORT.md](v5.14-TEST-REPORT.md) |
+| v5.15 | 09-10 晚 | 全项目代码审查 + 死链修复 | [AUDIT_2026-09-10.md](AUDIT_2026-09-10.md) |
+| v5.16 | 09-10 晚 | UX 修复（独立页面 + 返回箭头 + 选项弹窗） | [v5.16-TEST-REPORT.md](v5.16-TEST-REPORT.md) |
+| **v5.17** | **09-10 晚** | **商业化降级 + 小说辅助模拟器 + 6 张新表** | （v5.17 文档） |
+
+**关键里程碑**：6 天 9 个版本，从 5 题材单文件原型扩展到 30 题材 + 9 页面 + 12 JS 模块 + 商业化 4 大系统（11 张数据表 + 4 分层 + 22 收费点 + 5 维审核 + 3 级授权）。
+
+---
+
+## 2026-09-09 本批新增范围（v5.1，资料已收齐）
+
+正式名称改为 **灵境 · 双生（Lingjing · Dual Souls）**。口号：“一个角色，两种人生。在故事里经历命运，在现实中陪伴你。”定位：AI角色陪伴与小说世界模拟平台；同一角色在小说世界经历命运，在现实陪伴中共享人格和经历。World OS/无限世界是功能模块，MIRAI仅保留工程代号。
+
+本轮只更新需求与计划、保存原稿和法律草稿；框架、角色形象、界面、场景与人物模型均已列入开发范围，本轮不启动框架实现和资产制作。下列规范及其来源附件共同组成产品需求，不得只读取旧功能表而遗漏新需求。v5.2 仅做结构补强（[DOCS_AUDIT_2026-09-09](DOCS_AUDIT_2026-09-09.md) / [ONBOARDING](ONBOARDING.md) / [UI_DESIGN_GUIDE](UI_DESIGN_GUIDE.md) / [ASSET_PRODUCTION_GUIDE](ASSET_PRODUCTION_GUIDE.md) / [NEXTJS_DEV_GUIDE](NEXTJS_DEV_GUIDE.md) / [INDEX](INDEX.md)），不动 v5.1 范围与冲突裁决。
+
+| 新增需求ID | 规范 | 完成判断 |
+| --- | --- | --- |
+| BRAND-01、UI-01~04、ASSET-01、CONTENT-02 | [全题材目录/全软件框架/原创资产](product/06-world-directory-and-ui.md) | 全题材可扩展分类、多模式页面、SD立绘与Blender模型各自验收 |
+| UI-05、UI-06、UI-07 | [UI 设计指南](UI_DESIGN_GUIDE.md) | 设计令牌 + 12 个核心页面（含 22 题材目录页）规范 + 通用组件 + 状态/验收 |
+| ASSET-02~05 | [资产生产指南](ASSET_PRODUCTION_GUIDE.md) | 命名 / SD 立绘 / Blender 模型 / 版本与合规 / 流水线 |
+| WOS-01~15、NOV-01~04、DATA-01 | [WORLD_OS_SPEC](WORLD_OS_SPEC.md) | 世界/角色自主运行、事件因果、剧情、分支、小说生成与双向同步、预算审核、数据接口 |
+| CHAR-03、COMP-01~04、DUAL-01~05 | [DUAL_SOUL_SPEC](DUAL_SOUL_SPEC.md) | 八层建角、日常互动、两套养成、关怀、资格/带出/切换/共享记忆 |
+| CREATE-02~06、EXPORT-01~03 | [CREATOR_SYSTEM](CREATOR_SYSTEM.md) | 三种来源、人工矫正、质量版本、工作台发布、全部导出和商业服务候选 |
+| ECON-01~08 | [ECONOMY_SYSTEM](ECONOMY_SYSTEM.md) | 四大收费维度、双币、订阅/充值/抽卡/广告/分润、全部价格效果、幂等交易 |
+| ECON-BIBLE-01 | [ECONOMY_BIBLE](ECONOMY_BIBLE.md) | 11 张经济表完整 DDL / 8 API schema / 5 家竞品对标 / 生命周期 7 节点 / 10 万 MAU 测算 / B8 上线闸门 |
+| LEGAL-01~15 | [法律接入计划](legal/LEGAL_INTEGRATION_PLAN.md) | 15原稿已存档；法律核验和前端接入未完成 |
+| ONBOARD-01 | [产品速读](ONBOARDING.md) | 5 分钟定位灵境·双生 / 不同角色引读指引 |
+| IMPL-01 | [Next.js 实施指南](NEXTJS_DEV_GUIDE.md) | B0-B11 实施级步骤 + 全局工程规范 |
+| AUDIT-01 | [文档审计](DOCS_AUDIT_2026-09-09.md) | 当前覆盖度 + 缺口清单 + 补强方案 |
+| PLAN-01 | [开发计划](DEVELOPMENT_PLAN.md) | 新增工作包有依赖、验收和等待状态 |
+
+本批全部来源、逐项覆盖和26项冲突见[更新登记](UPDATE_2026-09-09.md)。确定原则：生存免费、完整免费主线、不售确定性胜利；矛盾定价/门槛保留候选，按冲突登记完成定版后启用。未核验的竞品说法、法规、版权和营收数字仅作为提供的资料，不作平台承诺。
+
+### World OS最终工程补充（资料收齐）
+
+最后附件S07已逐项核对，与S05/S06相同。新增 [工程交接契约](backend/26-world-os-engineering-contract.md) 与 [九表完整DDL参考](backend/27-world-os-source-ddl.md)，作为DATA-01、WOS-05/08/09/13/14/15、NOV-04、PLAN-01的规范组成部分。
+
+七项缺口全部有交付定义：数据库字段约束及迁移、八步AI链输入输出、四引擎集成、预算/LOD/缓存、一致性回滚、审核举报申诉、九Sprint量化验收。工程基线：程序提交世界结果，AI补充受约束叙事；10次互动触发入门专属事件，完整个人线与带出使用独立门槛；重大质量问题未修复不发布。其余商业口径不因附件重复而视作已确认。
+
+### 与已有需求的关系
+
+- 原AUTH/CHAT/MEM/REL/EMO/STORY/SAFE/OPS及发布闸门继续保留，新增模块复用已有基础设施。
+- 旧WORLD-01扩展到完整WOS/NOV；旧CREATE-01扩展CREATE-02~06/EXPORT；旧BILL-01扩展ECON；旧CHAR-01扩展CHAR-03；旧EXT-01保留语音/移动/3D方向并明确资产交付。
+- 旧“禁止主动推送”是未接新关怀机制时默认状态，不删掉新主动关怀需求。旧3部首发与本批大规模官方内容目标分列，原路径/结局质量不降低。
+- 以下v4.1正文保留既有需求和证据语境；冲突以本批登记的候选/待裁决状态为准，不按旧排期自动启动开发。
+
+2026-09-08；依据两份DeepSeek聊天记录及用户最新指令。当前权威见[MIRAI_SPEC](./MIRAI_SPEC.md)。本文件列需求，不代表实现完成。
+
+## 产品与完整体验
+让用户创建或选择人物，在既有小说世界中生活，通过日常互动、事件、路线抉择改变命运。玩法参考业内沉浸剧情对话范式：章节阅读、人物对话、变量养成、多角色路线、多结局、多周目。陪伴模式保留长期记忆与关系；创造模式分阶段交付。
+
+成年验证及知情同意 → 选故事 → 查看世界/人物/路线说明 → 原著人物或自建人物入世 → 2D场景阅读/NPC互动 → 连续选择 → 共通路线/分歧/个人路线 → 结局 → 命运卡 → 存档回溯/新周目。MVP不做大型开放世界，日常生活必须体现在可游玩的事件和状态变化中。
+
+## 功能与验收追踪
+P0=MVP第1–10周，P1=第11–24周，P2=第25–32周或后续。日期为排期目标，不是进度证明。
+
+| ID | 功能 | 阶段 | 验收标准 |
+| --- | --- | --- | --- |
+| AUTH-01 | 注册登录、JWT、手机号/邮箱验证 | P0 | 无凭证401；凭证校验服务端执行；开发身份不可进入生产 |
+| AUTH-02 | 实名与年龄硬拦截 | P0 | 服务商核验而非自填年龄；pending/active/frozen；未成年冻结；成年重新核验解冻 |
+| AUTH-03 | 协议、知情同意、账号借用声明 | P0 | 记录版本/时间；未签署不得游玩；设备异常/家长举报进入二次验证处置 |
+| AUTH-04 | 数据控制与注销 | P0 | 对话/记忆/游玩记录查看删除、JSON导出；注销期限与硬删除一致；实名信息最小化 |
+| CHAR-01 | 角色DNA创建编辑与已有角色选择 | P0 | 身份/背景/性格/价值观/喜恶/语言/边界保存；角色槽位服务端约束 |
+| CHAR-02 | AI立绘及表情 | P0 | 描述生成2D图、审核、下载、设头像；失败可重试；无密钥明确不可用 |
+| CHAT-01 | 流式聊天与编排 | P0 | 真流式、取消/错误恢复；结构化输出校验与最多2次重试；成本日志 |
+| CHAT-02 | 重说/回溯/评价 | P0 | 重说3–4版本可选；回溯撤销对应副作用；点赞点踩持久化 |
+| CHAT-03 | 灵感灯泡 | P0 | 空输入5秒、每会话最多3次；基于场景/记忆/关系 |
+| CHAT-04 | 编辑记忆/重启/事件簿摘要 | P1 | 重启保留DNA关系；摘要可追溯来源 |
+| MEM-01 | 四层记忆 | P0 | 工作/情景/语义/关系；pgvector召回；计数/衰减/失效正确 |
+| MEM-02 | 记忆产品化 | P0 | 提示条、时间线、搜索、单条删除和定向遗忘；删除后不可召回 |
+| MEM-03 | 编辑/锁定/私密/导出 | P1（导出P0） | 锁定不衰减、私密不入库；无软删除冒充物理删除 |
+| MEM-04 | 记忆卡牌 | P1 | 重要记忆转卡、收藏、皮肤、分享权限、撤销 |
+| REL-01 | 六维关系与风险 | P0 | trust/intimacy/familiarity/respect/affection/conflict；dependency_risk独立；事件记录与衰减 |
+| REL-02 | 等级和4里程碑 | P0 | 初见/首次命运选择/百次对话/等级提升；不可重复领奖 |
+| EMO-01 | 连续情绪及2D表情 | P0 | 持久化、衰减、注入对话；叙事NPC情绪随会话隔离 |
+| STORY-01 | 作品库及世界设定 | P0 | 3部正式作品目标；时代/地点/势力/人物/内容版本/版权来源齐全 |
+| STORY-02 | 原著人物/自建人物入世 | P0 | 原著身份列表；姓名背景编辑；已有自建角色选择；故事兼容身份槽位说明；越权角色拒绝 |
+| STORY-03 | 六章多路线引擎 | P0 | 共通序章→事件→分歧→深入→冲突→解决→结局；2–4路线；每路径20–30点、每点2–4选项 |
+| STORY-04 | 日常与世界生活 | P0 | 行军/宴会/拜访/休整等连续场景；时间地点/NPC关系可见；每选项有状态或剧情后果 |
+| STORY-05 | 多维玩家状态 | P0 | wisdom/courage/charm/strength为0–100；NPC独立关系、flags、hidden_affinity；会话隔离 |
+| STORY-06 | 多结局 | P0 | 每作5–8可达结局；规则优先级确定、兜底；隐藏未解锁不剧透；提供每结局可达测试 |
+| STORY-07 | 存档/读档/回溯/多周目 | P0 | 正式跨重启恢复；绑定内容版本；回溯恢复全部状态；新周目不污染旧周目 |
+| STORY-08 | 选择记录与并发 | P0 | 当前节点/选项/revision校验；重复请求不重复扣数；篡改/跨用户拒绝；事件有前后状态 |
+| STORY-09 | AI叙事补充 | P0 | 审核前后文；只能使用合法状态；失败有作者文本，不凭空推进路线 |
+| SHARE-01 | 命运卡/抉择卡 | P0 | 来自真实选择与结局；图片可下载、水印；默认私密；分享由用户触发 |
+| SHARE-02 | 分享落地页与统计 | P0 | 权限/撤销、二维码链接、预览、归因；不能假称已接通所有平台一键分享 |
+| SAFE-01 | 四级安全管线 | P0 | 输入输出审核→意图路由→高风险处置→审计；角色扮演终止且无亲密奖励 |
+| SAFE-02 | 时长与依赖提醒 | P0 | 每连续2小时提醒、显著AI身份提示；风险阈值配置化；不作诊断 |
+| SAFE-03 | 紧急联系处置 | P0 | 联系人授权、核验、触发审核、失败重试与审计；不得自动向未授权联系人发消息 |
+| SAFE-04 | 反迎合/反操纵/禁止主动推送 | P0 | 输入输出及失败路径测试；禁止诱导消费/替代现实关系 |
+| SAFE-05 | 发布合规材料 | P0 | 备案/安全评估适用性核验及五项制度、隐私/协议；法务审核留证 |
+| COST-01 | 成本熔断及配置 | P0 | AI调用前后用量、估算和实际成本；并发预算；429/503和响应头；无硬编码价格 |
+| OPS-01 | 工程与部署 | P0 | Monorepo/Docker/CI/Alembic/境内部署/Sentry/日志/管理员鉴权/性能报告 |
+| UGC-01 | 角色广场/记忆广场 | P1 | 搜索分类/领养/共鸣评论/审核/举报下架 |
+| UGC-02 | 创作者等级及分润 | P1 | 创作者后台、等级权益、使用收入分配；比例配置；MVP提现403 |
+| WORLD-01 | 原创世界生成器 | P1 | 描述生成世界/NPC/场景/连续选择，经编辑确认才能游玩；不可三点冒充完整作品 |
+| CONTENT-01 | 故事扩充和评价 | P1 | 新增5部后共8部；再补5部到13部；每部独立内容验收和用户评分 |
+| BILL-01 | 微信/支付宝/订阅/Credits | P1 | 国内支付验签、幂等、防重放、退款/取消、权益；赠送月清/购买保留；原价格仅候选配置 |
+| GROWTH-01 | 推荐/裂变/活动 | P1 | 归因与退出；以完整游玩率为核心，不能靠沉迷时长 |
+| CREATE-01 | 原创上传/可视化编辑器 | P2 | 导入/编辑/校验/预览/版本发布/版权承诺/举报 |
+| DEEP-01 | 因果链/命运报告/共创 | P2 | 从真实事件生成蝴蝶效应图、人生回顾；基础多结局已在P0 |
+| EXT-01 | 语音/移动端/语言/3D/海外 | 后续 | STT/TTS失败不阻断文字；React Native；3D独立评估；保留世界日程/离线演进/AI Director/授权IP/记忆图谱方向 |
+
+---
+
+## 2026-09-10 新增范围（v5.6 ~ v5.15，依据用户4段DeepSeek讨论结论）
+
+> **本节内容已优先纳入主需求追踪，与 v5.1 同步进入实施序列。** 在 v5.1 "AI 陪伴 + 小说世界模拟" 基础上，新增了"**30 题材库**""**自动游戏化**""**沉浸剧情对话 UI**""**商业化 4 大系统**" 4 条主线。
+
+| 新增需求ID | 名称 | 阶段 | 验收标准 | 对应规范/模块 |
+| --- | --- | --- | --- | --- |
+| **GENRE-30** | 30 题材全分类覆盖 | v5.12 ✅ | 30 个题材（玄幻/仙侠/都市/校园/历史/军事/游戏/体育/科幻/灵异/悬疑/二次元/古言/现言/浪漫青春/仙侠言情/玄幻言情/科幻空间/悬疑推理/同人/武侠/古武/网游/末世/赛博/无限流/童话/剧本杀/其他）；空仓显示+一键上传 | [`js/genres.js`](output/preview/js/genres.js) |
+| **GAME-AUTO-01** | 上传即自动游戏化 | v5.12 ✅ | 客户贴文本 → 规则引擎分章/抽角色/识别场景/标记高光 → 生成 plotTree → 即刻可玩 | [`js/novel-parser.js`](output/preview/js/novel-parser.js) + [`js/plot-engine.js`](output/preview/js/plot-engine.js) |
+| **GAME-AUTO-02** | 覆盖审计保不漏主线/角色/高光 | v5.12 ✅ | `runAudit` 自动核查 chaptersCovered / charsCovered / highlightsCovered；未覆盖角色自动并入首章主节点 | `runAudit()` |
+| **IMM-UI-01** | 沉浸剧情对话视觉语言 | v5.13 ✅ | 全屏场景（9 张 SD）+ 角色立绘（左右/居中）+ 底部对话框（半透明黑底）+ 打字机（10-120ms 可调）+ 悬浮选项（hover 偏移 + 高亮 + fx 数值标签）+ 数值实时跳动 + 角色名条 + 章节标题过场 | [`js/plot-engine.js`](output/preview/js/plot-engine.js) + [`plot-runner.html`](output/preview/plot-runner.html) |
+| **ORANGE-UI-02** | 结局模态 + 存档/历史 | v5.13 ✅ | LEGENDARY/EPIC/RARE/COMMON 4 稀有度 + 标题 + 引用 + 5 槽位存档 + 最近 50 句历史 | [`js/plot-engine.js`](output/preview/js/plot-engine.js) |
+| **AI-HELPER-01** | AI 辅助填表 + 多选项生成 | v5.14 ✅ | 字段旁 🤖 → 弹 2-5 选项 → 换一批/我来说；选项数动态（<5→2-3；5-20→3-4；>20→4-5） | [`js/ai-helper.js`](output/preview/js/ai-helper.js) |
+| **AI-HELPER-02** | 22 字段模板库 | v5.14 ✅ | 基础(4) + 世界(4) + 人物(5) + 场景(3) + 对话(3) + 收费(3)；不接真 LLM，规则+模板 | [`js/ai-helper.js`](output/preview/js/ai-helper.js) |
+| **CR-01** | 版权分层 L1-L4 | v5.14 ✅ | L1 AI辅助 / L2 人机协作 / L3 作者主导 / L4 纯人工；4 种证书文本 | [`js/copyright-tier.js`](output/preview/js/copyright-tier.js) |
+| **MONE-01** | 收费点 22 种 5 类 | v5.14 ✅ | 剧情锁(5) + 道具(5) + 卡牌(4) + 外观(5) + 功能(3)；10-5000 灵晶，平台建议 50-500 | [`js/monetization.js`](output/preview/js/monetization.js) |
+| **MONE-02** | 作者分润 5 档 + 月阶梯 | v5.14 ✅ | L1 青铜 50% · L2 白银 60% · L3 黄金 70% · L4 钻石 75% · L5 传奇 80% + 月收入阶梯 | [`js/monetization.js`](output/preview/js/monetization.js) |
+| **MONE-03** | MVP 不开放提现 | v5.14 ✅ | 月流水 <10 万 收益仅可平台消费；403 Forbidden | [`js/monetization.js`](output/preview/js/monetization.js) |
+| **ADAPT-01** | 改编授权 A/B/C | v5.14 ✅ | A 全版权 60% / B 单品类 70% / C 自主 90%；5 类：影视/动漫/游戏/有声/海外 | [`commerce.html`](output/preview/commerce.html) |
+| **ADAPT-02** | 改编合同 5 条核心 | v5.14 ✅ | ①含 AI 仿真人/动画/配音 ②实质修改审批 ③反 AI 训练 ④收益追溯 ⑤质量否决 | [`commerce.html`](output/preview/commerce.html) |
+| **QUALITY-01** | 5 维质量评估 | v5.14 ✅ | 叙事 30% + 角色 25% + 文学 20% + AI 味 15% + 合规 10%；硬门槛 (合规/AI味≤40/伏笔≥60%/字数8000) | [`js/quality-review.js`](output/preview/js/quality-review.js) |
+| **QUALITY-02** | S/A/B/C/D 等级上架 | v5.14 ✅ | S≥4.5 · A≥4.0 · B≥3.5 · C≥3.0 · D<3.0；3 级审核 (自动→AI→人工) | [`js/quality-review.js`](output/preview/js/quality-review.js) |
+| **LEGAL-12** | 用户协议 v2.0 | v5.14 ✅ | 删除"永久免费授权"条款 + AI 训练单独勾选 + 撤回机制 | [`legal/TERMS_OF_SERVICE.md`](legal/TERMS_OF_SERVICE.md) |
+| **LEGAL-13** | 侵权投诉分级 | v5.14 ✅ | 普通/紧急/重复侵权 7 工作日处理 | [`legal/COPYRIGHT_COMPLAINT_PROCESS.md`](legal/COPYRIGHT_COMPLAINT_PROCESS.md) |
+| **LEGAL-14** | 版权证书 | v5.14 ✅ | 4 级证书动态生成 + 时间戳 + 平台不主张版权声明 | [`legal/COPYRIGHT_CERTIFICATE.md`](legal/COPYRIGHT_CERTIFICATE.md) |
+| **AUDIT-01** | 全项目代码审查 | v5.15 ✅ | 9 页面 + 12 JS 模块 + 10 关键交互 + 22 文档全部审查；P0/P1/P2 分级 + 修复 | [AUDIT_2026-09-10.md](AUDIT_2026-09-10.md) |
+
+> **互斥/保守原则**：所有 v5.14 功能**不接真 LLM**（规则引擎+模板库 mock，保留 `window.AIHelper`/`window.LLMJudge` 钩子）；**不接真支付/提现**；**不抽卡/不卖确定性胜利**。所有金额以灵晶为单位计算。
+
+---
+
+## 数据表（v5.14 完整规格）
+
+新增 11 张 localStorage 数据表 + 持久化层 `window.DB`：
+
+| 表 ID | 表名 | 来源需求 |
+| --- | --- | --- |
+| `novel_copyright_tiers` | 小说版权分层记录 | CR-01 |
+| `adaptation_licenses` | 改编授权 | ADAPT-01 |
+| `adaptation_revenue_records` | 改编收益分成 | ADAPT-01 |
+| `creator_monetization_points` | 作者收费点 | MONE-01 |
+| `creator_earnings` | 作者收益 | MONE-02 |
+| `novel_quality_reports` | 质量报告 | QUALITY-01 |
+| `novel_review_records` | 审核记录 | QUALITY-02 |
+| `content_reports` | 侵权举报 | LEGAL-13 |
+| `tax_records` | 税务记录 | MONE-03 |
+| `aml_monitoring` | 反洗钱监控 | MONE-03 |
+| `ai_helper_usage` | AI 辅助填表使用 | AI-HELPER-02 |
+
+完整 DDL + CRUD API 见 [`js/db.js`](output/preview/js/db.js)。
+
+---
+
+## 测试报告清单（v5.6 ~ v5.15）
+
+| 版本 | 报告 | 主要交付 |
+| --- | --- | --- |
+| v5.6 | [v5.6-TEST-REPORT.md](v5.6-TEST-REPORT.md) | 5 题材 3D 真机可测版 + 11 结局 |
+| v5.7 | [v5.7-TEST-REPORT.md](v5.7-TEST-REPORT.md) | 移动端适配 + FPS 监控 + 设置面板 |
+| v5.8 | [v5.8-TEST-REPORT.md](v5.8-TEST-REPORT.md) | 重设计（聊天视图）— 历史归档 |
+| v5.10 | [v5.10-TEST-REPORT.md](v5.10-TEST-REPORT.md) | SD 真实立绘 + Blender .glb 模型 |
+| v5.11 | [v5.11-TEST-REPORT.md](v5.11-TEST-REPORT.md) | 9 题材 + GLTFLoader + AudioFX 重建 |
+| v5.12 | [v5.12-TEST-REPORT.md](v5.12-TEST-REPORT.md) | 30 题材库 + 上传即生成 + 5 demo + 覆盖审计 |
+| v5.13 | ([v5.13 含 v5.14-TEST-REPORT.md 第 1 节](v5.14-TEST-REPORT.md)) | 沉浸剧情对话 UI |
+| v5.14 | [v5.14-TEST-REPORT.md](v5.14-TEST-REPORT.md) | 商业化 4 大系统 |
+| **v5.15** | **[AUDIT_2026-09-10.md](AUDIT_2026-09-10.md)** | **全项目代码审查 + 死链修复** |
+
+## 内容规模与质量
+正式目标：吕布每路径30点/6结局；达西28点/6结局；岳飞26点/5结局。不同路线可复用共通章节；分别统计总节点与每路径节点。选项必须有意义，不用同一占位事件重复凑数。原著NPC不要求一次实现所有视角；未支持的角色不得显示为可玩。
+
+13部候选：三国、隋唐、东周列国志、史记项羽本纪、傲慢与偏见、呼啸山庄、简爱、老残游记、说岳、水浒、德古拉、庄子/山海经、二十年目睹之怪现状。第11–14周先扩隋唐/呼啸/老残/德古拉/水浒。原著公版不能推导现代译本/插图/音频自由使用，发布须逐版本授权审核。
+
+## 正式发布闸门
+实名与年龄服务端真实拦截；三部完整内容可达测试；存档跨重启；全流程E2E；记忆冲突/预算熔断/关系衰减回归；用户隔离；安全管线与紧急联系核验；删除导出；成本/性能/运维及法律材料。任一开发模拟不可被勾成上线完成。
+完整游玩率定义：有效开局到达合法结局并生成命运卡的会话占比。启动率30%、完整率20%、分享率15%、叙事D7留存25%为待验证目标，不能承诺。
+
+---
+
+## 2026-09-10 新增范围（v5.17 · 商业化降级 + 小说辅助模拟器）
+
+> **本节是 v5.14 商业化系统的延续与重构**：商业化已从顶级功能区降级为创作者中心内部按键；同时新增小说辅助模拟器，为不懂写作的作者提供"填表+提问"完整工具链。
+
+### 关键变更
+
+#### 变更 1：商业化降级（架构调整）
+
+| 项目 | v5.14 错误做法 | v5.17 正确做法 |
+| --- | --- | --- |
+| 商业化入口位置 | 顶级功能区（与"小说世界""双生陪伴""创作中心"并列） | 创作者中心内部按键"上架与定价" |
+| 客户可见性 | 客户（玩家）打开 App 能看到商业化按钮 | **客户（玩家）看不到**任何商业化相关界面 |
+| 入口文件 | `commerce.html` 作为顶级独立页 | `creator-center.html` → `commerce.html` |
+| 商业化本身功能 | 版权分层/收费点/收益/审核 4 大系统 | **不变**，仅入口位置改变 |
+
+**用户原始反馈**：
+> "商业化这个单独一个功能区合适吗？客户打开软件是为了玩游戏体验陪伴功能，这个商业化功能区只对作者有关系应该放到创作者中心功能区里以一个功能按键体现，点击这个按键是这个商业化详细介绍，名字改个作者以看就知道是什么的"
+
+#### 变更 2：新增"小说辅助模拟器"（核心新增）
+
+| 新增需求ID | 名称 | 阶段 | 验收标准 | 对应规范/模块 |
+| --- | --- | --- | --- | --- |
+| **CREATE-CENTER-01** | 创作者中心主页 | v5.17 ✅ | 3 大核心按键（创建新世界 / 小说辅助模拟器 / 上架与定价）+ 数据看板（作品数/完成度/收益/版权分级）+ 我的作品列表 + 入门指引 | [`creator-center.html`](../output/preview/creator-center.html) |
+| **CREATE-CENTER-02** | 创建新世界三入口 | v5.17 ✅ | 🤖 AI 辅助（→ 小说辅助模拟器）/ ✍️ 自己写 / 📤 上传 TXT/MD/DOCX | [`creator-create.html`](../output/preview/creator-create.html) |
+| **AI-NOVEL-01** | 小说辅助模拟器 | v5.17 ✅ | 6 张表 Tab（基础信息/世界格局/主线情节/章节细纲/人物小传/场景对话）+ 14 字段旁 🤖 帮我写 + 选项弹窗 + 换一批/我来说 + 自动保存 + 完成度追踪 | [`novel-ai-helper.html`](../output/preview/novel-ai-helper.html) + [`js/novel-outline.js`](../output/preview/js/novel-outline.js) |
+| **AI-NOVEL-02** | 28 字段模板 | v5.17 ✅ | 基础信息表 7 字段 + 世界格局表 7 字段 + 主线情节表 6 字段 + 章节细纲表 8 字段；每字段都有 AI 生成规则 | `js/novel-outline.js` |
+| **AI-NOVEL-03** | 人物小传系统 | v5.17 ✅ | 核心 10 要素（姓名/性别/年龄/外形/性格/家庭/感情/阶层/习惯/成长）+ 语言指纹（风格/口癖/句长/常用词/绝不说的词） | [`js/character-profile.js`](../output/preview/js/character-profile.js) |
+| **AI-NOVEL-04** | 场景卡+对话场景卡 | v5.17 ✅ | 场景卡 12 字段（编号/地点/时间/人物/目标/冲突/类型/情绪曲线/关键细节/结尾/伏笔）；对话卡 7 字段；场景三要素+对话五原则 | [`js/scene-card.js`](../output/preview/js/scene-card.js) |
+| **AI-NOVEL-05** | AI 格外提问（12 类模板） | v5.17 ✅ | 场景类 3（描写/过渡/氛围）+ 角色类 4（出场/内心/成长/关系）+ 对话类 3（重写/设计/金句）+ 情节类 4（转折/伏笔/升级/节奏）；每类返回 3 版本选项 + 推荐版本 + 区别说明 | [`js/ai-question.js`](../output/preview/js/ai-question.js) |
+| **AI-NOVEL-06** | 选项数量动态控制 | v5.17 ✅ | 使用次数 ≤5 给 2-3 选项；5-20 给 3-4 选项；>20 给 4-5 选项 | `js/novel-outline.js` + `js/character-profile.js` + `js/scene-card.js` |
+| **AI-NOVEL-07** | 伏笔台账 | v5.17 ✅ | 编号/内容/埋设章节/回收章节/类型（5 种）/重要度（0-1）/状态（4 种）+ 自动提醒算法（按章节推进 + 重要度排序） | [`js/foreshadowing.js`](../output/preview/js/foreshadowing.js) |
+| **AI-NOVEL-08** | 自动质量检测（6 维度） | v5.17 ✅ | 角色一致性（25%）+ 语言指纹（20%）+ 伏笔状态（20%）+ 时间线（15%）+ 世界规则（10%）+ 场景完整度（10%）；pass/warn/fail + 具体位置 + 修复建议 | [`js/quality-auto.js`](../output/preview/js/quality-auto.js) |
+| **COMMERCE-DOWNGRADE-01** | 商业化降级 | v5.17 ✅ | commerce.html 不再作为顶级入口，改为 creator-center.html 内部子页；library.html 主导航增加"✍️ 创作者中心"按钮；客户（玩家）看不到任何商业化界面 | [`creator-center.html`](../output/preview/creator-center.html) + [`library.html`](../output/preview/library.html) + [`commerce.html`](../output/preview/commerce.html) |
+
+### 数据表 11 → 17 张
+
+新增 6 张表（小说辅助模拟器）：
+
+| 表 ID | 表名 | 来源需求 |
+| --- | --- | --- |
+| `novel_outline` | 大纲要素表（基础信息/世界格局/主线情节/章节细纲 4 大类 28 字段） | AI-NOVEL-01/02 |
+| `character_profiles` | 人物小传（核心 10 要素+次要 5 要素+语言指纹） | AI-NOVEL-03 |
+| `scene_cards` | 场景卡（场景三要素+目标/冲突/情绪曲线/关键细节） | AI-NOVEL-04 |
+| `dialogue_cards` | 对话场景卡（双方/场景/目标/关系/基调/关键信息） | AI-NOVEL-04 |
+| `ai_questions` | AI 格外提问记录（12 类模板 + 多版本选项） | AI-NOVEL-05 |
+| `foreshadowing_tracker` | 伏笔台账（编号/埋设/回收/类型/重要度/状态） | AI-NOVEL-07 |
+
+完整 DDL + CRUD API 见 [`js/db.js`](../output/preview/js/db.js)。新版 key 前缀 `lingjing_v517_`。
+
+### 模块依赖关系
+
+```
+creator-center.html (创作者中心主页)
+   ├── creator-create.html (创建新世界三入口)
+   │    ├── novel-ai-helper.html (🤖 AI 辅助) ← 新增
+   │    ├── 写作编辑器 (✍️ 自己写 — 暂未实现)
+   │    └── novel-upload.html (📤 上传 TXT)
+   └── commerce.html (上架与定价 — 原 v5.14 商业化降级)
+        ├── 版权分层 (L1-L4)
+        ├── 收费点 (22 种)
+        ├── 收益分成 (5 档)
+        └── 改编授权 (3 级)
+
+novel-ai-helper.html (小说辅助模拟器)
+   ├── js/novel-outline.js (28 字段模板 + AI 生成)
+   ├── js/character-profile.js (10 要素 + 语言指纹)
+   ├── js/scene-card.js (场景卡 + 对话卡)
+   ├── js/ai-question.js (12 类提问模板)
+   ├── js/foreshadowing.js (伏笔台账)
+   └── js/quality-auto.js (6 维度自动检测)
+```
+
+### 与 v5.14 的兼容
+
+- 11 张 v5.14 表完整保留（数据迁移：新 key 前缀 `lingjing_v514_` → `lingjing_v517_`）
+- commerce.html 4 大系统功能不变，仅入口位置改变
+- 原有 AI 辅助填表（22 字段模板）逻辑被新 28 字段 + 12 类提问系统增强
+
+> **互斥/保守原则**：所有 v5.17 功能**不接真 LLM**（规则引擎+模板库 mock，保留 `window.AIHelper`/`window.LLMJudge` 钩子）；**不接真支付/提现**；**不抽卡/不卖确定性胜利**。所有金额以灵晶为单位计算。客户（玩家）永远看不到商业化界面。
+
+
+
+

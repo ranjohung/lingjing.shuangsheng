@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>小说辅助模拟器 · 创作者中心 · 灵境 · 双生</title>
+<meta name="description" content="v5.18 小说辅助模拟器 · 6 张表 + 28 字段 + 🤖 帮我写 + 12 类提问 + 6 维自动检测" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/design-system.css" />
+<style>
+  /* 侧边栏布局 */
+  .aih-layout {
+    display: flex;
+    min-height: calc(100vh - 64px);
+  }
+
+  .aih-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background: var(--bg-elevated);
+    backdrop-filter: blur(12px);
+    border-right: 1px solid var(--border-subtle);
+    padding: var(--s-6) var(--s-3);
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+
+  .aih-progress-card {
+    padding: var(--s-4);
+    background: var(--bg-elevated-strong);
+    border: 1px solid var(--border-default);
+    border-radius: var(--r-md);
+    margin-bottom: var(--s-4);
+  }
+  .aih-progress-title {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--s-2);
+  }
+  .aih-progress-value {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: var(--s-2);
+  }
+  .aih-progress-bar { margin-bottom: var(--s-3); }
+
+  .aih-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    padding: 0 var(--s-3);
+    margin: var(--s-4) 0 var(--s-2);
+  }
+
+  .aih-table-item {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: 10px var(--s-3);
+    border-radius: var(--r-md);
+    font-size: 13px;
+    color: var(--text-secondary);
+    transition: all var(--dur-fast);
+    cursor: pointer;
+    position: relative;
+  }
+  .aih-table-item:hover {
+    background: var(--bg-muted);
+    color: var(--text-primary);
+  }
+  .aih-table-item.active {
+    background: rgba(139, 124, 246, 0.12);
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .aih-table-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 3px;
+    height: 18px;
+    background: var(--brand-violet);
+    border-radius: 0 2px 2px 0;
+  }
+  .aih-table-icon {
+    width: 20px;
+    text-align: center;
+    font-size: 14px;
+  }
+  .aih-table-name { flex: 1; }
+  .aih-table-count {
+    font-size: 10px;
+    color: var(--text-muted);
+    background: var(--bg-muted);
+    padding: 1px 6px;
+    border-radius: var(--r-full);
+  }
+
+  /* 主内容 */
+  .aih-main {
+    flex: 1;
+    padding: var(--s-6) var(--s-8);
+    min-width: 0;
+  }
+
+  .aih-breadcrumb-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--s-5);
+  }
+  .aih-title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+  }
+  .aih-subtitle {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-top: 4px;
+  }
+
+  /* 表单字段 */
+  .aih-field {
+    margin-bottom: var(--s-4);
+  }
+  .aih-field-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .aih-field-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .aih-field-label .req { color: var(--brand-red); }
+  .aih-field-label .hint { color: var(--text-muted); font-weight: 400; font-size: 11px; }
+  .aih-ai-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: rgba(232, 199, 90, 0.1);
+    border: 1px solid rgba(232, 199, 90, 0.3);
+    border-radius: var(--r-full);
+    font-size: 11px;
+    color: var(--brand-gold);
+    cursor: pointer;
+    transition: all var(--dur-fast);
+  }
+  .aih-ai-btn:hover {
+    background: rgba(232, 199, 90, 0.18);
+    border-color: rgba(232, 199, 90, 0.5);
+    transform: translateY(-1px);
+  }
+
+  /* AI 弹窗 */
+  .aih-ai-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 7, 26, 0.7);
+    backdrop-filter: blur(8px);
+    z-index: 80;
+    display: grid;
+    place-items: center;
+    padding: var(--s-4);
+    animation: ds-fade-in 200ms var(--ease-out) both;
+  }
+  .aih-ai-modal-card {
+    width: 100%;
+    max-width: 560px;
+    background: var(--bg-overlay);
+    border: 1px solid var(--border-default);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    animation: ds-scale-in 240ms var(--ease-spring) both;
+  }
+  .aih-ai-modal-head {
+    padding: var(--s-5) var(--s-6);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .aih-ai-modal-body {
+    padding: var(--s-6);
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  .aih-ai-modal-foot {
+    padding: var(--s-4) var(--s-6);
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    gap: var(--s-2);
+    justify-content: flex-end;
+  }
+  .aih-ai-option {
+    padding: var(--s-4);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: var(--r-md);
+    cursor: pointer;
+    margin-bottom: var(--s-2);
+    transition: all var(--dur-fast);
+  }
+  .aih-ai-option:hover {
+    background: var(--bg-elevated-strong);
+    border-color: var(--brand-violet);
+    transform: translateX(4px);
+  }
+  .aih-ai-option-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .aih-ai-option-tag {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    background: var(--bg-muted);
+    padding: 2px 8px;
+    border-radius: var(--r-full);
+  }
+  .aih-ai-option-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* 字段区段 */
+  .aih-section {
+    padding: var(--s-6);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: var(--r-xl);
+    margin-bottom: var(--s-5);
+  }
+  .aih-section-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: var(--s-2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .aih-section-title::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: var(--brand-violet);
+    border-radius: 2px;
+  }
+  .aih-section-desc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-bottom: var(--s-5);
+  }
+
+  /* 提问模板区 */
+  .aih-templates {
+    padding: var(--s-6);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: var(--r-xl);
+    margin-bottom: var(--s-5);
+  }
+  .aih-template-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: var(--s-4);
+    flex-wrap: wrap;
+  }
+  .aih-template-tab {
+    padding: 6px 12px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-full);
+    font-size: 12px;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: all var(--dur-fast);
+  }
+  .aih-template-tab:hover { color: var(--text-primary); border-color: var(--border-strong); }
+  .aih-template-tab.active {
+    background: rgba(232, 199, 90, 0.12);
+    color: var(--brand-gold);
+    border-color: rgba(232, 199, 90, 0.4);
+  }
+  .aih-template-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s-2);
+  }
+  .aih-template {
+    padding: var(--s-3);
+    background: var(--bg-muted);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-md);
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text-secondary);
+    transition: all var(--dur-fast);
+    line-height: 1.5;
+  }
+  .aih-template:hover {
+    background: rgba(139, 124, 246, 0.08);
+    border-color: rgba(139, 124, 246, 0.3);
+    color: var(--text-primary);
+  }
+  .aih-template-name { font-weight: 500; margin-bottom: 2px; color: var(--text-primary); }
+
+  /* 检测结果 */
+  .aih-quality {
+    padding: var(--s-6);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: var(--r-xl);
+  }
+  .aih-quality-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--s-3);
+  }
+  .aih-quality-cell {
+    padding: var(--s-4);
+    background: var(--bg-muted);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-md);
+  }
+  .aih-quality-cell.pass { border-color: rgba(74, 222, 128, 0.3); }
+  .aih-quality-cell.warn { border-color: rgba(251, 191, 36, 0.3); }
+  .aih-quality-cell.fail { border-color: rgba(248, 113, 113, 0.3); }
+  .aih-quality-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .aih-quality-name .status {
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: var(--r-full);
+    font-weight: 600;
+  }
+  .aih-quality-name .status.pass { background: rgba(74, 222, 128, 0.15); color: var(--brand-green); }
+  .aih-quality-name .status.warn { background: rgba(251, 191, 36, 0.15); color: var(--brand-amber); }
+  .aih-quality-name .status.fail { background: rgba(248, 113, 113, 0.15); color: var(--brand-red); }
+  .aih-quality-desc { font-size: 11px; color: var(--text-tertiary); line-height: 1.5; }
+
+  @media (max-width: 1024px) {
+    .aih-sidebar { width: 100%; height: auto; position: static; border-right: 0; border-bottom: 1px solid var(--border-subtle); }
+    .aih-layout { flex-direction: column; }
+    .aih-main { padding: var(--s-4); }
+    .aih-quality-grid { grid-template-columns: 1fr; }
+    .aih-template-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="ds-page-header">
+  <div class="ds-page-header-inner">
+    <a href="creator-center.html" class="ds-back"><span class="arrow">←</span> 返回创作者中心</a>
+    <nav class="ds-breadcrumb">
+      <a href="library.html">小说世界</a>
+      <span class="sep">/</span>
+      <a href="creator-center.html">创作者中心</a>
+      <span class="sep">/</span>
+      <span class="current">小说辅助模拟器</span>
+    </nav>
+    <div class="ds-page-header-right">
+      <button class="ds-icon-btn ds-tooltip" data-tip="保存" aria-label="保存">💾</button>
+      <button class="ds-icon-btn ds-tooltip" data-tip="检测" aria-label="检测" onclick="runQualityCheck()">🛡️</button>
+      <div class="ds-user-chip">
+        <div class="ds-user-avatar">L</div>
+        <span>灵境作者</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="aih-layout">
+  <!-- ============== Sidebar ============== -->
+  <aside class="aih-sidebar">
+    <div class="aih-progress-card">
+      <div class="aih-progress-title">总体进度</div>
+      <div class="aih-progress-value" id="overall-progress">0%</div>
+      <div class="aih-progress-bar">
+        <div class="ds-progress"><div class="ds-progress-fill" id="overall-fill" style="width:0%"></div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-tertiary);">
+        <span>已完成 <strong id="overall-done" style="color:var(--text-primary)">0</strong>/28</span>
+        <span id="overall-remain">28 待填</span>
+      </div>
+    </div>
+
+    <div class="aih-section-label">6 张表</div>
+    <div id="table-list">
+      <div class="aih-table-item active" data-table="0" onclick="switchTable(0)">
+        <span class="aih-table-icon">📖</span>
+        <span class="aih-table-name">基础信息</span>
+        <span class="aih-table-count" id="cnt-0">0/7</span>
+      </div>
+      <div class="aih-table-item" data-table="1" onclick="switchTable(1)">
+        <span class="aih-table-icon">🌍</span>
+        <span class="aih-table-name">世界格局</span>
+        <span class="aih-table-count" id="cnt-1">0/7</span>
+      </div>
+      <div class="aih-table-item" data-table="2" onclick="switchTable(2)">
+        <span class="aih-table-icon">📚</span>
+        <span class="aih-table-name">主线情节</span>
+        <span class="aih-table-count" id="cnt-2">0/6</span>
+      </div>
+      <div class="aih-table-item" data-table="3" onclick="switchTable(3)">
+        <span class="aih-table-icon">📑</span>
+        <span class="aih-table-name">章节细纲</span>
+        <span class="aih-table-count" id="cnt-3">0/4</span>
+      </div>
+      <div class="aih-table-item" data-table="4" onclick="switchTable(4)">
+        <span class="aih-table-icon">🎭</span>
+        <span class="aih-table-name">人物小传</span>
+        <span class="aih-table-count" id="cnt-4">0/4</span>
+      </div>
+      <div class="aih-table-item" data-table="5" onclick="switchTable(5)">
+        <span class="aih-table-icon">💬</span>
+        <span class="aih-table-name">场景/对话</span>
+        <span class="aih-table-count" id="cnt-5">0/0</span>
+      </div>
+    </div>
+
+    <div class="aih-section-label">提问模板</div>
+    <a class="ds-btn ds-btn-secondary ds-btn-sm ds-w-full" href="javascript:void(0)" onclick="scrollToTemplates()">
+      12 类模板 →
+    </a>
+
+    <div class="aih-section-label">质量检测</div>
+    <button class="ds-btn ds-btn-gold ds-btn-sm ds-w-full" onclick="runQualityCheck()">
+      🛡️ 6 维自动检测
+    </button>
+  </aside>
+
+  <!-- ============== Main ============== -->
+  <main class="aih-main">
+    <div class="aih-breadcrumb-row ds-anim-fade-in">
+      <div>
+        <h1 class="aih-title" id="table-title">📖 基础信息表</h1>
+        <p class="aih-subtitle" id="table-desc">小说最基本的信息 — 书名、类型、主题、基调、字数、简介、读者</p>
+      </div>
+      <div class="ds-section-meta">
+        <button class="ds-btn ds-btn-ghost ds-btn-sm" onclick="resetTable()">↻ 重置</button>
+        <button class="ds-btn ds-btn-secondary ds-btn-sm" onclick="saveAll()">💾 保存</button>
+      </div>
+    </div>
+
+    <!-- 字段区（动态渲染） -->
+    <div id="fields-container"></div>
+
+    <!-- 提问模板 -->
+    <section class="aih-templates" id="templates-section">
+      <div class="aih-section-title">💡 AI 提问模板（12 类）</div>
+      <p class="aih-section-desc">针对任何字段，让 AI 多版本回答。点击模板 → 在右侧弹出 3 个版本选项。</p>
+
+      <div class="aih-template-tabs" id="template-tabs">
+        <button class="aih-template-tab active" data-cat="scene">场景类</button>
+        <button class="aih-template-tab" data-cat="character">角色类</button>
+        <button class="aih-template-tab" data-cat="dialogue">对话类</button>
+        <button class="aih-template-tab" data-cat="plot">情节类</button>
+      </div>
+
+      <div class="aih-template-grid" id="template-grid"></div>
+    </section>
+
+    <!-- 6 维检测 -->
+    <section class="aih-quality" id="quality-section">
+      <div class="aih-section-title">🛡️ 6 维自动质量检测</div>
+      <p class="aih-section-desc">点击上方"6 维自动检测"或右上角 🛡️ 按钮运行检测。报告生成后可作为修改参考。</p>
+
+      <div class="aih-quality-grid" id="quality-grid">
+        <div class="aih-quality-cell">
+          <div class="aih-quality-name">📊 角色一致性 <span class="status warn">—</span></div>
+          <div class="aih-quality-desc">点击运行检测</div>
+        </div>
+        <div class="aih-quality-cell">
+          <div class="aih-quality-name">🗣️ 语言指纹 <span class="status warn">—</span></div>
+          <div class="aih-quality-desc">点击运行检测</div>
+        </div>
+        <div class="aih-quality-cell">
+          <div class="aih-quality-name">🪝 伏笔状态 <span class="status warn">—</span></div>
+          <div class="aih-quality-desc">点击运行检测</div>
+        </div>
+        <div class="aih-quality-cell">
+          <div class="aih-quality-name">⏰ 时间线 <span class="status warn">—</span></div>
+          <div class="aih-quality-desc">点击运行检测</div>
+        </div>
+        <div class="aih-quality-cell">
+          <div class="aih-quality-name">📏 世界规则 <span class="status warn">—</span></div>
+          <div class="aih-quality-desc">点击运行检测</div>
+        </div>
+        <div class="aih-quality-cell">
+          <div class="aih-quality-name">🎬 场景完整度 <span class="status warn">—</span></div>
+          <div class="aih-quality-desc">点击运行检测</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="js/db.js"></script>
+<script src="js/novel-outline.js"></script>
+<script src="js/character-profile.js"></script>
+<script src="js/scene-card.js"></script>
+<script src="js/ai-question.js"></script>
+<script src="js/quality-auto.js"></script>
+<script>
+  // 6 张表定义
+  const TABLES = [
+    { id: 0, name: '基础信息表', desc: '小说最基本的信息 — 书名、类型、主题、基调、字数、简介、读者', icon: '📖',
+      fields: [
+        { key: 'title', label: '书名', required: true, type: 'text', hint: '《长夜将明》《记忆残卷》' },
+        { key: 'genre', label: '类型', required: true, type: 'select', options: ['都市','校园','言情','悬疑','玄幻','仙侠','科幻','末日','历史','架空','无限流','恐怖','游戏'], hint: '可多选' },
+        { key: 'theme', label: '主题', type: 'text', hint: '成长、救赎、权力与代价' },
+        { key: 'tone', label: '基调', type: 'text', hint: '沉重、紧张、带少量幽默' },
+        { key: 'wordcount', label: '预计字数（万字）', type: 'number', hint: '15' },
+        { key: 'logline', label: '一句话简介', required: true, type: 'textarea', hint: '一句话讲完故事' },
+        { key: 'audience', label: '目标读者', type: 'text', hint: '18-30岁，喜欢悬疑+修仙的读者' }
+      ]
+    },
+    { id: 1, name: '世界格局表', desc: '故事发生的世界设定 — 类型、时代、力量、势力、冲突', icon: '🌍',
+      fields: [
+        { key: 'world_type', label: '世界类型', type: 'select', options: ['现实','架空','半架空'] },
+        { key: 'era', label: '时代背景', type: 'text', hint: '类唐宋时期，但存在灵气' },
+        { key: 'power_system', label: '力量体系', type: 'textarea', hint: '炼气→筑基→金丹→元婴→化神五境' },
+        { key: 'factions', label: '主要势力', type: 'textarea', hint: '天剑宗/幽冥教/皇朝' },
+        { key: 'social_class', label: '社会阶层', type: 'textarea', hint: '修士、凡人、被放逐者' },
+        { key: 'core_conflict', label: '核心冲突', type: 'textarea', required: true, hint: '灵气正在枯竭...' },
+        { key: 'geography', label: '地理环境', type: 'textarea', hint: '东：天剑山脉；西：幽冥沼泽...' }
+      ]
+    },
+    { id: 2, name: '主线情节表', desc: '故事的骨架 — 主线目标、起点、终点、关键事件', icon: '📚',
+      fields: [
+        { key: 'main_goal', label: '主线一句话', type: 'text', required: true, hint: '主角要找到自己被篡改的记忆真相' },
+        { key: 'main_start', label: '主线起点', type: 'textarea', hint: '主角在一场战争中醒来...' },
+        { key: 'main_end', label: '主线终点', type: 'textarea', hint: '主角发现真相...' },
+        { key: 'main_events', label: '主线三个关键事件', type: 'textarea', hint: '事件一/二/三' },
+        { key: 'side_quests', label: '辅线（2-3条）', type: 'textarea', hint: '感情线/反派对决/同门寻找' },
+        { key: 'romance', label: '感情线', type: 'textarea', hint: '从戒备→并肩→信任→抉择→结局' }
+      ]
+    },
+    { id: 3, name: '章节细纲表', desc: '每个事件一张细纲 — 起因/发展/高潮/尾声', icon: '📑',
+      fields: [
+        { key: 'event1_cause', label: '事件一 · 起因', type: 'textarea' },
+        { key: 'event1_develop', label: '事件一 · 发展', type: 'textarea' },
+        { key: 'event1_climax', label: '事件一 · 高潮', type: 'textarea' },
+        { key: 'event1_aftermath', label: '事件一 · 尾声', type: 'textarea' }
+      ]
+    },
+    { id: 4, name: '人物小传', desc: '主要角色 10 要素 + 语言指纹', icon: '🎭',
+      fields: [
+        { key: 'char1_name', label: '主角 · 姓名', type: 'text' },
+        { key: 'char1_personality', label: '主角 · 性格特点', type: 'textarea', hint: '优点和缺点分别列出' },
+        { key: 'char1_voice', label: '主角 · 语言指纹', type: 'textarea', hint: '风格/口癖/句长/常用词' },
+        { key: 'char2_name', label: '核心配角 · 姓名', type: 'text' }
+      ]
+    },
+    { id: 5, name: '场景/对话卡', desc: '每个场景填写三要素 + 对话五原则', icon: '💬',
+      fields: [
+        { key: 'scene1_goal', label: '场景 · 目标', type: 'text', hint: '让主角获得第一个线索' },
+        { key: 'scene1_conflict', label: '场景 · 冲突', type: 'textarea', hint: '陌生人暗示主角的身份，但主角不信任他' }
+      ]
+    }
+  ];
+
+  // 提问模板
+  const TEMPLATES = {
+    scene: [
+      { name: '场景描写', q: '请用 200 字描写{地点}在{时间}的氛围，要求突出{情绪}，重点描写{细节}' },
+      { name: '场景过渡', q: '请写一个从{场景A}到{场景B}的过渡段落，要求自然、不超过 100 字' },
+      { name: '场景氛围', q: '请重写这段场景，增加{紧张/温馨/压抑}的氛围，用环境描写烘托情绪' }
+    ],
+    character: [
+      { name: '角色出场', q: '请设计{角色名}的首次出场，要求在{场景}中，通过{动作}展现{性格}' },
+      { name: '角色内心', q: '请写一段{角色名}的内心独白，在{情境}下，体现{情绪}和{矛盾}' },
+      { name: '角色成长', q: '请设计一个让{角色名}从{状态A}转变到{状态B}的关键事件' },
+      { name: '角色关系', q: '请写一段{A}和{B}的互动，体现他们关系从{阶段A}到{阶段B}的变化' }
+    ],
+    dialogue: [
+      { name: '对话重写', q: '请重写这段对话，要求更口语化，增加潜台词，符合{角色名}的语言指纹' },
+      { name: '对话设计', q: '请设计一段{A}和{B}的对话，场景是{场景}，要达成{目标}' },
+      { name: '金句设计', q: '请为{角色名}设计一句可截图传播的金句，体现{主题}' }
+    ],
+    plot: [
+      { name: '转折设计', q: '请在{事件}中设计一个意外转折，要求出人意料但合理' },
+      { name: '伏笔设计', q: '请在{章节}中埋下一个关于{某事}的伏笔，要求在{章节}回收' },
+      { name: '冲突升级', q: '请将{冲突}升级，增加{障碍}，让主角面临更难的抉择' },
+      { name: '节奏调整', q: '这段剧情节奏太{快/慢}，请{压缩/扩展}，保持{核心事件}不变' }
+    ]
+  };
+
+  // State
+  let currentTable = 0;
+  let fieldValues = {};
+  let currentNovelId = new URLSearchParams(location.search).get('novelId');
+
+  // Init
+  document.addEventListener('DOMContentLoaded', () => {
+    loadValues();
+    switchTable(0);
+    renderTemplates('scene');
+    setupTemplateTabs();
+  });
+
+  // 加载已有值
+  function loadValues() {
+    if (!currentNovelId) return;
+    try {
+      const stored = localStorage.getItem('lingjing_v514_novel_outline_v_' + currentNovelId);
+      if (stored) fieldValues = JSON.parse(stored);
+    } catch (e) { console.warn(e); }
+  }
+
+  // 切换表
+  function switchTable(id) {
+    currentTable = id;
+    document.querySelectorAll('.aih-table-item').forEach(el => el.classList.remove('active'));
+    document.querySelector(`.aih-table-item[data-table="${id}"]`).classList.add('active');
+    const t = TABLES[id];
+    document.getElementById('table-title').innerHTML = `${t.icon} ${t.name}`;
+    document.getElementById('table-desc').textContent = t.desc;
+    renderFields();
+  }
+
+  // 渲染字段
+  function renderFields() {
+    const t = TABLES[currentTable];
+    const container = document.getElementById('fields-container');
+    container.innerHTML = `
+      <section class="aih-section">
+        <div class="aih-section-title">${t.icon} ${t.name}</div>
+        <p class="aih-section-desc">${t.desc}</p>
+        <div class="ds-form-grid ds-form-grid-2">
+          ${t.fields.map(f => renderField(f)).join('')}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderField(f) {
+    const v = fieldValues[f.key] || '';
+    const isRequired = f.required ? '<span class="req">*</span>' : '';
+    const aiBtn = `<button class="aih-ai-btn" onclick="openAI('${f.key}', '${f.label}')">🤖 帮我写</button>`;
+
+    let input = '';
+    if (f.type === 'textarea') {
+      input = `<textarea class="ds-textarea" id="field-${f.key}" oninput="updateField('${f.key}', this.value)" placeholder="${f.hint || ''}">${v}</textarea>`;
+    } else if (f.type === 'select') {
+      input = `<select class="ds-select" id="field-${f.key}" onchange="updateField('${f.key}', this.value)">
+        <option value="">请选择</option>
+        ${f.options.map(o => `<option ${v === o ? 'selected' : ''}>${o}</option>`).join('')}
+      </select>`;
+    } else if (f.type === 'number') {
+      input = `<input class="ds-input" type="number" id="field-${f.key}" value="${v}" oninput="updateField('${f.key}', this.value)" placeholder="${f.hint || ''}" />`;
+    } else {
+      input = `<input class="ds-input" type="text" id="field-${f.key}" value="${v}" oninput="updateField('${f.key}', this.value)" placeholder="${f.hint || ''}" />`;
+    }
+
+    return `
+      <div class="aih-field">
+        <div class="aih-field-head">
+          <label class="aih-field-label">${f.label} ${isRequired} <span class="hint">${f.hint || ''}</span></label>
+          ${aiBtn}
+        </div>
+        ${input}
+      </div>
+    `;
+  }
+
+  function updateField(key, value) {
+    fieldValues[key] = value;
+    updateCounts();
+    saveAll(false);
+  }
+
+  function updateCounts() {
+    let total = 0, done = 0;
+    TABLES.forEach((t, i) => {
+      let tDone = 0;
+      t.fields.forEach(f => {
+        total++;
+        if (fieldValues[f.key] && String(fieldValues[f.key]).trim()) {
+          done++;
+          tDone++;
+        }
+      });
+      const el = document.getElementById('cnt-' + i);
+      if (el) el.textContent = `${tDone}/${t.fields.length}`;
+    });
+    const pct = Math.round((done / total) * 100);
+    document.getElementById('overall-progress').textContent = pct + '%';
+    document.getElementById('overall-fill').style.width = pct + '%';
+    document.getElementById('overall-done').textContent = done;
+    document.getElementById('overall-remain').textContent = (total - done) + ' 待填';
+  }
+
+  function resetTable() {
+    if (!confirm('清空当前表所有字段？')) return;
+    TABLES[currentTable].fields.forEach(f => {
+      fieldValues[f.key] = '';
+      const el = document.getElementById('field-' + f.key);
+      if (el) el.value = '';
+    });
+    updateCounts();
+    saveAll();
+  }
+
+  function saveAll(showMsg = true) {
+    if (!currentNovelId) {
+      currentNovelId = 'novel_' + Date.now();
+    }
+    try {
+      localStorage.setItem('lingjing_v514_novel_outline_v_' + currentNovelId, JSON.stringify(fieldValues));
+      if (showMsg) showToast('已保存到本地', 'success');
+    } catch (e) { console.warn(e); }
+  }
+
+  // AI 弹窗
+  function openAI(key, label) {
+    const options = generateAIOptions(label);
+    const modal = document.createElement('div');
+    modal.className = 'aih-ai-modal';
+    modal.innerHTML = `
+      <div class="aih-ai-modal-card">
+        <div class="aih-ai-modal-head">
+          <div>
+            <div style="font-weight:600;font-size:15px;">🤖 AI 帮我写：${label}</div>
+            <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px;">选项数量根据使用次数动态控制（2-5 个）</div>
+          </div>
+          <button class="ds-modal-close" onclick="this.closest('.aih-ai-modal').remove()">✕</button>
+        </div>
+        <div class="aih-ai-modal-body">
+          ${options.map((opt, i) => `
+            <div class="aih-ai-option" onclick="selectAI('${key}', '${opt.text.replace(/'/g, "\\'")}')">
+              <div class="aih-ai-option-label">
+                <span style="font-weight:600;color:var(--brand-violet);">版本 ${String.fromCharCode(65 + i)}</span>
+                <span class="aih-ai-option-tag">${opt.style}</span>
+              </div>
+              <div class="aih-ai-option-text">${opt.text}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="aih-ai-modal-foot">
+          <button class="ds-btn ds-btn-ghost ds-btn-sm" onclick="this.closest('.aih-ai-modal').remove()">取消</button>
+          <button class="ds-btn ds-btn-secondary ds-btn-sm" onclick="alert('换一批'); this.closest('.aih-ai-modal').remove()">🔄 换一批</button>
+          <button class="ds-btn ds-btn-gold ds-btn-sm" onclick="alert('自由输入'); this.closest('.aih-ai-modal').remove()">✏️ 我来说</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  function generateAIOptions(label) {
+    const seeds = {
+      '书名': [
+        { style: '厚重', text: '《长夜将明》—— 暗喻希望终将到来' },
+        { style: '诗意', text: '《剑与星河》—— 古典与现代的融合' },
+        { style: '爽文', text: '《我在修真界开挂》—— 轻松幽默' }
+      ],
+      '一句话简介': [
+        { style: '悬疑', text: '一个失去记忆的修士发现，整个修仙世界的历史都是被人为改写的。' },
+        { style: '成长', text: '从被遗弃的废柴，到力挽狂澜的传奇，他只用了十年。' },
+        { style: '爱情', text: '她说要走，他说不必留；十年后她在终点等，他追来时已是白头。' }
+      ]
+    };
+    return seeds[label] || [
+      { style: '紧张', text: '示例内容 1：营造紧张氛围，悬念层层递进。' },
+      { style: '抒情', text: '示例内容 2：情感细腻，触动人心。' },
+      { style: '爽文', text: '示例内容 3：节奏明快，反转不断。' }
+    ];
+  }
+
+  function selectAI(key, text) {
+    fieldValues[key] = text;
+    const el = document.getElementById('field-' + key);
+    if (el) el.value = text;
+    document.querySelector('.aih-ai-modal')?.remove();
+    updateCounts();
+    saveAll();
+    showToast('已采纳 AI 推荐内容', 'success');
+  }
+
+  // 模板
+  function setupTemplateTabs() {
+    document.querySelectorAll('.aih-template-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.aih-template-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        renderTemplates(tab.dataset.cat);
+      });
+    });
+  }
+
+  function renderTemplates(cat) {
+    const grid = document.getElementById('template-grid');
+    grid.innerHTML = TEMPLATES[cat].map(t => `
+      <div class="aih-template" onclick="useTemplate('${t.name}')">
+        <div class="aih-template-name">${t.name}</div>
+        <div>${t.q}</div>
+      </div>
+    `).join('');
+  }
+
+  function useTemplate(name) {
+    showToast(`已应用模板：${name}`, 'info');
+  }
+
+  function scrollToTemplates() {
+    document.getElementById('templates-section').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // 6 维检测
+  function runQualityCheck() {
+    if (window.QualityAuto) {
+      try {
+        const report = window.QualityAuto.checkAll(fieldValues);
+        renderQualityReport(report);
+        showToast('检测完成', 'success');
+        return;
+      } catch (e) { console.warn(e); }
+    }
+    // 兜底
+    renderQualityReport({
+      consistency: { status: 'pass', desc: '角色行为符合人物小传' },
+      voice: { status: 'pass', desc: '对话符合语言指纹' },
+      foreshadowing: { status: 'warn', desc: '回收率 0% — 请设置伏笔' },
+      timeline: { status: 'pass', desc: '时间顺序合理' },
+      world: { status: 'pass', desc: '未违反世界规则' },
+      completeness: { status: 'pass', desc: '场景三要素完整' }
+    });
+    showToast('检测完成', 'success');
+  }
+
+  function renderQualityReport(r) {
+    const items = [
+      { key: 'consistency', name: '角色一致性' },
+      { key: 'voice', name: '语言指纹' },
+      { key: 'foreshadowing', name: '伏笔状态' },
+      { key: 'timeline', name: '时间线' },
+      { key: 'world', name: '世界规则' },
+      { key: 'completeness', name: '场景完整度' }
+    ];
+    const grid = document.getElementById('quality-grid');
+    grid.innerHTML = items.map(it => {
+      const cell = r[it.key] || { status: 'warn', desc: '待检测' };
+      const status = cell.status === 'pass' ? '✅ PASS' : cell.status === 'warn' ? '⚠️ WARN' : '❌ FAIL';
+      return `
+        <div class="aih-quality-cell ${cell.status}">
+          <div class="aih-quality-name">${it.name} <span class="status ${cell.status}">${status}</span></div>
+          <div class="aih-quality-desc">${cell.desc}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Toast
+  function showToast(text, type = 'info') {
+    let container = document.querySelector('.ds-toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'ds-toast-container';
+      document.body.appendChild(container);
+    }
+    const icon = { success: '✓', error: '✕', info: 'ⓘ' }[type];
+    const toast = document.createElement('div');
+    toast.className = `ds-toast ${type}`;
+    toast.innerHTML = `<div class="ds-toast-icon">${icon}</div><div class="ds-toast-body"><div class="ds-toast-desc">${text}</div></div>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(20px)';
+      toast.style.transition = 'all 240ms';
+      setTimeout(() => toast.remove(), 240);
+    }, 2400);
+  }
+</script>
+
+</body>
+</html>

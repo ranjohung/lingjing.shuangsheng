@@ -1,0 +1,1236 @@
+《灵境 · 无限世界》— 今日讨论新增/补充/优化内容汇总
+
+本文档整理了今天所有讨论中新增、补充和优化的内容，用于更新昨天的开发文档和开发计划。
+
+整合说明：
+
+· 标注【新增】= 昨天文档中完全没有的内容
+· 标注【补充】= 昨天文档有框架但细节不足
+· 标注【优化】= 昨天文档有但设计有调整
+· 标注【修正】= 昨天文档有但需要修正
+
+第一部分：World OS / AI Novel / Live Your Novel 产品设计（【新增】核心功能模块）
+
+1.1 功能定义
+
+正式名称： 灵境 · 无限世界（Infinite World Engine）
+
+核心功能： 创建一本小说 → AI生成完整世界 → 用户进入小说 → 自由生存 → 改变剧情 → 世界持续演化 → 自动生成属于用户自己的小说。
+
+三个核心系统：
+
+系统 职责 说明
+World OS 世界操作系统 管理时间、地图、角色、势力、规则、经济、天气、事件、历史
+AI Novel Engine AI小说生成引擎 自动生成小说圣经、角色小传、章节、伏笔、结局
+Live Your Novel 进入小说世界模拟 用户创建角色进入世界、自由行动、改变剧情
+
+1.2 产品定位
+
+产品不是： AI写小说工具 / AI聊天软件 / 文字冒险游戏
+
+产品是： AI世界模拟与小说体验平台
+
+核心循环：
+
+```
+创建世界 → 创建小说 → AI生成角色 → AI生成世界 → AI生成故事
+    ↓
+用户进入世界 → 自由行动 → 世界产生变化 → 角色产生变化
+    ↓
+关系产生变化 → 时间线分裂 → AI继续生成故事 → 自动形成小说
+```
+
+1.3 用户核心爽点设计
+
+爽点 说明
+成为故事主角 用户选择人生（原著主角/重要角色/新角色/隐藏身份/普通NPC/观察者）
+命运可以改变 用户救下必死角色，世界产生连锁反应
+角色对我有记忆 角色记住共同经历，产生“被记住爽感”
+专属剧情 每个用户拥有自己的小说（恋爱/敌人/从未见过/杀死角色）
+隐藏剧情 隐藏角色/身份/结局/任务/地图/真相/恋爱路线
+攻略角色 多维关系状态（信任/亲密/尊重/吸引/冲突/理解/共同历史）
+收集 角色图鉴/剧情图鉴/CG/回忆/结局/成就/世界秘密
+多周目 保留当前世界，创建平行时间线
+
+1.4 核心架构
+
+```
+                    INFINITE WORLD
+                          │
+        ┌─────────────────┼─────────────────┐
+        │                 │                 │
+      WORLD OS        STORY OS          NOVEL OS
+        │                 │                 │
+   世界运行            剧情运行          小说生成
+        │                 │                 │
+        └─────────────────┼─────────────────┘
+                          │
+                   LIVE YOUR NOVEL
+                          │
+                    USER ACTION
+                          │
+        ┌─────────────────┼─────────────────┐
+        │                 │                 │
+    CHARACTER          WORLD           TIMELINE
+        │                 │                 │
+        └─────────────────┼─────────────────┘
+                          │
+                       MEMORY
+```
+
+1.5 World OS 详细设计
+
+1.5.1 World State
+
+```json
+{
+  "world_id": "world_001",
+  "name": "长夜城",
+  "current_time": {},
+  "weather": {},
+  "global_state": {},
+  "factions": [],
+  "characters": [],
+  "locations": [],
+  "active_events": [],
+  "history": [],
+  "rules": {},
+  "timeline_id": ""
+}
+```
+
+1.5.2 World Bible（世界圣经）
+
+```
+World Bible
+├── Basic（基础信息）
+├── Genre（类型）
+├── Theme（主题）
+├── History（历史）
+├── Geography（地理）
+├── Timeline（时间线）
+├── Politics（政治）
+├── Economy（经济）
+├── Culture（文化）
+├── Religion（宗教）
+├── Technology（科技）
+├── Magic（魔法）
+├── Social Rules（社会规则）
+├── Factions（势力）
+├── Important Events（重要事件）
+├── World Secrets（世界秘密）
+└── Future Threats（未来威胁）
+```
+
+1.5.3 World Rules（世界规则系统）
+
+```
+World Rules
+├── Physical Rules（物理规则）
+├── Social Rules（社会规则）
+├── Economic Rules（经济规则）
+├── Political Rules（政治规则）
+├── Power Rules（力量规则）
+├── Magic Rules（魔法规则）
+├── Technology Rules（科技规则）
+├── Cultural Rules（文化规则）
+└── Narrative Rules（叙事规则）
+```
+
+1.5.4 世界创建方式
+
+模式 说明
+模式A：官方世界 现代都市/修仙/末日/科幻/校园/宫廷/武侠
+模式B：AI创建 用户输入一句话，AI生成完整世界
+模式C：专业编辑 手动编辑世界规则/角色/地图/历史/事件
+
+1.5.5 AI世界创建流程（分阶段）
+
+```
+USER IDEA → Genre Generator → World Concept → World Bible → World Rules
+    ↓
+History Generator → Geography Generator → Faction Generator
+    ↓
+Character Generator → Conflict Generator → Timeline Generator → World Validation
+```
+
+1.5.6 世界验证系统
+
+AI生成后必须检查：
+
+· 规则冲突
+· 时间冲突
+· 角色冲突
+· 地理冲突
+· 能力冲突
+
+1.5.7 时间系统
+
+支持三种模式：
+
+· 现实时间模式：现实1小时 = 世界1小时
+· 加速模式：现实1小时 = 世界1天
+· 小说模式：时间由事件推进
+
+1.5.8 世界离线运行
+
+用户离线后世界继续运行，采用Lazy Simulation：
+
+· 用户离线3天，系统计算3天期间的重要角色事件、世界事件、关系变化
+· 用户回来时显示《世界日报》
+
+1.5.9 World Daily Report（世界日报）
+
+```
+过去3天：
+- 北境：战争升级
+- 苏晚：去了新的城市
+- 顾长夜：失踪
+- 你认识的商人：获得了一笔财富
+点击查看详情
+```
+
+1.6 Story OS 详细设计
+
+1.6.1 Story Director
+
+AI Story Director不直接写正文，负责“导演故事”：
+
+· 输入：World State + Character State + Relationship + Timeline + User Action + Story Goal
+· 输出：Next Story Opportunity（不强制，是“故事引力”）
+
+1.6.2 Narrative Gravity（叙事引力）
+
+```
+Main Story（主线）
+  ↓
+Secondary Story（支线）
+  ↓
+Character Story（角色个人剧情）
+  ↓
+World Story（世界自然发展）
+  ↓
+Emergent Story（用户行为产生）
+```
+
+1.6.3 Character Route Engine（角色路线引擎）
+
+每个重要角色拥有：
+
+```
+Introduction → Daily Interaction → Trust Event → Personal Secret
+    ↓
+Conflict → Choice → Character Route → Ending
+```
+
+1.6.4 Character Route Unlock（解锁条件）
+
+· Trust > 0.7
+· 经历3次危机
+· 知道角色秘密
+· （满足以上条件触发个人路线）
+
+1.6.5 Choice系统
+
+类型 说明
+Visible Choice 用户知道的选择
+Hidden Choice 满足条件才出现
+Free Choice 用户自由输入
+
+1.6.6 选择反馈系统
+
+· Immediate Impact：立刻可见的结果
+· Delayed Impact：3-30天后显现
+· Hidden Impact：用户可能永远不会知道
+
+1.6.7 Fate Engine（命运系统）
+
+每个角色拥有Potential Future（非固定未来）：
+
+· 死亡 / 成为反派 / 离开城市 / 与你结婚 / 成为领导者
+· 根据：World + User + Character 变化
+
+1.7 AI Novel Engine 详细设计
+
+1.7.1 小说生成模式
+
+模式 说明
+Mode A：Author Mode 用户创建小说，AI辅助写
+Mode B：Simulation Novel 用户玩世界，AI自动记录并生成小说
+
+1.7.2 小说生成流程
+
+```
+Novel Bible → World Bible → Character Bible → Story Bible
+    ↓
+Volume Outline → Chapter Outline → Scene Outline
+    ↓
+Draft → Validation → Revision
+```
+
+1.7.3 Novel Bible
+
+```
+Title / Genre / Theme / Audience / Tone / POV / Narrative Style / Length / Ending Type
+```
+
+1.7.4 支持的Genre（可混合）
+
+都市 / 校园 / 恋爱 / 悬疑 / 推理 / 玄幻 / 仙侠 / 武侠 / 科幻 / 赛博朋克 / 末日 / 无限流 / 历史 / 架空 / 恐怖 / 游戏
+
+1.7.5 支持的Theme
+
+成长 / 救赎 / 爱情 / 复仇 / 权力 / 战争 / 孤独 / 友情 / 自由 / 文明 / 生存
+
+1.7.6 支持的叙事结构
+
+· 三幕式
+· 英雄之旅
+· 起承转合
+· 无限流（世界1→世界2→世界3）
+· 恋爱线（相遇→了解→暧昧→冲突→分离→重逢→结局）
+
+1.7.7 Story Bible
+
+```
+Title / Logline / Theme / World / Main Character / Main Goal
+Main Conflict / Antagonist / Mystery / Romance / Character Arcs / Plot / Ending
+```
+
+1.7.8 Foreshadowing Engine（伏笔引擎）
+
+```
+{
+  "id": "",
+  "description": "",
+  "introduced_chapter": 0,
+  "importance": 0.0,
+  "status": "introduced/active/hinted/revealed/resolved",
+  "related_characters": [],
+  "planned_resolution": 0
+}
+```
+
+1.7.9 Chapter Quality Engine（章节质量检查）
+
+自动检查：
+
+· OOC（角色脱离人设）
+· 重复
+· 逻辑
+· 时间线
+· 世界规则
+· 角色关系
+· 伏笔
+· 节奏
+· 语言
+· 一致性
+
+1.8 Live Your Novel 详细设计
+
+1.8.1 进入方式
+
+① 原著主角
+② 原著角色
+③ 新角色（推荐重点）
+④ 普通NPC
+⑤ 隐藏身份
+⑥ 观察者
+
+1.8.2 新角色进入逻辑
+
+用户创建：Name / Age / Gender / Identity / Background / Personality / Goal
+AI生成：合理出生地点、社会关系、初始资源、世界位置
+
+1.8.3 世界平衡
+
+Character Balance Engine根据World Rules限制：
+
+· 能力
+· 金钱
+· 身份
+· 装备
+
+1.8.4 模式选择
+
+模式 说明
+Canon Mode 原著主线继续，用户影响
+Canon Lock 严格遵守原著关键事件
+Canon Flexible 允许改变剧情
+Alternate Mode 完全平行，原著只是基础
+
+1.8.5 用户行动类型
+
+说话 / 行动 / 探索 / 移动 / 调查 / 战斗 / 工作 / 学习 / 休息 / 恋爱 / 交易 / 创建 / 自由输入
+
+1.8.6 Action Parser
+
+```json
+{
+  "intent": "follow",
+  "target": "character_001",
+  "style": "secret",
+  "risk": "medium"
+}
+```
+
+1.8.7 Action Resolution流程
+
+```
+User Action → Intent Parser → World Rules → Character State
+    ↓
+Probability → Event Engine → Result → World Update → Story Update
+```
+
+1.8.8 概率系统
+
+用户说什么 ≠ AI实现什么。
+成功率 = 用户能力 + 环境因素 - 目标抵抗
+
+1.8.9 世界影响记录
+
+· Immediate Impact：立即
+· Delayed Impact：3天
+· Hidden Impact：30天
+
+1.8.10 Romance System（恋爱系统）
+
+```
+Attraction → Interest → Trust → Intimacy → Conflict → Commitment
+```
+
+不同角色：不同路径
+
+1.8.11 结局类型
+
+· Good Ending（好结局）
+· Bad Ending（坏结局）
+· True Ending（真结局）
+· Hidden Ending（隐藏结局）
+· Character Ending（角色结局）
+· World Ending（世界结局）
+
+1.8.12 小说自动记录
+
+系统自动保存Event Log：
+
+```json
+{
+  "time": "",
+  "location": "",
+  "participants": [],
+  "action": "",
+  "result": "",
+  "emotion": "",
+  "importance": 0.0
+}
+```
+
+1.8.13 Simulation Novel（小说生成模式）
+
+用户可选择：
+
+· Documentary（忠实记录）
+· Novelized（文学化）
+· Cinematic（电影感）
+· Light Novel（轻小说）
+· Game Narrative（游戏叙事）
+
+1.8.14 小说与世界双向同步
+
+```
+WORLD → EVENTS → NOVEL
+NOVEL EDIT → TIMELINE → NEW WORLD
+```
+
+1.8.15 Character World Agent（角色自主行为）
+
+每个重要角色拥有：
+
+· Identity / Personality / Goal / Desire / Fear / Secret / Belief
+· Relationship / Memory / Schedule / Location / Inventory / Ability
+
+1.8.16 角色目标系统
+
+角色有自己的目标（即使用户不出现也会执行）：
+
+· 赚钱 → 找店铺 → 学习 → 失败 → 改变计划
+
+1.8.17 NPC LOD（性能优化）
+
+```
+Near Player → Full AI
+Important NPC → Scheduled AI
+Normal NPC → Rule Simulation
+Background NPC → Statistical Simulation
+```
+
+1.9 融合已有系统
+
+1.9.1 调用Memory Engine
+
+```python
+# 存储用户在世界中的行为记忆
+memory_service.store(
+    user_id=user_id,
+    character_id=character_id,
+    content=f"在{world_name}中，{user_action}，导致{result}",
+    type="world_event",
+    importance=importance_score
+)
+
+# 检索相关记忆
+relevant_memories = memory_service.retrieve(
+    user_id=user_id,
+    character_id=character_id,
+    query=current_context,
+    limit=5
+)
+```
+
+1.9.2 调用Relationship Engine
+
+```python
+# 用户与NPC的关系变化
+relationship_service.update(
+    user_id=user_id,
+    character_id=npc_id,
+    delta={"trust": trust_change, "affection": affection_change}
+)
+```
+
+1.9.3 调用Emotion Engine
+
+```python
+# 更新NPC的情绪状态
+emotion_service.update(
+    character_id=npc_id,
+    event=event_type,
+    intensity=event_intensity
+)
+```
+
+1.9.4 调用3D Avatar
+
+```python
+# World OS输出场景状态，由3D引擎执行
+scene_state = {
+    "location": location_id,
+    "time": current_time,
+    "weather": weather_state,
+    "characters": [
+        {"id": char_id, "position": [x, y, z], "animation": anim_name}
+    ]
+}
+event_bus.publish("scene_update", scene_state)
+```
+
+1.10 数据表（【补充】完整DDL）
+
+worlds表
+
+```sql
+CREATE TABLE worlds (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    owner_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    genre VARCHAR(50) NOT NULL,
+    theme VARCHAR(50),
+    world_dna JSONB NOT NULL DEFAULT '{
+        "civilization_level": "medieval",
+        "technology_level": "low",
+        "magic_system": null,
+        "danger_level": 3,
+        "romance_level": 3,
+        "freedom_level": 4
+    }',
+    current_time JSONB NOT NULL DEFAULT '{"year": 1, "month": 1, "day": 1, "hour": 6, "minute": 0}',
+    status VARCHAR(20) DEFAULT 'draft',
+    is_public BOOLEAN DEFAULT false,
+    view_count INT DEFAULT 0,
+    play_count INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_worlds_owner ON worlds(owner_id);
+CREATE INDEX idx_worlds_status ON worlds(status);
+CREATE INDEX idx_worlds_public ON worlds(is_public) WHERE is_public = true;
+```
+
+world_rules表
+
+```sql
+CREATE TABLE world_rules (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    world_id UUID NOT NULL REFERENCES worlds(id) ON DELETE CASCADE,
+    rule_type VARCHAR(50) NOT NULL,
+    rule_name VARCHAR(100) NOT NULL,
+    rule_data JSONB NOT NULL,
+    priority INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(world_id, rule_type, rule_name)
+);
+CREATE INDEX idx_world_rules_world ON world_rules(world_id);
+```
+
+world_characters表
+
+```sql
+CREATE TABLE world_characters (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    world_id UUID NOT NULL REFERENCES worlds(id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL,
+    identity VARCHAR(100),
+    personality JSONB NOT NULL DEFAULT '{
+        "openness": 0.5, "conscientiousness": 0.5, "extraversion": 0.5,
+        "agreeableness": 0.5, "neuroticism": 0.5
+    }',
+    goals TEXT[],
+    desires TEXT[],
+    fears TEXT[],
+    secrets TEXT[],
+    current_state JSONB DEFAULT '{"location": null, "health": 100, "energy": 100, "hunger": 50, "mood": 50}',
+    current_location_id UUID,
+    schedule JSONB DEFAULT '[]',
+    is_npc BOOLEAN DEFAULT true,
+    is_player_controlled BOOLEAN DEFAULT false,
+    importance_level INT DEFAULT 3,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_world_characters_world ON world_characters(world_id);
+CREATE INDEX idx_world_characters_importance ON world_characters(importance_level);
+```
+
+story_bible表
+
+```sql
+CREATE TABLE story_bible (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    world_id UUID NOT NULL REFERENCES worlds(id) ON DELETE CASCADE,
+    timeline_id UUID,
+    title VARCHAR(255) NOT NULL,
+    genre VARCHAR(50)[],
+    theme VARCHAR(50)[],
+    logline TEXT,
+    main_conflict TEXT,
+    main_character_id UUID REFERENCES world_characters(id),
+    antagonist_id UUID REFERENCES world_characters(id),
+    status VARCHAR(20) DEFAULT 'draft',
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_story_bible_world ON story_bible(world_id);
+```
+
+chapters表
+
+```sql
+CREATE TABLE chapters (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    story_id UUID NOT NULL REFERENCES story_bible(id) ON DELETE CASCADE,
+    chapter_number INT NOT NULL,
+    title VARCHAR(255),
+    outline TEXT,
+    content TEXT,
+    summary TEXT,
+    hook TEXT,
+    quality_score FLOAT DEFAULT 0,
+    word_count INT DEFAULT 0,
+    status VARCHAR(20) DEFAULT 'draft',
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(story_id, chapter_number)
+);
+CREATE INDEX idx_chapters_story ON chapters(story_id);
+```
+
+world_events表
+
+```sql
+CREATE TABLE world_events (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    world_id UUID NOT NULL REFERENCES worlds(id) ON DELETE CASCADE,
+    event_type VARCHAR(50) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    location_id UUID,
+    start_time TIMESTAMP,
+    end_time TIMESTAMP,
+    participants UUID[],
+    cause JSONB,
+    possible_outcomes JSONB,
+    world_impact JSONB,
+    story_importance FLOAT DEFAULT 0.5,
+    status VARCHAR(20) DEFAULT 'pending',
+    visibility VARCHAR(20) DEFAULT 'public',
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_world_events_world ON world_events(world_id);
+CREATE INDEX idx_world_events_status ON world_events(status);
+```
+
+timelines表
+
+```sql
+CREATE TABLE timelines (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    world_id UUID NOT NULL REFERENCES worlds(id) ON DELETE CASCADE,
+    parent_timeline_id UUID REFERENCES timelines(id),
+    divergence_event_id UUID REFERENCES world_events(id),
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    current_state JSONB,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_timelines_world ON timelines(world_id);
+CREATE INDEX idx_timelines_parent ON timelines(parent_timeline_id);
+```
+
+player_actions表
+
+```sql
+CREATE TABLE player_actions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    world_id UUID NOT NULL REFERENCES worlds(id) ON DELETE CASCADE,
+    timeline_id UUID REFERENCES timelines(id),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    character_id UUID REFERENCES world_characters(id),
+    action_type VARCHAR(50) NOT NULL,
+    description TEXT,
+    input_raw TEXT,
+    parsed_intent JSONB,
+    result JSONB,
+    success_probability FLOAT,
+    actual_result VARCHAR(50),
+    immediate_impact JSONB,
+    delayed_impact JSONB,
+    hidden_impact JSONB,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_player_actions_world ON player_actions(world_id);
+CREATE INDEX idx_player_actions_user ON player_actions(user_id);
+```
+
+event_logs表
+
+```sql
+CREATE TABLE event_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    world_id UUID NOT NULL REFERENCES worlds(id) ON DELETE CASCADE,
+    timeline_id UUID REFERENCES timelines(id),
+    user_id UUID REFERENCES users(id),
+    event_type VARCHAR(50),
+    event_data JSONB,
+    action VARCHAR(255),
+    result TEXT,
+    importance FLOAT DEFAULT 0.5,
+    timestamp TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_event_logs_world ON event_logs(world_id);
+CREATE INDEX idx_event_logs_user ON event_logs(user_id);
+```
+
+1.11 AI调用流程（【补充】完整的AI叙事调用链）
+
+```
+【用户输入】"我偷偷跟踪他"
+
+【Step 1】Action Parser（LLM - Cheap Model）
+输入：用户原始文本
+输出：{"intent": "follow", "target": "character_001", "style": "secret", "risk": "medium"}
+
+【Step 2】World Rule Check（程序规则引擎）
+检查：世界规则是否允许？用户当前状态是否允许？
+输出：pass / fail + 原因
+
+【Step 3】Probability Engine（程序计算）
+成功率 = 用户潜行技能(45) + 环境遮蔽(20) - 目标警觉度(30) = 35%
+
+【Step 4】Event Engine（程序）
+生成事件：成功→"发现秘密"事件；失败→"被发现"事件
+
+【Step 5】World Update（程序）
+更新：用户位置、目标状态、关系值、世界状态
+
+【Step 6】Story Director（LLM - Medium Model）
+输入：World State + Character State + Event Result + Relationship
+输出：故事方向建议 + 叙事文本 + 是否触发角色路线
+
+【Step 7】Narrative Generator（LLM - Medium Model）
+输入：Story Director的建议 + 世界状态摘要 + 最近对话
+输出：具体叙事文本
+
+【Step 8】Editor Agent（LLM - Cheap Model）
+检查：与历史记录冲突？角色OOC？违反世界规则？
+修正后重新输出
+```
+
+1.12 AI模型分级（【补充】成本控制）
+
+阶段 模型级别 Token估算 用途
+Action Parser Cheap（通义千问-Turbo） 200-500 理解用户意图
+Story Director Medium（通义千问-Plus） 500-1500 故事方向决策
+Narrative Generator Medium（通义千问-Plus） 800-3000 生成叙事文本
+Editor Agent Cheap（通义千问-Turbo） 300-800 质量检查
+世界生成 Premium（通义千问-Max） 3000-10000 AI创建世界
+
+1.13 成本控制详细机制（【补充】）
+
+LLM调用预算控制
+
+```python
+DAILY_LLM_BUDGET = {
+    "cheap": 500,      # 500次/天
+    "medium": 100,     # 100次/天
+    "premium": 10      # 10次/天
+}
+
+MAX_TOKENS_PER_RESPONSE = {
+    "cheap": 500,
+    "medium": 2000,
+    "premium": 8000
+}
+```
+
+缓存策略
+
+```python
+CACHE_TTL = {
+    "world_state": 300,      # 5分钟
+    "character_state": 60,   # 1分钟
+    "narrative_context": 600 # 10分钟
+}
+
+BATCH_WRITE_INTERVAL = 60  # 每60秒批量写入一次
+```
+
+1.14 验收标准（【补充】每个Sprint可量化指标）
+
+Sprint 1（World Core）
+
+验收项 标准
+创建世界 用户输入一句话，AI在30秒内生成完整世界DNA
+世界规则 支持5种以上规则类型，规则冲突时系统能检测并提示
+时间系统 支持现实/加速/小说三种时间模式
+
+Sprint 2（Character Simulation）
+
+验收项 标准
+角色自主行为 5个NPC同时自主运行，每个每小时产生至少1个决策
+角色目标 NPC能根据当前状态调整子目标
+
+Sprint 3（Event Engine）
+
+验收项 标准
+因果链 用户行为能在3步内触发连锁反应
+事件追溯 任何事件都能追溯到源头原因
+
+Sprint 4（Story Engine）
+
+验收项 标准
+主线推进 用户不行动时，世界主线仍在推进
+角色路线 用户与特定NPC互动≥10次后，触发角色专属剧情
+
+Sprint 5（Timeline）
+
+验收项 标准
+分支保存 关键选择点自动生成Save Point
+平行世界 用户可从同一Save Point创建2个以上不同分支
+
+Sprint 6（Novel Engine）
+
+验收项 标准
+章节生成 用户游玩1小时后，系统自动生成至少1章小说
+小说质量 Editor Agent检测到OOC/逻辑冲突的次数 < 3次/章
+
+Sprint 7（Live Your Novel）
+
+验收项 标准
+进入世界 用户从选角到进入世界 < 3分钟
+自由行动 用户输入任意行动系统都能响应
+
+Sprint 8（Novel Sync）
+
+验收项 标准
+双向同步 小说修改 → 世界变化；世界变化 → 小说更新
+
+Sprint 9（3D Integration）
+
+验收项 标准
+场景同步 World OS输出的场景状态能正确驱动3D场景加载
+
+第二部分：公版白名单故事库（【新增】版权合规替代方案）
+
+2.1 完整公版作品清单
+
+古风穿越（将军×王妃 / 皇帝×白月光）
+
+编号 书名 作者 时代 可扮演角色 预设转折点
+S01 《三国演义》 罗贯中 东汉末年 吕布/貂蝉/诸葛亮/曹操 5个
+S02 《隋唐演义》 褚人获 隋末唐初 秦琼/李世民/李元霸 5个
+S03 《东周列国志》 冯梦龙 春秋战国 重耳/勾践/西施 4个
+S04 《史记·项羽本纪》 司马迁 秦末汉初 项羽/虞姬 3个
+
+豪门霸宠（霸总×实习生 / 契约婚姻）
+
+编号 书名 作者 时代 可扮演角色 预设转折点
+S05 《傲慢与偏见》 简·奥斯汀 19世纪英国 伊丽莎白/达西 4个
+S06 《呼啸山庄》 艾米莉·勃朗特 19世纪英国 凯瑟琳/希斯克利夫 4个
+S07 《简·爱》 夏洛蒂·勃朗特 19世纪英国 简·爱/罗切斯特 4个
+
+侦探悬疑 / 重生复仇 / 吸血鬼
+
+编号 书名 作者 时代 可扮演角色 预设转折点
+S08 《老残游记》 刘鹗 晚清 老残/各案受害人 4个
+S09 《说岳全传》 钱彩 南宋 岳飞/岳云 4个
+S10 《水浒传》 施耐庵 北宋 林冲/武松/潘金莲 4个
+S11 《德古拉》 布拉姆·斯托克 19世纪英国 德古拉/米娜/范海辛 4个
+S12 《庄子》+《山海经》 庄周/佚名 先秦 原创角色生成 3个
+S13 《二十年目睹之怪现状》 吴趼人 晚清 九死一生/各类角色 4个
+
+2.2 公版作品获取方式
+
+来源 地址 说明
+Project Gutenberg www.gutenberg.org 6万+公版书
+豆瓣阅读公版书 read.douban.com 中文公版书免费阅读
+中国哲学书电子化计划 ctext.org 中文古籍
+文硕阁 www.wenshuoge.com 中文公版书整理
+
+2.3 原创世界生成器（合规增长钩子）
+
+用户选择“创建自己的故事世界”：
+
+```
+用户输入：“我想活在什么样的世界”
+    ↓
+AI生成：世界观设定 + 3-5个角色 + 初始场景 + 3个命运转折点
+    ↓
+用户确认/修改 → 进入叙事模式游玩 → 可公开分享（无版权风险）
+```
+
+第三部分：营收与经济体系（【新增】完整商业化设计）
+
+3.1 核心理念
+
+“生存免费，体验付费；活下去不花钱，活得好才花钱。”
+
+原则 说明
+生存免费 用户每天有饭吃、有地方住、不会饿死
+体验付费 更好的身份、更快的成长、更美的外观、更深的关系
+不卖胜利 不卖“角色一定爱你”、不卖“剧情一定成功”
+不卖生存 不卖“不付费就饿死”、不卖“不付费就卡关”
+
+3.2 对标产品数据参考
+
+产品 月活 付费率 ARPPU 关键借鉴
+星野 488万 ~7% ~$5 12元月卡做入口，抽卡做增量
+Talkie 2519万 ~7% ~$10 三层变现叠加
+筑梦岛 500万 ~20% ~$3 用户端收入覆盖模型成本
+Character.AI 2.33亿 <1% $0.72 纯订阅不可持续
+
+3.3 双货币体系
+
+货币 获取方式 用途
+灵玉（免费） 每日签到、任务、活动、广告观看 基础功能消耗
+灵晶（付费） 充值（1元=100灵晶） 高级功能、抽卡、道具
+
+3.4 分层付费体系
+
+免费层（0元/月）
+
+权益 额度
+世界数量 1个
+角色数量 3个/世界
+每日灵玉 50
+每日对话额度 50轮
+小说生成 基础版，1部/月
+场景 5个基础场景
+广告 有（横幅）
+
+月卡（18元/月）
+
+权益 额度
+世界数量 3个
+角色数量 10个/世界
+每日灵玉 200（4倍）
+每日对话额度 无限
+小说生成 高级版，3部/月
+场景 全部基础场景
+记忆容量 500条
+广告 无
+语音 30分钟/日
+每月赠灵晶 300
+
+星卡（58元/月）
+
+权益 额度
+世界数量 10个
+角色数量 无限
+每日灵玉 500
+每日对话额度 无限
+小说生成 专业版，10部/月
+场景 全部场景（含付费）
+记忆容量 2000条
+广告 无
+语音 无限
+AI模型 高级模型
+世界模拟 深度模式
+专属标识 头像框/昵称特效
+每月赠灵晶 800
+
+年度订阅
+
+套餐 价格 相当于 节省
+月卡年付 168元/年 14元/月 省48元（22%）
+星卡年付 528元/年 44元/月 省168元（24%）
+
+3.5 灵晶充值档位
+
+档位 价格 灵晶 赠送 单价
+小包 6元 600 无 1元=100
+中包 30元 3000 100 1元=103
+大包 68元 6800 500 1元=107
+超值包 128元 12800 1500 1元=112
+至尊包 328元 32800 5000 1元=115
+传说包 648元 64800 10000 1元=115
+
+3.6 四大收费维度
+
+维度一：身份与开局
+
+商品 价格（灵晶） 人民币约
+平民开局 免费 0
+贵族开局 300 3元
+天才开局 500 5元
+隐藏身份开局 800 8元
+自定义开局 1000 10元
+
+维度二：属性与成长
+
+商品 价格（灵晶） 人民币约
+属性重置丹 200 2元
+资质提升丹 500 5元
+天赋觉醒石 1000 10元
+修炼加速符 100/次 1元
+技能速成券 300 3元
+转世重修令 1500 15元
+
+维度三：剧情与体验
+
+商品 价格（灵晶） 人民币约
+角色个人线 500/条 5元
+隐藏剧情包 300 3元
+番外篇 200/篇 2元
+真结局解锁 800 8元
+上帝视角 200 2元
+好感度可视化 150 1.5元
+
+维度四：外观与收藏
+
+商品 价格（灵晶） 人民币约
+角色服装 200-800/套 2-8元
+立绘变体 500 5元
+CG图鉴 300-1000 3-10元
+头像框 200-500 2-5元
+称号 300-1000 3-10元
+语音包 400 4元
+表白卡 100/张 1元
+卡牌皮肤 300-800 3-8元
+
+3.7 付费转化触发时机
+
+节点 触发条件 转化手段
+第一次额度用尽 免费用户日对话50轮用完 “升级月卡解锁无限对话（18元/月）”
+第一次命运卡生成 完成第一个命运转折 “解锁高级命运报告（2元/次）”
+第一次抽卡 获得免费抽卡机会 “还想再抽一次？仅需2元”
+第一次世界创建 创建第一个世界 “升级月卡可创建10个世界”
+第一次语音使用 尝试语音功能 “升级星卡解锁无限语音”
+
+3.8 创作者经济体系
+
+创作者等级
+
+等级 要求 分润比例
+L1·青铜 注册创作者 30%
+L2·白银 作品获100次游玩 40%
+L3·黄金 作品获1000次游玩 50%
+L4·钻石 作品获10000次游玩 60%
+L5·传奇 官方邀请 70%
+
+创作者收入来源
+
+· 世界模板销售（平台抽成30-50%）
+· 角色包销售（平台抽成30-50%）
+· 剧情包销售（平台抽成30-50%）
+· 卡牌交易抽成（10%）
+· 订阅分成（平台抽成30-50%）
+
+关键设计： MVP阶段创作者收入仅可兑换为平台灵晶（不提现），规避税务合规风险。月流水超过10万元后接入正式提现系统。
+
+3.9 单位经济模型
+
+用户类型 占比 月均收入 月均成本 月利润
+免费用户 80% 0元 1元 -80,000元
+月卡用户 15% 18元 3元 +225,000元
+星卡用户 3% 58元 8元 +150,000元
+内购用户 2% 50元 5元 +90,000元
+合计（10万月活） 100% — — +385,000元/月
+
+3.10 成本控制机制
+
+机制 触发条件 动作
+单日AI成本熔断 500元/天 暂停非核心AI调用，发告警
+单用户月成本预警 50元/月 标记异常用户，人工审核
+免费用户超额 超过日额度 “今日额度已用完，观看广告或升级会员”
+毛利率预警 < 20% 触发成本优化流程
+
+3.11 数据表（【新增】营收相关表）
+
+```sql
+-- 用户货币表
+CREATE TABLE user_currency (
+    user_id UUID PRIMARY KEY REFERENCES users(id),
+    ling_yu INT DEFAULT 50,
+    ling_jing INT DEFAULT 0,
+    last_checkin DATE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- 订阅表
+CREATE TABLE subscriptions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id),
+    plan_type VARCHAR(20) NOT NULL,
+    status VARCHAR(20) DEFAULT 'active',
+    started_at TIMESTAMP,
+    expires_at TIMESTAMP,
+    payment_id VARCHAR(255),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- 交易记录表
+CREATE TABLE transactions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id),
+    type VARCHAR(30) NOT NULL,
+    currency VARCHAR(10) NOT NULL,
+    amount INT NOT NULL,
+    balance_after INT,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- 命运卡牌表
+CREATE TABLE destiny_cards (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id),
+    world_id UUID REFERENCES worlds(id),
+    session_id UUID REFERENCES story_sessions(id),
+    name VARCHAR(255),
+    rarity VARCHAR(20),
+    image_url TEXT,
+    story_snapshot TEXT,
+    is_tradable BOOLEAN DEFAULT false,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- 创作者表
+CREATE TABLE creators (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) UNIQUE,
+    level INT DEFAULT 1,
+    total_earnings INT DEFAULT 0,
+    pending_earnings INT DEFAULT 0,
+    published_worlds INT DEFAULT 0,
+    total_plays INT DEFAULT 0,
+    rating FLOAT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+3.12 API接口（【新增】营收相关API）
+
+Method Endpoint 说明
+GET /api/v1/currency/balance 查询用户货币余额
+POST /api/v1/currency/recharge 灵晶充值（微信/支付宝）
+POST /api/v1/subscription/purchase 购买订阅
+GET /api/v1/subscription/status 查询订阅状态
+POST /api/v1/cards/draw 抽卡（消耗灵晶）
+GET /api/v1/cards/collection 获取卡牌收藏
+POST /api/v1/creator/publish 发布创作者内容
+GET /api/v1/creator/dashboard 创作者数据看板
+
+3.13 关键指标看板
+
+指标 MVP目标 健康值
+付费转化率 5% 10%
+月卡订阅率 3% 8%
+ARPPU 15元 25元
+续费率 40% 60%
+毛利率 20% 40%
+抽卡率 2% 5%
+
+第四部分：开发计划更新
+
+4.1 新增Sprint（World OS模块）
+
+Sprint 内容 周期 验收标准
+Sprint 1 World Core（世界CRUD、World Bible、Rules、Time） 2周 用户输入一句话，AI在30秒内生成完整世界DNA
+Sprint 2 Character Simulation（角色状态、Goals、Location、Schedule） 2周 5个NPC同时自主运行，每个每小时产生≥1个决策
+Sprint 3 Event Engine（事件、Cause、Effect） 2周 用户行为能在3步内触发连锁反应
+Sprint 4 Story Engine（Main Story、Side Story、Character Route） 2周 用户与NPC互动≥10次后触发角色专属剧情
+Sprint 5 Timeline（Save、Branch、Restore） 1周 关键选择点自动生成Save Point，可创建2个以上分支
+Sprint 6 Novel Engine（Bible、Outline、Chapter） 2周 用户游玩1小时后自动生成≥1章小说
+Sprint 7 Live Your Novel（Create Character、Enter World、Action） 2周 用户输入任意行动系统都能响应
+Sprint 8 Novel Sync（Event Log → Chapter） 1周 小说修改↔世界变化双向同步
+Sprint 9 3D Integration（World State → Unity Scene） 2周 World OS输出的场景状态能驱动3D场景加载
+
+4.2 营收系统开发计划
+
+Phase 内容 周期
+Phase 1 灵玉签到系统、月卡订阅、灵晶充值 第1-2周
+Phase 2 星卡订阅、年度订阅、抽卡系统 第3-4周
+Phase 3 场景/角色皮肤、创作者系统 第5-8周
+Phase 4 卡牌交易、创作者提现 第9-12周
+
+第五部分：追加给Codex的指令
+
+```
+【今日新增内容】本文档为今天讨论新增/补充/优化的全部内容。
+
+【整合方式】
+1. 第一部分（World OS / AI Novel / Live Your Novel）→ 作为独立新功能模块追加到开发文档
+2. 第二部分（公版白名单故事库）→ 替换原文档中涉及“上传第三方版权作品”的相关内容
+3. 第三部分（营收与经济体系）→ 作为独立章节追加到开发文档
+4. 第四部分（开发计划更新）→ 更新原有开发计划
+
+【执行顺序】
+1. 先将今天的“新增内容”作为独立文档添加到 docs/ 目录：
+   - docs/WORLD_OS_SPEC.md
+   - docs/ECONOMY_SYSTEM.md
+
+2. 再更新昨日开发文档中需要修改的部分
+
+【与现有系统的关系】
+- World OS是独立功能模块，可以单独运行
+- 调用已有：AI角色系统、Memory Engine、Relationship Engine、Emotion Engine、3D Avatar、Voice Engine
+- 不要重复开发已有AI陪伴基础设施
+
+【开发原则】
+- 不砍掉任何功能，全部保留
+- 通过分阶段开发逐步实现
+- 与现有AI陪伴系统兼容
+- 不推倒已做好的部分，只新增模块
+```
+
+---
+
+文档结束

@@ -1,0 +1,11 @@
+{
+  "status": "prototype_generated",
+  "style": "adult realistic anatomical base, procedural clothing and groom",
+  "source": "MakeHuman CC0",
+  "limitations": [
+    "not a finished photorealistic digital double",
+    "only torso/head rig; limbs and facial blendshapes pending",
+    "procedural material detail requires texture baking"
+  ],
+  "glb": "F:\\\u5f00\u53d1\u8f6f\u4ef6\u9879\u76ee\u6587\u4ef6\\MIRAI\u7075\u5883\\apps\\web\\public\\assets\\characters\\ling-realistic-prototype.glb"
+}

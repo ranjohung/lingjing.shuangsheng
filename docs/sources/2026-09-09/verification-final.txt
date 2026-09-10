@@ -1,0 +1,11 @@
+v5.1 final documentation checks
+PASS source S07 matches uploaded file SHA256 
+0BF74EA3E11F06196913BAFA3176A0982AB4B86625E673537791C27B7942B8FB
+PASS S07 equals S05/S06; seven source files archived
+PASS nine SQL blocks preserved exactly
+PASS nine Sprint acceptance rows
+PASS 
+58
+ relative links
+PASS UTF-8 reads
+Scope: documentation only; no database/runtime tests executed

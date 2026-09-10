@@ -1,0 +1,3 @@
+packages:
+  - "apps/web"
+  # apps/api 为 Python FastAPI，不纳入 pnpm 工作区

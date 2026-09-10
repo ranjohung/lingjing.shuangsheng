@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>存档 / 读档 · 灵境 · 双生</title>
+<style>
+:root { color-scheme: dark; }
+html, body { margin: 0; padding: 0; min-height: 100vh; background: linear-gradient(180deg, #0d1326 0%, #1c1939 60%, #0a0d1a 100%); color: #e8ecf4; font-family: "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif; }
+* { box-sizing: border-box; }
+
+.back-arrow { position: fixed; top: 14px; left: 14px; z-index: 60;
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px 8px 12px; border-radius: 999px;
+  background: rgba(20,18,46,.75); backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,.15); color: #fff;
+  font-size: 13px; cursor: pointer; font-family: inherit; text-decoration: none;
+  transition: all .2s;
+}
+.back-arrow:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.35); transform: translateX(-2px); }
+.back-arrow .icon { font-size: 18px; line-height: 1; font-weight: 700; }
+
+.page { max-width: 720px; margin: 0 auto; padding: 70px 22px 60px; }
+.head { text-align: center; margin-bottom: 20px; }
+.head h1 { margin: 0 0 6px; font-size: 22px; font-weight: 600; color: #fff; }
+.head p { margin: 0; font-size: 12px; color: #9faec2; letter-spacing: .2em; }
+
+.tabs { display: flex; gap: 0; background: rgba(255,255,255,.06); border-radius: 10px; padding: 3px; margin: 0 auto 22px; max-width: 360px; border: 1px solid rgba(255,255,255,.10); }
+.tab { flex: 1; padding: 9px 0; text-align: center; border-radius: 8px; cursor: pointer; font-size: 13px; color: #9faec2; transition: all .2s; border: none; background: transparent; font-family: inherit; }
+.tab.on { background: linear-gradient(120deg, #8e5bd8, #5b9cd8); color: #fff; box-shadow: 0 2px 8px rgba(142,91,216,.3); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.slot {
+ background: linear-gradient(180deg, rgba(28,24,56,.7), rgba(11,8,28,.7));
+ border: 1px solid rgba(255,255,255,.10); border-radius: 12px;
+ padding: 14px 16px; transition: all .2s; position: relative;
+}
+.slot.filled { border-color: rgba(255,209,128,.30); }
+.slot.empty { border-style: dashed; }
+.slot-head { display: flex; align-items: center; justify-content: space-between; }
+.slot-idx { font-size: 11px; color: #c9a8ff; letter-spacing: .25em; font-weight: 600; }
+.slot-time { font-size: 10px; color: #9faec2; }
+.slot-info { font-size: 12px; color: #e8ecf4; margin-top: 8px; line-height: 1.5; min-height: 36px; }
+.slot-info .meta { font-size: 10px; color: #6e7d96; margin-top: 4px; }
+.slot-actions { display: flex; gap: 6px; margin-top: 10px; }
+.btn {
+ padding: 7px 11px; border-radius: 8px;
+ background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.14);
+ color: #e8ecf4; font-size: 11.5px; cursor: pointer; font-family: inherit;
+ transition: all .15s; flex: 1;
+}
+.btn:hover { background: rgba(255,255,255,.08); }
+.btn.primary { background: linear-gradient(120deg, rgba(216,91,142,.30), rgba(142,91,216,.30)); border-color: rgba(216,91,142,.55); color: #fff; }
+.btn.primary:hover { filter: brightness(1.15); }
+.btn.danger { color: #ff9eb8; border-color: rgba(216,91,142,.35); }
+.btn.danger:hover { background: rgba(216,91,142,.10); }
+
+.notice { padding: 10px 14px; border-radius: 8px; background: rgba(91,197,160,.10); border: 1px solid rgba(91,197,160,.35); color: #7cf6c0; font-size: 12px; margin-top: 16px; display: none; text-align: center; }
+.notice.show { display: block; }
+.notice.warn { background: rgba(216,91,142,.10); border-color: rgba(216,91,142,.35); color: #ff9eb8; }
+
+@media (max-width: 768px) {
+  .page { padding: 60px 14px 40px; }
+  .head h1 { font-size: 18px; }
+  .grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<a class="back-arrow" href="plot-runner.html" id="backArrow"><span class="icon">◀</span><span>返回游戏</span></a>
+
+<div class="page">
+  <div class="head">
+    <h1>💾 存档 / 读档</h1>
+    <p>SAVE & LOAD · 5 槽位</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" id="tab-save">💾 存档</button>
+    <button class="tab" id="tab-load">📂 读档</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+  <div class="notice" id="notice"></div>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const novelId = params.get('novelId') || 'demo_palace';
+const mode = params.get('mode') || 'save';   // 默认存档
+const KEY_PREFIX = 'plotrunner.save.';
+const RUNNER_KEY = 'plotrunner.last.';
+
+document.getElementById('backArrow').href = `plot-runner.html?novelId=${novelId}`;
+
+const tabSave = document.getElementById('tab-save');
+const tabLoad = document.getElementById('tab-load');
+let currentMode = mode;
+tabSave.classList.toggle('on', currentMode === 'save');
+tabLoad.classList.toggle('on', currentMode === 'load');
+tabSave.onclick = () => { currentMode = 'save'; tabSave.classList.add('on'); tabLoad.classList.remove('on'); render(); };
+tabLoad.onclick = () => { currentMode = 'load'; tabLoad.classList.add('on'); tabSave.classList.remove('on'); render(); };
+
+function loadSlot(i) {
+  try { return JSON.parse(localStorage.getItem(KEY_PREFIX + novelId + '.' + i)) || null; }
+  catch { return null; }
+}
+function writeSlot(i, data) {
+  if (!data) localStorage.removeItem(KEY_PREFIX + novelId + '.' + i);
+  else localStorage.setItem(KEY_PREFIX + novelId + '.' + i, JSON.stringify(data));
+}
+
+function getCurrentSnapshot() {
+  try {
+    const raw = localStorage.getItem(RUNNER_KEY + novelId);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch { return null; }
+}
+
+function render() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 5; i++) {
+    const s = loadSlot(i);
+    const filled = !!s;
+    const div = document.createElement('div');
+    div.className = 'slot ' + (filled ? 'filled' : 'empty');
+    const headInfo = filled
+      ? `<span class="slot-time">${new Date(s.ts).toLocaleString('zh-CN', {month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})}</span>`
+      : `<span class="slot-time">空槽位</span>`;
+    const info = filled
+      ? `<div class="slot-info">
+           <div>${escapeHtml(s.name || '自动存档')}</div>
+           <div class="meta">${escapeHtml(s.chapter || '')} · 信任 ${s.snapshot?.trust ?? 0} · 亲密 ${s.snapshot?.intimacy ?? 0}</div>
+         </div>
+         <div class="slot-actions">
+           ${currentMode === 'load' ? '<button class="btn primary" data-act="load" data-i="'+i+'">读档</button>' : ''}
+           <button class="btn" data-act="overwrite" data-i="${i}">覆盖</button>
+           <button class="btn danger" data-act="del" data-i="${i}">删除</button>
+         </div>`
+      : `<div class="slot-info">尚未存档</div>
+         <div class="slot-actions">
+           ${currentMode === 'save'
+             ? '<button class="btn primary" data-act="save" data-i="'+i+'">立即存档</button>'
+             : '<button class="btn" disabled style="opacity:.4">无数据</button>'}
+         </div>`;
+
+    div.innerHTML = `
+      <div class="slot-head">
+        <span class="slot-idx">槽位 ${i + 1}</span>
+        ${headInfo}
+      </div>
+      ${info}
+    `;
+    grid.appendChild(div);
+  }
+
+  // 绑定按钮
+  grid.querySelectorAll('.btn[data-act]').forEach(btn => {
+    btn.onclick = () => {
+      const act = btn.dataset.act;
+      const i = parseInt(btn.dataset.i, 10);
+      if (act === 'save' || act === 'overwrite') {
+        const snap = getCurrentSnapshot();
+        if (!snap) { showNotice('当前没有可保存的进度', true); return; }
+        const slotData = {
+          ts: Date.now(),
+          name: `存档 ${i + 1}`,
+          chapter: snap.chapterTitle || snap.lastChapter || '章节',
+          snapshot: snap
+        };
+        writeSlot(i, slotData);
+        showNotice('✓ 已存档到槽位 ' + (i + 1));
+        render();
+      } else if (act === 'load') {
+        const s = loadSlot(i);
+        if (!s) return;
+        // 跳回游戏页 + 还原数据（写入 RUNNER_KEY 触发 plot-engine restore）
+        localStorage.setItem(RUNNER_KEY + novelId, JSON.stringify(s.snapshot));
+        // 同时保存 load intent
+        sessionStorage.setItem('plotrunner.loadintent', String(i));
+        showNotice('已读档，正在返回游戏…');
+        setTimeout(() => location.href = `plot-runner.html?novelId=${novelId}&loadSlot=${i}`, 600);
+      } else if (act === 'del') {
+        if (!confirm('确认删除槽位 ' + (i + 1) + '？')) return;
+        writeSlot(i, null);
+        showNotice('已删除槽位 ' + (i + 1));
+        render();
+      }
+    };
+  });
+}
+
+function showNotice(msg, isWarn = false) {
+  const n = document.getElementById('notice');
+  n.textContent = msg;
+  n.className = 'notice show' + (isWarn ? ' warn' : '');
+  setTimeout(() => n.classList.remove('show'), 2400);
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+render();
+</script>
+</body>
+</html>

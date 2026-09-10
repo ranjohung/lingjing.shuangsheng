@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>上传小说 · 创作者中心 · 灵境 · 双生</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/design-system.css" />
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;min-height:100%;background:#0d0b22;color:#edf1f6;font-family:'Noto Sans SC','Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+  .step{display:none;}
+  .step.active{display:block;}
+  .stepper{display:flex;align-items:center;justify-content:center;gap:8px;margin:24px auto 12px;max-width:680px;}
+  .step-bubble{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.04);display:grid;place-items:center;color:rgba(255,255,255,.6);font-weight:600;}
+  .step-bubble.active{background:linear-gradient(120deg,#8b7cf6,#6ec6ff);color:#08071a;border-color:transparent;box-shadow:0 0 24px rgba(139,124,246,.6);}
+  .step-bubble.done{background:#7cf6c0;color:#08071a;border-color:transparent;}
+  .step-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.15),transparent);}
+  .step-line.done{background:linear-gradient(90deg,#7cf6c0,transparent);}
+  .panel{background:rgba(20,18,46,.6);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:28px;max-width:1080px;margin:0 auto;}
+  .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;max-height:480px;overflow-y:auto;padding:6px;}
+  .genre-opt{padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:14px;cursor:pointer;background:rgba(255,255,255,.03);transition:background .15s,border .15s;}
+  .genre-opt:hover{background:rgba(255,255,255,.06);}
+  .genre-opt.sel{background:rgba(139,124,246,.18);border-color:rgba(139,124,246,.7);}
+  .btn{padding:10px 20px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:#fff;cursor:pointer;font-size:13px;}
+  .btn.primary{background:linear-gradient(120deg,#8b7cf6,#6ec6ff);color:#08071a;border:none;}
+  .btn:hover{background:rgba(255,255,255,.1);}
+  .btn.primary:hover{opacity:.9;}
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+  textarea{width:100%;min-height:280px;background:rgba(8,7,26,.6);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px;color:#fff;font:13px/1.7 'Noto Sans SC',sans-serif;resize:vertical;}
+  .file-drop{border:2px dashed rgba(255,255,255,.2);border-radius:14px;padding:24px;text-align:center;color:rgba(255,255,255,.6);background:rgba(8,7,26,.3);transition:border .15s,background .15s;}
+  .file-drop.dragover{border-color:#8b7cf6;background:rgba(139,124,246,.1);}
+  .kv{display:grid;grid-template-columns:140px 1fr;gap:10px;align-items:center;}
+  .kv label{font-size:12px;color:rgba(255,255,255,.7);}
+  .kv input,.kv select{background:rgba(8,7,26,.6);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:8px 12px;color:#fff;}
+  .audit-cell{background:rgba(8,7,26,.6);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;}
+  .audit-cell h4{font-size:13px;color:#8b7cf6;margin:0 0 8px;font-weight:600;}
+  .pill{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:9999px;background:rgba(255,255,255,.08);font-size:11px;margin:2px;}
+  .pill.main{background:rgba(110,198,255,.16);color:#6ec6ff;}
+  .pill.support{background:rgba(124,246,192,.16);color:#7cf6c0;}
+  .pill.antag{background:rgba(246,166,216,.16);color:#f6a6d8;}
+  .pill.highlight{background:rgba(255,217,160,.16);color:#ffd980;}
+  .audit-line{font-size:11px;color:rgba(255,255,255,.55);}
+  .audit-stat{display:flex;justify-content:space-between;font-size:13px;color:rgba(255,255,255,.7);}
+  .audit-stat b{color:#fff;}
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- v5.18: 新 PageHeader -->
+<header class="ds-page-header">
+  <div class="ds-page-header-inner">
+    <a href="creator-center.html" class="ds-back"><span class="arrow">←</span> 返回创作者中心</a>
+    <nav class="ds-breadcrumb">
+      <a href="library.html">小说世界</a>
+      <span class="sep">/</span>
+      <a href="creator-center.html">创作者中心</a>
+      <span class="sep">/</span>
+      <span class="current">上传小说</span>
+    </nav>
+    <div class="ds-page-header-right">
+      <div class="ds-user-chip">
+        <div class="ds-user-avatar">L</div>
+        <span>灵境作者</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div style="padding-top:var(--s-6);padding-bottom:var(--s-16);">
+
+  <!-- 步骤条 -->
+  <div class="stepper" id="stepper">
+    <div class="step-bubble active" data-step="1">1</div>
+    <div class="step-line"></div>
+    <div class="step-bubble" data-step="2">2</div>
+    <div class="step-line"></div>
+    <div class="step-bubble" data-step="3">3</div>
+    <div class="step-line"></div>
+    <div class="step-bubble" data-step="4">4</div>
+  </div>
+  <div style="text-align:center;margin-bottom:24px;font-size:12px;color:rgba(255,255,255,.55);">
+    <span id="step-label">① 选题材</span>
+  </div>
+
+  <div class="panel">
+
+    <!-- Step 1: 选题材 -->
+    <section class="step active" data-step="1">
+      <h3 class="font-display text-xl mb-2">① 选题材</h3>
+      <p class="text-xs text-white/55 mb-4">系统将基于关键词匹配自动推荐题材，你也可以手动选择</p>
+      <div class="genre-grid" id="genre-grid"></div>
+      <div class="flex justify-between items-center mt-6">
+        <div id="auto-genre-tip" class="text-xs text-white/45">🤖 自动推荐：<span id="auto-genre-name">—</span></div>
+        <button class="btn primary" id="step1-next">下一步：上传文本 →</button>
+      </div>
+    </section>
+
+    <!-- Step 2: 文本 -->
+    <section class="step" data-step="2">
+      <h3 class="font-display text-xl mb-2">② 上传或粘贴小说文本</h3>
+      <p class="text-xs text-white/55 mb-4">支持粘贴大段文本 / 上传 .txt / .md 文件。文本会按"第X章"自动分段</p>
+      <div class="file-drop" id="file-drop">
+        📂 把文件拖到这里 或 <label class="text-aurora-violet cursor-pointer" style="text-decoration:underline;">点击选择<input type="file" accept=".txt,.md" id="file-input" class="hidden" /></label>
+        <div class="text-[10px] mt-1">支持 .txt / .md · ≤ 10 MB</div>
+      </div>
+      <div style="margin:16px 0 8px;text-align:center;font-size:11px;color:rgba(255,255,255,.4);">— 或 —</div>
+      <textarea id="text-input" placeholder="把小说全文粘贴到这里...&#10;第一章 雨夜&#10;我叫林霜晚...&#10;&#10;第二章 书院"></textarea>
+      <div class="flex justify-between mt-3 text-xs text-white/55">
+        <span>字数：<b id="text-len">0</b></span>
+        <span id="text-meta">—</span>
+      </div>
+      <div class="flex justify-between items-center mt-6">
+        <button class="btn" id="step2-back">← 上一步</button>
+        <button class="btn primary" id="step2-next" disabled>下一步：填元数据 →</button>
+      </div>
+    </section>
+
+    <!-- Step 3: 元数据 -->
+    <section class="step" data-step="3">
+      <h3 class="font-display text-xl mb-2">③ 元数据（标题 / 作者）</h3>
+      <div class="kv" style="margin-top:14px;">
+        <label>小说标题</label>
+        <input id="meta-title" type="text" placeholder="锦绣未央 · 大明宫夜宴" />
+      </div>
+      <div class="kv" style="margin-top:10px;">
+        <label>作者</label>
+        <input id="meta-author" type="text" placeholder="匿名" />
+      </div>
+      <div class="kv" style="margin-top:10px;">
+        <label>确认题材</label>
+        <div id="meta-genre" style="padding:8px 12px;background:rgba(8,7,26,.6);border-radius:10px;border:1px solid rgba(255,255,255,.1);">—</div>
+      </div>
+      <div class="flex justify-between items-center mt-6">
+        <button class="btn" id="step3-back">← 上一步</button>
+        <button class="btn primary" id="step3-next">下一步：一键解析 →</button>
+      </div>
+    </section>
+
+    <!-- Step 4: 解析预览 -->
+    <section class="step" data-step="4">
+      <h3 class="font-display text-xl mb-2">④ 解析预览 · 覆盖审计</h3>
+      <p class="text-xs text-white/55 mb-4">系统已自动识别所有 <b>角色 / 章节 / 高光</b>。任何章节都不会漏；任何主配角反派都会出现在游戏中；任何高光都会变成可玩的游戏节点。</p>
+
+      <div class="audit-cell mb-4">
+        <h4>📊 覆盖审计</h4>
+        <div class="audit-stat"><span>章节</span><span><b id="audit-ch">—</b></span></div>
+        <div class="audit-line">已覆盖 <span id="audit-ch-cov">—</span> / 共 <span id="audit-ch-total">—</span></div>
+        <div id="audit-ch-gap" class="audit-line" style="color:#f6a6d8;margin-top:2px;"></div>
+        <hr style="border-color:rgba(255,255,255,.05);margin:10px 0;">
+        <div class="audit-stat"><span>角色</span><span><b id="audit-char">—</b></span></div>
+        <div class="audit-line">已覆盖 <span id="audit-char-cov">—</span> / 共 <span id="audit-char-total">—</span></div>
+        <div id="audit-char-gap" class="audit-line" style="color:#f6a6d8;margin-top:2px;"></div>
+        <hr style="border-color:rgba(255,255,255,.05);margin:10px 0;">
+        <div class="audit-stat"><span>高光</span><span><b id="audit-hl">—</b></span></div>
+        <div class="audit-line">已覆盖 <span id="audit-hl-cov">—</span> / 共 <span id="audit-hl-total">—</span></div>
+        <div id="audit-hl-gap" class="audit-line" style="color:#f6a6d8;margin-top:2px;"></div>
+      </div>
+
+      <div class="audit-cell mb-4">
+        <h4>👤 提取的角色</h4>
+        <div id="char-list"></div>
+      </div>
+
+      <div class="audit-cell mb-4">
+        <h4>📑 识别的章节</h4>
+        <div id="chapter-list" class="text-xs"></div>
+      </div>
+
+      <div class="audit-cell mb-4">
+        <h4>✦ 识别的高光剧情</h4>
+        <div id="highlight-list"></div>
+      </div>
+
+      <div class="flex justify-between items-center mt-6">
+        <button class="btn" id="step4-back">← 上一步</button>
+        <div class="flex gap-3">
+          <button class="btn" id="step4-edit">📝 进入编辑器微调</button>
+          <button class="btn primary" id="step4-save">💾 保存并进入游戏 →</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script src="js/genres.js"></script>
+<script src="js/novel-store.js"></script>
+<script src="js/novel-parser.js"></script>
+<script src="js/plot-schema.js"></script>
+<script src="js/demo-seed.js"></script>
+<script>
+(function () {
+  const STATE = { step: 1, genre: null, text: '', title: '', author: '', plot: null };
+  // 预选 genre from URL
+  const params = new URLSearchParams(location.search);
+  if (params.get('genre')) STATE.genre = params.get('genre');
+
+  // === Step 1: 选题材 ===
+  const grid = document.getElementById('genre-grid');
+  GENRES_LIBRARY.forEach(g => {
+    const opt = document.createElement('div');
+    opt.className = 'genre-opt';
+    opt.dataset.genre = g.id;
+    opt.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:22px;">${g.icon}</span>
+        <strong style="font:13px 'Noto Sans SC';">${g.cn}</strong>
+      </div>
+      <p style="font:10px/1.4;color:rgba(255,255,255,.5);margin-top:4px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${g.desc}</p>`;
+    opt.onclick = () => {
+      STATE.genre = g.id;
+      document.querySelectorAll('#genre-grid .genre-opt').forEach(o => o.classList.remove('sel'));
+      opt.classList.add('sel');
+      updateAutoGenre();
+    };
+    if (STATE.genre === g.id) opt.classList.add('sel');
+    grid.appendChild(opt);
+  });
+  function updateAutoGenre() { /* 体裁手动覆盖优先 */ }
+
+  function gotoStep(n) {
+    STATE.step = n;
+    document.querySelectorAll('.step').forEach(s => s.classList.toggle('active', s.dataset.step == n));
+    document.querySelectorAll('.stepper .step-bubble').forEach(b => {
+      const idx = parseInt(b.dataset.step);
+      b.classList.toggle('active', idx === n);
+      b.classList.toggle('done', idx < n);
+    });
+    const labels = ['① 选题材', '② 上传文本', '③ 元数据', '④ 解析预览'];
+    document.getElementById('step-label').textContent = labels[n-1];
+    document.querySelectorAll('.stepper .step-line').forEach((l,i)=>{
+      l.classList.toggle('done', i < n - 1);
+    });
+    if (n === 4) doParse();
+    if (n === 3) {
+      const g = getGenreById(STATE.genre);
+      document.getElementById('meta-genre').innerHTML = `<span style="font-size:18px;margin-right:8px;">${g.icon}</span> ${g.cn} <small style="opacity:.5;margin-left:8px;">(${g.tag})</small>`;
+      if (!STATE.title) document.getElementById('meta-title').value = '';
+      if (!STATE.author) document.getElementById('meta-author').value = '';
+    }
+  }
+
+  // Step 1 → 2
+  document.getElementById('step1-next').onclick = () => {
+    if (!STATE.genre) return alert('请选择一个题材');
+    gotoStep(2);
+  };
+  // Step 2: 文本
+  const textInput = document.getElementById('text-input');
+  textInput.addEventListener('input', () => {
+    STATE.text = textInput.value;
+    document.getElementById('text-len').textContent = STATE.text.length;
+    const chapterCount = (STATE.text.match(/第[一二三四五六七八九十百千零〇两\d]+[\s章回卷篇集部节]|Chapter\s*\d+/gi) || []).length;
+    document.getElementById('text-meta').textContent = STATE.text.length > 50 ? `${chapterCount} 章节预识别` : '—';
+    document.getElementById('step2-next').disabled = STATE.text.length < 50;
+    // 自动推荐
+    const r = matchGenre(STATE.text);
+    if (r && r.top.score > 0) {
+      const g = getGenreById(r.top.id);
+      document.getElementById('auto-genre-name').textContent = g ? `${g.icon} ${g.cn}` : '—';
+      if (!document.querySelector('#genre-grid .genre-opt.sel')) {
+        STATE.genre = r.top.id;
+        document.querySelectorAll('#genre-grid .genre-opt').forEach(o => o.classList.remove('sel'));
+        const el = document.querySelector(`#genre-grid .genre-opt[data-genre=${r.top.id}]`);
+        if (el) el.classList.add('sel');
+      }
+    }
+  });
+  // 文件上传
+  const fileDrop = document.getElementById('file-drop');
+  const fileInput = document.getElementById('file-input');
+  fileDrop.addEventListener('dragover', e => { e.preventDefault(); fileDrop.classList.add('dragover'); });
+  fileDrop.addEventListener('dragleave', () => fileDrop.classList.remove('dragover'));
+  fileDrop.addEventListener('drop', e => {
+    e.preventDefault();
+    fileDrop.classList.remove('dragover');
+    const f = e.dataTransfer.files[0];
+    if (f) readFile(f);
+  });
+  fileInput.addEventListener('change', e => { if (e.target.files[0]) readFile(e.target.files[0]); });
+  function readFile(f) {
+    if (f.size > 10 * 1024 * 1024) return alert('文件超过 10 MB');
+    const reader = new FileReader();
+    reader.onload = ev => { textInput.value = ev.target.result; textInput.dispatchEvent(new Event('input')); };
+    reader.readAsText(f);
+  }
+
+  document.getElementById('step2-back').onclick = () => gotoStep(1);
+  document.getElementById('step2-next').onclick = () => {
+    if (!STATE.text || STATE.text.length < 50) return;
+    gotoStep(3);
+  };
+
+  // Step 3
+  document.getElementById('step3-back').onclick = () => gotoStep(2);
+  document.getElementById('step3-next').onclick = () => {
+    STATE.title = document.getElementById('meta-title').value.trim() || '未命名小说';
+    STATE.author = document.getElementById('meta-author').value.trim() || '匿名';
+    gotoStep(4);
+  };
+
+  // Step 4: 解析
+  function doParse() {
+    if (!STATE.text || !STATE.genre) return;
+    const plot = NovelParser.parse(STATE.text, { title: STATE.title, author: STATE.author, genre: STATE.genre });
+    plot.novel.id = 'n_' + Date.now();
+    STATE.plot = plot;
+    renderAudit(plot);
+  }
+
+  function renderAudit(plot) {
+    const a = plot.audit;
+    document.getElementById('audit-ch').textContent = a.covered.chapters === a.total.chapters ? '✅' : (a.gaps.chapters.length ? '⚠️' : '✓');
+    document.getElementById('audit-ch-cov').textContent = a.covered.chapters;
+    document.getElementById('audit-ch-total').textContent = a.total.chapters;
+    document.getElementById('audit-ch-gap').textContent = a.gaps.chapters.length ? `⚠ 缺 ${a.gaps.chapters.length} 章: ${a.gaps.chapters.join(', ')}` : '✅ 全部覆盖';
+
+    document.getElementById('audit-char').textContent = a.covered.chars === a.total.chars ? '✅' : (a.gaps.chars.length ? '⚠️' : '✓');
+    document.getElementById('audit-char-cov').textContent = a.covered.chars;
+    document.getElementById('audit-char-total').textContent = a.total.chars;
+    document.getElementById('audit-char-gap').textContent = a.gaps.chars.length ? `⚠ 缺 ${a.gaps.chars.length} 角色: ${a.gaps.chars.join('/')}` : '✅ 全部覆盖';
+
+    document.getElementById('audit-hl').textContent = a.covered.highlights === a.total.highlights ? '✅' : (a.gaps.highlights.length ? '⚠️' : '✓');
+    document.getElementById('audit-hl-cov').textContent = a.covered.highlights;
+    document.getElementById('audit-hl-total').textContent = a.total.highlights;
+    document.getElementById('audit-hl-gap').textContent = a.gaps.highlights.length ? `⚠ 缺 ${a.gaps.highlights.length} 高光: ${a.gaps.highlights.join('/')}` : '✅ 全部覆盖';
+
+    const cl = document.getElementById('char-list');
+    cl.innerHTML = '';
+    plot.chars.forEach(c => {
+      const p = document.createElement('span');
+      p.className = 'pill ' + c.role;
+      p.textContent = `${c.name} (${c.mentions}次)`;
+      cl.appendChild(p);
+    });
+
+    const chl = document.getElementById('chapter-list');
+    chl.innerHTML = '';
+    plot.novel.chapters.forEach(c => {
+      const d = document.createElement('div');
+      d.style.padding = '6px 8px';
+      d.style.borderBottom = '1px dashed rgba(255,255,255,.06)';
+      d.textContent = `${c.title}`;
+      chl.appendChild(d);
+    });
+
+    const hl = document.getElementById('highlight-list');
+    hl.innerHTML = '';
+    plot.highlights.forEach(h => {
+      const p = document.createElement('div');
+      p.className = 'pill highlight';
+      p.style.display = 'block';
+      p.style.margin = '4px 0';
+      p.style.padding = '6px 10px';
+      p.textContent = `[${h.badge}] "${h.excerpt}"`;
+      hl.appendChild(p);
+    });
+  }
+
+  document.getElementById('step4-back').onclick = () => gotoStep(3);
+  document.getElementById('step4-edit').onclick = () => {
+    if (!STATE.plot) return;
+    NovelStore.saveNovel(STATE.plot);
+    location.href = `novel-edit.html?novelId=${STATE.plot.novel.id}`;
+  };
+  document.getElementById('step4-save').onclick = () => {
+    if (!STATE.plot) return;
+    NovelStore.saveNovel(STATE.plot);
+    location.href = `plot-runner.html?novelId=${STATE.plot.novel.id}`;
+  };
+
+  // 初始
+  if (STATE.genre) {
+    const el = document.querySelector(`#genre-grid .genre-opt[data-genre=${STATE.genre}]`);
+    if (el) el.classList.add('sel');
+  }
+})();
+</script>
+</body>
+</html>

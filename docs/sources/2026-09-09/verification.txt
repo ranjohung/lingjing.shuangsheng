@@ -1,0 +1,9 @@
+PASS source S01-legal.txt
+PASS source S02-creator.txt
+PASS source S03-world-additions.txt
+PASS source S04-economy.txt
+PASS source S05-world-engineering.txt
+PASS source S06-world-engineering-duplicate.txt
+PASS 15 legal drafts exact source sections
+PASS 63 relative links
+PASS UTF-8 document reads without replacement characters

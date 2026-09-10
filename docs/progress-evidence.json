@@ -1,0 +1,87 @@
+{
+  "STORY-01": {
+    "status": "partial",
+    "evidence": "吕布可玩；达西与岳飞目录明确待开发",
+    "next": "补齐另外两部完整内容"
+  },
+  "STORY-02": {
+    "status": "partial",
+    "evidence": "原著、自建替身及已有自建人物入口已验证",
+    "next": "专属背景事件与多视角"
+  },
+  "STORY-03": {
+    "status": "partial",
+    "evidence": "吕布两路线各30选择点、六章",
+    "next": "泛化多作品内容契约"
+  },
+  "STORY-04": {
+    "status": "partial",
+    "evidence": "军议/拜访/耕作等46节点",
+    "next": "补充场景演出和后果叙述"
+  },
+  "STORY-05": {
+    "status": "partial",
+    "evidence": "属性/关系/隐藏标志随选择更新",
+    "next": "正式player_state迁移与跨作品隔离"
+  },
+  "STORY-06": {
+    "status": "partial",
+    "evidence": "六个结局可达测试",
+    "next": "其余两部结局与完整条件系统"
+  },
+  "STORY-07": {
+    "status": "partial",
+    "evidence": "SQLAlchemy存档；本地SQLite跨进程恢复",
+    "next": "PostgreSQL、手动存档槽、版本兼容"
+  },
+  "STORY-08": {
+    "status": "partial",
+    "evidence": "revision检查、并发单次生效、审计",
+    "next": "幂等响应和正式账户隔离"
+  },
+  "SHARE-01": {
+    "status": "partial",
+    "evidence": "PNG命运卡实际下载及检查",
+    "next": "抉择卡、持久权限与分享落地页"
+  },
+  "CHAR-01": {
+    "status": "partial",
+    "evidence": "基本建角与伙伴页；本地SD生成成年写实立绘并接入引导/伙伴页；Blender已导出基础GLB，尚非写实成品",
+    "next": "完整DNA持久化；多人物一致性立绘；3D皮肤贴图、毛发、手部与全身绑定"
+  },
+  "MEM-02": {
+    "status": "partial",
+    "evidence": "记忆页面和开发搜索删除",
+    "next": "物理删除、向量检索和提示条"
+  },
+  "COST-01": {
+    "status": "partial",
+    "evidence": "现有开发熔断器",
+    "next": "币种配置和正式并发计费"
+  },
+  "OPS-01": {
+    "status": "partial",
+    "evidence": "10项故事测试与最新Next构建通过；看板44项需求可筛选；390px布局和Radix弹窗焦点归还通过；Android模拟器Chrome已启动产品",
+    "next": "继续模拟器完整通关、PostgreSQL/Redis、CI及真机测试"
+  },
+  "AUTH-01": {
+    "status": "external",
+    "evidence": "当前仍是开发占位，未验收",
+    "next": "先实现失败关闭与接口契约，再接真实服务商"
+  },
+  "AUTH-02": {
+    "status": "external",
+    "evidence": "当前仍是开发占位，未验收",
+    "next": "先实现失败关闭与接口契约，再接真实服务商"
+  },
+  "SAFE-01": {
+    "status": "external",
+    "evidence": "当前仍是开发占位，未验收",
+    "next": "先实现失败关闭与接口契约，再接真实服务商"
+  },
+  "SAFE-03": {
+    "status": "external",
+    "evidence": "当前仍是开发占位，未验收",
+    "next": "先实现失败关闭与接口契约，再接真实服务商"
+  }
+}

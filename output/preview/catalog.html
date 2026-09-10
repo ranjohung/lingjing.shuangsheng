@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="DgPbdDsBmlPteFM0I29eAo">
+<head data-page-node-id="nHQTtgmR6gp7H7bF6Y83dT">
+<meta charset="UTF-8" data-page-node-id="eRuEykMqq8Or6QN2oJTIJU" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="UD9xETUW4TWYOSAJhELRjq" />
+<title>灵境 · 双生 — 30 题材小说世界目录（v5.14）</title>
+<meta name="description" content="灵境·双生：30 题材小说世界目录的可视化原型，按市面上所有小说题材划分。" data-page-node-id="Vv9B7kfF8tVK08TBK6SJtP" />
+<link rel="preconnect" href="https://fonts.googleapis.com" data-page-node-id="7c57qALSzfASnYYPXA3cfB" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin data-page-node-id="AhlPDDGkyDU4EBt22M539f" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" data-page-node-id="BG35Hxxnm12xfGo8isprkd" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet" data-page-node-id="x2WWGgJunQaH6PYmmpTjnS" />
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          night: { 950: '#08071a', 900: '#0d0b22', 800: '#14122e', 700: '#1c1939', 600: '#27234d' },
+          aurora: { violet:'#8b7cf6', pink:'#f6a6d8', blue:'#6ec6ff', gold:'#ffd9a0', mint:'#7cf6c0' },
+        },
+        fontFamily: {
+          brand: ['"Cormorant Garamond"', '"Noto Serif SC"', 'serif'],
+          display: ['"Noto Serif SC"', 'serif'],
+          sans: ['"Noto Sans SC"','Inter','system-ui','sans-serif'],
+        },
+        boxShadow: { glow: '0 0 40px -8px rgba(139,124,246,0.55)', 'glow-pink': '0 0 40px -8px rgba(246,166,216,0.5)', glass: '0 8px 32px rgba(4,3,20,0.55)' },
+        keyframes: {
+          'fade-up': { '0%': { opacity: '0', transform: 'translateY(12px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+          twinkle: { '0%,100%': { opacity: '0.25' }, '50%': { opacity: '0.9' } },
+          float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-6px)' } },
+          shimmer: { '0%': { backgroundPosition: '-400% 0' }, '100%': { backgroundPosition: '400% 0' } },
+        },
+        animation: {
+          'fade-up': 'fade-up 0.6s ease-out both',
+          twinkle: 'twinkle 3s ease-in-out infinite',
+          float: 'float 5s ease-in-out infinite',
+          shimmer: 'shimmer 6s linear infinite',
+        },
+      },
+    },
+  };
+</script>
+<style>
+  html,body{background:#0d0b22;color:#edf1f6;font-family:'Noto Sans SC','Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .font-display{font-family:'Noto Serif SC',serif}
+  .font-brand{font-family:'Cormorant Garamond','Noto Serif SC',serif;letter-spacing:0.3em}
+  .text-gradient{background:linear-gradient(120deg,#f6a6d8,#8b7cf6 60%,#6ec6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .glass{background:rgba(20,18,46,.55);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.08)}
+  .scroll-x::-webkit-scrollbar{height:6px}
+  .scroll-x::-webkit-scrollbar-thumb{background:#27234d;border-radius:8px}
+  .chip{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .9rem;border-radius:9999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);font-size:.78rem;color:rgba(255,255,255,.7)}
+  .chip.active{background:rgba(255,255,255,.10);color:#fff;border-color:rgba(207,190,240,.6)}
+  .card-bg{position:relative;overflow:hidden;border-radius:1.25rem}
+  .card-bg::before{content:'';position:absolute;inset:0;background:var(--c1)33;opacity:.8;transition:opacity .25s}
+  .card-bg:hover::before{opacity:1}
+  .hero-shimmer{background:linear-gradient(110deg,transparent 0%,transparent 40%,rgba(255,255,255,.08) 50%,transparent 60%,transparent 100%);background-size:400% 100%;animation:shimmer 6s linear infinite}
+  .stars{position:absolute;inset:0;pointer-events:none;background:radial-gradient(1px 1px at 13% 17%,rgba(255,255,255,.6) 50%,transparent 51%),radial-gradient(1px 1px at 71% 33%,rgba(255,255,255,.4) 50%,transparent 51%),radial-gradient(1px 1px at 28% 73%,rgba(255,255,255,.5) 50%,transparent 51%),radial-gradient(1px 1px at 87% 87%,rgba(255,255,255,.3) 50%,transparent 51%),radial-gradient(1px 1px at 56% 22%,rgba(255,255,255,.6) 50%,transparent 51%);opacity:.45}
+  details>summary{list-style:none;cursor:pointer}
+  details>summary::-webkit-details-marker{display:none}
+  .scrollX{scrollbar-width:thin}
+</style>
+</head>
+<body class="min-h-screen" data-page-node-id="kpLmYtJ8IYGd6UpcNk78nB">
+
+<!-- 顶部顶栏（参考实装 AppShell） -->
+<header class="fixed top-0 inset-x-0 z-40 glass" data-page-node-id="Maj4ioqSL4YInBuA95f6Mh">
+  <div class="max-w-7xl mx-auto px-5 h-14 flex items-center justify-between" data-page-node-id="k5SCbSKpsOfeEViEuwYUYH">
+    <div class="flex items-center gap-3" data-page-node-id="mqhnjWLUKyY3cyOVcIR1vb">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-aurora-violet to-aurora-pink grid place-items-center font-display text-night-950 font-bold" data-page-node-id="fKzz0Br75N6uUjPMJa8Abh">灵</div>
+      <div data-page-node-id="FhjaCFd7VgjzEC0aNdwFoD">
+        <p class="font-display text-base font-semibold leading-none" data-page-node-id="MSNgnE6ktSGKHG2vAH8Yph">灵境 · 双生</p>
+        <p class="text-[10px] tracking-widest text-white/45 mt-0.5" data-page-node-id="gcVebMccTyKhgqfp66vtZT">LINGJING · DUAL SOULS</p>
+      </div>
+    </div>
+    <nav class="hidden md:flex items-center gap-1 text-sm" data-page-node-id="rP6kSakoWeEtMyUFxUYl3w">
+      <a class="px-3 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/5" href="../product-preview.html#hero" data-page-node-id="w91fI1TpCEBOqQTvN4Ab2X"><i class="fa-solid fa-moon mr-1.5 text-xs" data-page-node-id="96tbChDgE0z9daZJvfIAWg"></i>我的世界</a>
+      <a class="px-3 py-2 rounded-lg bg-aurora-violet/25 text-white border border-aurora-violet/40" href="library.html" data-page-node-id="qBnq7k2a92XnKlre6adimY"><i class="fa-solid fa-book-open mr-1.5 text-xs" data-page-node-id="OL04rx6Hrf1GPPHmDwXgur"></i>小说世界</a>
+      <a class="px-3 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/5" href="game-3d.html" data-page-node-id="1BEV13UMLp53TD1jneJnzW"><i class="fa-solid fa-user-group mr-1.5 text-xs" data-page-node-id="EWTdFN49OZlD70tf2TNltN"></i>双生陪伴</a>
+      <a class="px-3 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/5" href="novel-upload.html" data-page-node-id="Y0g1hyRON65NgLYE4GEqr1"><i class="fa-solid fa-feather mr-1.5 text-xs" data-page-node-id="5Ckvj7BY4ZXy31EKJ8qsyF"></i>创作中心</a>
+      <a class="px-3 py-2 rounded-lg text-white/65 hover:text-white hover:bg-white/5" href="commerce.html" data-page-node-id="aMecvx01itm88hbAiFWuyP"><i class="fa-solid fa-compass mr-1.5 text-xs" data-page-node-id="aMHg6VLKcLR7zBfGEPg6Yi"></i>商业化</a>
+    </nav>
+    <div class="flex items-center gap-2 text-xs" data-page-node-id="dpoAPjwd4tdsDpFnd1t4Zx">
+      <span class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/5 border border-white/10" data-page-node-id="SVTZluzMFyrJ0d9XwDAtPl">
+        <i class="fa-solid fa-coins text-aurora-gold" data-page-node-id="Z1tH7213CEG4ujCVGUHU4Y"></i>1,280 灵玉
+      </span>
+      <span class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-aurora-violet/15 border border-aurora-violet/30" data-page-node-id="EgA7JNbuKaUTfuSGF8xPst">
+        <i class="fa-solid fa-gem text-aurora-violet" data-page-node-id="BMgzt9go5XvJWhW2P7u4Ru"></i>680 灵晶
+      </span>
+      <button class="w-8 h-8 rounded-full bg-white/5 border border-white/10 grid place-items-center" data-page-node-id="FQEqMW1kvx54qPcUQHTexR"><i class="fa-solid fa-user text-white/65" data-page-node-id="9dD2RJnm0wN26VBcCDoFhb"></i></button>
+    </div>
+  </div>
+</header>
+<div class="h-14" data-page-node-id="iv2SCDZ69tqKCwFM5KjKU1"></div>
+
+<!-- Hero -->
+<section class="relative overflow-hidden" data-page-node-id="6wMGggxjxaNhQwramFmtk9">
+  <div class="absolute inset-0 -z-10" style="background:radial-gradient(80% 60% at 50% 0%,#27234d 0%,#0d0b22 60%)" data-page-node-id="h1gVanN67I0zpQ1ChiV7vD"></div>
+  <div class="stars animate-twinkle" data-page-node-id="MPvUtHZtJYkb0ABByC94Rc"></div>
+  <div class="max-w-7xl mx-auto px-5 py-16 md:py-24 relative" data-page-node-id="7R4N8JKi7Zdo3eAmYZFDhJ">
+    <p class="text-[11px] tracking-[0.3em] text-aurora-violet/85 uppercase mb-3" data-page-node-id="ZrAdFrE3JdNxfDUasDvX8k">Lingjing · Story Worlds</p>
+    <h1 class="font-display text-4xl md:text-7xl font-bold leading-tight" data-page-node-id="vigFivTqX2GSiDSuXPAVBU">
+      进入<span class="text-gradient" data-page-node-id="9ZXEVJWnzNVzr05HO3qA9f"> 你想活过 </span>的那个故事
+    </h1>
+    <p class="mt-5 max-w-2xl text-sm md:text-base text-white/65 leading-relaxed" data-page-node-id="x4qU40khWCtJJh9DpCCCOf">
+      按市面上 30 类常见题材分门别类。从三国到赛博，从宫廷到星际——选择一个题材，挑一位角色，故事会以你的选择向前推进。
+      而故事里陪你走过的那位 TA，可以被你带回到现实的陪伴模式。
+    </p>
+
+    <!-- 搜索 -->
+    <div class="mt-7 max-w-2xl flex items-center gap-3 rounded-2xl glass px-4 py-3" data-page-node-id="qhUmxmYmCRxMOawijYK1O2">
+      <i class="fa-solid fa-magnifying-glass text-white/45" data-page-node-id="uGbfgyexQjdcVINZkPRQq9"></i>
+      <input type="search" placeholder="搜作品 / 角色 / 题材（如：吕布 / 修仙 / 穿越）" class="w-full bg-transparent text-sm placeholder:text-white/35 focus:outline-none" data-page-node-id="QGzN21yy02pkJCPed3njFj"/>
+      <button class="text-xs text-white/45 hover:text-white" data-page-node-id="xk67lBlb1DSz5OLOxGX7RE">清空</button>
+    </div>
+
+    <!-- 主类 Chip 横滑（30 主类，按热度排序） -->
+    <div class="mt-6 -mx-5 overflow-x-auto scroll-x px-5 pb-2" data-page-node-id="EIP1Y6yJuiQG31inr5DssE">
+      <div class="flex gap-2" data-page-node-id="tn6e05QFZfcQyjGsMbBVJv">
+        <button class="chip active" style="background:rgba(255,255,255,.10);color:#fff;border-color:rgba(207,190,240,.6)" data-page-node-id="LDTRC6UuayBziZh6BwBAyS">全部</button>
+        <!-- 自动渲染 -->
+        <div id="genreChips" class="contents" data-page-node-id="pkEZYQhMZXqyu3xO9AUbN9"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 跨类标签 + 筛选 -->
+<section class="max-w-7xl mx-auto px-5 mt-10" data-page-node-id="vSk2NIVAEZgLiK7IYpRNlv">
+  <div class="flex flex-wrap items-center gap-x-7 gap-y-3 rounded-2xl glass px-4 py-3 text-xs" data-page-node-id="ednYjFhFGawkbzXT8LDFm2">
+    <div class="flex items-center gap-2" data-page-node-id="RWfEoLdrmJXBA8c3ER00JM">
+      <span class="text-white/55" data-page-node-id="S15CCCu9WZJLCVhTn4x1G5">跨类标签</span>
+      <div class="flex flex-wrap gap-1.5" data-page-node-id="5lbjvDKfSFvdXiSAhLgXuv">
+        <button class="chip" data-page-node-id="kvORNbC13kY5xI6YKdJhNU">穿越 <span class="text-white/45 text-[10px]" data-page-node-id="IEyFmB7upFiX7it5CqBhqu">1.2k</span></button>
+        <button class="chip active" data-page-node-id="md1I0XHaiRs6GNCWg90cva">重生</button>
+        <button class="chip" data-page-node-id="cKJnn5EvIusi5sYlKvd7GT">系统流</button>
+        <button class="chip" data-page-node-id="JinJurfVjZEa7jsB0luUEj">复仇</button>
+        <button class="chip" data-page-node-id="JFXDZ8DQ5qmGtzhgrQGYq4">种田</button>
+        <button class="chip" data-page-node-id="yUTqxTEI9YDQch34uuuvLX">宗门/家族</button>
+        <button class="chip" data-page-node-id="iWB9xkuvnqCzYzNCaBHh9W">大女主</button>
+        <button class="chip active" data-page-node-id="5VvWOeSlGHwJCOnOy7tUPD">轻松</button>
+      </div>
+    </div>
+    <div class="ml-auto flex items-center gap-2" data-page-node-id="46rUuGwjOZxNkGNaUh6GY5">
+      <span class="text-white/55" data-page-node-id="jEoJw4ezSoc1dd1sAPuIHs">排序</span>
+      <select class="rounded-lg border border-white/10 bg-white/[0.06] px-2.5 py-1 text-xs text-white" data-page-node-id="ddFgiWlUwmeSFWRCb6pn2p">
+        <option data-page-node-id="baHTXW4mfxz43AXn1F9Zrt">热度</option>
+        <option data-page-node-id="pASj7YmI50ybUFgeEkEClc">最新</option>
+        <option data-page-node-id="FwzVVVbalUzmWXUBArT4uz">评分</option>
+        <option data-page-node-id="Jt6zGV3PabY1ncq1ybf22N">字数</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<!-- 30 题材封面墙 -->
+<section class="max-w-7xl mx-auto px-5 mt-10" data-page-node-id="rVPjjrdnEnD2w9XiaKFCzS">
+  <div class="flex items-end justify-between mb-5" data-page-node-id="6o3Pmhi7FNF7pK89TZjPY5">
+    <div data-page-node-id="E5q75LHc6mkIOTFyPixwme">
+      <h2 class="font-display text-2xl" data-page-node-id="74UIrppbUuiaUrCG0zBExY">30 主类 · 一眼纵览</h2>
+      <p class="text-xs text-white/45 mt-1" data-page-node-id="AhW9pwl3SGGAoSgiNoBo5c">每类一个独立主色，配上题材专属字体风格和子类</p>
+    </div>
+    <button class="text-xs text-white/55 hover:text-white" data-page-node-id="Q3M7wz0WcHUCHZjZMB7BOx">展开子类 →</button>
+  </div>
+  <div id="genreGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" data-page-node-id="xczi1SX611S2PzxB6VHAPW"></div>
+</section>
+
+<!-- 热门推荐（作品卡） -->
+<section class="max-w-7xl mx-auto px-5 mt-14" data-page-node-id="x1F495unHPKxxWPMiCIKKH">
+  <div class="flex items-end justify-between mb-5" data-page-node-id="yttY1eke6lOIE8t6zlcRkr">
+    <h2 class="font-display text-xl" data-page-node-id="0ZFSPbxMFQO7uDXzG3Qu7Y">热门推荐</h2>
+    <a href="#" class="text-xs text-white/55 hover:text-white" data-page-node-id="NZFe2DdgbYMITfODBM1Gjb">查看全部 →</a>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4" data-page-node-id="qeaAfAIRPYfBG4KPCLwV5F">
+
+    <article class="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur hover:-translate-y-0.5 hover:border-white/20 transition-all" data-page-node-id="drIzPG2AndzC2hqfbD16O0">
+      <div class="relative aspect-[3/4]" style="background:linear-gradient(160deg,#8b7cf666,#8b7cf622 60%,#0d0b22 100%)" data-page-node-id="oF0TxpqICue8p4CMulyn9e">
+        <div class="absolute top-3 left-3 flex gap-1.5" data-page-node-id="OJmZLKmkHrMqZS0Cm9po1G">
+          <span class="rounded-full bg-black/45 px-2 py-0.5 text-[10px]" data-page-node-id="1wTPabey2g308MyZNXJsiG">历史</span>
+          <span class="rounded-full bg-black/45 px-2 py-0.5 text-[10px]" data-page-node-id="9SAgFAVMAI2lblWJL0z20w">战争</span>
+        </div>
+        <span class="absolute top-3 right-3 rounded bg-black/55 px-1.5 py-0.5 text-[10px] font-semibold" data-page-node-id="jFILFI6AdSOZiSjR80Rk26">BE</span>
+        <div class="absolute bottom-12 left-3 right-3 font-display text-base font-semibold leading-tight" data-page-node-id="ICEC0yeM0mbCBCcp4rJ68F">三国·吕布篇</div>
+      </div>
+      <div class="space-y-1.5 p-3" data-page-node-id="cnKTEVmDgQViQBoCmAYWpd">
+        <p class="line-clamp-2 text-xs leading-relaxed text-white/55" data-page-node-id="VBslVlWczOSGQcOqKUeHRZ">你将以怎样的身份，重新走上那条不归路?</p>
+        <p class="text-[11px] text-white/40" data-page-node-id="OV2SOsuDepBvVH5a66ZEbf">@ 灵境官方</p>
+        <div class="flex items-center justify-between text-[10px] text-white/55" data-page-node-id="WwYKMb3JQtKYqTpYF3uE63">
+          <span data-page-node-id="5L1LCDBH819wlT3zirrBhO"><i class="fa-solid fa-star text-amber-300" data-page-node-id="HKuem7Rb7ZRzvdE5tAEcjE"></i> 9.2 · 1.2万 游玩</span>
+          <span class="rounded border border-white/10 bg-white/5 px-1.5 py-0.5 text-white/70" data-page-node-id="59td4fwOP1d3JpPF3Jo1Np">试读</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur hover:-translate-y-0.5 hover:border-white/20 transition-all" data-page-node-id="kf5LlUeaLF3AXmKgfGs8Lo">
+      <div class="relative aspect-[3/4]" style="background:linear-gradient(160deg,#5B9CD866,#5B9CD822 60%,#0d0b22 100%)" data-page-node-id="quj1BQRdfV0zQRzEpMDsCQ">
+        <div class="absolute top-3 left-3 flex gap-1.5" data-page-node-id="lYJNJPrLJiTGXFEVXfdRnp">
+          <span class="rounded-full bg-black/45 px-2 py-0.5 text-[10px]" data-page-node-id="6qmaLNBApLOzuRMsGDc3tT">仙侠</span>
+        </div>
+        <span class="absolute top-3 right-3 rounded bg-black/55 px-1.5 py-0.5 text-[10px] font-semibold" data-page-node-id="f49Lh413F7ZVFC02mXBslc">HE</span>
+        <div class="absolute bottom-12 left-3 right-3 font-display text-base font-semibold leading-tight" data-page-node-id="L1PCZB8HaOD9byRBAq366b">凡人修仙：灵根凡，志不凡</div>
+      </div>
+      <div class="space-y-1.5 p-3" data-page-node-id="FZClviaeaXXqOPJpnepYLe">
+        <p class="line-clamp-2 text-xs leading-relaxed text-white/55" data-page-node-id="15beabn3zSQDTLm3JjyCD6">散修无依，你靠的是一步一脚印的狠劲。</p>
+        <p class="text-[11px] text-white/40" data-page-node-id="ZuL0BDoY3PY8vQjC3RcoWd">@ 晨曦工坊</p>
+        <div class="flex items-center justify-between text-[10px] text-white/55" data-page-node-id="5nIPgLzKRyXDUp8xe1OaYj">
+          <span data-page-node-id="JBLYvgkkhP7k3VNJJJpK4Z"><i class="fa-solid fa-star text-amber-300" data-page-node-id="I7VJ26RDaW58Epj2spCmDi"></i> 8.8 · 9.3k 游玩</span>
+          <span class="rounded border border-white/10 bg-white/5 px-1.5 py-0.5 text-white/70" data-page-node-id="KYpgqiey8ZvOZGxoC573Ar">免费</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur hover:-translate-y-0.5 hover:border-white/20 transition-all" data-page-node-id="JWJD9AjI10jghw8VnrHJ8z">
+      <div class="relative aspect-[3/4]" style="background:linear-gradient(160deg,#B8598888,#B8598822 60%,#0d0b22 100%)" data-page-node-id="i1GrBFr9DeprSlOBTvDbIr">
+        <div class="absolute top-3 left-3 flex gap-1.5" data-page-node-id="agejpAo20ZvCct7aUUPTbb">
+          <span class="rounded-full bg-black/45 px-2 py-0.5 text-[10px]" data-page-node-id="daD2SpbijGlLdZqAVWqEO7">古代言情</span>
+        </div>
+        <span class="absolute top-3 right-3 rounded bg-black/55 px-1.5 py-0.5 text-[10px] font-semibold" data-page-node-id="TcPXIp0kEzR3jtg7xEZrDT">TE</span>
+        <div class="absolute bottom-12 left-3 right-3 font-display text-base font-semibold leading-tight" data-page-node-id="bLujCbfKuakIw7KoVbA5jf">太后在上</div>
+      </div>
+      <div class="space-y-1.5 p-3" data-page-node-id="BRa90SRKE4oQsszzfjTHSM">
+        <p class="line-clamp-2 text-xs leading-relaxed text-white/55" data-page-node-id="x0plmLwJGifVy20keZnXIj">深宫六院的规矩与真心。</p>
+        <p class="text-[11px] text-white/40" data-page-node-id="EEAXLkKOvp3tCECxd5W9ZF">@ 鹧鸪天</p>
+        <div class="flex items-center justify-between text-[10px] text-white/55" data-page-node-id="UX3eD8NjtGXYXnyhGqR0tz">
+          <span data-page-node-id="9XjC6xHwM7SR7cNsc4YVf9"><i class="fa-solid fa-star text-amber-300" data-page-node-id="QoOFN0aI3ATJdVrK00wQFQ"></i> 9.0 · 1.8万 游玩</span>
+          <span class="rounded border border-white/10 bg-white/5 px-1.5 py-0.5 text-white/70" data-page-node-id="ELcSX4brTlkFRheCIEJeAe">付费</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur hover:-translate-y-0.5 hover:border-white/20 transition-all" data-page-node-id="kAFqfMnOA9sDptl4sExYAC">
+      <div class="relative aspect-[3/4]" style="background:linear-gradient(160deg,#4FB3D988,#4FB3D922 60%,#0d0b22 100%)" data-page-node-id="8N7Ogfi2hm38cYdjovMmMP">
+        <div class="absolute top-3 left-3 flex gap-1.5" data-page-node-id="P7SjkvmZjb5wD03RPVQWbI">
+          <span class="rounded-full bg-black/45 px-2 py-0.5 text-[10px]" data-page-node-id="yyyYTA6F8QCiJTtq9Kz5lK">赛博朋克</span>
+          <span class="rounded-full bg-black/45 px-2 py-0.5 text-[10px]" data-page-node-id="vEWJgg69fCbPhzbcn0FvDM">科幻</span>
+        </div>
+        <div class="absolute bottom-12 left-3 right-3 font-display text-base font-semibold leading-tight" data-page-node-id="ilBbxBMAqQ5nkKnXGzU8JB">赛博玫瑰</div>
+      </div>
+      <div class="space-y-1.5 p-3" data-page-node-id="Lx6Mhthjy1WTLpFzy7ayXr">
+        <p class="line-clamp-2 text-xs leading-relaxed text-white/55" data-page-node-id="34rT1Il2CZGlnn4IWOxSbc">霓虹不夜城，每一条街道都是新的副本。</p>
+        <p class="text-[11px] text-white/40" data-page-node-id="W9gBikelLA4dOCsMdUrkXR">@ 蓝鸟工作室</p>
+        <div class="flex items-center justify-between text-[10px] text-white/55" data-page-node-id="l2OQbUZprhvJX3Puscj7WT">
+          <span data-page-node-id="0BisN2B3mrmD7sIXGCKfmw"><i class="fa-solid fa-star text-amber-300" data-page-node-id="LX8QjGjYMj2CSAkXEjFbEv"></i> 8.7 · 7.8k 游玩</span>
+          <span class="rounded border border-white/10 bg-white/5 px-1.5 py-0.5 text-white/70" data-page-node-id="DMlobXg1HzesWVrUzHTEjQ">完结</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur hover:-translate-y-0.5 hover:border-white/20 transition-all" data-page-node-id="DL5NkkROncdUQIgHX5ozSf">
+      <div class="relative aspect-[3/4]" style="background:linear-gradient(160deg,#88C97B88,#88C97B22 60%,#0d0b22 100%)" data-page-node-id="OYvxo8Ap5IB5VSbPm5zISX">
+        <div class="absolute top-3 left-3 flex gap-1.5" data-page-node-id="GFed5BkKImMUEDYh5CSnZu">
+          <span class="rounded-full bg-black/45 px-2 py-0.5 text-[10px]" data-page-node-id="IrPjepxfUbaufh0kXncH1T">青春校园</span>
+        </div>
+        <span class="absolute top-3 right-3 rounded bg-black/55 px-1.5 py-0.5 text-[10px] font-semibold" data-page-node-id="o127YGsHRT7uYed6GqTeKV">HE</span>
+        <div class="absolute bottom-12 left-3 right-3 font-display text-base font-semibold leading-tight" data-page-node-id="lZxQ6jVf2xxCMoZD60QCxS">同桌的你</div>
+      </div>
+      <div class="space-y-1.5 p-3" data-page-node-id="yWxp3MgfJOm8tLl1uJUYqW">
+        <p class="line-clamp-2 text-xs leading-relaxed text-white/55" data-page-node-id="TTtvjWKkQUsxE6i3KCGBjb">教室窗外的蝉鸣，比谁都记得我们。</p>
+        <p class="text-[11px] text-white/40" data-page-node-id="XxGncJ9mYNGEEuEfV4hCBp">@ 纸鸢文字</p>
+        <div class="flex items-center justify-between text-[10px] text-white/55" data-page-node-id="DpABpOEbw9tJjRSAIE1Rdi">
+          <span data-page-node-id="mqenKobvxTFO2H4bOQF6Ln"><i class="fa-solid fa-star text-amber-300" data-page-node-id="BEGISKYMunfkdG0lc5GUyS"></i> 8.5 · 5.6k 游玩</span>
+          <span class="rounded border border-white/10 bg-white/5 px-1.5 py-0.5 text-white/70" data-page-node-id="xb73rR9jPJCEymlQ5vX6YA">免费</span>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- 三步"双生"引导 -->
+<section class="max-w-7xl mx-auto px-5 mt-16" data-page-node-id="9KUpWWRW2uT9qkAJrzRv6W">
+  <div class="rounded-3xl border border-white/10 p-8 md:p-12" style="background:linear-gradient(135deg,#27234d33,#f6a6d811)" data-page-node-id="VCarzJCeQ9osGFnejgbNMl">
+    <p class="text-[11px] uppercase tracking-[0.3em] text-aurora-pink/80" data-page-node-id="ijOv6h9o30aOSxRudBBVdA">Dual Souls</p>
+    <h2 class="font-display text-3xl md:text-4xl mt-2" data-page-node-id="T7AirNYQNKkMLW9HCPoLQp">一个角色，<span class="text-gradient" data-page-node-id="u4mb9lGfMQ7XD4NKItkIVR">两种人生</span></h2>
+    <p class="mt-3 max-w-2xl text-sm text-white/65" data-page-node-id="QnLra8frbstfMDIX3yVLpC">
+      在小说世界里陪过你的那位 TA，可以被你带回到现实的陪伴模式——你们的对话、记忆、关系，一并打包回家。
+    </p>
+    <ol class="mt-7 grid gap-5 md:grid-cols-3" data-page-node-id="Vb3PCpMmSb5TVoDzOcb4H9">
+      <li class="rounded-2xl border border-white/10 bg-black/30 p-5" data-page-node-id="dMDVI7oC91xHCx0wkFLMEj">
+        <p class="text-xs text-white/45" data-page-node-id="n0t0cQf6O6aDKomxzKMUDr">第 1 步</p>
+        <h4 class="mt-2 text-base" data-page-node-id="VwVqaKZi1Rb6B2WGCXMTMN">在小说世界里遇见</h4>
+        <p class="mt-1.5 text-xs text-white/65" data-page-node-id="gfKaFEsuj7B09l3uqoQtKW">和 TA 共同做完一段命运，关系值会自然累积。</p>
+      </li>
+      <li class="rounded-2xl border border-white/10 bg-black/30 p-5" data-page-node-id="jrAdkMIYoZC4wjjEhOmXav">
+        <p class="text-xs text-white/45" data-page-node-id="gceTqjxEwh9wVPAW0uqdvN">第 2 步</p>
+        <h4 class="mt-2 text-base" data-page-node-id="ozzYOsoxI2kKaBkGoceckB">完成个人路线</h4>
+        <p class="mt-1.5 text-xs text-white/65" data-page-node-id="jMTVioEL6HBrTes4M16Bqk">亲密度达到 80、解锁个人线、付费 800-3000 灵晶——三重验证。</p>
+      </li>
+      <li class="rounded-2xl border border-white/10 bg-black/30 p-5" data-page-node-id="8gbLlXMqzeFC8UnLUh0X2Q">
+        <p class="text-xs text-white/45" data-page-node-id="3sCyKPwhNtS5DJ1usCpCjw">第 3 步</p>
+        <h4 class="mt-2 text-base" data-page-node-id="f5EkAmodOVyJaH4dHs88VE">带 TA 回到现实</h4>
+        <p class="mt-1.5 text-xs text-white/65" data-page-node-id="0pOJpv0nsI1qfKPMD4el79">切换按钮一键穿越。TA 拥有独立记忆，能主动提起昨天在小说里发生的事。</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- 30 题材明细表（文字版，方便 PC 调试） -->
+<section class="max-w-7xl mx-auto px-5 mt-16 mb-20" data-page-node-id="0Fe6a0X7sZwUD1ieF9Grqx">
+  <h2 class="font-display text-2xl mb-5" data-page-node-id="eWMCdqghBypijVBDMgM1ec">30 题材索引（资料）</h2>
+  <div id="genreTable" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" data-page-node-id="t1QLPyQZ3ArVeTFhY5VwtC"></div>
+</section>
+
+<footer class="text-center text-xs text-white/40 py-10 border-t border-white/10" data-page-node-id="fozROXEyJhYj78JbBF7dLe">
+  灵境 · 双生　LINGJING · DUAL SOULS　·　© 2026
+  <br data-page-node-id="hcDDggHnoHZHxe9uGeoc5h"/>
+  本页为产品可视化原型，由 Tailwind CDN + Font Awesome 实时构建
+</footer>
+
+<!-- 数据 + 渲染脚本 -->
+<script>
+  const GENRES = [
+    { slug:'xuanhuan', name:'玄幻', color:'#8E5BD8', icon:'scroll', blurb:'灵气、异世、废柴逆袭、王朝与位面交错。', subs:['东方玄幻','异世大陆','高武','王朝争霸','洪荒','异能'] },
+    { slug:'xianxia', name:'仙侠', color:'#5B9CD8', icon:'cloud', blurb:'剑光与道心，凡人也能成仙。', subs:['古典仙侠','幻想修仙','宗门','凡人流','丹器阵符','御兽'] },
+    { slug:'wuxia', name:'武侠', color:'#5B8E5B', icon:'sword', blurb:'江湖一盏灯，儿女一坛酒。', subs:['传统武侠','新派武侠','江湖恩怨','朝堂武林','武侠二创','逸闻'] },
+    { slug:'qihuan', name:'奇幻', color:'#C95B9C', icon:'dragon', blurb:'剑与魔法、龙与圣杯的世界。', subs:['西方奇幻','剑与魔法','史诗奇幻','吸血鬼','神话','冒险小队'] },
+    { slug:'dushi', name:'都市', color:'#D8A45B', icon:'city', blurb:'城市霓虹与生活烟火。', subs:['都市生活','都市异能','商战','职场','娱乐圈','美食'] },
+    { slug:'xianshi', name:'现实', color:'#88A668', icon:'home', blurb:'生活本身就是最复杂的故事。', subs:['家庭','社会','行业','乡土','年代','生活流'] },
+    { slug:'lishi', name:'历史', color:'#8B5A2B', icon:'scroll-old', blurb:'在故纸堆里，我们重逢。', subs:['秦汉','三国','隋唐','宋元','明清','架空历史'] },
+    { slug:'junshi', name:'军事', color:'#4A6B8A', icon:'helmet', blurb:'钢与火的另一种语言。', subs:['古代战争','近现代','谍战','战略','军事科幻','特种'] },
+    { slug:'kehuan', name:'科幻', color:'#4FB3D9', icon:'rocket', blurb:'星辰大海，代码与金属。', subs:['星际文明','太空歌剧','机甲','AI','时间旅行','赛博朋克'] },
+    { slug:'mori', name:'末日', color:'#6B8E23', icon:'biohazard', blurb:'文明之后，剩下的人心。', subs:['灾变','丧尸','废土','末世异能','避难所','求生'] },
+    { slug:'xuanyi', name:'悬疑', color:'#5A6B8E', icon:'search', blurb:'真相，是另一种冒险。', subs:['侦探','刑侦','社会派','本格','心理','法医'] },
+    { slug:'jingsong', name:'惊悚', color:'#8A4F6B', icon:'ghost', blurb:'看清阴影之前，先屏住呼吸。', subs:['民俗','灵异','怪谈','克苏鲁','惊悚冒险','写实惊悚'] },
+    { slug:'xiandai-yanqing', name:'现代言情', color:'#E89B5A', icon:'heart', blurb:'电梯里的第二次相遇。', subs:['都市','职场','豪门','契约','先婚后爱','治愈'] },
+    { slug:'gudai-yanqing', name:'古代言情', color:'#B85988', icon:'fan', blurb:'深闺与江湖，女子一样可立。', subs:['宫廷','宅门','江湖情缘','权谋','古代经营','穿越古言'] },
+    { slug:'huanxiang-yanqing', name:'幻想言情', color:'#C97BD8', icon:'sparkle', blurb:'他不是人类，但他也心动。', subs:['仙侠情缘','奇幻恋爱','非人类','星际情缘','异世界','师徒'] },
+    { slug:'qingchun-xiaoyuan', name:'青春校园', color:'#88C97B', icon:'backpack', blurb:'教室外的蝉鸣，比谁都响。', subs:['大学','青春成长','社团','校园悬疑','校园恋爱','高中'] },
+    { slug:'youxi', name:'游戏', color:'#5B7AD8', icon:'gamepad', blurb:'键盘与摇杆，另一种人生。', subs:['虚拟网游','电竞','游戏异界','桌游','开黑','地下城'] },
+    { slug:'tiyu', name:'体育', color:'#D88A4F', icon:'trophy', blurb:'跑道上的，不只是输赢。', subs:['足球','篮球','赛车','格斗','排球','田径'] },
+    { slug:'wuxian-liu', name:'无限流', color:'#6B5BD8', icon:'repeat', blurb:'通关一个副本，再开一扇门。', subs:['无限流','诸天','快穿','副本','轮回','悬疑无限'] },
+    { slug:'qingxiaoshuo', name:'轻小说', color:'#D9A0CE', icon:'book', blurb:'日轻中轻，另一种轻盈。', subs:['原创轻小说','日常','异世界轻小说','悬疑轻小说','新宅','转生'] },
+    { slug:'nvxing-qunxiang', name:'女性群像', color:'#E89B5A', icon:'users', blurb:'她们，不是一个主角。', subs:['女性成长','家庭事业','群像','友情','事业经营','艺术'] },
+    { slug:'duoyuan-qinggan', name:'多元情感', color:'#C95B9C', icon:'heart-three', blurb:'爱，不止一种形状。', subs:['纯爱','百合','无 CP','群像关系','温馨','正经恋'] },
+    { slug:'ertong', name:'儿童文学', color:'#88A668', icon:'balloon', blurb:'给童年的一束温柔的光。', subs:['童话','寓言','神话改编','科普童话','儿童奇幻','游戏书'] },
+    { slug:'qita', name:'其他', color:'#6E6E68', icon:'more', blurb:'无法归类的，都先放在这里。', subs:['自定义','实验文学','反转','现代诗','短篇精选','声音剧'] },
+  ];
+
+  function iconSlug(icon) {
+    const map = { 'scroll-old':'fa-scroll-torah','heart-three':'fa-heart-half-stroke','more':'fa-ellipsis' };
+    return map[icon] || ('fa-'+icon);
+  }
+
+  // 渲染主类 Chip 横滑
+  const chipsEl = document.getElementById('genreChips');
+  GENRES.forEach(g => {
+    const b = document.createElement('button');
+    b.className = 'chip';
+    b.innerHTML = `<i class="${iconSlug(g.icon)}" style="color:${g.color}"></i> ${g.name}`;
+    chipsEl.appendChild(b);
+  });
+
+  // 渲染 30 题材封面墙
+  const grid = document.getElementById('genreGrid');
+  GENRES.forEach((g, i) => {
+    const tags = g.subs.slice(0,3).map(s=>`<span class="rounded-full border border-white/10 bg-black/20 px-2 py-0.5 text-[10px] text-white/65">${s}</span>`).join('');
+    const el = document.createElement('div');
+    el.className = 'group relative overflow-hidden rounded-3xl';
+    el.innerHTML = `
+      <a href="#" class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
+        <div class="absolute inset-0" style="background:radial-gradient(120% 120% at 0% 0%, ${g.color}55 0%, ${g.color}28 40%, transparent 75%)"></div>
+        <div class="relative flex h-44 flex-col justify-between border border-white/10 bg-white/[0.04] p-5 backdrop-blur transition-all duration-300 group-hover:-translate-y-1 group-hover:border-white/20 group-hover:bg-white/[0.07]">
+          <div class="flex items-start justify-between">
+            <div class="flex h-12 w-12 items-center justify-center rounded-xl text-2xl" style="background:${g.color}33;color:#fff"><i class="${iconSlug(g.icon)}"></i></div>
+            <span class="rounded-full bg-black/30 px-2.5 py-1 text-[10px] tracking-wider text-white/70">${i<3?'热门':i<6?'推荐':i<12?'精选':'新'}</span>
+          </div>
+          <div>
+            <h3 class="font-display text-2xl font-semibold leading-tight text-white">${g.name}</h3>
+            <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-white/55">${g.blurb}</p>
+          </div>
+          <div class="flex flex-wrap gap-1.5 pt-1">${tags}</div>
+        </div>
+      </a>
+    `;
+    grid.appendChild(el);
+  });
+
+  // 渲染资料表
+  const t = document.getElementById('genreTable');
+  GENRES.forEach(g => {
+    const subs = g.subs.map(s=>`<span class="inline-block rounded border border-white/10 bg-white/5 px-1.5 py-0.5 mr-1 mb-1 text-[10px] text-white/65">${s}</span>`).join('');
+    const el = document.createElement('div');
+    el.className = 'rounded-xl border border-white/10 bg-white/[0.025] p-3';
+    el.innerHTML = `
+      <div class="flex items-center gap-2 mb-1.5">
+        <i class="${iconSlug(g.icon)}" style="color:${g.color}"></i>
+        <strong class="text-sm">${g.name}</strong>
+      </div>
+      <p class="text-[11px] text-white/55 mb-1.5">${g.blurb}</p>
+      <div>${subs}</div>
+    `;
+    t.appendChild(el);
+  });
+</script>
+
+</body>
+</html>
+</content>
+</invoke>

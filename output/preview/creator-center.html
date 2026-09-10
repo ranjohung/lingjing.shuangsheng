@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>创作者中心 · 灵境 · 双生</title>
+<meta name="description" content="v5.18 创作者中心重构：统一设计系统 · 解决重复入口 · shadcn + Aceternity 风格 · 玻璃态卡片 · 微动效" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/design-system.css" />
+<style>
+  /* 创作者中心页面专属：hero 头像/进度环 + 作品卡 */
+  .cc-hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--s-6);
+    align-items: center;
+    padding: var(--s-8) 0 var(--s-6);
+  }
+  .cc-hero-text { min-width: 0; }
+  .cc-hero-greeting {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-bottom: var(--s-2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cc-hero-greeting .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--r-full);
+    background: var(--brand-green);
+    box-shadow: 0 0 8px var(--brand-green);
+  }
+  .cc-hero-title {
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 1.1;
+    margin-bottom: var(--s-3);
+    background: linear-gradient(120deg, #ffffff 0%, #f6a6d8 50%, #8b7cf6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .cc-hero-subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    max-width: 600px;
+    line-height: 1.7;
+  }
+  .cc-hero-actions {
+    display: flex;
+    gap: var(--s-2);
+    margin-top: var(--s-5);
+  }
+
+  .cc-progress-card {
+    padding: var(--s-5);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: var(--r-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+    min-width: 280px;
+  }
+  .cc-progress-info { flex: 1; }
+  .cc-progress-title { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .cc-progress-value { font-family: var(--font-display); font-size: 24px; font-weight: 600; line-height: 1; }
+  .cc-progress-value .unit { font-size: 12px; color: var(--text-tertiary); margin-left: 4px; font-family: var(--font-body); }
+  .cc-progress-desc { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+
+  /* 三大功能区 */
+  .cc-features {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: var(--s-5);
+    margin-bottom: var(--s-10);
+  }
+  .cc-feature {
+    position: relative;
+    padding: var(--s-6);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    transition: all var(--dur-base) var(--ease-out);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    min-height: 240px;
+  }
+  .cc-feature::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--grad-card-violet);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .cc-feature.gold::before { background: var(--grad-card-gold); }
+  .cc-feature.cyan::before { background: var(--grad-card-cyan); }
+  .cc-feature::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(139,124,246,.6), rgba(110,198,255,.3));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.5;
+    transition: opacity var(--dur-base);
+  }
+  .cc-feature.gold::after { background: linear-gradient(135deg, rgba(232,199,90,.6), rgba(216,91,142,.3)); }
+  .cc-feature.cyan::after { background: linear-gradient(135deg, rgba(110,198,255,.6), rgba(91,197,216,.3)); }
+  .cc-feature:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .cc-feature:hover::after { opacity: 1; }
+  .cc-feature > * { position: relative; }
+  .cc-feature-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--r-md);
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    margin-bottom: var(--s-4);
+    background: rgba(139, 124, 246, 0.15);
+    border: 1px solid rgba(139, 124, 246, 0.3);
+  }
+  .cc-feature.gold .cc-feature-icon { background: rgba(232, 199, 90, 0.15); border-color: rgba(232, 199, 90, 0.3); }
+  .cc-feature.cyan .cc-feature-icon { background: rgba(110, 198, 255, 0.15); border-color: rgba(110, 198, 255, 0.3); }
+  .cc-feature-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: var(--s-2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cc-feature-desc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    line-height: 1.6;
+    margin-bottom: var(--s-4);
+  }
+  .cc-feature-stats {
+    display: flex;
+    gap: var(--s-4);
+    padding: var(--s-3) 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    margin-top: auto;
+  }
+  .cc-feature-stat { flex: 1; }
+  .cc-feature-stat-value { font-size: 16px; font-weight: 600; font-family: var(--font-display); }
+  .cc-feature-stat-label { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+  .cc-feature-cta {
+    margin-top: var(--s-3);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--brand-violet);
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .cc-feature.gold .cc-feature-cta { color: var(--brand-gold); }
+  .cc-feature.cyan .cc-feature-cta { color: var(--brand-cyan); }
+  .cc-feature-cta .arrow { transition: transform var(--dur-fast); }
+  .cc-feature:hover .cc-feature-cta .arrow { transform: translateX(4px); }
+
+  /* 我的作品区 */
+  .cc-works {
+    padding: var(--s-6);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: var(--r-xl);
+    margin-bottom: var(--s-8);
+  }
+  .cc-works-empty {
+    padding: var(--s-10) var(--s-6);
+    text-align: center;
+  }
+  .cc-works-empty .icon {
+    width: 88px;
+    height: 88px;
+    margin: 0 auto var(--s-4);
+    border-radius: var(--r-2xl);
+    background: var(--grad-card-violet);
+    display: grid;
+    place-items: center;
+    font-size: 44px;
+    box-shadow: var(--shadow-md);
+  }
+
+  .cc-work-card {
+    padding: var(--s-4);
+    background: rgba(11, 9, 31, 0.6);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-lg);
+    transition: all var(--dur-fast) var(--ease-out);
+    cursor: pointer;
+  }
+  .cc-work-card:hover {
+    background: rgba(139, 124, 246, 0.08);
+    border-color: rgba(139, 124, 246, 0.3);
+    transform: translateY(-2px);
+  }
+  .cc-work-card-head { display: flex; align-items: center; gap: var(--s-3); margin-bottom: var(--s-3); }
+  .cc-work-card-cover {
+    width: 44px;
+    height: 60px;
+    border-radius: var(--r-sm);
+    background: var(--grad-card-violet);
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .cc-work-card-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .cc-work-card-meta { font-size: 11px; color: var(--text-tertiary); }
+  .cc-work-card-progress { margin-bottom: var(--s-2); }
+  .cc-work-card-progress .label { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-tertiary); margin-bottom: 4px; }
+  .cc-work-card-footer { display: flex; gap: var(--s-2); margin-top: var(--s-3); }
+
+  /* 快速入门 */
+  .cc-onboard {
+    padding: var(--s-6);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: var(--r-xl);
+  }
+  .cc-onboard-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--s-4);
+    margin-top: var(--s-5);
+  }
+  .cc-onboard-step {
+    position: relative;
+    padding: var(--s-4);
+    background: rgba(11, 9, 31, 0.4);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-md);
+  }
+  .cc-onboard-step-num {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    margin-bottom: var(--s-2);
+  }
+  .cc-onboard-step-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .cc-onboard-step-desc { font-size: 11px; color: var(--text-tertiary); line-height: 1.5; }
+  .cc-onboard-step-arrow {
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    z-index: 1;
+  }
+
+  /* 响应式 */
+  @media (max-width: 1024px) {
+    .cc-hero { grid-template-columns: 1fr; }
+    .cc-progress-card { min-width: 0; }
+    .cc-features { grid-template-columns: 1fr; }
+    .cc-onboard-steps { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    .cc-hero-title { font-size: 28px; }
+    .cc-onboard-steps { grid-template-columns: 1fr; }
+    .cc-onboard-step-arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== Page Header ============== -->
+<header class="ds-page-header">
+  <div class="ds-page-header-inner">
+    <a href="library.html" class="ds-logo">
+      <span class="ds-logo-mark">∞</span>
+      <span>双生<small>CREATOR · v5.18</small></span>
+    </a>
+    <nav class="ds-breadcrumb" aria-label="面包屑">
+      <a href="library.html">小说世界</a>
+      <span class="sep">/</span>
+      <span class="current">创作者中心</span>
+    </nav>
+    <div class="ds-page-header-right">
+      <button class="ds-icon-btn ds-tooltip" data-tip="通知" aria-label="通知">🔔</button>
+      <button class="ds-icon-btn ds-tooltip" data-tip="帮助" aria-label="帮助">?</button>
+      <div class="ds-user-chip">
+        <div class="ds-user-avatar">L</div>
+        <span>灵境作者</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="ds-container ds-page">
+
+  <!-- ============== Hero（带状态卡） ============== -->
+  <section class="cc-hero ds-anim-fade-in">
+    <div class="cc-hero-text">
+      <div class="cc-hero-greeting">
+        <span class="dot"></span>
+        <span>欢迎回来 · 今天是 <span id="today"></span></span>
+        <span class="ds-badge ds-badge-violet ds-badge-dot">作者认证</span>
+      </div>
+      <h1 class="cc-hero-title">创作者中心</h1>
+      <p class="cc-hero-subtitle">
+        这里是创作小说的全部工具。客户不会看到这个页面 — 它只对想成为创作者的你开放。
+        通过<strong style="color:var(--brand-gold)">填表 + 提问</strong>系统，让不懂写作的人也能产出有质量的内容。
+      </p>
+      <div class="cc-hero-actions">
+        <a href="creator-create.html" class="ds-btn ds-btn-primary ds-btn-lg">
+          <span style="font-size:16px;">+</span> 新建作品
+        </a>
+        <a href="novel-ai-helper.html" class="ds-btn ds-btn-secondary ds-btn-lg">
+          打开小说辅助模拟器
+        </a>
+      </div>
+    </div>
+
+    <aside class="cc-progress-card">
+      <div class="ds-ring" style="--p:42;--size:88px;--thick:8px;--color:var(--brand-violet);" id="ring-progress">
+        <span class="ds-ring-value">42%</span>
+      </div>
+      <div class="cc-progress-info">
+        <div class="cc-progress-title">总体进度</div>
+        <div class="cc-progress-value">12 <span class="unit">/ 28 字段</span></div>
+        <div class="cc-progress-desc">完成全部字段以解锁 AI 辅助生成</div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- ============== 三大功能区（核心入口） ============== -->
+  <section class="cc-features ds-stagger">
+    <a class="cc-feature gold" href="novel-ai-helper.html">
+      <div class="cc-feature-icon">📋</div>
+      <h3 class="cc-feature-title">
+        小说辅助模拟器
+        <span class="ds-badge ds-badge-gold">v5.17 NEW</span>
+      </h3>
+      <p class="cc-feature-desc">用"填表 + 提问"生成高质量小说。28 字段模板 + 12 类提问 + 6 维度自动检测。</p>
+      <div class="cc-feature-stats">
+        <div class="cc-feature-stat">
+          <div class="cc-feature-stat-value">4</div>
+          <div class="cc-feature-stat-label">大表</div>
+        </div>
+        <div class="cc-feature-stat">
+          <div class="cc-feature-stat-value">28</div>
+          <div class="cc-feature-stat-label">字段</div>
+        </div>
+        <div class="cc-feature-stat">
+          <div class="cc-feature-stat-value">12</div>
+          <div class="cc-feature-stat-label">提问模板</div>
+        </div>
+        <div class="cc-feature-stat">
+          <div class="cc-feature-stat-value">6</div>
+          <div class="cc-feature-stat-label">自动检测</div>
+        </div>
+      </div>
+      <div class="cc-feature-cta">立即开始 <span class="arrow">→</span></div>
+    </a>
+
+    <a class="cc-feature" href="creator-create.html">
+      <div class="cc-feature-icon">📚</div>
+      <h3 class="cc-feature-title">我的作品</h3>
+      <p class="cc-feature-desc">管理已创建的小说世界。所有作品的进度、状态、数据看板都在这里。</p>
+      <div class="cc-feature-stats">
+        <div class="cc-feature-stat">
+          <div class="cc-feature-stat-value" id="stat-works-mini">0</div>
+          <div class="cc-feature-stat-label">作品</div>
+        </div>
+        <div class="cc-feature-stat">
+          <div class="cc-feature-stat-value">5</div>
+          <div class="cc-feature-stat-label">本周新增</div>
+        </div>
+        <div class="cc-feature-stat">
+          <div class="cc-feature-stat-value">3</div>
+          <div class="cc-feature-stat-label">已发布</div>
+        </div>
+      </div>
+      <div class="cc-feature-cta">查看作品 <span class="arrow">→</span></div>
+    </a>
+
+    <a class="cc-feature cyan" href="commerce.html">
+      <div class="cc-feature-icon">💰</div>
+      <h3 class="cc-feature-title">上架与定价</h3>
+      <p class="cc-feature-desc">版权分层 + 收费点 + 收益分成 + 改编授权 + 作品审核 — 完成后即可上架。</p>
+      <div class="cc-feature-stats">
+        <div class="cc-feature-stat">
+          <div class="cc-feature-stat-value">L1-L4</div>
+          <div class="cc-feature-stat-label">版权分级</div>
+        </div>
+        <div class="cc-feature-stat">
+          <div class="cc-feature-stat-value">22</div>
+          <div class="cc-feature-stat-label">收费点</div>
+        </div>
+        <div class="cc-feature-stat">
+          <div class="cc-feature-stat-value">5</div>
+          <div class="cc-feature-stat-label">档位分成</div>
+        </div>
+      </div>
+      <div class="cc-feature-cta">设置收益 <span class="arrow">→</span></div>
+    </a>
+  </section>
+
+  <!-- ============== 数据看板 ============== -->
+  <section class="ds-section-head">
+    <div>
+      <h2 class="ds-section-title">📊 数据看板</h2>
+      <div class="ds-section-subtitle">实时反映你的创作进度与商业数据</div>
+    </div>
+    <div class="ds-section-meta">
+      <span>数据更新于 21:30</span>
+    </div>
+  </section>
+
+  <div class="ds-grid ds-grid-4 ds-mb-8">
+    <div class="ds-stat">
+      <div class="ds-stat-label">📚 我的作品</div>
+      <div class="ds-stat-value" id="stat-works">0 <span class="unit">部</span></div>
+      <div class="ds-stat-sub">已创建的小说</div>
+    </div>
+    <div class="ds-stat">
+      <div class="ds-stat-label">📝 大纲完成度</div>
+      <div class="ds-stat-value" id="stat-outline">0<span class="unit">%</span></div>
+      <div class="ds-stat-sub">28 字段已填写比例</div>
+    </div>
+    <div class="ds-stat">
+      <div class="ds-stat-label">💎 本月收益</div>
+      <div class="ds-stat-value">0 <span class="unit" style="color:var(--brand-gold)">灵晶</span></div>
+      <div class="ds-stat-trend up">↑ 较上月 +0%</div>
+    </div>
+    <div class="ds-stat">
+      <div class="ds-stat-label">🏷️ 版权分级</div>
+      <div class="ds-stat-value" style="font-size:20px;color:var(--brand-gold);">—</div>
+      <div class="ds-stat-sub">自动判定 L1-L4</div>
+    </div>
+  </div>
+
+  <!-- ============== 我的作品 ============== -->
+  <section class="cc-works ds-anim-fade-up">
+    <div class="ds-section-head">
+      <div>
+        <h2 class="ds-section-title">📚 我的作品</h2>
+        <div class="ds-section-subtitle">管理所有已创建的小说世界 · 点击进入 AI 辅助填表</div>
+      </div>
+      <a href="creator-create.html" class="ds-btn ds-btn-secondary ds-btn-sm">
+        <span style="font-size:14px;line-height:1;">+</span> 新建作品
+      </a>
+    </div>
+
+    <div id="works-list" class="ds-grid ds-grid-3">
+      <!-- 动态填充 -->
+    </div>
+
+    <div class="cc-works-empty" id="works-empty">
+      <div class="icon">📖</div>
+      <h3 class="ds-font-display" style="font-size:20px;margin-bottom:8px;">还没有作品</h3>
+      <p style="font-size:13px;color:var(--text-tertiary);max-width:360px;margin:0 auto var(--s-5);line-height:1.6;">
+        创建你的第一个小说世界，从 0 到上架仅需 30 分钟。
+      </p>
+      <a href="creator-create.html" class="ds-btn ds-btn-primary">立即创建 →</a>
+    </div>
+  </section>
+
+  <!-- ============== 快速入门 ============== -->
+  <section class="cc-onboard">
+    <div class="ds-section-head">
+      <div>
+        <h2 class="ds-section-title">🚀 新手创作者 4 步走</h2>
+        <div class="ds-section-subtitle">从 0 到上架，全程不超过 30 分钟</div>
+      </div>
+    </div>
+    <div class="cc-onboard-steps">
+      <a href="creator-create.html" class="cc-onboard-step" style="text-decoration:none;color:inherit;">
+        <div class="cc-onboard-step-num">STEP 01</div>
+        <h4 class="cc-onboard-step-title">创建作品</h4>
+        <p class="cc-onboard-step-desc">选择 AI 辅助 / 纯人工 / 上传 TXT 三大路径之一</p>
+        <span class="cc-onboard-step-arrow">→</span>
+      </a>
+      <a href="novel-ai-helper.html" class="cc-onboard-step" style="text-decoration:none;color:inherit;">
+        <div class="cc-onboard-step-num">STEP 02</div>
+        <h4 class="cc-onboard-step-title">填写大纲</h4>
+        <p class="cc-onboard-step-desc">28 字段模板 + 🤖 帮我写 — 不懂写作也能填</p>
+        <span class="cc-onboard-step-arrow">→</span>
+      </a>
+      <a href="novel-ai-helper.html" class="cc-onboard-step" style="text-decoration:none;color:inherit;">
+        <div class="cc-onboard-step-num">STEP 03</div>
+        <h4 class="cc-onboard-step-title">人物 / 场景 / 提问</h4>
+        <p class="cc-onboard-step-desc">10 要素人物小传 + 场景卡 + 12 类提问</p>
+        <span class="cc-onboard-step-arrow">→</span>
+      </a>
+      <a href="commerce.html" class="cc-onboard-step" style="text-decoration:none;color:inherit;">
+        <div class="cc-onboard-step-num">STEP 04</div>
+        <h4 class="cc-onboard-step-title">质量检测 + 上架</h4>
+        <p class="cc-onboard-step-desc">6 维自动检测 → 设置收费点 → 版权分层 → 上架</p>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============== Footer ============== -->
+<footer style="margin-top:var(--s-12);padding:var(--s-6) 0;border-top:1px solid var(--border-subtle);text-align:center;font-size:11px;color:var(--text-muted);">
+  灵境 · 双生 · 创作者中心 · v5.18 · 设计系统重构 · 解决重复入口 · 官方感设计
+</footer>
+
+<!-- Scripts -->
+<script src="js/db.js"></script>
+<script src="js/novel-outline.js"></script>
+<script src="js/character-profile.js"></script>
+<script src="js/scene-card.js"></script>
+<script src="js/ai-question.js"></script>
+<script>
+  // 当前日期
+  document.getElementById('today').textContent = new Date().toLocaleDateString('zh-CN', { month: 'long', day: 'numeric', weekday: 'long' });
+
+  // 数字滚动动画
+  function animateNumber(el, target, duration = 1200) {
+    const start = 0;
+    const startTime = performance.now();
+    const isFloat = String(target).includes('.');
+    function tick(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const v = start + (target - start) * eased;
+      el.textContent = isFloat ? v.toFixed(1) : Math.floor(v);
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // 数据统计
+  function loadStats() {
+    let totalWorks = 0;
+    let outlineComplete = 0;
+    try {
+      if (window.DB) {
+        const outlines = window.DB.outline ? window.DB.outline.list() : [];
+        const profiles = window.DB.profile ? window.DB.profile.list() : [];
+        totalWorks = outlines.length;
+        outlineComplete = totalWorks > 0 ? Math.min(100, Math.round((outlines.filter(o => o.title).length / Math.max(outlines.length, 1)) * 100)) : 0;
+      }
+    } catch (e) { console.warn('stats error', e); }
+
+    animateNumber(document.getElementById('stat-works'), totalWorks);
+    animateNumber(document.getElementById('stat-outline'), outlineComplete);
+    animateNumber(document.getElementById('stat-works-mini'), totalWorks);
+
+    // 进度环
+    document.getElementById('ring-progress').style.setProperty('--p', outlineComplete);
+    document.querySelector('.ds-ring-value').textContent = outlineComplete + '%';
+  }
+
+  // 作品列表
+  function loadWorks() {
+    const list = document.getElementById('works-list');
+    const empty = document.getElementById('works-empty');
+    let works = [];
+    try {
+      if (window.DB && window.DB.outline) {
+        works = window.DB.outline.list();
+      }
+    } catch (e) { works = []; }
+
+    if (works.length === 0) {
+      list.style.display = 'none';
+      empty.style.display = 'block';
+      return;
+    }
+
+    list.style.display = 'grid';
+    empty.style.display = 'none';
+    list.innerHTML = works.map((w, i) => `
+      <div class="cc-work-card" onclick="location.href='novel-ai-helper.html?novelId=${w.id}'">
+        <div class="cc-work-card-head">
+          <div class="cc-work-card-cover">📖</div>
+          <div style="flex:1;min-width:0;">
+            <div class="cc-work-card-title">${w.title || '未命名作品'}</div>
+            <div class="cc-work-card-meta">${w.genre || '未分类'} · ${w.status || '草稿'}</div>
+          </div>
+        </div>
+        <div class="cc-work-card-progress">
+          <div class="label"><span>大纲完成度</span><span style="color:var(--brand-violet)">${w.completion || 0}%</span></div>
+          <div class="ds-progress"><div class="ds-progress-fill" style="width:${w.completion || 0}%;"></div></div>
+        </div>
+        <div class="cc-work-card-footer">
+          <span class="ds-badge ds-badge-solid">${w.tier || '未评定'}</span>
+          <span style="font-size:10px;color:var(--text-muted);margin-left:auto;">${new Date(w.updated_at || w.created_at || Date.now()).toLocaleDateString('zh-CN')}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    loadStats();
+    loadWorks();
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+{
+  "results": [
+    {
+      "page": "creator-center",
+      "title": "灵境 · 双生 · 创作者中心 · v5.17",
+      "back_arrow": 1,
+      "core_btns": 4,
+      "ok": true
+    },
+    {
+      "page": "creator-create",
+      "paths": 3,
+      "back": 1,
+      "ok": true
+    },
+    {
+      "page": "ai-helper-basic",
+      "tabs": 7,
+      "fields": 7,
+      "ai_btns": 7,
+      "ok": true
+    },
+    {
+      "page": "ai-modal",
+      "visible": true,
+      "options": 3,
+      "ok": true
+    },
+    {
+      "page": "ai-helper-world",
+      "fields": 7,
+      "ok": true
+    },
+    {
+      "page": "commerce",
+      "title": "灵境 · 双生 · 上架与定价 · v5.17",
+      "back_to_center": true,
+      "sections": 6,
+      "ok": true
+    },
+    {
+      "page": "library-nav",
+      "nav_links": [
+        "📚小说世界",
+        "✍️创作者中心",
+        "🎮5 题材老版",
+        "🏛️v5.8 旧版"
+      ],
+      "has_creator": true,
+      "ok": true
+    }
+  ],
+  "errors": [],
+  "pass": true
+}
