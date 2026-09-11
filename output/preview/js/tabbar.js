@@ -111,11 +111,14 @@
       bar.appendChild(a);
     });
     // V20-B：tabbar 永远在最顶层，z-index 200 高于所有 mask/dialog
+    // V20-E：保留 CSS 的 left:50% + transform:translateX(-50%) 居中策略，
+    //       不要用 left:0/right:0 强制铺满，否则 desktop 视口 + max-width:480px
+    //       会让 tabbar 贴在屏幕左边（手机游戏必须 mobile-first 居中）
     bar.style.zIndex = '200';
     bar.style.position = 'fixed';
     bar.style.bottom = '0';
-    bar.style.left = '0';
-    bar.style.right = '0';
+    bar.style.left = '50%';
+    bar.style.transform = 'translateX(-50%)';
     return bar;
   }
 
