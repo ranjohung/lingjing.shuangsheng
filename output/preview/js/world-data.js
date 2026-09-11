@@ -20,7 +20,7 @@
     { id: 'b5', title: '红楼梦 · 灵境版', subtitle: '公版新解读 · 黛玉知己结局', gradient: 'linear-gradient(135deg,#B8863B,#8C5A2B)', href: 'plot-detail.html?novel=pd1', emoji: '📜' }
   ];
 
-  // ---------- 分类树（10 一级 · 多人二级） ----------
+  // ---------- 分类树（V20-K：16 一级 · 覆盖市面主流题材 · 灵境专属术语，零第三方 IP 名） ----------
   var CATEGORIES = [
     { id: 'gufeng', name: '古风', children: [
       { id: 'gonggu', name: '宫闺府宅' },
@@ -29,6 +29,10 @@
       { id: 'wuxia', name: '武侠江湖' },
       { id: 'gdshenghuo', name: '古代生活' },
       { id: 'shinong', name: '士农工商' },
+      { id: 'zhongtian', name: '种田经商' },
+      { id: 'zhaidou', name: '宅斗宫斗' },
+      { id: 'lishijia', name: '历史架空' },
+      { id: 'kuaiyi', name: '快意恩仇' },
       { id: 'zhuxianmianfei', name: '主线免费' }
     ]},
     { id: 'xiandai', name: '现代', children: [
@@ -42,7 +46,28 @@
       { id: 'minguo', name: '民国' },
       { id: 'xiandaiyiwen', name: '现代异闻' },
       { id: 'xingzhen', name: '刑侦悬疑' },
-      { id: 'huanxiang', name: '幻想言情' }
+      { id: 'huanxiang', name: '幻想言情' },
+      { id: 'dushi', name: '都市生活' },
+      { id: 'yiliao', name: '医疗' },
+      { id: 'lvzheng', name: '律政' },
+      { id: 'meishi', name: '美食' },
+      { id: 'tiyu', name: '体育竞技' }
+    ]},
+    { id: 'kehuan', name: '科幻', children: [
+      { id: 'xingji', name: '星际文明' },
+      { id: 'saibo', name: '赛博朋克' },
+      { id: 'shikong', name: '时空悖论' },
+      { id: 'feit', name: '废土' },
+      { id: 'aijx', name: 'AI 觉醒' },
+      { id: 'weilai', name: '未来世界' }
+    ]},
+    { id: 'xuanyi', name: '悬疑灵异', children: [
+      { id: 'benge', name: '本格推理' },
+      { id: 'shehuipai', name: '社会派推理' },
+      { id: 'kongbu', name: '惊悚恐怖' },
+      { id: 'lingyi', name: '灵异鬼怪' },
+      { id: 'mishi', name: '密室逃脱' },
+      { id: 'guize', name: '规则怪谈' }
     ]},
     { id: 'huanxiang', name: '幻想冒险', children: [
       { id: 'datuosha', name: '大逃杀' },
@@ -50,48 +75,92 @@
       { id: 'mori', name: '末日' },
       { id: 'paotuan', name: '跑团怪谈' },
       { id: 'zainan', name: '灾难' },
-      { id: 'xuanyi', name: '悬疑推理' }
+      { id: 'xuanyituili', name: '悬疑推理' },
+      { id: 'xifang', name: '西方奇幻' },
+      { id: 'yishijie', name: '异世界' },
+      { id: 'wuxianliu', name: '无限流' }
     ]},
     { id: 'kuachuan', name: '快穿穿书', children: [
       { id: 'kuachuan', name: '快穿' },
       { id: 'chuanshu', name: '穿书' },
+      { id: 'chongsheng', name: '重生' },
+      { id: 'chuanyue', name: '穿越' },
+      { id: 'xitong', name: '系统流' },
       { id: 'yishi', name: '异世玄幻' }
     ]},
     { id: 'shiguang', name: '时光档案', children: [
       { id: 'time1', name: '回到过去' },
       { id: 'time2', name: '未来幻想' },
-      { id: 'time3', name: '平行时空' }
+      { id: 'time3', name: '平行时空' },
+      { id: 'xunhuan', name: '循环流' }
     ]},
-    // PRD 9.1 R7：BTS/HP/EXO → 韩流同人/欧美同人/日系同人/影视改编
+    // PRD 9.1 R7：BTS/HP/EXO → 韩流同人/欧美同人/日系同人/影视改编（泛指合规）
     { id: 'mingxing', name: '同人专区', children: [
       { id: 'hnt', name: '韩流同人' },
       { id: 'omt', name: '欧美同人' },
       { id: 'ri', name: '日系同人' },
-      { id: 'yingxi', name: '影视改编' }
+      { id: 'yingxi', name: '影视改编' },
+      { id: 'manTR', name: '漫画同人' },
+      { id: 'youxiTR', name: '游戏同人' }
     ]},
     { id: 'guangying', name: '光影', children: [
       { id: 'dianying', name: '电影改编' },
-      { id: 'dianshi', name: '电视剧改编' }
+      { id: 'dianshi', name: '电视剧改编' },
+      { id: 'jilupian', name: '纪录片风格' }
+    ]},
+    { id: 'youxi', name: '游戏竞技', children: [
+      { id: 'dianji', name: '电竞' },
+      { id: 'wangyou', name: '网游' },
+      { id: 'fuben', name: '副本攻略' },
+      { id: 'tiyuJ', name: '体育竞技' }
+    ]},
+    { id: 'erci', name: '二次元', children: [
+      { id: 'qingshuo', name: '轻小说' },
+      { id: 'xiaoyuanYN', name: '校园异能' },
+      { id: 'fanju', name: '番剧风' },
+      { id: 'yinv', name: '乙女向' },
+      { id: 'zhiyuRC', name: '治愈日常' }
+    ]},
+    { id: 'rexuewen', name: '热血爽文', children: [
+      { id: 'rexue', name: '热血' },
+      { id: 'wudi', name: '无敌流' },
+      { id: 'banzhu', name: '扮猪吃虎' },
+      { id: 'zhuixu', name: '赘婿逆袭' },
+      { id: 'shengji', name: '升级流' },
+      { id: 'zhengba', name: '争霸流' }
     ]},
     { id: 'chengzhang', name: '成长向', children: [
       { id: 'shaonian', name: '少年成长' },
-      { id: 'qingchun', name: '青春校园' }
+      { id: 'qingchun', name: '青春校园' },
+      { id: 'lizhi', name: '励志逆袭' }
     ]},
     { id: 'dongren', name: '动人情感', children: [
       { id: 'aiqing', name: '爱情' },
       { id: 'youqing', name: '友情' },
-      { id: 'qinqing', name: '亲情' }
+      { id: 'qinqing', name: '亲情' },
+      { id: 'zhiyuX', name: '治愈系' },
+      { id: 'zhiyuY', name: '致郁系' },
+      { id: 'qunxiang', name: '群像' }
     ]},
-    { id: 'wanjie', name: '完结', children: [
-      { id: 'wanjiequan', name: '完结全收录' }
+    { id: 'wanjie', name: '完结专区', children: [
+      { id: 'wanjiequan', name: '完结全收录' },
+      { id: 'gaofen', name: '高分完结' },
+      { id: 'baiwan', name: '百万字完结' }
+    ]},
+    { id: 'mianfei', name: '免费专区', children: [
+      { id: 'zhuxian', name: '主线免费' },
+      { id: 'xianmian', name: '限免中' },
+      { id: 'xinren', name: '新人免费' }
     ]}
   ];
 
   // ---------- 标签配色（卡片题材 tag 用） ----------
   var TAG_COLORS = {
-    '古风': '#B8863B', '现代': '#4ECCA3', '幻想冒险': '#6C5CE7',
-    '快穿穿书': '#FFB347', '时光档案': '#00B894', '同人专区': '#E94560',
-    '光影': '#A29BFE', '成长向': '#4ECCA3', '动人情感': '#E94560', '完结': '#00B894'
+    '古风': '#B8863B', '现代': '#4ECCA3', '科幻': '#4FB3D9', '悬疑灵异': '#8E5BD8',
+    '幻想冒险': '#6C5CE7', '快穿穿书': '#FFB347', '时光档案': '#00B894', '同人专区': '#E94560',
+    '光影': '#A29BFE', '游戏竞技': '#FFA500', '二次元': '#FF8FAB', '热血爽文': '#FF6B6B',
+    '成长向': '#4ECCA3', '动人情感': '#E94560', '完结': '#00B894', '完结专区': '#00B894',
+    '免费专区': '#4ECCA3'
   };
   function tagColor(cat) { return TAG_COLORS[cat] || '#A0A0B0'; }
 
@@ -101,7 +170,7 @@
     // FEATURED (8)
     ['凤求凰', '云间月', '古风', 'gufeng', 'gonggu', 9.2, '12.3万字', 'ed'],
     ['长夜城', '夜归人', '古风', 'gufeng', 'wangquan', 9.0, '24.6万字', 'ed'],
-    ['深海回声', '林清雪', '幻想冒险', 'huanxiang', 'xuanyi', 8.8, '18.2万字', 'ed'],
+    ['深海回声', '林清雪', '幻想冒险', 'huanxiang', 'xuanyituili', 8.8, '18.2万字', 'ed'],
     ['快穿之攻略反派', '苏沐橙', '快穿穿书', 'kuachuan', 'kuachuan', 8.6, '16.5万字', 'ed'],
     ['锦衣卫日记', '墨倾池', '古风', 'gufeng', 'wuxia', 8.5, '21.0万字', 'ed'],
     ['回到 1998', '陆星河', '时光档案', 'shiguang', 'time1', 8.4, '15.8万字', 'ed'],
@@ -136,41 +205,41 @@
   ];
 
   // 卡片公共字段：status=新/连载中/完结；level=编推/精装/L3/L2；price=灵晶定价（0 表示免费）
-  // wordCountNum 用于字数筛选；publishYear 用于年份筛选
+  // wordCountNum 用于字数筛选；publishYear 用于年份筛选；attrs 用于热门属性筛选（V20-K）
   var META = {
     // FEATURED 8 张
-    '凤求凰':       { status: 'ing',  level: 'pd',  wc: 12.3, price: 60,  year: 2026 },
-    '长夜城':       { status: 'ing',  level: 'pd',  wc: 24.6, price: 128, year: 2026 },
-    '深海回声':     { status: 'ing',  level: 'pd',  wc: 18.2, price: 88,  year: 2025 },
-    '快穿之攻略反派': { status: 'ing', level: 'lz', wc: 16.5, price: 50,  year: 2025 },
-    '锦衣卫日记':   { status: 'ing',  level: 'lz',  wc: 21.0, price: 98,  year: 2025 },
-    '回到 1998':    { status: 'new',  level: 'L3',  wc: 15.8, price: 30,  year: 2026 },
-    '仙侠奇缘录':   { status: 'ing',  level: 'L3',  wc: 28.4, price: 188, year: 2024 },
-    '偶像练习手记': { status: 'done', level: 'L2',  wc: 10.2, price: 50,  year: 2024 },
+    '凤求凰':       { status: 'ing',  level: 'pd',  wc: 12.3, price: 60,  year: 2026, attrs: ['shuangwen'] },
+    '长夜城':       { status: 'ing',  level: 'pd',  wc: 24.6, price: 128, year: 2026, attrs: ['rexue', 'qunxiang'] },
+    '深海回声':     { status: 'ing',  level: 'pd',  wc: 18.2, price: 88,  year: 2025, attrs: ['zhiyu', 'qunxiang'] },
+    '快穿之攻略反派': { status: 'ing', level: 'lz', wc: 16.5, price: 50,  year: 2025, attrs: ['chongsheng', 'shuangwen'] },
+    '锦衣卫日记':   { status: 'ing',  level: 'lz',  wc: 21.0, price: 98,  year: 2025, attrs: ['rexue'] },
+    '回到 1998':    { status: 'new',  level: 'L3',  wc: 15.8, price: 30,  year: 2026, attrs: ['chongsheng', 'zhiyu'] },
+    '仙侠奇缘录':   { status: 'ing',  level: 'L3',  wc: 28.4, price: 188, year: 2024, attrs: ['rexue', 'xitong'] },
+    '偶像练习手记': { status: 'done', level: 'L2',  wc: 10.2, price: 50,  year: 2024, attrs: ['zhiyu'] },
     // HOT 12 张
-    '赛博长夜':     { status: 'ing',  level: 'pd',  wc: 12.8, price: 50,  year: 2026 },
-    '末日余晖':     { status: 'ing',  level: 'pd',  wc: 22.6, price: 128, year: 2026 },
-    '民国旧梦':     { status: 'done', level: 'lz',  wc: 19.5, price: 88,  year: 2025 },
-    '豪门千金':     { status: 'ing',  level: 'lz',  wc: 13.7, price: 60,  year: 2025 },
-    '刑侦档案':     { status: 'ing',  level: 'L3',  wc: 17.0, price: 60,  year: 2025 },
-    '逃杀游戏':     { status: 'ing',  level: 'L3',  wc: 14.1, price: 50,  year: 2024 },
-    '奇谭怪谈录':   { status: 'new',  level: 'L2',  wc: 11.2, price: 30,  year: 2026 },
-    '灵境红楼梦':   { status: 'ing',  level: 'pd',  wc: 120,  price: 0,   year: 2026 },
-    '英伦贵族':     { status: 'done', level: 'L3',  wc: 20.1, price: 88,  year: 2024 },
-    '幻想言情':     { status: 'ing',  level: 'L2',  wc: 9.8,  price: 30,  year: 2026 },
-    '校园风云':     { status: 'done', level: 'L2',  wc: 8.5,  price: 0,   year: 2024 },
-    '星际开拓':     { status: 'ing',  level: 'L3',  wc: 26.0, price: 128, year: 2025 },
+    '赛博长夜':     { status: 'ing',  level: 'pd',  wc: 12.8, price: 50,  year: 2026, attrs: ['xitong', 'rexue'] },
+    '末日余晖':     { status: 'ing',  level: 'pd',  wc: 22.6, price: 128, year: 2026, attrs: ['rexue', 'qunxiang'] },
+    '民国旧梦':     { status: 'done', level: 'lz',  wc: 19.5, price: 88,  year: 2025, attrs: ['zhiyu'] },
+    '豪门千金':     { status: 'ing',  level: 'lz',  wc: 13.7, price: 60,  year: 2025, attrs: ['shuangwen', 'banzhu'] },
+    '刑侦档案':     { status: 'ing',  level: 'L3',  wc: 17.0, price: 60,  year: 2025, attrs: ['qunxiang'] },
+    '逃杀游戏':     { status: 'ing',  level: 'L3',  wc: 14.1, price: 50,  year: 2024, attrs: ['rexue', 'wudi'] },
+    '奇谭怪谈录':   { status: 'new',  level: 'L2',  wc: 11.2, price: 30,  year: 2026, attrs: ['xitong'] },
+    '灵境红楼梦':   { status: 'ing',  level: 'pd',  wc: 120,  price: 0,   year: 2026, attrs: ['chongsheng', 'qunxiang'] },
+    '英伦贵族':     { status: 'done', level: 'L3',  wc: 20.1, price: 88,  year: 2024, attrs: ['shuangwen'] },
+    '幻想言情':     { status: 'ing',  level: 'L2',  wc: 9.8,  price: 30,  year: 2026, attrs: ['zhiyu'] },
+    '校园风云':     { status: 'done', level: 'L2',  wc: 8.5,  price: 0,   year: 2024, attrs: ['zhiyu', 'qunxiang'] },
+    '星际开拓':     { status: 'ing',  level: 'L3',  wc: 26.0, price: 128, year: 2025, attrs: ['rexue', 'xitong'] },
     // NEW_DONE 10 张
-    '穿成反派他娘': { status: 'done', level: 'pd',  wc: 14.6, price: 88,  year: 2025 },
-    '公主成长录':   { status: 'done', level: 'lz',  wc: 11.4, price: 60,  year: 2024 },
-    '古代生活小记': { status: 'done', level: 'L2',  wc: 9.7,  price: 30,  year: 2024 },
-    '平行之约':     { status: 'done', level: 'L3',  wc: 13.2, price: 60,  year: 2025 },
-    '职场浮沉':     { status: 'done', level: 'L3',  wc: 12.0, price: 50,  year: 2025 },
-    '友情万岁':     { status: 'done', level: 'L2',  wc: 7.5,  price: 0,   year: 2024 },
-    '末日救援':     { status: 'done', level: 'pd',  wc: 18.0, price: 88,  year: 2025 },
-    '回到过去找你': { status: 'done', level: 'L3',  wc: 10.6, price: 30,  year: 2024 },
-    '少年锦衣':     { status: 'done', level: 'L2',  wc: 8.8,  price: 0,   year: 2024 },
-    '亲情二三事':   { status: 'done', level: 'L2',  wc: 6.5,  price: 0,   year: 2024 }
+    '穿成反派他娘': { status: 'done', level: 'pd',  wc: 14.6, price: 88,  year: 2025, attrs: ['chuanyue', 'shuangwen'] },
+    '公主成长录':   { status: 'done', level: 'lz',  wc: 11.4, price: 60,  year: 2024, attrs: ['chongsheng'] },
+    '古代生活小记': { status: 'done', level: 'L2',  wc: 9.7,  price: 30,  year: 2024, attrs: ['zhiyu'] },
+    '平行之约':     { status: 'done', level: 'L3',  wc: 13.2, price: 60,  year: 2025, attrs: ['chuanyue', 'qunxiang'] },
+    '职场浮沉':     { status: 'done', level: 'L3',  wc: 12.0, price: 50,  year: 2025, attrs: ['qunxiang'] },
+    '友情万岁':     { status: 'done', level: 'L2',  wc: 7.5,  price: 0,   year: 2024, attrs: ['zhiyu', 'qunxiang'] },
+    '末日救援':     { status: 'done', level: 'pd',  wc: 18.0, price: 88,  year: 2025, attrs: ['rexue', 'qunxiang'] },
+    '回到过去找你': { status: 'done', level: 'L3',  wc: 10.6, price: 30,  year: 2024, attrs: ['chongsheng', 'zhiyu'] },
+    '少年锦衣':     { status: 'done', level: 'L2',  wc: 8.8,  price: 0,   year: 2024, attrs: ['rexue', 'chongsheng'] },
+    '亲情二三事':   { status: 'done', level: 'L2',  wc: 6.5,  price: 0,   year: 2024, attrs: ['zhiyu'] }
   };
 
   function toCard(row, idx) {
@@ -185,7 +254,7 @@
       'linear-gradient(160deg,#1C2542,#6C5CE7)'
     ];
     var emojiPool = ['🌸','🏯','🌌','⚡','🌙','🎭','🗡','🌊','🦋','📜','🪄','🎪','🧭','💫','🌿','🐉'];
-    var meta = META[row[0]] || { status: 'ing', level: 'L3', wc: 10, price: 30, year: 2026 };
+    var meta = META[row[0]] || { status: 'ing', level: 'L3', wc: 10, price: 30, year: 2026, attrs: [] };
     return {
       id: 'w' + (idx + 1),
       title: row[0],
@@ -201,12 +270,13 @@
       isNew: meta.status === 'new',
       isDone: meta.status === 'done' || row[7] === 'done',
       isPublicDomain: row[3] === 'mingxing',
-      // 5 维筛选字段（V17.0 §2.6）
+      // 6 维筛选字段（V17.0 §2.6 + V20-K 热门属性）
       status: meta.status,
       level: meta.level,
       wc: meta.wc,
       price: meta.price,
-      year: meta.year
+      year: meta.year,
+      attrs: meta.attrs || []
     };
   }
 
@@ -232,19 +302,25 @@
     { id: 'pd10', title: '影视改编：琅琊', author: '灵境官方', catName: '公版同人', cat: 'mingxing', sub: 'yingxi', score: 8.9, wordCount: '15.2万字', cov: 'linear-gradient(160deg,#5E2E3A,#6C5CE7)', emoji: '🎭', desc: '权谋古装剧 · 同人续写', publicDomain: false }
   ];
 
-  // ---------- 顶部排序：本周灵韵 / 本周人气 ----------
+  // ---------- 顶部排序（V20-K：8 种，参考主流小说 App） ----------
   var SORTS = [
     { id: 'ly', name: '本周灵韵' },
-    { id: 'rq', name: '本周人气' }
+    { id: 'rq', name: '本周人气' },
+    { id: 'shoucang', name: '收藏最多' },
+    { id: 'pingfen', name: '评分最高' },
+    { id: 'zishu', name: '字数最多' },
+    { id: 'gengxin', name: '最新更新' },
+    { id: 'fabu', name: '最新发布' },
+    { id: 'pinglun', name: '评论最多' }
   ];
 
-  // ---------- 5 维筛选条件（V17.0 §2.6）----------
+  // ---------- 6 维筛选条件（V20-K 扩充：状态/等级/字数 8 档/价格 6 档/热门属性/时间） ----------
   var FILTERS = {
     status: [
       { id: 'all',   name: '不限' },
-      { id: 'new',   name: '新作' },
       { id: 'ing',   name: '连载中' },
-      { id: 'done',  name: '完结' }
+      { id: 'done',  name: '已完结' },
+      { id: 'new',   name: '新书上线' }
     ],
     level: [
       { id: 'all',   name: '不限' },
@@ -254,24 +330,57 @@
       { id: 'L2',    name: 'L2' }
     ],
     words: [
-      { id: 'all',     name: '不限' },
-      { id: 'short',   name: '短（3 万以下）' },
-      { id: 'mid',     name: '中（3-8 万）' },
-      { id: 'long',    name: '长（8 万以上）' }
+      { id: 'all', name: '不限' },
+      { id: 'w0',  name: '3 万以下' },
+      { id: 'w1',  name: '3-10 万' },
+      { id: 'w2',  name: '10-30 万' },
+      { id: 'w3',  name: '30-50 万' },
+      { id: 'w4',  name: '50-100 万' },
+      { id: 'w5',  name: '100-200 万' },
+      { id: 'w6',  name: '200 万以上' }
     ],
     price: [
-      { id: 'all',     name: '不限' },
-      { id: 'p0',      name: '50 灵晶以内' },
-      { id: 'p1',      name: '51-100 灵晶' },
-      { id: 'p2',      name: '101-200 灵晶' }
+      { id: 'all',  name: '不限' },
+      { id: 'free', name: '免费' },
+      { id: 'p0',   name: '50 灵晶以内' },
+      { id: 'p1',   name: '51-100 灵晶' },
+      { id: 'p2',   name: '101-200 灵晶' },
+      { id: 'p3',   name: '200 灵晶以上' }
+    ],
+    attr: [
+      { id: 'all',       name: '不限' },
+      { id: 'rexue',     name: '热血' },
+      { id: 'shuangwen', name: '爽文' },
+      { id: 'chongsheng', name: '重生' },
+      { id: 'chuanyue',  name: '穿越' },
+      { id: 'xitong',    name: '系统' },
+      { id: 'wudi',      name: '无敌流' },
+      { id: 'banzhu',    name: '扮猪吃虎' },
+      { id: 'zhiyu',     name: '治愈' },
+      { id: 'qunxiang',  name: '群像' }
     ],
     year: [
-      { id: 'all',     name: '不限' },
-      { id: '2026',    name: '2026' },
-      { id: '2025',    name: '2025' },
-      { id: '2024',    name: '2024' }
+      { id: 'all',   name: '不限' },
+      { id: '2026',  name: '2026' },
+      { id: '2025',  name: '2025' },
+      { id: '2024',  name: '2024' },
+      { id: 'older', name: '2023 及更早' }
     ]
   };
+
+  // ---------- 排行榜（V20-K：10 榜单，参考主流小说 App 榜单体系） ----------
+  var RANKS = [
+    { id: 'rq',       name: '人气榜', icon: '🔥' },
+    { id: 'ly',       name: '灵韵榜', icon: '✨' },
+    { id: 'new',      name: '新书榜', icon: '🌱' },
+    { id: 'done',     name: '完本榜', icon: '🏁' },
+    { id: 'shoucang', name: '收藏榜', icon: '⭐' },
+    { id: 'resou',    name: '热搜榜', icon: '🔍' },
+    { id: 'gengxin',  name: '更新榜', icon: '⚡' },
+    { id: 'pingfen',  name: '口碑榜', icon: '🏆' },
+    { id: 'fee',      name: '付费榜', icon: '💎' },
+    { id: 'free',     name: '免费榜', icon: '🎁' }
+  ];
 
   // ---------- 更新日历（V17.0 §2.3 四大金刚-更新日历）----------
   // 7 天内的更新作品
@@ -293,6 +402,7 @@
     PUBLIC_DOMAIN: PUBLIC_DOMAIN,
     SORTS: SORTS,
     FILTERS: FILTERS,
+    RANKS: RANKS,
     CALENDAR: CALENDAR,
     tagColor: tagColor
   };

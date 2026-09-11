@@ -77,7 +77,7 @@ with sync_playwright() as p:
     drawer_open = page.evaluate("document.getElementById('ds-drawer').classList.contains('open')")
     cat_count = page.evaluate("document.querySelectorAll('.ds-d-cat').length")
     tag_count = page.evaluate("document.querySelectorAll('.ds-d-tag').length")
-    print(f"[12] 侧边栏 open={drawer_open} · 一级 {cat_count} · 二级 {tag_count}  -> {'OK' if drawer_open and cat_count == 10 and tag_count > 0 else 'FAIL'}")
+    print(f"[12] 侧边栏 open={drawer_open} · 一级 {cat_count} · 二级 {tag_count}  -> {'OK' if drawer_open and cat_count == 16 and tag_count > 0 else 'FAIL'}")  # V20-K：10 → 16 一级分类
 
     # 13. 切换一级分类（切到同人专区）
     page.click('.ds-d-cat[data-id="mingxing"]')

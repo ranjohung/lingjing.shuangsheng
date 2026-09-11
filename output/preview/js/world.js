@@ -188,17 +188,36 @@
   }
 
   // ---------- 排行榜 ----------
+  // ---------- 排行榜（V20-K：10 榜单 Tab · 参考主流小说 App 榜单体系） ----------
+  var currentRank = 'rq';
   function renderRank(main) {
     main.appendChild(el('div', { class: 'ds-board-head' }, [
-      el('div', { class: 'ds-board-title' }, ['本周榜单']),
-      el('div', { class: 'ds-board-sort' }, [
-        el('span', { class: 'ds-sort active' }, ['本周灵韵']),
-        el('span', { class: 'ds-sort' }, ['本周人气'])
-      ])
+      el('div', { class: 'ds-board-title' }, ['排行榜']),
+      el('div', { class: 'ds-board-sub' }, ['十大榜单 · 每周一 05:00 更新'])
     ]));
-    var all = window.WORLD_DATA.FEATURED.concat(window.WORLD_DATA.HOT);
-    var sorted = all.slice().sort(function (a, b) { return b.score - a.score; });
+    // 榜单 Tab（横向滚动）
+    var tabs = el('div', { class: 'rank-tabs' });
+    window.WORLD_DATA.RANKS.forEach(function (r) {
+      tabs.appendChild(el('span', {
+        class: 'rank-tab' + (currentRank === r.id ? ' active' : ''),
+        'data-rank': r.id
+      }, [r.icon + ' ' + r.name]));
+    });
+    main.appendChild(tabs);
+
+    // 当前榜单作品集（新书/完本/付费/免费榜 = 先过滤再排序）
+    var all = window.WORLD_DATA.FEATURED.concat(window.WORLD_DATA.HOT).concat(window.WORLD_DATA.NEW_DONE);
+    var pool = all;
+    if (currentRank === 'new') pool = all.filter(function (c) { return c.isNew; });
+    else if (currentRank === 'done') pool = all.filter(function (c) { return c.isDone; });
+    else if (currentRank === 'fee') pool = all.filter(function (c) { return c.price > 0; });
+    else if (currentRank === 'free') pool = all.filter(function (c) { return c.price === 0; });
+    var sorted = sortCards(pool, currentRank);
+
     var list = el('div', { class: 'rank-list' });
+    if (!sorted.length) {
+      list.appendChild(el('div', { class: 'ds-empty' }, ['该榜单暂无作品，换个榜单看看']));
+    }
     sorted.slice(0, 10).forEach(function (w, idx) {
       var row = el('div', { class: 'rank-row' }, [
         el('div', { class: 'rank-num rank-num-' + (idx < 3 ? 'top' : 'normal') }, [String(idx + 1)]),
@@ -239,11 +258,12 @@
   // ---------- 筛选结果页（V17.0 §2.6）----------
   // 顶部排序"本周灵韵 | 本周人气" + 5 维筛选 chip + 双列瀑布流
   var filterState = {
-    sort: 'ly',  // ly / rq
+    sort: 'ly',  // ly / rq / shoucang / pingfen / zishu / gengxin / fabu / pinglun
     status: 'all',
     level: 'all',
     words: 'all',
     price: 'all',
+    attr: 'all',
     year: 'all'
   };
 
@@ -251,15 +271,45 @@
     return cards.filter(function (c) {
       if (filterState.status !== 'all' && c.status !== filterState.status) return false;
       if (filterState.level !== 'all' && c.level !== filterState.level) return false;
-      if (filterState.words === 'short' && c.wc >= 3) return false;
-      if (filterState.words === 'mid' && (c.wc < 3 || c.wc > 8)) return false;
-      if (filterState.words === 'long' && c.wc <= 8) return false;
-      if (filterState.price === 'p0' && c.price > 50) return false;
+      // V20-K：字数 8 档（wc 单位 = 万字）
+      var w = c.wc || 0;
+      if (filterState.words === 'w0' && w >= 3) return false;
+      if (filterState.words === 'w1' && (w < 3 || w >= 10)) return false;
+      if (filterState.words === 'w2' && (w < 10 || w >= 30)) return false;
+      if (filterState.words === 'w3' && (w < 30 || w >= 50)) return false;
+      if (filterState.words === 'w4' && (w < 50 || w >= 100)) return false;
+      if (filterState.words === 'w5' && (w < 100 || w >= 200)) return false;
+      if (filterState.words === 'w6' && w < 200) return false;
+      // V20-K：价格 6 档（含免费 / 200 以上）
+      if (filterState.price === 'free' && c.price !== 0) return false;
+      if (filterState.price === 'p0' && (c.price === 0 || c.price > 50)) return false;
       if (filterState.price === 'p1' && (c.price < 51 || c.price > 100)) return false;
       if (filterState.price === 'p2' && (c.price < 101 || c.price > 200)) return false;
-      if (filterState.year !== 'all' && String(c.year) !== filterState.year) return false;
+      if (filterState.price === 'p3' && c.price <= 200) return false;
+      // V20-K：热门属性
+      if (filterState.attr !== 'all' && (c.attrs || []).indexOf(filterState.attr) === -1) return false;
+      // V20-K：年份（含 2023 及更早）
+      if (filterState.year === 'older') { if ((c.year || 2026) > 2023) return false; }
+      else if (filterState.year !== 'all' && String(c.year) !== filterState.year) return false;
       return true;
     });
+  }
+
+  // ---------- V20-K：通用排序（筛选页 + 排行榜共用） ----------
+  function sortCards(list, sid) {
+    var arr = list.slice();
+    var byScore = function (a, b) { return b.score - a.score; };
+    switch (sid) {
+      case 'rq':       return arr.sort(function (a, b) { return (b.score * 900 + b.wc * 3) - (a.score * 900 + a.wc * 3); });
+      case 'shoucang': return arr.sort(function (a, b) { return (b.score * 260) - (a.score * 260); });
+      case 'pingfen':  return arr.sort(byScore);
+      case 'zishu':    return arr.sort(function (a, b) { return (b.wc || 0) - (a.wc || 0); });
+      case 'gengxin':  return arr.sort(function (a, b) { return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0) || (b.year - a.year) || byScore(a, b); });
+      case 'fabu':     return arr.sort(function (a, b) { return (b.year - a.year) || byScore(a, b); });
+      case 'pinglun':  return arr.sort(function (a, b) { return (b.score * 12) - (a.score * 12); });
+      case 'resou':    return arr.sort(function (a, b) { return (b.score * 700 + b.wc * 7) - (a.score * 700 + a.wc * 7); });
+      default:         return arr.sort(function (a, b) { return (b.score * 1000) - (a.score * 1000); }); // ly 本周灵韵
+    }
   }
 
   function renderFilterPage(main, catId, subId) {
@@ -273,22 +323,27 @@
     });
     var title = cat ? (cat.name + ' / ' + (sub ? sub.name : '')) : '全部分类';
 
-    // 面包屑 + 顶部排序
+    // 面包屑 + 顶部排序（V20-K：数据驱动 8 种排序，横向滚动）
     main.appendChild(el('div', { class: 'ds-board-head' }, [
       el('div', { class: 'ds-board-title' }, [title])
     ]));
-    main.appendChild(el('div', { class: 'filter-sort-bar' }, [
-      el('span', { class: 'filter-sort-item' + (filterState.sort === 'ly' ? ' active' : ''), 'data-sort': 'ly' }, ['本周灵韵']),
-      el('span', { class: 'filter-sort-item' + (filterState.sort === 'rq' ? ' active' : ''), 'data-sort': 'rq' }, ['本周人气']),
-      el('button', { class: 'filter-back', 'data-action': 'back-home' }, ['‹ 返回'])
-    ]));
+    var sortBar = el('div', { class: 'filter-sort-bar' });
+    window.WORLD_DATA.SORTS.forEach(function (s) {
+      sortBar.appendChild(el('span', {
+        class: 'filter-sort-item' + (filterState.sort === s.id ? ' active' : ''),
+        'data-sort': s.id
+      }, [s.name]));
+    });
+    sortBar.appendChild(el('button', { class: 'filter-back', 'data-action': 'back-home' }, ['‹ 返回']));
+    main.appendChild(sortBar);
 
-    // 5 维筛选
+    // 6 维筛选（V20-K：+ 热门属性）
     var dims = [
       { key: 'status', label: '作品状态', data: window.WORLD_DATA.FILTERS.status },
       { key: 'level',  label: '作品等级', data: window.WORLD_DATA.FILTERS.level },
       { key: 'words',  label: '作品字数', data: window.WORLD_DATA.FILTERS.words },
       { key: 'price',  label: '灵晶定价', data: window.WORLD_DATA.FILTERS.price },
+      { key: 'attr',   label: '热门属性', data: window.WORLD_DATA.FILTERS.attr },
       { key: 'year',   label: '发布时间', data: window.WORLD_DATA.FILTERS.year }
     ];
     dims.forEach(function (dim) {
@@ -316,7 +371,7 @@
       if (subId && c.sub !== subId) return false;
       return true;
     });
-    var filtered = applyFilter(scoped);
+    var filtered = sortCards(applyFilter(scoped), filterState.sort);
 
     // 瀑布流（可显示角标）
     main.appendChild(el('div', { class: 'ds-board-head' }, [
@@ -683,7 +738,7 @@
           currentSub = 'filter';
           currentFilter.catId = cat.id;
           currentFilter.subId = sub.id;
-          filterState = { sort: 'ly', status: 'all', level: 'all', words: 'all', price: 'all', year: 'all' };
+          filterState = { sort: 'ly', status: 'all', level: 'all', words: 'all', price: 'all', attr: 'all', year: 'all' };
           // 让顶部 banner/金刚显示（filter 视图是搜索筛选结果页）
           var banner = $('#ds-banner');
           var qg = $('#ds-quick-grid');
@@ -742,11 +797,17 @@
         t.classList.add('active');
       }
     });
-    // 筛选页事件代理：本周灵韵/本周人气 + 5 维筛选 chip + 返回
+    // 筛选页事件代理：8 种排序 + 6 维筛选 chip + 榜单 Tab + 返回
     document.addEventListener('click', function (e) {
       var t = e.target;
       if (!t) return;
-      // 本周灵韵 / 本周人气 切换
+      // 排行榜 Tab 切换（V20-K）
+      if (t.classList && t.classList.contains('rank-tab')) {
+        currentRank = t.getAttribute('data-rank');
+        renderContent();
+        return;
+      }
+      // 排序切换（本周灵韵 / 本周人气 / 收藏最多 / …）
       if (t.classList && t.classList.contains('filter-sort-item')) {
         filterState.sort = t.getAttribute('data-sort');
         renderContent();
@@ -755,7 +816,7 @@
       // 返回首页
       if (t.getAttribute && t.getAttribute('data-action') === 'back-home') {
         currentSub = 'home';
-        filterState = { sort: 'ly', status: 'all', level: 'all', words: 'all', price: 'all', year: 'all' };
+        filterState = { sort: 'ly', status: 'all', level: 'all', words: 'all', price: 'all', attr: 'all', year: 'all' };
         currentFilter = { board: 'featured', sort: 'ly', catId: null, subId: null };
         setSubNav('home');
         return;
