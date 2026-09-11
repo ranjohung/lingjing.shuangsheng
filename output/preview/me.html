@@ -88,6 +88,8 @@
 .list .item .t{flex:1;font-size:14px}
 .list .item .meta{font-size:11px;color:var(--sub)}
 .list .item .arr{font-size:16px;color:rgba(160,160,176,.4)}
+/* V20-F · 退出登录弹窗 backdrop */
+#logout-dialog::backdrop{background:rgba(10,10,26,.72)}
 </style>
 </head>
 <body data-page-node-id="BUubIrwLdDaLvsaNibmbwn">
@@ -177,8 +179,28 @@
       <a class="item" href="docs/ALL_FUNCTIONS.md" data-page-node-id="pD9vkyJDCQiDd5WPmjUV70"><div class="ico" data-page-node-id="s5y9sBqg6ThP2AMhxhnVTa">📚</div><div class="t" data-page-node-id="lsDMVn3HDjR5jK8TE7o9RY">完整功能清单</div><div class="meta" data-page-node-id="Dja2JUqEDoUMX66cRETbTW">ALL_FUNCTIONS</div><div class="arr" data-page-node-id="XIcnCRtOu0vhngbltwTpUg">›</div></a>
     </div>
 
+    <!-- 账号（V20-F：退出登录，客户可换账号） -->
+    <h2 class="sec" data-page-node-id="v20f-sec-account">账号</h2>
+    <div class="list" data-page-node-id="v20f-list-account">
+      <div class="item" data-page-node-id="v20f-item-kind"><div class="ico" data-page-node-id="v20f-ico-kind">🔑</div><div class="t" data-page-node-id="v20f-t-kind">当前登录方式</div><div class="meta" id="account-kind-label" data-page-node-id="v20f-meta-kind">未登录</div></div>
+      <div class="item" id="logout-btn" role="button" tabindex="0" style="cursor:pointer" data-page-node-id="v20f-item-logout"><div class="ico" data-page-node-id="v20f-ico-logout">🚪</div><div class="t" style="color:#E94560" data-page-node-id="v20f-t-logout">退出登录</div><div class="meta" data-page-node-id="v20f-meta-logout">可切换其他账号</div></div>
+    </div>
+
     <div style="text-align:center;padding:24px 0 8px;font-size:11px;color:rgba(160,160,176,.45)" data-page-node-id="ZGtKZlsY3zW11cnCS4a0uE">灵境 · 双生 · v6.4</div>
   </main>
+
+  <!-- V20-F · 退出登录确认弹窗（<dialog> 替代 confirm · 铁律 #10） -->
+  <dialog id="logout-dialog" style="background:none;border:0;padding:0;max-width:320px;width:86%" data-page-node-id="v20f-dialog">
+    <div style="background:#16213E;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:22px 18px;text-align:center" data-page-node-id="v20f-dialog-card">
+      <div style="font-size:34px;margin-bottom:10px" data-page-node-id="v20f-dialog-emoji">🚪</div>
+      <div style="font:600 17px 'Noto Serif SC';color:#fff;margin-bottom:8px" data-page-node-id="v20f-dialog-title">退出当前账号？</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:18px" data-page-node-id="v20f-dialog-sub">退出后将回到启动页，可重新登录或使用其他账号。本地阅读进度与资产不受影响。</div>
+      <div style="display:flex;gap:10px" data-page-node-id="v20f-dialog-btns">
+        <button id="logout-cancel" style="flex:1;padding:11px 0;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:none;color:rgba(255,255,255,.75);font-size:14px;cursor:pointer" data-page-node-id="v20f-btn-cancel">再想想</button>
+        <button id="logout-confirm" style="flex:1;padding:11px 0;border-radius:10px;border:0;background:#E94560;color:#fff;font-size:14px;font-weight:600;cursor:pointer" data-page-node-id="v20f-btn-confirm">退出登录</button>
+      </div>
+    </div>
+  </dialog>
 
   <!-- 5 Tab 底部（我的 active） -->
   <nav class="tabbar" data-page-node-id="XOWSigTk6dNEIYr0H2ARXf">
@@ -201,6 +223,45 @@ function showToast(kind, title, msg){
   c.appendChild(t);
   setTimeout(function(){ t.remove(); }, 3000);
 }
+
+/* ---------- V20-F · 账号信息 + 退出登录 ---------- */
+var LJ_KIND_NAMES = {
+  phone: '手机号登录', email: '邮箱登录', wechat: '微信', apple: 'Apple', qq: 'QQ', guest: '访客体验'
+};
+function renderAccountInfo() {
+  try {
+    var kind = localStorage.getItem('lingjing_account_kind');
+    var profile = JSON.parse(localStorage.getItem('lingjing_user_profile') || 'null');
+    var kindLabel = document.getElementById('account-kind-label');
+    if (kindLabel) kindLabel.textContent = kind ? (LJ_KIND_NAMES[kind] || kind) : '未登录';
+    var prName = document.querySelector('.pr-name');
+    if (prName && profile && profile.name) prName.textContent = profile.name;
+    var prAva = document.querySelector('.pr-ava');
+    if (prAva && profile && profile.name) prAva.textContent = profile.name.charAt(0);
+  } catch (e) {}
+}
+function doLogout() {
+  localStorage.removeItem('lingjing_onboarding_done');
+  localStorage.removeItem('lingjing_user_profile');
+  localStorage.removeItem('lingjing_account_kind');
+  window.location.href = '../../product-preview.html';
+}
+document.addEventListener('DOMContentLoaded', function () {
+  renderAccountInfo();
+  var dlg = document.getElementById('logout-dialog');
+  var btn = document.getElementById('logout-btn');
+  if (btn) {
+    btn.addEventListener('click', function () { dlg.showModal(); });
+  }
+  var cancel = document.getElementById('logout-cancel');
+  if (cancel) cancel.addEventListener('click', function () { dlg.close(); });
+  var confirmBtn = document.getElementById('logout-confirm');
+  if (confirmBtn) confirmBtn.addEventListener('click', function () {
+    dlg.close();
+    showToast('ok', '已退出登录', '回到启动页');
+    setTimeout(doLogout, 600);
+  });
+});
 </script>
 <script src="js/tabbar.js" data-page-node-id="v20e-tabbar-mount"></script>
 </body>
