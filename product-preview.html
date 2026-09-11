@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-page-node-id="rtHs1s6m9oPWWvoM4XxxxC">
-<head data-page-node-id="PHgad3DYMDZ6HVwRN7y70I">
-<meta charset="UTF-8" data-page-node-id="HS7RFR5aQw9bHtaD2G2DP6" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" data-page-node-id="jhXxhVx020G5GSJX4Yirgv" />
-<title>灵境 · 双生 — 项目状态镜像</title>
-<meta name="description" content="灵境·双生 · V20.0 + V19.0 已落地 · 累计 155/155 PASS · 12 工作包 · 公版库 40 本 + plot-runner 启动序列 + 首页/世界/心屿/创作/我的 5 Tab" data-page-node-id="fx7FashWIijR7lbOYz06bG" />
-<meta name="theme-color" content="#1A1A2E" data-page-node-id="YwRBDtU3ExRUFdiD7AYcle" />
-<link rel="stylesheet" href="output/preview/css/shell-v64.css" data-page-node-id="o0tNGGGqic8PxoUuhWwB20" />
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>灵境 · 双生</title>
+<meta name="description" content="灵境·双生 · 沉浸剧情对话 + 世界图书馆 + 心屿陪伴 + 小说世界游戏 + 创作中心" />
+<meta name="theme-color" content="#1A1A2E" />
+<link rel="stylesheet" href="output/preview/css/shell-v64.css" />
 <style>
 /* =================================================================
- * 灵境 · 双生 V18.0 + V17-G — 项目状态镜像
+ * 灵境 · 双生 — 产品体验主页（v20.1 · 客户视角）
+ * 0 开发元数据 · 0 PASS · 0 章节编号 · 0 Git commits
+ * 只展示产品本身（客户/作者体验的功能区）
  * ================================================================= */
 :root {
   --bg:#1A1A2E; --card:#16213E; --card-2:#1C2542;
@@ -27,51 +29,33 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
 #app{max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg);position:relative;padding-bottom:calc(72px + env(safe-area-inset-bottom))}
 @media(min-width:520px){#app{box-shadow:0 0 60px rgba(0,0,0,.6);border-left:1px solid var(--line);border-right:1px solid var(--line)}}
 
-/* ---------- 页面顶部品牌条 ---------- */
+/* ---------- 顶部品牌条（仅品牌） ---------- */
 .brand-bar{
   margin:14px var(--margin);
   display:flex;align-items:center;gap:12px;
-  padding:14px 16px;
+  padding:16px;
   border-radius:var(--radius);
   background:linear-gradient(135deg,rgba(233,69,96,.18),rgba(108,92,231,.18));
   border:1px solid rgba(233,69,96,.4);
 }
 .bb-logo{
-  width:44px;height:44px;border-radius:12px;flex-shrink:0;
-  display:grid;place-items:center;font-size:22px;font-weight:700;color:#fff;
+  width:48px;height:48px;border-radius:14px;flex-shrink:0;
+  display:grid;place-items:center;font-size:24px;font-weight:700;color:#fff;
   background:linear-gradient(135deg,#E94560,#6C5CE7);
   box-shadow:0 6px 18px rgba(233,69,96,.4);
 }
 .bb-text{flex:1;min-width:0}
-.bb-title{font:600 18px 'Noto Serif SC';color:#fff;letter-spacing:.05em}
-.bb-sub{font-size:11px;color:rgba(255,255,255,.65);margin-top:2px}
-.bb-ver{margin-left:auto;text-align:right;flex-shrink:0}
-.bb-ver .v{font:600 22px 'Noto Serif SC';color:var(--warn)}
-.bb-ver .l{font-size:9px;color:rgba(255,255,255,.5);letter-spacing:.15em}
-
-/* ---------- 累计回归数据看板 ---------- */
-.dash{
-  margin:14px var(--margin);
-  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
-}
-.dash-card{
-  padding:12px 10px;border-radius:10px;
-  background:var(--card);border:1px solid var(--line);
-  text-align:center;
-}
-.dc-v{font:600 22px 'Noto Serif SC';color:var(--ok);line-height:1}
-.dc-v.warn{color:var(--warn)}
-.dc-v.xinyu{color:var(--xinyu)}
-.dc-l{font-size:10px;color:var(--sub);margin-top:4px;letter-spacing:.05em}
+.bb-title{font:600 22px 'Noto Serif SC';color:#fff;letter-spacing:.08em}
+.bb-sub{font-size:12px;color:rgba(255,255,255,.7);margin-top:3px;letter-spacing:.04em}
 
 /* ---------- 第一层：状态栏 ---------- */
 .home-status{
   display:flex;align-items:center;justify-content:space-between;
-  padding:16px var(--margin) 8px;
+  padding:14px var(--margin) 8px;
 }
 .hs-left{display:flex;align-items:center;gap:10px}
 .hs-avatar{
-  width:38px;height:38px;border-radius:50%;
+  width:40px;height:40px;border-radius:50%;
   display:grid;place-items:center;font-size:20px;
   background:linear-gradient(135deg,var(--accent),var(--xinyu));
   border:1px solid rgba(255,255,255,.15);
@@ -80,8 +64,8 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
 .hs-greet b{color:var(--accent);font-weight:700}
 .hs-right{display:flex;align-items:center;gap:10px}
 .hs-bell{
-  position:relative;width:38px;height:38px;border-radius:50%;
-  display:grid;place-items:center;font-size:17px;
+  position:relative;width:40px;height:40px;border-radius:50%;
+  display:grid;place-items:center;font-size:18px;
   background:rgba(255,255,255,.06);border:1px solid var(--line);
 }
 .hs-bell .badge{position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;border-radius:8px;background:var(--accent);color:#fff;font-size:10px;line-height:16px;text-align:center;padding:0 4px;font-weight:700}
@@ -161,7 +145,6 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
 .home-board-more{font-size:12px;color:var(--sub);font-weight:400}
 .home-board-more::after{content:'›';margin-left:2px}
 
-/* 板块 1：今日推荐（双列瀑布流） */
 .home-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .home-rec-card{
   display:flex;flex-direction:column;
@@ -180,7 +163,6 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
 .hr-score{color:var(--warn);font-weight:600}
 .hr-wc{font-size:9px;opacity:.7}
 
-/* 板块 2：陪伴动态 */
 .home-feed{display:flex;flex-direction:column;gap:8px}
 .home-feed-item{
   display:flex;align-items:center;gap:12px;
@@ -199,7 +181,6 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
   display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
 .hf-time{font-size:10px;color:rgba(160,160,176,.6);flex-shrink:0}
 
-/* 板块 3：世界更新 */
 .home-update-list{display:flex;flex-direction:column;gap:8px}
 .home-update-item{
   display:flex;align-items:center;gap:12px;
@@ -216,7 +197,6 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
 }
 .hu-meta{font-size:11px;color:var(--sub);margin-top:4px}
 
-/* 板块 4：热门活动 */
 .home-activity-list{display:flex;flex-direction:column;gap:8px}
 .home-activity-item{
   display:flex;align-items:center;gap:12px;
@@ -247,26 +227,15 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
 @keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
 /* =================================================================
- * 通用样式：横幅 / Section / 截图 / 进度条
+ * 通用：Section / 截图 / 阶梯
  * ================================================================= */
-.banner{
-  margin:20px var(--margin);padding:14px;border-radius:12px;
-  border:1px solid var(--line);
-  display:flex;align-items:center;gap:12px;
-}
-.banner .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;background:var(--ok);box-shadow:0 0 10px var(--ok)}
-.banner .body{font-size:13px;line-height:1.5;flex:1}
-.banner .body b{font-weight:700}
-.banner .links{margin-top:6px;display:flex;flex-wrap:wrap;gap:8px}
-.banner .links a{font-size:11px;text-decoration:underline}
-
 .section-h{
   display:flex;align-items:center;gap:10px;
-  margin:24px var(--margin) 10px;
+  margin:28px var(--margin) 12px;
 }
-.section-h .em{font-size:20px}
-.section-h h3{font:600 15px 'Noto Serif SC';color:#fff}
-.section-h .badge{margin-left:auto;font-size:10px;padding:3px 8px;border-radius:6px;font-weight:600}
+.section-h .em{font-size:22px}
+.section-h h3{font:600 16px 'Noto Serif SC';color:#fff}
+.section-h .sub{margin-left:auto;font-size:11px;color:var(--sub);font-weight:400}
 
 .shot-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 var(--margin)}
 .shot-grid .shot{
@@ -274,13 +243,13 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
   border:1px solid var(--line);background:var(--card);
 }
 .shot img{width:100%;display:block}
-.shot .cap{padding:8px 10px;font-size:11px;color:var(--sub);line-height:1.4;border-top:1px solid var(--line)}
-.shot .cap b{color:#fff;font-size:12px;display:block;margin-bottom:2px}
+.shot .cap{padding:8px 10px;font-size:12px;color:rgba(255,255,255,.85);line-height:1.5;border-top:1px solid var(--line)}
+.shot .cap b{color:#fff;font-size:13px;display:block;margin-bottom:3px}
 
 .shot-wide{margin:10px var(--margin);border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--card)}
 .shot-wide img{width:100%;display:block}
-.shot-wide .cap{padding:10px 12px;font-size:11px;color:var(--sub);border-top:1px solid var(--line);line-height:1.5}
-.shot-wide .cap b{color:#fff;font-size:13px;display:block;margin-bottom:4px}
+.shot-wide .cap{padding:10px 12px;font-size:12px;color:rgba(255,255,255,.85);border-top:1px solid var(--line);line-height:1.5}
+.shot-wide .cap b{color:#fff;font-size:14px;display:block;margin-bottom:4px}
 
 .mini-ladder{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:14px var(--margin)}
 .ml-card{padding:10px 6px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);text-align:center;position:relative}
@@ -290,155 +259,112 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
 .ml-card .r{font:600 13px 'Noto Serif SC';color:#FFB347}
 .ml-card .tag{position:absolute;top:6px;right:6px;font-size:8px;padding:1px 4px;border-radius:4px;background:#FFB347;color:#000;font-weight:600}
 
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;border:1px solid transparent}
-
-.kv-list{margin:14px var(--margin);display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.kv{padding:10px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:11px;line-height:1.5}
-.kv b{color:var(--ok);font-size:13px;display:block;margin-bottom:2px}
-.kv.xinyu b{color:var(--xinyu)}
-.kv.warn b{color:var(--warn)}
-.kv.world b{color:var(--world)}
-
 .final-foot{margin:30px var(--margin) 100px;padding-top:18px;border-top:1px solid var(--line);text-align:center;font-size:11px;color:rgba(160,160,176,.5);line-height:1.7}
 </style>
 </head>
-<body data-page-node-id="uB8Lieyoo9fB2taZFzrE2s">
+<body>
 
-<div id="app" data-page-node-id="7Usy3byDS4GS8BHRJ6fOhC">
+<div id="app">
 
   <!-- ============ 顶部品牌条 ============ -->
-  <div class="brand-bar" data-page-node-id="brand-bar">
+  <div class="brand-bar">
     <div class="bb-logo">灵</div>
     <div class="bb-text">
       <div class="bb-title">灵境 · 双生</div>
-      <div class="bb-sub">项目状态镜像 · 2026-09-11 · 累计 155/155 PASS</div>
+      <div class="bb-sub">一个角色，两种人生</div>
     </div>
-    <div class="bb-ver">
-      <div class="v">v18</div>
-      <div class="l">+ V17-G</div>
-    </div>
-  </div>
-
-  <!-- ============ 累计回归数据看板 ============ -->
-  <div class="dash" data-page-node-id="dash">
-    <div class="dash-card"><div class="dc-v">91</div><div class="dc-l">Playwright 通过</div></div>
-    <div class="dash-card"><div class="dc-v warn">7</div><div class="dc-l">工作包交付</div></div>
-    <div class="dash-card"><div class="dc-v xinyu">19</div><div class="dc-l">数据表</div></div>
   </div>
 
   <!-- ============ 第一层：状态栏 ============ -->
-  <header class="home-status" id="home-status" data-page-node-id="PuR9GXZAwqhbdD9XQBPRz0"></header>
+  <header class="home-status" id="home-status"></header>
 
-  <!-- ============ 第二层：签到入口卡片 ============ -->
-  <div class="home-signin" id="home-signin" data-page-node-id="KQKy1pCP0Nwnw9wipupfyA"></div>
+  <!-- ============ 第二层：签到入口 ============ -->
+  <div class="home-signin" id="home-signin"></div>
 
   <!-- ============ 第三层：4 快捷入口 ============ -->
-  <nav class="home-quick" id="home-quick" data-page-node-id="StquXdK4X0fhWOY0rD5o3A"></nav>
+  <nav class="home-quick" id="home-quick"></nav>
 
   <!-- ============ 第四层：4 推荐板块 ============ -->
-  <div id="home-recommend" data-page-node-id="NlS2y6weaUCzTex3eqNBjj"></div>
+  <div id="home-recommend"></div>
 
-  <!-- ============ V18 + V17-G 实施进度横幅 ============ -->
-  <div class="banner" style="background:linear-gradient(135deg,rgba(78,204,163,.18),rgba(108,92,231,.18));border-color:rgba(78,204,163,.35)" data-page-node-id="Dqm01OmyFLDDX1XN1Vvi8A">
-    <span class="dot"></span>
-    <div class="body">
-      <b style="color:var(--ok)">V20.0 + V19.0 + V18.0 + V17-G 已全部落地 ✅</b><br>
-      4 层结构首页 + 5 Tab 全局状态管理 + 世界/心屿/plot-runner/经济体系 全部真实化 + 创作者分成阶梯 5 档
-      <div class="links">
-        <a href="docs/PRD-v18.md" target="_blank" style="color:var(--xinyu)">PRD-v18</a>
-        <a href="docs/DEV_PLAN-v18.md" target="_blank" style="color:var(--xinyu)">DEV_PLAN-v18</a>
-        <a href="docs/DEV_PLAN-v17.md" target="_blank" style="color:var(--xinyu)">DEV_PLAN-v17（V17-G §11.5）</a>
-        <a href="docs/PRD.md" target="_blank" style="color:var(--xinyu)">PRD</a>
-        <a href="docs/DEVELOPMENT_PLAN.md" target="_blank" style="color:var(--xinyu)">DEVELOPMENT_PLAN</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ V18-A 首页（实景截图）============ -->
-  <div class="section-h"><span class="em">🏠</span><h3>V18-A 首页功能区（4 层结构）</h3><span class="badge" style="background:var(--ok);color:#000">已交付 · 13/13</span></div>
+  <!-- ============ 首页实景 ============ -->
+  <div class="section-h"><span class="em">🏠</span><h3>首页 · 4 层结构</h3><span class="sub">从问候到推荐，一气呵成</span></div>
   <div class="shot-grid">
-    <div class="shot"><img src="output/preview/screenshots/v18-a-home-top.png" alt="首页顶部"><div class="cap"><b>顶部 · 状态栏+签到</b>问候/余额/灵晶灵玉/已签到卡片</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v18-a-home-mid.png" alt="首页中部"><div class="cap"><b>中部 · 4 快捷入口</b>继续阅读/陪伴/创作/福利</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v18-a-home-top.png" alt="首页顶部"><div class="cap"><b>问候 + 签到</b>早晚问候 · 灵晶灵玉余额 · 每日签到领灵玉</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v18-a-home-mid.png" alt="首页中部"><div class="cap"><b>4 个快捷入口</b>继续阅读 · 陪伴对话 · 创作后台 · 福利中心</div></div>
   </div>
   <div class="shot-wide">
     <img src="output/preview/screenshots/v18-a-home-bottom.png" alt="首页底部">
-    <div class="cap"><b>底部 · 4 推荐板块</b>今日推荐（双列瀑布流）/ 陪伴动态 / 世界更新（含更新角标）/ 热门活动 · 5 Tab 首页红 active</div>
+    <div class="cap"><b>4 个推荐板块</b>今日推荐 · 陪伴动态 · 世界更新 · 热门活动</div>
   </div>
 
-  <!-- ============ V17-A 5 Tab 状态管理 ============ -->
-  <div class="section-h"><span class="em">🧭</span><h3>V17-A · 5 Tab 全局状态管理</h3><span class="badge" style="background:var(--ok);color:#000">已交付 · tabbar.js</span></div>
-  <div class="shot-wide">
-    <img src="output/preview/screenshots/v17-a-tabbar.png" alt="5 Tab 演示">
-    <div class="cap"><b>tabbar.js 演示</b>localStorage 记忆当前 Tab（KEY=<code>lingjing_v5170_current_tab</code>）· 沉浸页豁免（plot-runner / game-3d / catalog 不挂载）· 公开 API <code>LJTabbar.{mount, go, setBadge, getCurrent}</code> · 0 CSS 增量（100% 复用 shell-v64.css）</div>
-  </div>
-
-  <!-- ============ V17-B 世界功能区 ============ -->
-  <div class="section-h" style="margin-top:28px"><span class="em">📖</span><h3>V17-B 世界功能区（按 V17.0 文档严格实施 16/16）</h3><span class="badge" style="background:var(--ok);color:#000">已交付 · 16/16</span></div>
+  <!-- ============ 世界功能区 ============ -->
+  <div class="section-h" style="margin-top:36px"><span class="em">📖</span><h3>世界 · 故事图书馆</h3><span class="sub">海量题材，一键阅读</span></div>
   <div class="shot-grid">
-    <div class="shot"><img src="output/preview/screenshots/v17-b-world-home.png" alt="世界首页"><div class="cap"><b>§2.1+2.2+2.3+2.4</b>7 子导航 + Banner 32vh + 四大金刚 + 3 板块瀑布流（编辑推荐/热门佳作/最新完结）</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v17-b-world-filter.png" alt="筛选页"><div class="cap"><b>§2.6 筛选结果页</b>本周灵韵/本周人气 + 5 维筛选 chip（作品状态/等级/字数/灵晶定价/发布时间）</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v17-b-world-calendar.png" alt="更新日历"><div class="cap"><b>§2.3 更新日历</b>四大金刚-更新日历 · 时间轴近 7 天更新作品</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v17-b-world-drawer.png" alt="类目抽屉"><div class="cap"><b>§2.5 分类侧边栏</b>10 一级 + 二级（古风 7 / 现代 11 / 幻想冒险 6）</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v17-b-world-tongren.png" alt="同人区"><div class="cap"><b>§2.7 同人区侧边栏</b>左侧 9 子类（公版名著 5 + 同人专区 4）+ 右侧 10 张公版瀑布流（灵境专属术语）</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v17-b-world-home.png" alt="世界首页"><div class="cap"><b>世界首页</b>7 个分类导航 · 推荐作品瀑布流</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v17-b-world-filter.png" alt="筛选页"><div class="cap"><b>按标签筛选</b>本周灵韵 · 作品状态 · 字数 · 定价</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v17-b-world-calendar.png" alt="更新日历"><div class="cap"><b>更新日历</b>追更 7 天内最新章节</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v17-b-world-drawer.png" alt="分类抽屉"><div class="cap"><b>类目抽屉</b>古风 · 现代 · 幻想 · 同人</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v17-b-world-tongren.png" alt="同人区"><div class="cap"><b>公版同人区</b>红楼 · 三国 · 西游等公版名著</div></div>
   </div>
 
-  <!-- ============ V18-B 心屿功能区 ============ -->
-  <div class="section-h"><span class="em">💬</span><h3>V18-B 心屿功能区（5 子标签 + [创]/[双]角标）</h3><span class="badge" style="background:var(--ok);color:#000">已交付 · 21/21</span></div>
+  <!-- ============ 心屿功能区 ============ -->
+  <div class="section-h" style="margin-top:36px"><span class="em">💬</span><h3>心屿 · AI 陪伴</h3><span class="sub">角色陪你聊心事</span></div>
   <div class="shot-grid">
-    <div class="shot"><img src="output/preview/screenshots/v18-b-heart-accompany.png" alt="陪伴"><div class="cap"><b>陪伴 · 子筛选</b>全部/我创建的/双生角色 + 角色卡 [创]/[双] 角标</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v18-b-heart-intro.png" alt="首次进入弹窗"><div class="cap"><b>首次进入弹窗</b>欢迎来到心屿 + 🪄我创建的 + 💫双生角色</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v18-b-heart-accompany.png" alt="陪伴页"><div class="cap"><b>陪伴 · 子筛选</b>全部 / 我创建的 / 双生角色</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v18-b-heart-intro.png" alt="首次进入"><div class="cap"><b>欢迎来到心屿</b>三种角色类型，总有聊得来的</div></div>
   </div>
 
-  <!-- ============ V18-C plot-runner ============ -->
-  <div class="section-h"><span class="em">🎮</span><h3>V18-C 小说世界游戏（6 层叠加 + 30ms 打字机）</h3><span class="badge" style="background:var(--ok);color:#000">已交付 · 18/18</span></div>
+  <!-- ============ 小说世界游戏 ============ -->
+  <div class="section-h" style="margin-top:36px"><span class="em">🎮</span><h3>小说世界游戏</h3><span class="sub">你是主角，故事由你写</span></div>
   <div class="shot-grid">
-    <div class="shot"><img src="output/preview/screenshots/v18-c-plot-main.png" alt="plot 主界面"><div class="cap"><b>主界面 · 长夜城</b>场景+立绘+对话框+顶部7按钮+右下功能</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v18-c-plot-choices.png" alt="选项"><div class="cap"><b>选项浮现</b>A/B/C 三选项 + 立绘变暗 50%</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v18-c-plot-popup.png" alt="数值跳动"><div class="cap"><b>数值跳动 + CG</b>+5 亲密绿 + +2 信任 + 「初遇·月下相逢」CG</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v18-c-plot-map.png" alt="地图"><div class="cap"><b>地图探索</b>主城 + 后宫/御书房/演武场/市集/农田/酒楼</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v18-c-plot-main.png" alt="游戏主界面"><div class="cap"><b>主界面 · 长夜城</b>场景 + 立绘 + 对话 + 全屏沉浸</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v18-c-plot-choices.png" alt="选择分支"><div class="cap"><b>选择分支</b>A/B/C 三选一 · 不同选择不同命运</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v18-c-plot-popup.png" alt="属性提升"><div class="cap"><b>亲密度变动</b>亲密 + 信任双属性实时成长</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v18-c-plot-map.png" alt="场景探索"><div class="cap"><b>场景探索</b>主城 · 后宫 · 市集 · 田园 · 酒楼</div></div>
   </div>
 
-  <!-- ============ V19-A plot-runner 启动序列 + 详情页 ============ -->
-  <div class="section-h" style="margin-top:32px"><span class="em">🚀</span><h3>V19-A plot-runner 启动序列 + 作品详情页</h3><span class="badge" style="background:var(--ok);color:#000">已交付 · 21/21</span></div>
+  <!-- ============ 小说世界：启动 + 作品详情 ============ -->
+  <div class="section-h" style="margin-top:36px"><span class="em">🚀</span><h3>进入小说世界</h3><span class="sub">实名认证 → 加载封面 → 进入剧情</span></div>
   <div class="shot-grid">
-    <div class="shot"><img src="output/preview/screenshots/v19-a-plot-detail-detail.png" alt="作品详情"><div class="cap"><b>plot-detail 详情 Tab</b>3 Tab + 主演横滑 + Banner + 互动区 + 交流群 + 底部操作栏</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v19-a-plot-detail-roles.png" alt="角色表白"><div class="cap"><b>角色表白 Tab</b>应援排行 + 台词墙 + 角色粉丝数</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v19-a-plot-detail-ranks.png" alt="榜单"><div class="cap"><b>榜单 Tab</b>灵韵榜 + 人气榜 双榜单</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v19-a-plot-detail-interact.png" alt="互动区"><div class="cap"><b>互动区 · 精选</b>精选/最新互动 切换 + 横滑卡片</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v19-a-realname.png" alt="实名认证"><div class="cap"><b>实名认证弹窗</b>姓名 + 证件类型 + 号码 + 3 条注意事项</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v19-a-loading-50.png" alt="Loading 50%"><div class="cap"><b>Loading 加载页</b>封面插画 + 进度条 + 「灵境整理」角标</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v19-a-loading-100.png" alt="Loading 100%"><div class="cap"><b>Loading 完成</b>进度 100% 后自动跳封面</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v19-a-cover.png" alt="封面"><div class="cap"><b>封面起始页</b>全屏青绿渐变 + 桃花 + 标题 + 左右工具栏</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v19-a-main-stage.png" alt="主线剧情"><div class="cap"><b>主线剧情</b>点击封面后进入 6 层叠加 plot-stage</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v19-a-plot-detail-detail.png" alt="作品详情"><div class="cap"><b>作品详情</b>演职员表 · 互动榜 · 交流群</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v19-a-plot-detail-roles.png" alt="角色表白"><div class="cap"><b>角色表白墙</b>为心仪角色应援打榜</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v19-a-plot-detail-ranks.png" alt="榜单"><div class="cap"><b>双榜排行</b>灵韵榜 + 人气榜</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v19-a-plot-detail-interact.png" alt="互动区"><div class="cap"><b>评论区互动</b>精选 + 最新 切换</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v19-a-realname.png" alt="实名认证"><div class="cap"><b>实名认证</b>一次通过，全站使用</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v19-a-loading-50.png" alt="加载页"><div class="cap"><b>加载页</b>封面插画 + 加载进度</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v19-a-loading-100.png" alt="加载完成"><div class="cap"><b>加载完成</b>自动跳转封面起始页</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v19-a-cover.png" alt="封面"><div class="cap"><b>封面起始页</b>青绿底色 + 桃花 · 点击任意处进入</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v19-a-main-stage.png" alt="主线"><div class="cap"><b>主线剧情</b>沉浸式 6 层叠加主舞台</div></div>
   </div>
 
-  <!-- ============ V20-A 公版小说库 ============ -->
-  <div class="section-h" style="margin-top:32px"><span class="em">📚</span><h3>V20-A 公版小说库 + 自动收费点（40 本 · 25 中文 + 15 外文）</h3><span class="badge" style="background:var(--ok);color:#000">已交付 · 12/12</span></div>
+  <!-- ============ 公版小说库 ============ -->
+  <div class="section-h" style="margin-top:36px"><span class="em">📚</span><h3>公版小说库</h3><span class="sub">40 本人类文化遗产</span></div>
   <div class="shot-grid">
-    <div class="shot"><img src="output/preview/screenshots/v20-a-pd-zh.png" alt="中国古典"><div class="cap"><b>中国古典 25 本</b>红/西/三/水/聊/儒 + 概览 4 维 + 完整性/字数/章节/价格 排序</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v20-a-pd-en.png" alt="外国经典"><div class="cap"><b>外国经典 15 本</b>傲慢与偏见/悲惨世界/安娜 + Project Gutenberg 源</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v20-a-pd-all.png" alt="下载管理"><div class="cap"><b>下载管理 · 40 本</b>完整下载 40/40 + 完整性报告</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v20-a-pd-detail-hongloumeng.png" alt="红楼梦详情"><div class="cap"><b>详情 modal · 红楼梦</b>4 维完整性 + 自动收费点（章节锁 24 + 选择锁 8 + 番外 3）+ 18 灵晶/章</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v20-a-pd-detail-pride.png" alt="傲慢与偏见详情"><div class="cap"><b>详情 modal · 傲慢与偏见</b>98% 保留率 + 自动收费点 + 进入小说世界</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v20-a-pd-zh.png" alt="中国古典"><div class="cap"><b>中国古典 25 本</b>红楼 · 西游 · 三国 · 水浒等</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v20-a-pd-en.png" alt="外国经典"><div class="cap"><b>外国经典 15 本</b>傲慢与偏见 · 悲惨世界等</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v20-a-pd-all.png" alt="下载管理"><div class="cap"><b>下载管理</b>40 本全集 · 完整性报告</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v20-a-pd-detail-hongloumeng.png" alt="红楼梦详情"><div class="cap"><b>红楼梦</b>自动分成章节 · 章节锁 + 选择锁</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v20-a-pd-detail-pride.png" alt="傲慢与偏见详情"><div class="cap"><b>傲慢与偏见</b>完整 98% 保留率</div></div>
   </div>
 
-  <!-- ============ V18-D 经济体系（专属术语命名）============ -->
-  <div class="section-h"><span class="em">💎</span><h3>V18-D 世界功能区专属命名 + 经济体系</h3><span class="badge" style="background:var(--ok);color:#000">已交付 · 9/9</span></div>
+  <!-- ============ 经济体系（专属术语）============ -->
+  <div class="section-h" style="margin-top:36px"><span class="em">💎</span><h3>双轨经济体系</h3><span class="sub">灵玉免费 · 灵晶付费</span></div>
   <div class="shot-grid">
-    <div class="shot"><img src="output/preview/screenshots/v18-d-world-xinyu.png" alt="心屿推"><div class="cap"><b>心屿推 · 每周回响</b>引路人积分排行</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v18-d-world-csb.png" alt="创世杯"><div class="cap"><b>创世杯</b>2026 灵境·双生创世杯 + 古风TOP100 助威</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v18-d-world-welfare.png" alt="福利"><div class="cap"><b>福利 · 5 档充值</b>6/18/58/128/328 元 · 灵玉/灵晶双轨</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v18-d-world-xinyu.png" alt="心屿推"><div class="cap"><b>心屿推</b>每周回响 · 引路人积分</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v18-d-world-csb.png" alt="创世杯"><div class="cap"><b>创世杯</b>年度盛典 · 古风 TOP100 助威</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v18-d-world-welfare.png" alt="福利中心"><div class="cap"><b>福利中心</b>5 档充值 · 任务系统</div></div>
   </div>
 
-  <!-- ============ V17-G 创作者分成阶梯 ============ -->
-  <div class="section-h"><span class="em">🪜</span><h3>V17-G 创作者分成阶梯（5 档 + 多维门槛 + 协议页）</h3><span class="badge" style="background:var(--warn);color:#000">已交付 · 16/16</span></div>
+  <!-- ============ 创作者中心（仅创作者可见）============ -->
+  <div class="section-h" style="margin-top:36px"><span class="em">🪜</span><h3>创作者中心</h3><span class="sub">5 档分成阶梯 · 多维门槛考核</span></div>
 
   <!-- 当前档位卡 -->
   <div style="margin:0 var(--margin);display:flex;align-items:center;gap:14px;padding:14px;border-radius:10px;background:linear-gradient(135deg,rgba(255,179,71,.12),rgba(233,69,96,.05));border:1px solid rgba(255,179,71,.3)">
     <div style="font-size:36px;width:54px;height:54px;display:grid;place-items:center;background:rgba(255,179,71,.18);border-radius:12px">🥇</div>
     <div style="flex:1">
       <div style="font:600 17px 'Noto Serif SC';color:#fff">L3 · 黄金创作者</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px">距 L4 钻石还差 28% 进度 · 考核周期：每月 1 日 + 季度复评</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px">距 L4 钻石还差 28% · 月度考核 + 季度复评</div>
       <div style="height:5px;background:rgba(255,255,255,.08);border-radius:3px;margin-top:6px;overflow:hidden">
         <div style="width:72%;height:100%;background:linear-gradient(90deg,#FFB347,#E94560)"></div>
       </div>
@@ -460,48 +386,24 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
 
   <div class="shot-wide">
     <img src="output/preview/screenshots/v17-g-commerce-tier.png" alt="commerce.html 阶梯">
-    <div class="cap"><b>commerce.html 完整阶梯区</b>当前档位卡 + 5 档阶梯表（current/passed/locked 视觉区分）+ 升级进度条 + 协议入口</div>
+    <div class="cap"><b>commerce.html 完整阶梯区</b>当前档位卡 · 5 档阶梯表 · 升级进度条 · 协议入口</div>
   </div>
 
   <div class="shot-grid" style="grid-template-columns:1fr 1fr">
-    <div class="shot"><img src="output/preview/screenshots/v17-g-creator-center.png" alt="creator-center 入口"><div class="cap"><b>creator-center.html 入口</b>等级卡新增 5 档分成（橙）+ 协议按钮</div></div>
-    <div class="shot"><img src="output/preview/screenshots/v17-g-creator-legal.png" alt="协议页"><div class="cap"><b>creator-legal.html 协议</b>8 章节（速览/义务/考核/结算/退出/IP/免责/签署）</div></div>
-  </div>
-
-  <!-- ============ 累计回归数据 + 文档索引 ============ -->
-  <div class="section-h"><span class="em">📊</span><h3>累计回归 · 155/155 PASS · 12 工作包</h3><span class="badge" style="background:var(--ok);color:#000">0 业务错误</span></div>
-  <div class="kv-list">
-    <div class="kv"><b>V17-A</b>5 Tab 状态管理 · tabbar.js（122 行）· 公开 API</div>
-    <div class="kv world"><b>V17-B</b>16/16 · 世界功能区按 V17.0 文档 7 子导航 + Banner 32vh + 4 金刚 + 3 板块瀑布流 + 抽屉 + 筛选页（5 维）+ 日历 + 同人区
-    <div class="kv warn"><b>V17-G</b>16/16 · 创作者分成阶梯 · DB 19 表 + tier.js + commerce + 协议页</div>
-    <div class="kv"><b>V18-A</b>13/13 · 首页 · 4 层结构 + 4 推荐板块</div>
-    <div class="kv xinyu"><b>V18-B</b>21/21 · 心屿 · 5 子标签 + [创]/[双]角标 + 弹窗 + 免责声明</div>
-    <div class="kv warn"><b>V18-C</b>18/18 · plot-runner · 6 层叠加 + 30ms 打字机 + 选项 + 数值 + 地图 + 存档</div>
-    <div class="kv world"><b>V18-D</b>9/9 · 专属命名 + 经济体系 · 5 档充值 + 心屿推 + 创世杯 + 福利</div>
-    <div class="kv warn"><b>V17-A-Fix</b>9/9 · 路径自适应修复 · 根/子目录双向跳转 + home 永远回根</div>
-    <div class="kv world"><b>V17-B-Strict</b>16/16 · V17.0 文档严格实施 · Banner 32vh + 筛选页 + 日历 + 同人区侧边栏</div>
-    <div class="kv warn"><b>V19-A</b>21/21 · plot-runner 启动序列 + 详情页 · 实名 + Loading + 封面 + plot-detail 3 Tab</div>
-    <div class="kv warn"><b>V20-B</b>4/4 · 弹窗不挡 5 Tab · tabbar z-index 200 + mask 点击关闭 + 主页稳定</div>
-    <div class="kv warn"><b>V20-A</b>12/12 · 公版小说库 · 40 本（25 中文 + 15 外文）+ 4 维完整性校验 + 自动收费点</div>
-    <div class="kv"><b>合计</b><span style="color:var(--ok)">155/155</span> · 0 业务错误 · 0 第三方平台名</div>
-  </div>
-
-  <!-- 核心硬规则 -->
-  <div style="margin:14px var(--margin);padding:14px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:11px;line-height:1.7;color:rgba(160,160,176,.8)">
-    <b style="color:#fff;font-size:12px;display:block;margin-bottom:6px">📜 核心铁律（跨会话硬规则）</b>
-    ① <b style="color:var(--ok)">不砍功能</b>：未实现 ≠ 不显示，UI 标注「v5.21+ 即将开放」 · ② <b style="color:var(--ok)">第三方平台名 0 入 UI</b>（所有国际/同业 IP 名一律用灵境专属术语替代，详见 PRD §3.2 名词对照表） · ③ <b style="color:var(--ok)">5 Tab 主功能区不动</b>（首页/世界/心屿/创作/我的），各 Tab 接入 v6.4 共享壳 · ④ <b style="color:var(--ok)">沉浸页豁免</b>（plot-runner / game-3d / catalog 仅左上角 [← 返回]） · ⑤ <b style="color:var(--ok)">商业化只对作者可见</b>（commerce / creator-legal 仅 creator-center 入口，普通用户 my.html 不展示） · ⑥ <b style="color:var(--ok)">文档与代码同步</b>，否则算 bug
+    <div class="shot"><img src="output/preview/screenshots/v17-g-creator-center.png" alt="创作后台"><div class="cap"><b>创作后台</b>我创建的角色 · 协议与分成入口</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v17-g-creator-legal.png" alt="协议"><div class="cap"><b>创作者协议</b>权利 · 义务 · 考核 · 结算 · 退出</div></div>
   </div>
 
   <div class="final-foot">
-    <div style="margin-bottom:6px;color:rgba(160,160,176,.8)">灵境 · 双生 · v18.0 + V17-G</div>
-    <div>底部 5 Tab · 首页/世界/心屿/创作/我的 · 累计 155/155 PASS · 0 业务错误</div>
-    <div style="margin-top:8px">Git: <code>90facae</code>（路径修复）/ <code>d305712</code>（preview 镜像）/ <code>4989911</code>（V17-G）· 远程 push 等用户方便</div>
+    <div style="margin-bottom:6px;color:rgba(160,160,176,.8)">灵境 · 双生</div>
+    <div>© 2026 一个角色，两种人生</div>
+    <div style="margin-top:8px">首页 · 世界 · 心屿 · 创作 · 我的</div>
   </div>
 
 </div>
 
 <!-- Toast -->
-<div id="toast" data-page-node-id="3dyekl0VBGzCzA0QPVdlWW"></div>
+<div id="toast"></div>
 
 <script src="output/preview/js/home.js"></script>
 <script src="output/preview/js/tabbar.js"></script>
