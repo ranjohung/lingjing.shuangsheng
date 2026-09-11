@@ -341,6 +341,51 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
 
 /* 隐藏系统菜单和存档面板时仍能点击舞台推进 */
 #plot-stage:not(.menu-open) .plot-dialog{cursor:pointer}
+
+/* =================================================================
+ * V19.0 — 实名认证弹窗 / Loading 加载页 / 封面起始页
+ * page-level override ≤ 30 行
+ * ================================================================= */
+.plot-realname,.plot-loading,.plot-cover{position:absolute;inset:0;z-index:80;display:none;align-items:center;justify-content:center}
+.plot-realname.open,.plot-loading.open,.plot-cover.open{display:flex}
+.plot-realname::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.7);z-index:-1}
+.plot-realname-card{background:#fff;color:#333;width:86%;max-width:380px;border-radius:14px;padding:20px 18px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.plot-realname-card h3{font-size:18px;margin-bottom:8px;text-align:center}
+.plot-rn-intro{font-size:13px;color:#666;margin-bottom:14px;line-height:1.5}
+.plot-rn-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.plot-rn-row label{flex:0 0 64px;font-size:13px;color:#666}
+.plot-rn-row input,.plot-rn-row select{flex:1;padding:8px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px;background:#fafafa}
+.plot-rn-notice{background:#FFF8E1;border-left:3px solid #FFB347;padding:8px 10px;margin-bottom:14px;font-size:12px;color:#666;line-height:1.6;border-radius:4px}
+.plot-rn-actions{display:flex;gap:10px}
+.plot-rn-actions button{flex:1;padding:10px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;border:none}
+.plot-rn-cancel{background:#f5f5f5;color:#333}
+.plot-rn-submit{background:#FFD700;color:#333}
+
+.plot-loading{background:linear-gradient(160deg,#FFE4B5,#FFC0CB)}
+.plot-loading-card{width:90%;max-width:420px;text-align:center}
+.plot-loading-title{font-size:22px;font-weight:700;color:#8B4513;margin-bottom:20px;text-shadow:0 2px 6px rgba(255,255,255,.4)}
+.plot-loading-art{height:220px;background:linear-gradient(135deg,#2E3A6E,#4A3A8C);border-radius:14px;margin-bottom:18px;display:grid;place-items:center;font-size:80px;border:1px solid rgba(255,255,255,.2);position:relative;overflow:hidden}
+.plot-loading-art::after{content:'灵境整理宝藏作品';position:absolute;bottom:10px;right:14px;background:rgba(233,69,96,.9);color:#fff;font-size:11px;padding:3px 8px;border-radius:6px}
+.plot-progress{width:100%;height:14px;background:rgba(255,255,255,.3);border-radius:10px;overflow:hidden;margin-bottom:10px}
+.plot-progress-bar{height:100%;background:linear-gradient(90deg,#FFD700,#FFA500);width:0;transition:width .2s;border-radius:10px}
+.plot-progress-text{font-size:14px;color:#8B4513;font-weight:700;margin-bottom:12px}
+.plot-loading-tip{font-size:12px;color:#A0522D;margin-top:6px}
+
+.plot-cover{background:linear-gradient(135deg,#3CB371,#2E8B57);overflow:hidden;flex-direction:column;justify-content:center;align-items:center}
+.plot-cover::before{content:'';position:absolute;top:30px;left:-20px;width:200px;height:300px;background:radial-gradient(circle,#FFB6C1 6px,transparent 7px) 0 0/40px 60px;opacity:.5}
+.plot-cover::after{content:'';position:absolute;bottom:0;right:30px;width:240px;height:240px;border:6px solid rgba(139,69,19,.4);border-radius:50%;box-shadow:inset 0 0 30px rgba(255,255,255,.3)}
+.plot-cover-title{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:18px;color:#fff}
+.plot-cover-title .sub{font-size:13px;letter-spacing:4px;opacity:.85}
+.plot-cover-title .main{font-size:36px;font-weight:700;letter-spacing:8px;text-shadow:0 4px 16px rgba(0,0,0,.4);padding:12px 0}
+.plot-cover-tap{margin-top:30px;font-size:12px;opacity:.6;animation:tapBlink 1.5s infinite}
+@keyframes tapBlink{0%,100%{opacity:.4}50%{opacity:1}}
+
+.plot-toolbar-l,.plot-toolbar-r{position:absolute;display:flex;flex-direction:column;gap:14px;z-index:82}
+.plot-toolbar-l{left:8px;top:60px}
+.plot-toolbar-r{right:8px;top:60px}
+.plt-btn{width:42px;height:42px;border-radius:50%;background:rgba(0,0,0,.4);color:#fff;border:1px solid rgba(255,255,255,.15);font-size:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;backdrop-filter:blur(6px)}
+.plt-btn .ico{font-size:14px}
+.plt-btn .lbl{font-size:9px;letter-spacing:1px}
 </style>
 </head>
 <body>
@@ -454,9 +499,65 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
     <div class="cg-title"></div>
   </div>
 
+  <!-- V19-A · 封面起始页（图 5） -->
+  <div class="plot-cover" id="plot-cover">
+    <div class="plot-cover-title">
+      <div class="sub">女主出场</div>
+      <div class="main">长夜城</div>
+      <div class="sub">黄金万两</div>
+    </div>
+    <div class="plot-cover-tap">点击屏幕任意位置进入 ›</div>
+
+    <div class="plot-toolbar-l">
+      <button class="plt-btn" data-cover-act="collapse"><span class="ico">^</span><span class="lbl">收起</span></button>
+      <button class="plt-btn" data-cover-act="light"><span class="ico">💡</span><span class="lbl">点亮</span></button>
+    </div>
+    <div class="plot-toolbar-r">
+      <button class="plt-btn" data-cover-act="collapse"><span class="ico">^</span><span class="lbl">收起</span></button>
+      <button class="plt-btn" data-cover-act="menu"><span class="ico">☰</span><span class="lbl">菜单</span></button>
+      <button class="plt-btn" data-cover-act="gallery"><span class="ico">🔮</span><span class="lbl">灵境</span></button>
+      <button class="plt-btn" data-cover-act="fav"><span class="ico">★</span><span class="lbl">收藏</span></button>
+      <button class="plt-btn" data-cover-act="share"><span class="ico">↗</span><span class="lbl">分享</span></button>
+      <button class="plt-btn" data-cover-act="shot"><span class="ico">📷</span><span class="lbl">截图</span></button>
+    </div>
+  </div>
+
+  <!-- V19-A · Loading 加载页（图 3） -->
+  <div class="plot-loading" id="plot-loading">
+    <div class="plot-loading-card">
+      <div class="plot-loading-title">官撰榜首系列周边活动 · 限时抽奖</div>
+      <div class="plot-loading-art">🏯</div>
+      <div class="plot-progress"><div class="plot-progress-bar" id="plot-progress-bar"></div></div>
+      <div class="plot-progress-text" id="plot-progress-text">0%</div>
+      <div class="plot-loading-tip">排行榜都是灵境整理的宝藏作品呢~</div>
+    </div>
+  </div>
+
   <!-- 免责声明（底部常驻） -->
   <div class="plot-disclaimer">⚠ AI 生成内容仅供参考，不构成医疗、法律、心理咨询建议。</div>
 
+</div>
+
+<!-- V19-A · 实名认证弹窗（图 2 · plot-stage 之外） -->
+<div class="plot-realname" id="plot-realname">
+  <div class="plot-realname-card">
+    <h3>实名认证通知</h3>
+    <div class="plot-rn-intro">根据国家相关规定，未实名账号无法使用部分功能，请先填写实名信息</div>
+    <div class="plot-rn-row"><label>真实姓名</label><input id="rn-name" placeholder="请输入真实姓名" maxlength="20" /></div>
+    <div class="plot-rn-row"><label>证件类型</label>
+      <select id="rn-type"><option>身份证</option><option>港澳台居住证</option><option>护照</option></select>
+    </div>
+    <div class="plot-rn-row"><label>证件号码</label><input id="rn-id" placeholder="请输入证件号码" maxlength="20" /></div>
+    <div class="plot-rn-notice">
+      1、您提供的证件信息将受到严格保护，仅用于身份验证，未经本人许可不会用于其他用途<br>
+      2、如果您是港澳台或海外用户需要实名认证，请联系客服为您进行核实<br>
+      3、每日仅可提交 3 次身份认证，请认真检查提交身份信息
+    </div>
+    <div class="plot-rn-actions">
+      <button class="plot-rn-cancel" id="rn-cancel">取消</button>
+      <button class="plot-rn-submit" id="rn-submit">提交</button>
+    </div>
+  </div>
 </div>
 
 <!-- Toast -->
@@ -484,6 +585,110 @@ document.querySelectorAll('.plot-map-bldg').forEach(function(b){
     if (window.LJPlot && window.LJPlot.toggleMapMode) window.LJPlot.toggleMapMode();
   });
 });
+
+/* =================================================================
+ * V19.0 — plot-runner V19-A 启动序列
+ * 实名认证 → Loading → 封面 → 主线剧情
+ * ================================================================= */
+(function () {
+  function showRealname() {
+    var done = localStorage.getItem('lingjing_v519_realname_done');
+    if (done === 'true') { startLoading(); return; }
+    var tries = parseInt(localStorage.getItem('lingjing_v519_realname_tries') || '0', 10);
+    if (tries >= 3) {
+      if (window.LJToast) window.LJToast.show('warn', '实名认证', '今日次数已用完，明天再来');
+      startLoading();
+      return;
+    }
+    var dlg = document.getElementById('plot-realname');
+    if (!dlg) { startLoading(); return; }
+    dlg.classList.add('open');
+    document.getElementById('rn-cancel').onclick = function () {
+      dlg.classList.remove('open');
+      startLoading();
+    };
+    document.getElementById('rn-submit').onclick = function () {
+      var n = document.getElementById('rn-name').value.trim();
+      var id = document.getElementById('rn-id').value.trim();
+      if (n.length < 2 || n.length > 20) {
+        if (window.LJToast) window.LJToast.show('warn', '姓名格式', '请输入 2-20 字');
+        return;
+      }
+      if (!/^\d{17}[\dXx]$/.test(id)) {
+        if (window.LJToast) window.LJToast.show('warn', '身份证号', '请输入 18 位身份证');
+        return;
+      }
+      localStorage.setItem('lingjing_v519_realname_done', 'true');
+      var t = parseInt(localStorage.getItem('lingjing_v519_realname_tries') || '0', 10) + 1;
+      localStorage.setItem('lingjing_v519_realname_tries', String(t));
+      dlg.classList.remove('open');
+      if (window.LJToast) window.LJToast.show('ok', '实名成功', '正在进入剧情');
+      startLoading();
+    };
+  }
+
+  function startLoading() {
+    var ld = document.getElementById('plot-loading');
+    if (!ld) { showCover(); return; }
+    ld.classList.add('open');
+    var pct = 0;
+    var bar = document.getElementById('plot-progress-bar');
+    var txt = document.getElementById('plot-progress-text');
+    var timer = setInterval(function () {
+      pct += 8 + Math.random() * 8;
+      if (pct >= 100) {
+        pct = 100;
+        clearInterval(timer);
+        if (bar) bar.style.width = '100%';
+        if (txt) txt.textContent = '100%';
+        setTimeout(showCover, 400);
+        return;
+      }
+      if (bar) bar.style.width = pct + '%';
+      if (txt) txt.textContent = Math.floor(pct) + '%';
+    }, 200);
+  }
+
+  function showCover() {
+    var ld = document.getElementById('plot-loading');
+    var cv = document.getElementById('plot-cover');
+    if (ld) ld.classList.remove('open');
+    if (!cv) return;
+    cv.classList.add('open');
+    cv.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-cover-act]');
+      if (!btn) {
+        cv.classList.remove('open');
+        // 进入剧情主流程（保持原有 plot-stage 行为）
+        return;
+      }
+      var act = btn.getAttribute('data-cover-act');
+      if (act === 'menu') {
+        var m = document.getElementById('plot-system-menu');
+        if (m && window.LJPlot && window.LJPlot.toggleSystemMenu) window.LJPlot.toggleSystemMenu();
+      } else if (act === 'collapse') {
+        if (window.LJToast) window.LJToast.show('warn', '收起', '全屏沉浸');
+      } else if (act === 'fav' || act === 'share' || act === 'shot' || act === 'gallery' || act === 'light') {
+        var label = { fav: '收藏', share: '分享', shot: '截图', gallery: '灵境追番', light: '点亮' }[act];
+        if (window.LJToast) window.LJToast.show('ok', label, '已记录');
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', showRealname);
+  } else {
+    setTimeout(showRealname, 50);
+  }
+
+  // 公开 API（供测试用）
+  window.LJPlotV19 = {
+    showRealname: showRealname,
+    startLoading: startLoading,
+    showCover: showCover,
+    realnameDone: function () { return localStorage.getItem('lingjing_v519_realname_done') === 'true'; }
+  };
+})();
 </script>
 </body>
 </html>
