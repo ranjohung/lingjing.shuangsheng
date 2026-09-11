@@ -3,7 +3,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(__file__))
 from playwright.sync_api import sync_playwright
 
-URL = 'http://127.0.0.1:8770/product-preview.html'
+URL = 'http://127.0.0.1:8771/product-preview.html'
 
 with sync_playwright() as p:
     browser = p.chromium.launch(args=['--use-gl=swiftshader'])

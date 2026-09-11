@@ -2,7 +2,7 @@
 import sys, os
 from playwright.sync_api import sync_playwright
 
-BASE = "http://127.0.0.1:8770/output/preview"
+BASE = "http://127.0.0.1:8771/output/preview"
 SHOTS = "output/preview/screenshots"
 os.makedirs(SHOTS, exist_ok=True)
 
