@@ -85,6 +85,18 @@
 .pl-rank-num-normal{background:var(--line);color:var(--sub)}
 .pl-rank-name{flex:1;font-size:14px}
 .pl-rank-score{font-size:13px;color:var(--accent);font-weight:700}
+/* V20-J 介绍大图 hero 区 */
+.pl-hero{position:relative;height:210px;display:flex;align-items:flex-end;overflow:hidden}
+.pl-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,26,46,.05) 30%,rgba(26,26,46,.94) 100%)}
+.pl-hero-emoji{position:absolute;top:36px;left:0;right:0;text-align:center;font-size:78px;text-shadow:0 6px 18px rgba(0,0,0,.55);z-index:1}
+.pl-hero-info{position:relative;z-index:2;padding:14px var(--margin) 12px;width:100%}
+.pl-hero-title{font-size:20px;font-weight:700;color:#fff}
+.pl-hero-sub{font-size:12px;color:var(--sub);margin-top:2px}
+.pl-hero-tags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.pl-hero-tag{font-size:11px;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:2px 8px}
+.pl-hero-summary{padding:12px var(--margin) 0;font-size:13px;color:rgba(255,255,255,.75);line-height:1.8}
+.pl-hero-stats{display:flex;gap:18px;padding:10px var(--margin) 2px;font-size:11px;color:var(--sub)}
+.pl-hero-stats b{display:block;color:#fff;font-size:14px;font-weight:700}
 </style>
 <link rel="stylesheet" href="css/mobile-lock.css" />
 </head>
@@ -97,6 +109,18 @@
   </div>
   <button class="topbar-menu">⋯</button>
 </header>
+
+<!-- V20-J 介绍大图 hero 区（世界页卡片点击进入所见） -->
+<section class="pl-hero" id="pl-hero">
+  <span class="pl-hero-emoji" id="pl-hero-emoji">📖</span>
+  <div class="pl-hero-info">
+    <div class="pl-hero-title" id="pl-hero-title">作品详情</div>
+    <div class="pl-hero-sub" id="pl-hero-sub">—</div>
+    <div class="pl-hero-tags" id="pl-hero-tags"></div>
+  </div>
+</section>
+<div class="pl-hero-stats" id="pl-hero-stats"></div>
+<div class="pl-hero-summary" id="pl-hero-summary"></div>
 
 <!-- 3 Tab -->
 <nav class="pl-tabs">
@@ -163,7 +187,7 @@
     <span class="ico">💬</span>
     <span>互动</span>
   </button>
-  <button class="pl-act-start" id="pl-act-start">开始阅读</button>
+  <button class="pl-act-start" id="pl-act-start">▶ 游玩</button>
 </footer>
 
 <div id="plot-stage-mount" style="height:120px"></div>
@@ -175,6 +199,7 @@
 </div>
 
 <script src="js/tabbar.js"></script>
+<script src="js/world-data.js"></script>
 <script src="js/plot-detail-data.js"></script>
 <script src="js/plot-detail.js"></script>
 </body>

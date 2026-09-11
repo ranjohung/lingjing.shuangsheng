@@ -136,7 +136,8 @@
     opts = opts || {};
     container.innerHTML = '';
     cards.forEach(function (c) {
-      var card = el('a', { class: 'ds-wf-card', href: 'discover.html?id=' + c.id }, [
+      // V20-J：卡片（介绍页图片）点击 → 详细介绍页；游玩在详情页内进入正式游戏
+      var card = el('a', { class: 'ds-wf-card', href: 'plot-detail.html?novel=' + c.id }, [
         el('div', { class: 'ds-wf-cov', style: 'background:' + c.cov }, [
           el('span', { class: 'ds-wf-emoji' }, [c.emoji]),
           c.isNew ? el('span', { class: 'ds-corner-tag ds-tag-new' }, ['新作']) : null,

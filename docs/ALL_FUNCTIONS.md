@@ -91,6 +91,7 @@
 | 11f | 法律阅读页 | `legal-view.html?doc=XXX` | 手机版壳（返回+标题）+ fetch docs/legal/*.md + 极简 md 渲染（h1-h3/列表/粗体/引用）；16 份法律文书统一入口 | ✅ V20-G |
 | 11g | 全项目接口审查（V20-I） | `docs/AUDIT_2026-09-12.md` + `AUDIT-ISSUES_2026-09-12.md` | 32 页 + 29 JS 全量审查：链接/资源/fetch/参数/存储五维交叉比对 + 35 入口 230+ 点击动态审计；修复 4 项（commerce 渲染中断 / plot-runner 参数名 / 公版书错误跳转 / plot-detail 购买 404），登记 7 项遗留（O-1 通用引擎缺口等） | ✅ V20-I |
 | 11h | 审查工具链 | `scripts/audit_links.py` + `audit_runtime.py` + `test_v20i_audit_fixes.py` | 静态扫描（链接/资源/键交叉）+ 动态运行时审计（pageerror/404/点击异常）+ 修复回归，可重复执行 | ✅ V20-I |
+| 12c | **小说世界「卡片→详情→游玩」链路** | `plot-detail.html`（hero 介绍大图版） | 世界页瀑布流卡片 / banner 图书位 / 首页推荐卡点击 → 详细介绍页（封面大图 + 标题作者标签 + 数据 + 简介）；「▶ 游玩」→ 正式游戏：三国系（sanguoyanyi/pd2）→ sanguo-world，长夜城/深海回声 → plot-runner，其余 → 运行器「暂未接入」提示页；详情数据三级回退（内置 → world-data 卡片 → 占位，不再错误显示长夜城） | ✅ V20-J |
 | 12 | **钱包** | （待建）`wallet.html` | Tab：灵玉/灵晶/订阅/充值/交易记录/退款申请 | ❌ 缺失 |
 | 13 | **设置 + 法律中心** | （待建）`settings.html` | 9 Tab：账号/安全/通知/隐私/显示/声音/AI 偏好/法律（15 份接入）/关于/注销 | ❌ 缺失 |
 

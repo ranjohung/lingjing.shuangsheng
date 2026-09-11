@@ -37,8 +37,106 @@
     return currentNovelId;
   }
 
+  // ---------- V20-J 游玩路由：专属小说世界 ----------
+  var WORLD_ROUTES = {
+    sanguoyanyi: 'sanguo-world.html', // 三国演义 · 120 回卷制世界（V20-H）
+    pd2: 'sanguo-world.html'          // 灵境解读三国 → 三国演义小说世界
+  };
+
+  // ---------- V20-J 内置详情（专属小说世界作品） ----------
+  function buildExtra(id) {
+    if (id === 'sanguoyanyi') {
+      return {
+        id: 'sanguoyanyi',
+        title: '三国演义 · 小说世界',
+        author: '罗贯中（公版）',
+        tags: ['公版名著', '古风', '战争权谋'],
+        summary: '120 回全本卷制阅读 · 桃园结义、群雄逐鹿、三分天下。卷一免费开放，全书券 128 灵晶（省 42%），阅读券可享 10 灵玉单卷。灵玉每日签到 +10。',
+        cover: 'linear-gradient(160deg,#6B2737,#B8863B)',
+        emoji: '📖',
+        stats: { likes: 1286, favs: 592, comments: 143, reads: 25830 },
+        cast: [], ads: [], groups: [], roles: [], ranks: [],
+        interact: { selected: [], latest: [] }
+      };
+    }
+    return null;
+  }
+
   function findNovel(id) {
-    return PLOT[id] || PLOT.changyecheng;
+    if (PLOT[id]) return PLOT[id];
+    var extra = buildExtra(id);
+    if (extra) return extra;
+    // 世界页卡片（world-data.js）通用详情回退 —— 不再错误回退到长夜城
+    if (window.WORLD_DATA) {
+      var lists = [window.WORLD_DATA.FEATURED, window.WORLD_DATA.HOT, window.WORLD_DATA.NEW_DONE, window.WORLD_DATA.PUBLIC_DOMAIN];
+      for (var i = 0; i < lists.length; i++) {
+        var hit = (lists[i] || []).filter(function (c) { return c.id === id; })[0];
+        if (hit) {
+          var parts = [];
+          if (hit.desc) parts.push(hit.desc);
+          if (hit.wordCount) parts.push(hit.wordCount);
+          return {
+            id: hit.id, title: hit.title, author: hit.author,
+            tags: [hit.catName || '小说世界'],
+            summary: (parts.join(' · ') || '灵境小说世界作品') + '。点击下方「▶ 游玩」进入小说世界。',
+            cover: hit.cov, emoji: hit.emoji,
+            stats: {
+              likes: Math.round(hit.score * 100), favs: Math.round(hit.score * 40),
+              comments: Math.round(hit.score * 8), reads: Math.round(hit.score * 2600)
+            },
+            cast: [], ads: [], groups: [], roles: [], ranks: [],
+            interact: { selected: [], latest: [] }
+          };
+        }
+      }
+    }
+    // 未知作品：占位提示（保持页面可用，不显示错误内容）
+    return {
+      id: id, title: '作品详情', author: '—', tags: [],
+      summary: '该作品信息暂缺 · 通用小说世界引擎 v5.21+ 即将开放',
+      cover: 'linear-gradient(160deg,#1A1A2E,#16213E)', emoji: '📖',
+      stats: { likes: 0, favs: 0, comments: 0, reads: 0 },
+      cast: [], ads: [], groups: [], roles: [], ranks: [],
+      interact: { selected: [], latest: [] }
+    };
+  }
+
+  // ---------- V20-J 介绍大图 hero ----------
+  function renderHero(novel) {
+    var hero = $('#pl-hero');
+    if (!hero) return;
+    if (novel.cover) hero.style.background = novel.cover;
+    var emoji = $('#pl-hero-emoji');
+    if (emoji) emoji.textContent = novel.emoji || '📖';
+    var title = $('#pl-hero-title');
+    if (title) title.textContent = novel.title || '作品详情';
+    var sub = $('#pl-hero-sub');
+    if (sub) sub.textContent = (novel.author && novel.author !== '—') ? (novel.author + ' · 小说世界') : '小说世界';
+    var tags = $('#pl-hero-tags');
+    if (tags) {
+      tags.innerHTML = '';
+      (novel.tags || []).forEach(function (t) {
+        tags.appendChild(el('span', { class: 'pl-hero-tag' }, [t]));
+      });
+    }
+    var stats = $('#pl-hero-stats');
+    if (stats && novel.stats) {
+      stats.innerHTML = '';
+      var cells = [
+        [String(novel.stats.reads.toLocaleString()), '在读'],
+        [String(novel.stats.likes.toLocaleString()), '点赞'],
+        [String(novel.stats.favs.toLocaleString()), '收藏'],
+        [String(novel.stats.comments), '评论']
+      ];
+      cells.forEach(function (c) {
+        stats.appendChild(el('div', {}, [
+          el('b', {}, [c[0]]),
+          el('span', {}, [c[1]])
+        ]));
+      });
+    }
+    var sum = $('#pl-hero-summary');
+    if (sum) sum.textContent = novel.summary || '';
   }
 
   // ---------- 主演横滑 ----------
@@ -46,6 +144,10 @@
     var wrap = $('#pl-cast-list');
     if (!wrap) return;
     wrap.innerHTML = '';
+    if (!novel.cast || !novel.cast.length) {
+      wrap.appendChild(el('div', { class: 'pl-empty' }, ['主演资料整理中 · v5.21+ 即将开放']));
+      return;
+    }
     novel.cast.forEach(function (c) {
       var card = el('div', { class: 'pl-cast-card' }, [
         el('div', { class: 'pl-cast-cover', style: 'background:' + c.bg }, [c.emoji]),
@@ -222,6 +324,11 @@
     });
     var startBtn = $('#pl-act-start');
     if (startBtn) startBtn.addEventListener('click', function () {
+      // V20-J 游玩路由：专属世界直入正式游戏；其余交运行器（未接入时出提示页）
+      if (WORLD_ROUTES[currentNovelId]) {
+        window.location.href = WORLD_ROUTES[currentNovelId];
+        return;
+      }
       window.location.href = 'plot-runner.html?novel=' + currentNovelId;
     });
   }
@@ -256,6 +363,7 @@
     var titleEl = $('#pl-novel-title');
     if (titleEl) titleEl.textContent = novel.title;
 
+    renderHero(novel);
     renderCast(novel);
     renderBanner(novel);
     renderInteract(novel);
@@ -266,6 +374,10 @@
     bindTabs();
     setTab('detail');
     setInteractTab('selected');
+
+    // V20-J：点赞数初始化（原为静态 707）
+    var likeCount = $('#pl-act-like-count');
+    if (likeCount) likeCount.textContent = String(novel.stats.likes);
 
     // 5 Tab 注入（如果存在）
     if (window.LJTabbar && typeof window.LJTabbar.mount === 'function') {

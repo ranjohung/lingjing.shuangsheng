@@ -80,11 +80,11 @@
 - **复核**：全仓 grep 该键仅 creator-legal.html 1 处写入、0 处读取。
 - **建议**：v5.21+ 在 creator-create 提交前校验该键，未签则引导到 creator-legal。
 
-### O-4【P3】plot-detail.html 是孤儿页
+### O-4【P3】plot-detail.html 是孤儿页 ✅ 已解决（V20-J · 2026-09-12）
 
 - **现象**：全站（31 页 + 29 JS）无任何链接指向 plot-detail.html；其自身「开始阅读」等出站链接正常。
 - **复核**：grep `plot-detail.html` 全仓排除自身 = 0 命中。
-- **建议**：由世界 Tab / 搜索结果 / 心屿角色卡「进入 TA 的世界」接入（对应 v6.4.2 待办）。
+- **处置**：V20-J 打通链路——世界页瀑布流卡片 / banner 图书位（b2/b5）/ 首页推荐卡全部指向 `plot-detail.html?novel={id}`；详情页新增介绍大图 hero 区 +「▶ 游玩」按钮（三国系 → sanguo-world，内置剧情 → plot-runner）。回归：test_v20j 15/15 PASS。
 
 ### O-5【P3】plot-engine.js 为死模块
 

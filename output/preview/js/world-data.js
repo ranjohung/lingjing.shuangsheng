@@ -14,10 +14,10 @@
   // ---------- Banner 5 张 ----------
   var BANNERS = [
     { id: 'b1', title: '双生 · 入世', subtitle: '一个角色，两种人生', gradient: 'linear-gradient(135deg,#E94560,#6C5CE7)', href: 'discover.html?id=banner1', emoji: '🌌' },
-    { id: 'b2', title: '长夜城 · 第三章', subtitle: '新章节上线 · 共写命运', gradient: 'linear-gradient(135deg,#16213E,#1C2542)', href: 'discover.html?id=banner2', emoji: '🏯' },
+    { id: 'b2', title: '长夜城 · 第三章', subtitle: '新章节上线 · 共写命运', gradient: 'linear-gradient(135deg,#16213E,#1C2542)', href: 'plot-detail.html?novel=changyecheng', emoji: '🏯' },
     { id: 'b3', title: '创作者激励计划', subtitle: '灵晶奖池 10000+ · 青铜起分润', gradient: 'linear-gradient(135deg,#FFB347,#E94560)', href: 'creator-center.html', emoji: '✨' },
     { id: 'b4', title: '心屿 · 新角色', subtitle: '苏念 入驻 · 等你相识', gradient: 'linear-gradient(135deg,#6C5CE7,#A29BFE)', href: 'heart-island.html', emoji: '💬' },
-    { id: 'b5', title: '红楼梦 · 灵境版', subtitle: '公版新解读 · 黛玉知己结局', gradient: 'linear-gradient(135deg,#B8863B,#8C5A2B)', href: 'discover.html?id=hongloumeng', emoji: '📜' }
+    { id: 'b5', title: '红楼梦 · 灵境版', subtitle: '公版新解读 · 黛玉知己结局', gradient: 'linear-gradient(135deg,#B8863B,#8C5A2B)', href: 'plot-detail.html?novel=pd1', emoji: '📜' }
   ];
 
   // ---------- 分类树（10 一级 · 多人二级） ----------

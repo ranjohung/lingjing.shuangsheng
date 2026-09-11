@@ -128,11 +128,11 @@
   // ---------- 4 推荐板块 ----------
   // 今日推荐：从 world-data.js 复用（2 张卡片）
   var TODAY_RECOMMEND = [
-    // V20-I（2026-09-12）：三国演义小说世界直达卡（V20-H 上线 · 铁律 #14 首页镜像同步）
-    { id: 'sanguoyanyi', title: '三国演义 · 小说世界', author: '罗贯中（公版）', cat: '公版名著', score: 9.6, desc: '120 回 · 卷一免费 · 全书券省 42%', cov: 'linear-gradient(160deg,#6B2737,#B8863B)', emoji: '📖', href: 'output/preview/sanguo-world.html' },
-    { id: 'w1', title: '长夜城', author: '夜归人', cat: '古风', score: 9.0, desc: '权谋古风 · 24.6万字', cov: 'linear-gradient(160deg,#2E3A6E,#4A3A8C)', emoji: '🏯' },
-    { id: 'w2', title: '三国 · 吕布篇', author: '灵境官方', cat: '古风', score: 9.2, desc: '穿越成吕布，改写三国命运', cov: 'linear-gradient(160deg,#B8863B,#8C5A2B)', emoji: '⚔️' },
-    { id: 'w3', title: '深海回声', author: '林清雪', cat: '悬疑', score: 8.8, desc: '悬疑 · 18.2万字 · 共写命运', cov: 'linear-gradient(160deg,#2E5E56,#00B894)', emoji: '🌊' }
+    // V20-J：三国直达卡改走详细介绍页（详情页内「游玩」进入小说世界）
+    { id: 'sanguoyanyi', title: '三国演义 · 小说世界', author: '罗贯中（公版）', cat: '公版名著', score: 9.6, desc: '120 回 · 卷一免费 · 全书券省 42%', cov: 'linear-gradient(160deg,#6B2737,#B8863B)', emoji: '📖', href: 'output/preview/plot-detail.html?novel=sanguoyanyi' },
+    { id: 'changyecheng', title: '长夜城', author: '夜归人', cat: '古风', score: 9.0, desc: '权谋古风 · 24.6万字', cov: 'linear-gradient(160deg,#2E3A6E,#4A3A8C)', emoji: '🏯' },
+    { id: 'pd2', title: '三国 · 吕布篇', author: '灵境官方', cat: '古风', score: 9.2, desc: '穿越成吕布，改写三国命运', cov: 'linear-gradient(160deg,#B8863B,#8C5A2B)', emoji: '⚔️' },
+    { id: 'shenhuihuisheng', title: '深海回声', author: '林清雪', cat: '悬疑', score: 8.8, desc: '悬疑 · 18.2万字 · 共写命运', cov: 'linear-gradient(160deg,#2E5E56,#00B894)', emoji: '🌊' }
   ];
 
   // 陪伴动态（来自心屿角色最近消息）
@@ -164,7 +164,8 @@
     html += '<section class="home-board"><div class="home-board-head"><h3>今日推荐</h3><a class="home-board-more" href="output/preview/library.html">全部 ›</a></div>';
     html += '<div class="home-grid-2">';
     TODAY_RECOMMEND.slice(0, 4).forEach(function (w) {
-      var wHref = w.href || ('output/preview/discover.html?id=' + w.id);
+      // V20-J：推荐卡（介绍页图片）→ 详细介绍页；游玩在详情页内进入
+      var wHref = w.href || ('output/preview/plot-detail.html?novel=' + w.id);
       html +=
         '<a class="home-rec-card" href="' + wHref + '">' +
         '<div class="hr-cov" style="background:' + w.cov + '"><span class="hr-emoji">' + w.emoji + '</span></div>' +

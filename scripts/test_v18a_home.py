@@ -13,6 +13,9 @@ with sync_playwright() as p:
     page.on('console', lambda m: errors.append('console.' + m.type + ': ' + m.text) if m.type == 'error' else None)
 
     page.goto(URL)
+    # V20-C 起 product-preview 有启动浮层（splash/login/onboarding）；跳过以直达首页（V20-J 测试债修复）
+    page.evaluate("localStorage.setItem('lingjing_onboarding_done','true')")
+    page.reload()
     page.wait_for_load_state('networkidle')
     page.wait_for_timeout(800)
 
