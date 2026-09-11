@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="hz4i9eO1zbyYgycj5Mg7mu">
+<head data-page-node-id="i8jEw0G8e7Yz0MYBzvq7Cr">
+<meta charset="UTF-8" data-page-node-id="jzqjMom7rS0aNNGGFzMr8W" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" data-page-node-id="HjS2EK5t2YfEYn1IdtAa5G" />
+<title>灵境 · 双生 — 首页</title>
+<meta name="description" content="v6.4 · V17.0 实施中 · V17-A 已交付（js/tabbar.js · 122 行）· 按《UI/UX 设计文档 V1.0》重做：深空蓝黑 #1A1A2E · 灵境红 #E94560 · 5 Tab 底部导航 · 启动页 + 首页" data-page-node-id="9ACwYpUMBDBLSkNzlKkFq1" />
+<meta name="theme-color" content="#1A1A2E" data-page-node-id="IvhFEFlPTYf0D1Z5PLz49q" />
+<style>
+/* ================================================================
+   灵境 · 双生 v6.4 — 全局设计规范（UI/UX 文档 V1.0 §一）
+   主色 #1A1A2E · 辅色 #16213E · 强调 #E94560
+   心屿 #6C5CE7 · 世界 #00B894 · 成功 #4ECCA3 · 警告 #FFB347
+   页面边距 16 · 卡片间距 12 · 内边距 12 · 按钮高 48 · 圆角 12
+================================================================ */
+:root{
+  --bg:#1A1A2E;
+  --card:#16213E;
+  --card-2:#1C2542;
+  --accent:#E94560;
+  --text:#EAEAEA;
+  --sub:#A0A0B0;
+  --ok:#4ECCA3;
+  --warn:#FFB347;
+  --xinyu:#6C5CE7;
+  --world:#00B894;
+  --line:rgba(255,255,255,.08);
+  --radius:12px;
+  --gap:12px;
+  --margin:16px;
+  --btn-h:48px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:#0d0d1a;
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:16px;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit}
+
+/* ---------- 手机壳：桌面端居中呈现 ---------- */
+#app{
+  max-width:480px;margin:0 auto;min-height:100vh;
+  background:var(--bg);position:relative;
+  padding-bottom:calc(72px + env(safe-area-inset-bottom));
+}
+@media(min-width:520px){
+  #app{box-shadow:0 0 60px rgba(0,0,0,.6);border-left:1px solid var(--line);border-right:1px solid var(--line)}
+}
+
+/* ---------- 启动页（§2.1） ---------- */
+#splash{
+  position:fixed;inset:0;z-index:100;
+  max-width:480px;margin:0 auto;
+  background:radial-gradient(ellipse 120% 60% at 50% -10%,rgba(108,92,231,.28),transparent 60%),
+             radial-gradient(ellipse 100% 50% at 85% 100%,rgba(0,184,148,.15),transparent 60%),
+             var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .6s ease,visibility .6s;
+}
+#splash.hide{opacity:0;visibility:hidden;pointer-events:none}
+.splash-logo{
+  font-family:Georgia,"Noto Serif SC","Songti SC",serif;
+  font-size:34px;font-weight:700;letter-spacing:4px;
+  background:linear-gradient(120deg,#EAEAEA 20%,#E94560 60%,#6C5CE7 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:splashUp .9s cubic-bezier(.16,1,.3,1) both;
+}
+.splash-slogan{
+  margin-top:14px;font-size:16px;color:var(--sub);letter-spacing:2px;
+  animation:splashUp .9s .15s cubic-bezier(.16,1,.3,1) both;
+}
+.splash-load{
+  margin-top:44px;width:180px;height:3px;border-radius:2px;
+  background:rgba(255,255,255,.08);overflow:hidden;
+  animation:splashUp .9s .3s cubic-bezier(.16,1,.3,1) both;
+}
+.splash-load i{display:block;height:100%;width:0;border-radius:2px;
+  background:linear-gradient(90deg,var(--accent),var(--xinyu));
+  animation:load3s 3s .3s cubic-bezier(.4,0,.2,1) forwards}
+.splash-enter{
+  margin-top:36px;height:var(--btn-h);padding:0 44px;
+  border-radius:var(--radius);font-size:16px;font-weight:600;letter-spacing:6px;
+  color:#fff;background:linear-gradient(135deg,var(--accent),#C73652);
+  box-shadow:0 10px 28px rgba(233,69,96,.35);
+  opacity:0;transform:translateY(12px);pointer-events:none;
+  transition:opacity .5s ease,transform .5s cubic-bezier(.16,1,.3,1);
+}
+.splash-enter.on{opacity:1;transform:none;pointer-events:auto}
+.splash-enter:active{transform:scale(.96)}
+.splash-skip{
+  position:absolute;bottom:28px;right:20px;font-size:12px;color:rgba(255,255,255,.35);
+  padding:6px 10px;
+}
+@keyframes splashUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes load3s{to{width:100%}}
+
+/* ---------- 顶栏（§2.4） ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px var(--margin);
+  background:rgba(26,26,46,.88);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.topbar-title{font-size:18px;font-weight:600;display:flex;align-items:center;gap:8px}
+.topbar-title .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+.topbar-acts{display:flex;gap:10px}
+.icon-btn{
+  position:relative;width:38px;height:38px;border-radius:50%;
+  display:grid;place-items:center;font-size:17px;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);
+  transition:transform .15s ease,background .2s;
+}
+.icon-btn:active{transform:scale(.9)}
+.icon-btn .badge{
+  position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;
+  border-radius:8px;background:var(--accent);color:#fff;
+  font-size:10px;line-height:16px;text-align:center;padding:0 4px;font-weight:700;
+}
+
+/* ---------- 问候卡（§2.4） ---------- */
+.greet-card{
+  margin:var(--margin);padding:20px 16px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(108,92,231,.28),rgba(0,184,148,.10) 60%,rgba(233,69,96,.12)),
+             var(--card);
+  border:1px solid rgba(108,92,231,.25);
+  animation:fadeUp .6s .05s cubic-bezier(.16,1,.3,1) both;
+}
+.greet-hi{font-size:22px;font-weight:600}
+.greet-ask{font-size:14px;color:var(--sub);margin-top:6px}
+.btn-primary{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:16px;width:100%;height:var(--btn-h);
+  border-radius:var(--radius);font-size:16px;font-weight:600;color:#fff;
+  background:linear-gradient(135deg,var(--accent),#C73652);
+  box-shadow:0 8px 20px rgba(233,69,96,.3);
+  transition:transform .15s ease,box-shadow .2s;
+}
+.btn-primary:active{transform:scale(.97);box-shadow:0 4px 12px rgba(233,69,96,.3)}
+.btn-primary.ghost{
+  background:rgba(255,255,255,.06);border:1px solid var(--line);
+  box-shadow:none;color:var(--text);
+}
+
+/* ---------- 3 大快捷入口（§2.4） ---------- */
+.quick-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);
+  margin:0 var(--margin);
+  animation:fadeUp .6s .12s cubic-bezier(.16,1,.3,1) both;
+}
+.quick-card{
+  padding:14px 8px;border-radius:var(--radius);text-align:center;
+  background:var(--card);border:1px solid var(--line);
+  transition:transform .2s cubic-bezier(.16,1,.3,1),border-color .2s;
+}
+.quick-card:active{transform:scale(.95)}
+.quick-card .ico{font-size:26px;line-height:1}
+.quick-card .name{font-size:14px;font-weight:600;margin-top:8px}
+.quick-card .num{font-size:12px;color:var(--sub);margin-top:3px}
+.quick-card .num b{font-weight:600}
+.quick-card.q-world .num b{color:var(--world)}
+.quick-card.q-xinyu .num b{color:#A29BFE}
+.quick-card.q-create .num b{color:var(--accent)}
+.quick-card.q-world{border-top:2px solid var(--world)}
+.quick-card.q-xinyu{border-top:2px solid var(--xinyu)}
+.quick-card.q-create{border-top:2px solid var(--accent)}
+
+/* ---------- 分区标题 ---------- */
+.sec{
+  margin:26px var(--margin) var(--gap);
+  font-size:18px;font-weight:500;color:var(--text);
+  display:flex;align-items:center;gap:8px;
+  animation:fadeUp .6s both;
+}
+.sec::before{content:'';width:4px;height:16px;border-radius:2px;background:var(--accent)}
+
+/* ---------- 继续游玩（§2.4） ---------- */
+.continue-card{
+  margin:0 var(--margin);padding:16px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--line);
+  display:flex;align-items:center;gap:14px;
+  animation:fadeUp .6s .18s cubic-bezier(.16,1,.3,1) both;
+}
+.cc-cover{
+  width:56px;height:72px;border-radius:8px;flex-shrink:0;
+  background:linear-gradient(160deg,#2E3A6E,#4A3A8C);
+  display:grid;place-items:center;font-size:24px;
+}
+.cc-body{flex:1;min-width:0}
+.cc-title{font-size:16px;font-weight:600}
+.cc-sub{font-size:14px;color:var(--sub);margin-top:3px}
+.cc-progress{margin-top:10px;height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}
+.cc-fill{height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--warn));transition:width 1.2s cubic-bezier(.16,1,.3,1)}
+.cc-pct{font-size:12px;color:var(--sub);margin-top:6px;font-variant-numeric:tabular-nums}
+.cc-pct b{color:var(--text)}
+.btn-mini{
+  height:40px;padding:0 20px;border-radius:10px;flex-shrink:0;
+  font-size:14px;font-weight:600;color:#fff;
+  background:linear-gradient(135deg,var(--accent),#C73652);
+  transition:transform .15s ease;
+}
+.btn-mini:active{transform:scale(.94)}
+
+/* ---------- 今日推荐 · 横滑（§2.4） ---------- */
+.rec-scroll{
+  display:flex;gap:var(--gap);overflow-x:auto;
+  padding:2px var(--margin) 6px;
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.rec-scroll::-webkit-scrollbar{display:none}
+.rec-scroll>*{scroll-snap-align:start;flex-shrink:0}
+.rec-card{width:132px;border-radius:var(--radius);padding:10px;
+  background:var(--card);border:1px solid var(--line);
+  transition:transform .2s cubic-bezier(.16,1,.3,1),border-color .2s;}
+.rec-card:active{transform:scale(.96)}
+.rec-card .cov{
+  height:150px;border-radius:8px;margin-bottom:10px;
+  display:grid;place-items:center;font-size:34px;
+}
+.rec-card .t{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rec-card .g{font-size:12px;color:var(--sub);margin-top:3px;
+  display:flex;align-items:center;gap:4px}
+.rec-card .g .star{color:var(--warn)}
+
+/* ---------- 心屿动态（§2.4） ---------- */
+.moment-card{
+  margin:0 var(--margin) var(--gap);padding:14px 16px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--line);
+  display:flex;gap:12px;align-items:flex-start;
+  transition:border-color .2s,transform .2s cubic-bezier(.16,1,.3,1);
+  animation:fadeUp .6s both;
+}
+.moment-card:active{transform:scale(.98)}
+.moment-card .ava{
+  width:44px;height:44px;border-radius:50%;flex-shrink:0;
+  display:grid;place-items:center;font-size:19px;
+  background:linear-gradient(135deg,var(--xinyu),#A29BFE);
+}
+.moment-card .m-body{flex:1;min-width:0}
+.moment-card .m-head{display:flex;align-items:center;gap:8px}
+.moment-card .m-name{font-size:14px;font-weight:600}
+.moment-card .m-stage{
+  font-size:10px;padding:1px 7px;border-radius:6px;
+  background:rgba(108,92,231,.2);color:#A29BFE;font-weight:600;
+}
+.moment-card .m-text{font-size:14px;color:var(--sub);line-height:1.6;margin-top:5px}
+.moment-card .m-time{font-size:12px;color:rgba(160,160,176,.6);margin-top:5px}
+
+/* ---------- 底部 5 Tab 导航（§1.4） ---------- */
+.tabbar{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:480px;z-index:60;
+  display:flex;
+  padding:8px 0 calc(8px + env(safe-area-inset-bottom));
+  background:rgba(22,33,62,.94);backdrop-filter:blur(16px);
+  border-top:1px solid var(--line);
+}
+.tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-size:11px;color:var(--sub);
+  transition:color .2s;
+}
+.tab .ico{font-size:22px;line-height:1;transition:transform .2s cubic-bezier(.16,1,.3,1)}
+.tab:active .ico{transform:scale(.88)}
+.tab.active{color:var(--accent)}
+.tab.active .ico{transform:translateY(-1px)}
+.tab.t-world.active{color:var(--world)}
+.tab.t-xinyu.active{color:#A29BFE}
+.tab.t-create.active{color:var(--warn)}
+
+/* ---------- 页脚（轻量 · 文档入口不丢） ---------- */
+.mini-footer{
+  margin:32px var(--margin) 8px;padding-top:16px;
+  border-top:1px solid var(--line);
+  font-size:11px;color:rgba(160,160,176,.55);text-align:center;line-height:2;
+}
+.mini-footer a{color:rgba(160,160,176,.75);margin:0 6px}
+
+/* ---------- Toast ---------- */
+#toast{
+  position:fixed;bottom:calc(88px + env(safe-area-inset-bottom));left:50%;
+  transform:translateX(-50%);z-index:90;
+  display:flex;flex-direction:column;gap:8px;align-items:center;
+  pointer-events:none;width:max-content;max-width:86vw;
+}
+.toast-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;border-radius:10px;font-size:13px;
+  background:rgba(28,37,66,.96);border:1px solid var(--line);
+  box-shadow:0 10px 30px rgba(0,0,0,.5);
+  animation:toastIn .35s cubic-bezier(.16,1,.3,1) both;
+}
+.toast-item .ti{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.toast-item.ok .ti{background:var(--ok)}
+.toast-item.warn .ti{background:var(--warn)}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ================================================================
+   V17.0 草案预览样式（2026-09-11 · 待用户审阅）
+   复用 v6.4.1 tokens，不引入新组件库
+================================================================ */
+.v17-banner{
+  margin:32px var(--margin) 0;padding:14px 16px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(108,92,231,.22),rgba(0,184,148,.18));
+  border:1px solid rgba(108,92,231,.35);
+  display:flex;align-items:center;gap:12px;
+}
+.v17-banner .dot{width:8px;height:8px;border-radius:50%;background:var(--warn);box-shadow:0 0 8px var(--warn)}
+.v17-banner .b-txt{flex:1;font-size:13px;line-height:1.5}
+.v17-banner .b-txt b{color:var(--warn);font-weight:700}
+.v17-banner .b-txt a{color:var(--xinyu);text-decoration:underline;margin-right:8px}
+
+/* ---------- V17-D 启动签到 mock ---------- */
+.v17-section{margin:36px var(--margin) 0}
+.v17-section-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+}
+.v17-section-head h3{font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px}
+.v17-section-head h3::before{content:'';width:4px;height:14px;border-radius:2px;background:var(--xinyu)}
+.v17-section-head .badge{
+  font-size:10px;padding:3px 8px;border-radius:6px;
+  background:rgba(255,179,71,.18);color:var(--warn);font-weight:700;letter-spacing:.5px;
+}
+.signin-mock{
+  padding:18px 14px 14px;border-radius:14px;
+  background:linear-gradient(160deg,rgba(255,179,71,.12),rgba(233,69,96,.06) 60%,var(--card));
+  border:1px solid rgba(255,179,71,.25);
+}
+.signin-mock .sm-title{font-size:15px;font-weight:600;text-align:center;margin-bottom:12px}
+.signin-mock .sm-week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px}
+.signin-mock .sm-day{
+  text-align:center;padding:8px 2px;border-radius:8px;
+  background:rgba(255,255,255,.04);border:1px solid var(--line);
+  font-size:11px;
+}
+.signin-mock .sm-day .d-d{font-size:13px;font-weight:600;color:var(--sub)}
+.signin-mock .sm-day .d-r{font-size:10px;color:var(--warn);margin-top:3px;font-weight:600}
+.signin-mock .sm-day.today{
+  background:linear-gradient(135deg,var(--warn),#FF8A5B);
+  border-color:transparent;color:#1A1A2E;
+}
+.signin-mock .sm-day.today .d-d,.signin-mock .sm-day.today .d-r{color:#1A1A2E}
+.signin-mock .sm-day.done{opacity:.5}
+.signin-mock .sm-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.signin-mock .sm-actions button{
+  height:42px;border-radius:10px;font-size:13px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;gap:4px;
+}
+.signin-mock .sm-actions .a-sign{background:linear-gradient(135deg,var(--warn),#FF8A5B);color:#1A1A2E}
+.signin-mock .sm-actions .a-video{background:rgba(255,255,255,.08);border:1px solid var(--line);color:var(--text)}
+.signin-mock .sm-shortcuts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.signin-mock .sm-shortcuts .sc{
+  text-align:center;padding:8px 2px;border-radius:8px;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);
+  font-size:10px;color:var(--sub);
+}
+.signin-mock .sm-shortcuts .sc .em{font-size:18px;display:block;margin-bottom:3px}
+
+/* ---------- V17-B 世界功能区 mock ---------- */
+.world-mock{padding:14px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.world-mock .wm-subnav{
+  display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;
+  scrollbar-width:none;
+}
+.world-mock .wm-subnav::-webkit-scrollbar{display:none}
+.world-mock .wm-subnav .sn{
+  flex-shrink:0;padding:6px 12px;border-radius:16px;font-size:12px;
+  background:rgba(255,255,255,.05);color:var(--sub);white-space:nowrap;
+}
+.world-mock .wm-subnav .sn.active{
+  background:var(--world);color:#fff;font-weight:600;
+}
+.world-mock .wm-banner{
+  height:120px;border-radius:10px;margin-bottom:12px;
+  background:linear-gradient(135deg,#6C5CE7,#A29BFE 50%,#E94560);
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;
+  padding:12px;color:#fff;position:relative;overflow:hidden;
+}
+.world-mock .wm-banner::before{
+  content:'';position:absolute;top:8px;right:8px;
+  width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.2);
+}
+.world-mock .wm-banner .b-t{font-size:14px;font-weight:700;letter-spacing:.5px}
+.world-mock .wm-banner .b-s{font-size:11px;opacity:.85;margin-top:2px}
+.world-mock .wm-banner .b-dots{
+  position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+  display:flex;gap:4px;
+}
+.world-mock .wm-banner .b-dots i{
+  width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4);
+}
+.world-mock .wm-banner .b-dots i.on{background:#fff;width:14px;border-radius:3px}
+.world-mock .wm-quick{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
+.world-mock .wm-quick .qk{
+  text-align:center;padding:10px 4px;border-radius:10px;
+  background:rgba(0,184,148,.08);border:1px solid rgba(0,184,148,.2);
+  font-size:11px;color:var(--text);
+}
+.world-mock .wm-quick .qk .em{font-size:18px;display:block;margin-bottom:3px}
+.world-mock .wm-board{margin-bottom:10px}
+.world-mock .wm-board-head{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:13px;font-weight:600;margin-bottom:8px;
+}
+.world-mock .wm-board-head .sub-tabs{display:flex;gap:6px}
+.world-mock .wm-board-head .sub-tabs span{
+  font-size:11px;padding:3px 8px;border-radius:6px;color:var(--sub);
+}
+.world-mock .wm-board-head .sub-tabs span.on{
+  background:rgba(255,255,255,.08);color:var(--text);
+}
+.world-mock .wm-waterfall{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.world-mock .wm-card{
+  border-radius:8px;background:var(--card-2);border:1px solid var(--line);
+  overflow:hidden;
+}
+.world-mock .wm-card .cov{
+  height:90px;display:grid;place-items:center;font-size:24px;
+}
+.world-mock .wm-card .info{padding:6px 8px}
+.world-mock .wm-card .t{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.world-mock .wm-card .g{font-size:10px;color:var(--sub);margin-top:2px}
+.world-mock .wm-card .meta{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:4px;font-size:10px;color:var(--sub);
+}
+.world-mock .wm-card .meta .star{color:var(--warn)}
+
+/* ---------- V17-C 心屿功能区 mock ---------- */
+.xinyu-mock{padding:14px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.xinyu-mock .xm-subnav{
+  display:flex;gap:14px;margin-bottom:12px;padding-bottom:8px;
+  border-bottom:1px solid var(--line);
+}
+.xinyu-mock .xm-subnav .sn{
+  font-size:13px;color:var(--sub);font-weight:500;
+  padding-bottom:6px;border-bottom:2px solid transparent;
+}
+.xinyu-mock .xm-subnav .sn.active{color:var(--xinyu);border-bottom-color:var(--xinyu)}
+.xinyu-mock .xm-filter{
+  display:flex;gap:6px;margin-bottom:14px;
+}
+.xinyu-mock .xm-filter .f{
+  font-size:11px;padding:5px 10px;border-radius:14px;
+  background:rgba(255,255,255,.05);color:var(--sub);
+}
+.xinyu-mock .xm-filter .f.on{background:var(--xinyu);color:#fff;font-weight:600}
+.xinyu-mock .xm-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.xinyu-mock .xm-char{
+  position:relative;padding:10px;border-radius:10px;
+  background:var(--card-2);border:1px solid var(--line);
+}
+.xinyu-mock .xm-char .src-tag{
+  position:absolute;top:6px;right:6px;
+  font-size:9px;padding:2px 5px;border-radius:4px;font-weight:700;
+}
+.xinyu-mock .xm-char .src-tag.creator{background:#4A90E2;color:#fff}
+.xinyu-mock .xm-char .src-tag.novel{background:#D85B9A;color:#fff}
+.xinyu-mock .xm-char .head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.xinyu-mock .xm-char .ava{
+  width:36px;height:36px;border-radius:50%;display:grid;place-items:center;
+  font-size:18px;flex-shrink:0;
+}
+.xinyu-mock .xm-char .nm{font-size:13px;font-weight:600}
+.xinyu-mock .xm-char .stg{font-size:10px;color:var(--sub);margin-top:1px}
+.xinyu-mock .xm-char .stg b{color:var(--warn);font-weight:700}
+.xinyu-mock .xm-char .msg{
+  font-size:11px;color:var(--sub);line-height:1.4;
+  margin-bottom:8px;
+  overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+}
+.xinyu-mock .xm-char .acts{display:flex;gap:4px}
+.xinyu-mock .xm-char .acts button{
+  flex:1;height:28px;border-radius:6px;font-size:11px;font-weight:600;
+}
+.xinyu-mock .xm-char .acts .a-chat{background:var(--xinyu);color:#fff}
+.xinyu-mock .xm-char .acts .a-world{
+  background:rgba(255,255,255,.08);border:1px solid var(--line);color:var(--text);
+}
+.xinyu-mock .xm-add{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:100%;height:40px;border-radius:10px;font-size:13px;font-weight:600;
+  background:rgba(108,92,231,.15);border:1px dashed rgba(108,92,231,.4);color:var(--xinyu);
+}
+
+/* ---------- V17.0 Q1-Q10 决策面板 ---------- */
+.v17-decisions{
+  margin:24px var(--margin) 0;padding:14px;border-radius:12px;
+  background:var(--card);border:1px solid var(--line);
+}
+.v17-decisions h3{font-size:15px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.v17-decisions h3::before{content:'🎯';font-size:14px}
+.v17-decisions .vd-list{display:flex;flex-direction:column;gap:6px}
+.v17-decisions .vd-row{
+  display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;
+  background:rgba(255,255,255,.03);
+}
+.vinyu-no{display:none}
+.v17-decisions .vd-row .q-num{
+  flex-shrink:0;width:22px;height:22px;border-radius:50%;
+  background:rgba(108,92,231,.2);color:var(--xinyu);
+  font-size:11px;font-weight:700;display:grid;place-items:center;
+}
+.v17-decisions .vd-row .q-txt{flex:1;font-size:12px;line-height:1.4}
+.v17-decisions .vd-row .q-txt b{font-weight:600;color:var(--text)}
+.v17-decisions .vd-row .q-tag{
+  flex-shrink:0;font-size:10px;padding:3px 7px;border-radius:5px;
+  background:rgba(78,204,163,.18);color:var(--ok);font-weight:600;
+}
+.v17-footer-link{
+  margin:8px var(--margin) 16px;text-align:center;font-size:11px;color:var(--sub);
+}
+.v17-footer-link a{color:var(--xinyu);text-decoration:underline;margin:0 6px}
+
+/* ---------- V17-G 创作者分成阶梯 mock ---------- */
+.tier-mock{
+  padding:14px;border-radius:14px;
+  background:linear-gradient(160deg,rgba(255,179,71,.08),rgba(233,69,96,.04) 60%,var(--card));
+  border:1px solid rgba(255,179,71,.2);
+}
+.tm-current{padding-bottom:12px;border-bottom:1px dashed var(--line);margin-bottom:12px}
+.tm-c-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.tm-tier-icon{font-size:28px;line-height:1}
+.tm-c-name{font-size:15px;font-weight:700}
+.tm-c-sub{font-size:11px;color:var(--sub);margin-top:2px}
+.tm-c-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:6px}
+.tm-c-bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--warn),#FF8A5B)}
+.tm-c-hint{font-size:11px;color:var(--sub)}
+.tm-c-hint b{color:var(--warn);font-weight:700}
+.tm-ladder{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.tm-row{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;
+  background:rgba(255,255,255,.03);font-size:12px;
+}
+.tm-row.done{background:rgba(78,204,163,.08);border:1px solid rgba(78,204,163,.18)}
+.tm-row.current{
+  background:rgba(255,179,71,.12);border:1px solid rgba(255,179,71,.3);
+  position:relative;
+}
+.tm-row.current::after{
+  content:'当前';position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-size:9px;padding:2px 6px;border-radius:4px;
+  background:var(--warn);color:#1A1A2E;font-weight:700;
+}
+.tm-ic{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.tm-nm{font-weight:600;min-width:36px}
+.tm-pct{color:var(--warn);font-weight:700;font-variant-numeric:tabular-nums;min-width:32px}
+.tm-th{color:var(--sub);font-size:11px;flex:1}
+.tm-row.done .tm-th{color:var(--ok)}
+.tm-link {
+  display:block;text-align:center;padding:10px;border-radius:10px;
+  background:rgba(255,179,71,.1);border:1px dashed rgba(255,179,71,.3);
+  color:var(--warn);font-size:12px;font-weight:600;text-decoration:none;
+}
+
+/* ---------- V17-A · tabbar.js 演示区 ---------- */
+.ok-badge{background:rgba(78,204,163,.18);color:var(--ok);border-color:rgba(78,204,163,.4)}
+#v17a-tabbar-demo{position:relative;margin:14px 0 8px;border-radius:12px;border:1px solid var(--line);overflow:hidden}
+.v17a-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.v17a-card{
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:12px;font-size:12px;line-height:1.55;
+}
+.v17a-c-head{font-size:12px;font-weight:600;color:var(--ok);margin-bottom:6px;letter-spacing:.3px}
+.v17a-list{list-style:none;padding:0;margin:0;color:var(--sub)}
+.v17a-list li{padding:3px 0;border-bottom:1px dashed rgba(255,255,255,.04)}
+.v17a-list li:last-child{border-bottom:0}
+.v17a-list code{font-size:11px;color:var(--text);background:rgba(255,255,255,.04);padding:1px 5px;border-radius:4px}
+.v17a-key{
+  display:inline-block;font-size:11px;color:var(--accent);
+  background:rgba(233,69,96,.1);padding:3px 8px;border-radius:6px;
+  font-family:"SF Mono",Consolas,monospace;
+}
+.v17a-hint{margin-top:6px;font-size:11px;color:var(--sub)}
+.v17a-imm{display:flex;flex-wrap:wrap;gap:6px}
+.v17a-imm span{
+  background:rgba(108,92,231,.1);color:#A29BFE;
+  border:1px solid rgba(108,92,231,.3);border-radius:6px;
+  padding:2px 8px;font-size:11px;font-family:"SF Mono",Consolas,monospace;
+}
+.v17a-api{
+  margin:6px 0 0;font-size:11px;line-height:1.5;color:var(--text);
+  background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:6px;
+  padding:8px;font-family:"SF Mono",Consolas,monospace;white-space:pre-wrap;
+}
+.v17a-tip{
+  margin-top:14px;padding:10px 12px;border-radius:8px;font-size:12px;line-height:1.6;
+  background:rgba(78,204,163,.08);border:1px solid rgba(78,204,163,.25);color:var(--text);
+}
+.v17a-tip b{color:var(--ok);font-weight:700}
+.v17a-tip code{font-size:11px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px;color:var(--text)}
+@media (max-width:380px){.v17a-grid{grid-template-columns:1fr}}
+
+/* ---------- V17-B · 世界功能区演示区 ---------- */
+.v17b-shot{
+  margin:0 0 14px;border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--card);overflow:hidden;
+}
+.v17b-shot img{width:100%;display:block}
+.v17b-shot a{display:block;cursor:zoom-in}
+.v17b-cap{
+  padding:10px 12px;font-size:12px;color:var(--sub);
+  border-bottom:1px solid var(--line);background:rgba(0,0,0,.2);
+}
+.v17b-cap b{color:var(--ok);font-weight:700;margin-right:4px}
+.v17b-shots-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+@media(max-width:380px){.v17b-shots-grid{grid-template-columns:1fr}}
+.v17b-shots-grid .v17b-shot{margin-bottom:0}
+.v17b-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.v17b-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;font-size:12px;line-height:1.55}
+.v17b-c-head{font-size:12px;font-weight:600;color:var(--world);margin-bottom:6px;letter-spacing:.3px}
+.v17b-list{list-style:none;padding:0;margin:0;color:var(--sub)}
+.v17b-list li{padding:3px 0;border-bottom:1px dashed rgba(255,255,255,.04)}
+.v17b-list li:last-child{border-bottom:0}
+.v17b-list code{font-size:11px;color:var(--text);background:rgba(255,255,255,.04);padding:1px 5px;border-radius:4px}
+.v17b-tip{
+  margin-top:14px;padding:10px 12px;border-radius:8px;font-size:12px;line-height:1.6;
+  background:rgba(255,179,71,.08);border:1px solid rgba(255,179,71,.25);color:var(--text);
+}
+.v17b-tip b{color:var(--warn);font-weight:700}
+@media (max-width:380px){.v17b-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-page-node-id="OHd5Z4Ti0GHRAAA7MCSSk0">
+
+<!-- ============ 启动页（§2.1） ============ -->
+<div id="splash" data-page-node-id="ofTGPGXYDHOhLO6vGXc5F9">
+  <div class="splash-logo" data-page-node-id="SrakUDKzHgsPauA6oWNeSL">灵境 · 双生</div>
+  <div class="splash-slogan" data-page-node-id="XvFBmoko0XGAu9HeWHghKx">一个角色，两种人生。</div>
+  <div class="splash-load" data-page-node-id="2RrxaDdbOeRX1ca4F3WRvr"><i data-page-node-id="FbQpkqfkfpyGZL5gfvkxqE"></i></div>
+  <button class="splash-enter" id="splash-btn" onclick="enterLingjing()" data-page-node-id="E6FeLCL3zNWcP5Esjkf8Zb">进入灵境</button>
+  <button class="splash-skip" onclick="enterLingjing()" data-page-node-id="AzyPEd8x6jjpOHiLV31Isi">跳过 ›</button>
+</div>
+
+<!-- ============ 应用 ============ -->
+<div id="app" data-page-node-id="M7KU1c8isEZbrPSgn8lxeZ">
+
+  <!-- 顶栏 -->
+  <header class="topbar" data-page-node-id="4gwy1ByQt07j2BUqAHoEj9">
+    <div class="topbar-title" data-page-node-id="nwHzhb7BXGDWtfa3j0sHFW"><span class="dot" data-page-node-id="ePIWhKVzRxErMJnT1MCW2H"></span>首页</div>
+    <div class="topbar-acts" data-page-node-id="C4rd8fBaOTsjCdtGvhQXr3">
+      <button class="icon-btn" onclick="showToast('ok','3 条未读通知','通知中心即将开放')" title="通知" data-page-node-id="Me27Npp5jG7Ek87ttlcOZT">🔔<span class="badge" data-page-node-id="fMdlQPcCfNOMdjHhkJNRNn">3</span></button>
+      <a class="icon-btn" href="output/preview/me.html" title="我的" data-page-node-id="rlcQ3yE2FCOiygGhsFFUKC">👤</a>
+    </div>
+  </header>
+
+  <!-- 问候卡 -->
+  <section class="greet-card" data-page-node-id="hbso2hN7HBi0FODkkLOqy9">
+    <div class="greet-hi" id="greet-hi" data-page-node-id="qZuWOsLoBYLJsAl8lF8kr4">🌙 晚上好，旅人</div>
+    <div class="greet-ask" data-page-node-id="3RGmaedhoBgceG2Ysx8t9I">今天想做什么？</div>
+    <button class="btn-primary" onclick="location.href='output/preview/plot-runner.html'" data-page-node-id="6yyaUejHLrwMRkqooh2bvL">
+      📖 继续昨天的小说
+    </button>
+  </section>
+
+  <!-- 3 大快捷入口 -->
+  <section class="quick-grid" data-page-node-id="entTCdnjrAsTbGhk1SYdln">
+    <a class="quick-card q-world" href="output/preview/library.html" data-page-node-id="4dG3hzxioo3CREQqSYfEut">
+      <div class="ico" data-page-node-id="Fl09rGqlAGX1EOxa1oaEWj">📖</div>
+      <div class="name" data-page-node-id="sBjN9ZDpgWljp4KKYHhV0f">世界</div>
+      <div class="num" data-page-node-id="PWgJq2027DcgqpdETmbFXX"><b data-page-node-id="W1bkTkWi40tHeufWV8z72D">6</b> 个故事</div>
+    </a>
+    <a class="quick-card q-xinyu" href="output/preview/heart-island.html" data-page-node-id="8AizIcQJ27xZs8BkuI9RDn">
+      <div class="ico" data-page-node-id="u4A93zviEXJTBBsGBdm4J7">💬</div>
+      <div class="name" data-page-node-id="8zyvpDqiJFv4cTiHqMOvbQ">心屿</div>
+      <div class="num" data-page-node-id="VhRusFggSSZh3LYJerb5pN"><b data-page-node-id="vs48RF9WyhEWbjsDOzGoE0">3</b> 个角色</div>
+    </a>
+    <a class="quick-card q-create" href="output/preview/creator-center.html" data-page-node-id="S2AIEXagATZoE85Z0Pst01">
+      <div class="ico" data-page-node-id="K0SyApAiCvgklGAj4M8Cvq">✨</div>
+      <div class="name" data-page-node-id="s3O0ccz38IiUNJfJKA4eY6">创作</div>
+      <div class="num" data-page-node-id="X446WeS65AfHS7LBaWgps5"><b data-page-node-id="kfV2fkJRDODeJBSiDUYTrp">2</b> 部作品</div>
+    </a>
+  </section>
+
+  <!-- 继续游玩 -->
+  <h2 class="sec" style="animation-delay:.22s" data-page-node-id="FH0WIMleTNk3UBVVb2c2AE">继续游玩</h2>
+  <section class="continue-card" data-page-node-id="5Hyd4EzbdhhDRCDEYbsw0e">
+    <div class="cc-cover" data-page-node-id="sNp5u3RLNCCELvkxfHLFlx">🏯</div>
+    <div class="cc-body" data-page-node-id="wHrsT8Wtw2qIBeMGbVLC6A">
+      <div class="cc-title" data-page-node-id="CZFcJ7nXZqRtbvHApQJpb7">《长夜城》</div>
+      <div class="cc-sub" data-page-node-id="LEPaaneL2TG2psXSGAjAPj">第3章 · 初入长夜城</div>
+      <div class="cc-progress" data-page-node-id="dxIo34Ss3zdlDKxOvCRUlt"><div class="cc-fill" id="cc-fill" data-page-node-id="T7vfCl8YspAXVNKqTEqtew"></div></div>
+      <div class="cc-pct" data-page-node-id="QUo6oD0qNGKCmb01vQ9OKp"><b data-page-node-id="WEzRAcfm0tH3mtGyIwxo05">45%</b> · 约 2 小时通关剩余剧情</div>
+    </div>
+    <button class="btn-mini" onclick="location.href='output/preview/plot-runner.html'" data-page-node-id="9BvAMVoKaTOAtI42nAjSj9">继续</button>
+  </section>
+
+  <!-- 今日推荐 -->
+  <h2 class="sec" style="animation-delay:.26s" data-page-node-id="neWZzT6tFGVHK0jvuqw8c2">今日推荐</h2>
+  <div class="rec-scroll" data-page-node-id="EgpQpZ0B4SjWHjFgotv9PT">
+    <a class="rec-card" href="output/preview/catalog.html" data-page-node-id="oeyvTQxyl26EhWEoZcbgr1">
+      <div class="cov" style="background:linear-gradient(160deg,#8E5BD8,#C95B9C)" data-page-node-id="x0iLwzToBkps0ZKbFrADBo">🎭</div>
+      <div class="t" data-page-node-id="8SAsPgY9RAAox87QaA2nHu">傲慢与偏见</div>
+      <div class="g" data-page-node-id="IYN4dXBZGzxxPESidQ0Yc3"><span class="star" data-page-node-id="NMdqVB5KbAKRKkGODOHoEM">★</span>4.9 · 豪门</div>
+    </a>
+    <a class="rec-card" href="output/preview/catalog.html" data-page-node-id="I1K3jqqaGXsc07qNGqtGgv">
+      <div class="cov" style="background:linear-gradient(160deg,#B8863B,#8C5A2B)" data-page-node-id="FS8Tn2mrLtpYZ8cqZ9IViC">🎭</div>
+      <div class="t" data-page-node-id="ivIfaEA8SM6hiNcZMIvlGq">三国演义 · 吕布篇</div>
+      <div class="g" data-page-node-id="BqOgnrjgCAyou89VWZMXLY"><span class="star" data-page-node-id="0sBDHXEyGJF9hR8gUbTqPR">★</span>4.8 · 古风</div>
+    </a>
+    <a class="rec-card" href="output/preview/catalog.html" data-page-node-id="FSq5bOoP6CuqCpb4rHmDue">
+      <div class="cov" style="background:linear-gradient(160deg,#3A2E5E,#6C5CE7)" data-page-node-id="De6BP6uBcxEDgVK1VfjzSM">🧛</div>
+      <div class="t" data-page-node-id="Kklxsak8C0pz6t2KbfwoYE">德古拉</div>
+      <div class="g" data-page-node-id="l6TTSzHFyCv3bT18BtiBAx"><span class="star" data-page-node-id="U8jXwVbAXtbP4ehBE3S7kb">★</span>4.7 · 哥特</div>
+    </a>
+    <a class="rec-card" href="output/preview/catalog.html" data-page-node-id="JfO8kASAXRknI74FKL2Lne">
+      <div class="cov" style="background:linear-gradient(160deg,#2E5E56,#00B894)" data-page-node-id="6C7vxis7BSLIigh8WUpBLz">🌊</div>
+      <div class="t" data-page-node-id="PuWfN4eOBG0pQY8LYzhbUA">深海回声</div>
+      <div class="g" data-page-node-id="qOc0HWlcOAwMTWhe9FVk0m"><span class="star" data-page-node-id="n9DoIU2SskS2AJ3GQ2BQKM">★</span>4.8 · 悬疑</div>
+    </a>
+    <a class="rec-card" href="output/preview/catalog.html" data-page-node-id="qC5Bz4EGEACRCERaVVwGwo">
+      <div class="cov" style="background:linear-gradient(160deg,#5E2E3A,#E94560)" data-page-node-id="ZfLO7SNMLFPOpfaxbniRB0">🌸</div>
+      <div class="t" data-page-node-id="VY7WG0pQpERKH8sYSu7GJa">校园物语</div>
+      <div class="g" data-page-node-id="gjHILod8xDEj3yhXwtS0pK"><span class="star" data-page-node-id="xI4EHdEyP7DGlHzfxA6IX3">★</span>4.6 · 青春</div>
+    </a>
+  </div>
+
+  <!-- 心屿动态 -->
+  <h2 class="sec" style="animation-delay:.3s" data-page-node-id="NdUl1Xvtb3RBWdF5q6nAvo">心屿动态</h2>
+  <a class="moment-card" href="output/preview/chat.html" style="animation-delay:.32s" data-page-node-id="vOAyngb3rFBVnOhvnrSeX5">
+    <div class="ava" data-page-node-id="QYZSFB9wRZZZMi4fowVDr3">❄️</div>
+    <div class="m-body" data-page-node-id="nR1IDvhkL1qq7KjDFYnWY7">
+      <div class="m-head" data-page-node-id="KN84c90D6Pbx4sH42RPAGR"><span class="m-name" data-page-node-id="VOENriSZU1AykJ5hWjZy7j">林清雪</span><span class="m-stage" data-page-node-id="E04phpJPYdwrQ1XA7oUmhH">亲密</span></div>
+      <div class="m-text" data-page-node-id="wFzyZbR5wlQnkBESFZ46kf">“今天路过一家花店，想起你说喜欢向日葵。”</div>
+      <div class="m-time" data-page-node-id="R2ygTgxnbAeTH4jyOq7CUA">2小时前</div>
+    </div>
+  </a>
+  <a class="moment-card" href="output/preview/chat.html" style="animation-delay:.38s" data-page-node-id="nLmYxAkJ7Z6VB9RQVpT10R">
+    <div class="ava" style="background:linear-gradient(135deg,#E94560,#FF8A5B)" data-page-node-id="A0GvG1kXfSCma70dvasGEt">🏮</div>
+    <div class="m-body" data-page-node-id="DSstpw78dCbkllp5BIdnWR">
+      <div class="m-head" data-page-node-id="jNqvMAKHBgSrACksXW8h2A"><span class="m-name" data-page-node-id="kJnjiHaovqF0OBV3H8hNDT">阿岁</span><span class="m-stage" data-page-node-id="7l0N8iDiUqRaDdOCnV2QkF">知己</span></div>
+      <div class="m-text" data-page-node-id="3nf9TJFjQq08TitSetwGiO">“昨晚你没说完的那句话，我等到现在。要不要接着讲？”</div>
+      <div class="m-time" data-page-node-id="LHphEBRsQxCbqe3k83DZJg">5小时前</div>
+    </div>
+  </a>
+
+  <!-- ============ V17.0 实施进度（2026-09-11 · 实时同步）============ -->
+  <div class="v17-banner" style="border-color:var(--ok);background:linear-gradient(135deg,rgba(78,204,163,.18),rgba(108,92,231,.18));">
+    <span class="dot" style="background:var(--ok);box-shadow:0 0 10px var(--ok)"></span>
+    <div class="b-txt">
+      <b style="color:var(--ok)">V17.0 实施中 · V17-A + V17-B 已交付 ✅</b><br>
+      Q1-Q11 全部确认 · 7 工作包 · V17-A（js/tabbar.js · 122 行）+ V17-B（library.html 重写 · world.js/data.js · 5 文件）完成 · 下一步 V17-C 心屿
+      <a href="docs/PRD-v17.md" target="_blank">PRD-v17</a>
+      <a href="docs/DEV_PLAN-v17.md" target="_blank">DEV_PLAN-v17</a>
+      <a href="output/preview/library.html" target="_blank">世界功能区</a>
+      <a href="docs/sources/2026-09-11/S01-v17-world-and-xinyu-redesign.txt" target="_blank">原始需求</a>
+    </div>
+  </div>
+
+  <!-- V17-A 已交付：5 Tab 状态管理 -->
+  <section class="v17-section">
+    <div class="v17-section-head">
+      <h3>🧭 V17-A · 5 Tab 全局状态管理</h3>
+      <span class="badge ok-badge">已交付</span>
+    </div>
+
+    <!-- 5 Tab 实时演示：复用 shell-v64.css 真实样式 -->
+    <nav class="tabbar" id="v17a-tabbar-demo" data-demo="true" style="position:relative;margin:14px 0 8px;border-radius:12px;border:1px solid var(--line)">
+      <a class="tab t-home active"  href="#v17a" data-tab="home">  <span class="ico">🏠</span><span class="lbl">首页</span></a>
+      <a class="tab t-world"          href="#v17a" data-tab="world"> <span class="ico">📖</span><span class="lbl">世界</span></a>
+      <a class="tab t-xinyu"          href="#v17a" data-tab="xinyu"> <span class="ico">💬</span><span class="lbl">心屿</span></a>
+      <a class="tab t-create"         href="#v17a" data-tab="create"><span class="ico">✨</span><span class="lbl">创作</span></a>
+      <a class="tab t-me"             href="#v17a" data-tab="me">    <span class="ico">👤</span><span class="lbl">我的</span></a>
+    </nav>
+
+    <div class="v17a-grid">
+      <div class="v17a-card">
+        <div class="v17a-c-head">📦 交付物</div>
+        <ul class="v17a-list">
+          <li><code>output/preview/js/tabbar.js</code> · 122 行 · ~3.5KB</li>
+          <li><code>node --check</code> SYNTAX_OK</li>
+          <li>复用 v6.4.1 <code>shell-v64.css</code>（零 CSS 增量）</li>
+        </ul>
+      </div>
+      <div class="v17a-card">
+        <div class="v17a-c-head">🔑 localStorage KEY</div>
+        <code class="v17a-key">lingjing_v5170_current_tab</code>
+        <div class="v17a-hint">与 V17-E PREFIX 升级路径同步</div>
+      </div>
+      <div class="v17a-card">
+        <div class="v17a-c-head">🛡️ 沉浸页豁免</div>
+        <div class="v17a-imm">
+          <span>plot-runner.html</span><span>game-3d.html</span><span>catalog.html</span>
+        </div>
+        <div class="v17a-hint">或 <code>body[data-page="immersive"]</code></div>
+      </div>
+      <div class="v17a-card">
+        <div class="v17a-c-head">🔌 公开 API</div>
+        <pre class="v17a-api">window.LJTabbar = {
+  mount(), go(tabId),
+  setBadge(tabId, n),
+  getCurrent()
+}</pre>
+      </div>
+    </div>
+
+    <div class="v17a-tip">
+      <b>接入成本极低：</b>主功能区页面 <code>&lt;body&gt;</code> 末尾追加
+      <code>&lt;script src="js/tabbar.js" defer&gt;&lt;/script&gt;</code> 即可（与现有 <code>shell-v64.css</code> 配合）。
+    </div>
+  </section>
+
+  <!-- V17-D 启动签到 mock -->
+  <section class="v17-section">
+    <div class="v17-section-head">
+      <h3>🚀 启动签到</h3>
+      <span class="badge">V17-D</span>
+    </div>
+    <div class="signin-mock">
+      <div class="sm-title">每日签到 · 第 3 天</div>
+      <div class="sm-week">
+        <div class="sm-day done"><div class="d-d">1</div><div class="d-r">4</div></div>
+        <div class="sm-day done"><div class="d-d">2</div><div class="d-r">4</div></div>
+        <div class="sm-day today"><div class="d-d">3</div><div class="d-r">6</div></div>
+        <div class="sm-day"><div class="d-d">4</div><div class="d-r">8</div></div>
+        <div class="sm-day"><div class="d-d">5</div><div class="d-r">10</div></div>
+        <div class="sm-day"><div class="d-d">6</div><div class="d-r">12</div></div>
+        <div class="sm-day"><div class="d-d">7</div><div class="d-r">25</div></div>
+      </div>
+      <div class="sm-actions">
+        <button class="a-sign">✨ 签到 +6 灵晶</button>
+        <button class="a-video">🎬 看视频 +10 (0/3)</button>
+      </div>
+      <div class="sm-shortcuts">
+        <div class="sc"><span class="em">👯</span>CP 排行</div>
+        <div class="sc"><span class="em">🔮</span>每日运势</div>
+        <div class="sc"><span class="em">💌</span>邀友获钻</div>
+        <div class="sc"><span class="em">👑</span>会员福利</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- V17-B 已交付：世界功能区（library.html 重写） -->
+  <section class="v17-section">
+    <div class="v17-section-head">
+      <h3>📖 V17-B · 世界功能区重构</h3>
+      <span class="badge ok-badge">已交付</span>
+    </div>
+
+    <div class="v17b-shot">
+      <div class="v17b-cap">
+        <b>首页</b> · 7 子导航 + Banner 5 张 + 四大金刚 + 瀑布流
+      </div>
+      <a href="output/preview/library.html" target="_blank"><img src="output/preview/screenshots/v17-b-world-home.png" alt="V17-B 首页" /></a>
+    </div>
+
+    <div class="v17b-shots-grid">
+      <div class="v17b-shot">
+        <div class="v17b-cap"><b>同人区</b> · 公版角标 + 灵境术语</div>
+        <a href="output/preview/library.html" target="_blank"><img src="output/preview/screenshots/v17-b-world-tongren.png" alt="V17-B 同人区" /></a>
+      </div>
+      <div class="v17b-shot">
+        <div class="v17b-cap"><b>分类抽屉</b> · 10 一级 + 多二级</div>
+        <a href="output/preview/library.html" target="_blank"><img src="output/preview/screenshots/v17-b-world-drawer.png" alt="V17-B 抽屉" /></a>
+      </div>
+    </div>
+
+    <div class="v17b-shot">
+      <div class="v17b-cap">
+        <b>搜索子区</b> · 搜「长夜」→ 长夜城 + 赛博长夜
+      </div>
+      <a href="output/preview/library.html" target="_blank"><img src="output/preview/screenshots/v17-b-world-search.png" alt="V17-B 搜索" /></a>
+    </div>
+
+    <div class="v17b-grid">
+      <div class="v17b-card">
+        <div class="v17b-c-head">📦 交付物（5 文件）</div>
+        <ul class="v17b-list">
+          <li><code>output/preview/library.html</code> · 重写 ~410 行</li>
+          <li><code>output/preview/js/world-data.js</code> · 200 行 mock</li>
+          <li><code>output/preview/js/world.js</code> · 280 行交互</li>
+          <li><code>scripts/test_v17b_world.py</code> · 14 项验证</li>
+          <li><code>output/preview/library.html.v517.bak</code> · 原版备份</li>
+        </ul>
+      </div>
+      <div class="v17b-card">
+        <div class="v17b-c-head">🔑 关键验收</div>
+        <ul class="v17b-list">
+          <li>7 子导航（首页/排行榜/心屿推/福利/创世杯/同人区/🔍）</li>
+          <li>Banner 5 张 · 5s 自动轮播 + 触摸滑动</li>
+          <li>四大金刚 4 项 · ⊞ 分类/📅 日历/👑 经典/✍ 创作</li>
+          <li>双列瀑布流 · 30 张 + 角标（新作/完结/公版）</li>
+          <li>分类侧边栏 10 一级 + 多二级 · 从左滑出</li>
+          <li>同人区 10 张公版 · 灵境专属术语</li>
+          <li>搜索子区 · 实时过滤作品名/作者/题材</li>
+        </ul>
+      </div>
+      <div class="v17b-card">
+        <div class="v17b-c-head">🛡️ 第三方案规</div>
+        <ul class="v17b-list">
+          <li>BTS/HP/EXO → 韩流同人/欧美同人（PRD 9.1 R7）</li>
+          <li>底部 5 Tab 沿用 v17.0 V17-A 组件</li>
+          <li>创作 Tab → creator-center.html</li>
+          <li>不显示游玩人数/来源标签</li>
+          <li>公版作品以"灵境版"专属术语呈现</li>
+        </ul>
+      </div>
+      <div class="v17b-card">
+        <div class="v17b-c-head">✅ Playwright 验证</div>
+        <ul class="v17b-list">
+          <li>14/14 项 PASS</li>
+          <li>LJWorld + WORLD_DATA 双挂载</li>
+          <li>5 Tab 完整渲染</li>
+          <li>子导航切换 / 抽屉开关 / 搜索过滤</li>
+          <li>0 个错误/告警</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="v17b-tip">
+      <b>下一步 V17-C</b>：心屿功能区重构（heart-island.html → 5 子标签 + 角色来源角标 [创]/[双]）— 等用户审阅启动。
+    </div>
+  </section>
+
+  <!-- V17-C 心屿功能区 mock -->
+  <section class="v17-section">
+    <div class="v17-section-head">
+      <h3>💬 心屿功能区</h3>
+      <span class="badge">V17-C</span>
+    </div>
+    <div class="xinyu-mock">
+      <div class="xm-subnav">
+        <span class="sn active">陪伴</span>
+        <span class="sn">精选</span>
+        <span class="sn">记忆</span>
+        <span class="sn">故事</span>
+        <span class="sn">🔍</span>
+      </div>
+      <div class="xm-filter">
+        <span class="f on">全部</span>
+        <span class="f">我创建的</span>
+        <span class="f">双生角色</span>
+      </div>
+      <div class="xm-list">
+        <div class="xm-char">
+          <span class="src-tag creator">[创]</span>
+          <div class="head">
+            <div class="ava" style="background:linear-gradient(135deg,#E94560,#FF8A5B)">🏮</div>
+            <div><div class="nm">阿岁</div><div class="stg">知己 · <b>89</b></div></div>
+          </div>
+          <div class="msg">"昨晚你没说完的那句话，我等到现在。"</div>
+          <div class="acts"><button class="a-chat">聊天</button></div>
+        </div>
+        <div class="xm-char">
+          <span class="src-tag novel">[双]</span>
+          <div class="head">
+            <div class="ava" style="background:linear-gradient(135deg,#6C5CE7,#A29BFE)">❄️</div>
+            <div><div class="nm">苏念</div><div class="stg">亲密 · <b>76</b></div></div>
+          </div>
+          <div class="msg">"今天路过一家花店，想起你说喜欢向日葵。"</div>
+          <div class="acts"><button class="a-chat">聊天</button><button class="a-world">进世界</button></div>
+        </div>
+      </div>
+      <button class="xm-add">＋ 创建新角色</button>
+    </div>
+  </section>
+
+  <!-- V17-G 创作者分成阶梯 mock -->
+  <section class="v17-section">
+    <div class="v17-section-head">
+      <h3>💰 创作者分成阶梯</h3>
+      <span class="badge">V17-G 🆕</span>
+    </div>
+    <div class="tier-mock">
+      <div class="tm-current">
+        <div class="tm-c-head">
+          <span class="tm-tier-icon">🥉</span>
+          <div>
+            <div class="tm-c-name">青铜创作者</div>
+            <div class="tm-c-sub">当前档位 · 分成 50%</div>
+          </div>
+        </div>
+        <div class="tm-c-progress">
+          <div class="tm-c-bar"><i style="width:35%"></i></div>
+          <div class="tm-c-hint">距离白银还需 <b>¥320</b> 流水 · 继续加油</div>
+        </div>
+      </div>
+      <div class="tm-ladder">
+        <div class="tm-row done"><span class="tm-ic">🥉</span><span class="tm-nm">青铜</span><span class="tm-pct">50%</span><span class="tm-th">已达成 ✓</span></div>
+        <div class="tm-row current"><span class="tm-ic">🥈</span><span class="tm-nm">白银</span><span class="tm-pct">60%</span><span class="tm-th">¥500 流水 · 进行中</span></div>
+        <div class="tm-row"><span class="tm-ic">🥇</span><span class="tm-nm">黄金</span><span class="tm-pct">70%</span><span class="tm-th">¥2000/月 · 评分 8.0</span></div>
+        <div class="tm-row"><span class="tm-ic">💎</span><span class="tm-nm">钻石</span><span class="tm-pct">75%</span><span class="tm-th">¥5000/月 · 多维门槛</span></div>
+        <div class="tm-row"><span class="tm-ic">🏆</span><span class="tm-nm">传奇</span><span class="tm-pct">80%</span><span class="tm-th">平台主动签约</span></div>
+      </div>
+      <a class="tm-link" href="output/preview/creator-legal.html">📜 查看完整创作者协议 →</a>
+    </div>
+  </section>
+
+  <!-- V17.0 Q1-Q11 决策面板 -->
+  <section class="v17-decisions">
+    <h3>V17.0 决策面板（Q1-Q11 · ✅ 全部锁定）</h3>
+    <div class="vd-list">
+      <div class="vd-row"><span class="q-num">1</span><span class="q-txt"><b>底部 Tab 切换 vs 子导航</b> — 底部 Tab 切 5 主功能区；顶部子导航切分功能；沉浸页左上角返回</span><span class="q-tag">✅ 已锁定</span></div>
+      <div class="vd-row"><span class="q-num">2</span><span class="q-txt"><b>原独立页是否保留</b> — chat/memory/profile 保留</span><span class="q-tag">✅ A · 保留</span></div>
+      <div class="vd-row"><span class="q-num">3</span><span class="q-txt"><b>localStorage PREFIX</b> — 升级到 lingjing_v5170_</span><span class="q-tag">✅ A · 升级</span></div>
+      <div class="vd-row"><span class="q-num">4</span><span class="q-txt"><b>启动签到默认行为</b> — 每日只弹一次</span><span class="q-tag">✅ A · localStorage</span></div>
+      <div class="vd-row"><span class="q-num">5</span><span class="q-txt"><b>签到关闭后默认 Tab</b> — 🏠首页（library.html）</span><span class="q-tag">✅ A · 复用</span></div>
+      <div class="vd-row"><span class="q-num">6</span><span class="q-txt"><b>[创]/[双] 角标颜色</b> — 蓝 / 粉</span><span class="q-tag">✅ A · #4A90E2/#D85B9A</span></div>
+      <div class="vd-row"><span class="q-num">7</span><span class="q-txt"><b>国际 IP 名替换</b> — BTS/HP/EXO → 泛指</span><span class="q-tag">✅ A · 韩流/欧美同人</span></div>
+      <div class="vd-row"><span class="q-num">8</span><span class="q-txt"><b>同步重构创作/我的</b> — 不动，仅世界+心屿</span><span class="q-tag">✅ A · 不动</span></div>
+      <div class="vd-row"><span class="q-num">9</span><span class="q-txt"><b>mobile Banner 高度</b> — 25% / desktop 32%</span><span class="q-tag">✅ A · 25%</span></div>
+      <div class="vd-row"><span class="q-num">10</span><span class="q-txt"><b>是否新建 home.html</b> — 复用 library.html</span><span class="q-tag">✅ B · 复用</span></div>
+      <div class="vd-row" style="background:rgba(78,204,163,.08);border:1px solid rgba(78,204,163,.2);"><span class="q-num" style="background:rgba(78,204,163,.2);color:var(--ok)">11</span><span class="q-txt"><b>V17-G 创作者分成阶梯本轮纳入</b> — commerce.html + creator-center.html 5 档改造 + creator-legal.html 协议页</span><span class="q-tag" style="background:rgba(255,179,71,.18);color:var(--warn)">🆕 追加</span></div>
+    </div>
+    <div class="v17-footer-link">
+      详细方案见
+      <a href="docs/PRD-v17.md" target="_blank">PRD-v17.md</a> ·
+      <a href="docs/DEV_PLAN-v17.md" target="_blank">DEV_PLAN-v17.md</a>
+    </div>
+  </section>
+
+  <!-- 轻量页脚：文档与站点入口 -->
+  <footer class="mini-footer" data-page-node-id="IiiIgY8EDysCQz4BVvSstL">
+    灵境 · 双生 © 2026 · v6.4<br data-page-node-id="kicGGXmfCe586WoFGGjM7S"/>
+    <a href="docs/SITE_MAP.md" data-page-node-id="KkJUNQAOP2BEULELBwp7ny">站点目录</a>·<a href="docs/ALL_FUNCTIONS.md" data-page-node-id="ezTqXO2sSkFHLMavEGfXU9">完整功能清单</a>·<a href="docs/DESIGN_LANGUAGE.md" data-page-node-id="B2iD8rM0SSquNwoPpYowEO">设计语言</a>
+  </footer>
+
+  <!-- 底部 5 Tab 导航（§1.4） -->
+  <nav class="tabbar" data-page-node-id="rUrBXak2UK5x6AJBM4awwl">
+    <a class="tab active" href="product-preview.html" data-page-node-id="0J4xE3IAXuDFFAGAQgRYqM"><span class="ico" data-page-node-id="kpzBCMvBkNJwubA5Qz2aBC">🏠</span><span data-page-node-id="uu95icrXn4TCvZumJDdw9c">首页</span></a>
+    <a class="tab t-world" href="output/preview/library.html" data-page-node-id="pEwTWDJgQR4vuIsTRwXKqM"><span class="ico" data-page-node-id="B4WfwMrYe5DL6HgPK9PDDs">📖</span><span data-page-node-id="6b87qCNsRW4MjnlXJkETeY">世界</span></a>
+    <a class="tab t-xinyu" href="output/preview/heart-island.html" data-page-node-id="RHqCbrXReFS6H8Rh8Pk6OW"><span class="ico" data-page-node-id="7zX8OZlwywKaefc5om0Ohy">💬</span><span data-page-node-id="N5y7igYt4H6rR0w5oqdHEh">心屿</span></a>
+    <a class="tab t-create" href="output/preview/creator-center.html" data-page-node-id="UZYeOs8QXReFoUI2ozftoZ"><span class="ico" data-page-node-id="NSEC1XxO5HBGKmKc9Qc8eb">✨</span><span data-page-node-id="PtsdtKlel1yX3PkBbWJElx">创作</span></a>
+    <a class="tab" href="output/preview/me.html" data-page-node-id="QtJK3WAB62r30Hr13cS3wg"><span class="ico" data-page-node-id="pWPHx3aPNx84jeEpvHKv5N">👤</span><span data-page-node-id="WowEJwOa69VYYA0YkqO3CT">我的</span></a>
+  </nav>
+</div>
+
+<!-- Toast -->
+<div id="toast" data-page-node-id="EmfHESbQpnEYZ4vheZWvLY"></div>
+
+<script>
+/* ============ 启动页：3 秒品牌动画后亮出按钮（§2.1） ============ */
+var splashBtn = document.getElementById('splash-btn');
+setTimeout(function(){ splashBtn.classList.add('on'); }, 3000);
+
+function enterLingjing(){
+  var s = document.getElementById('splash');
+  if (s) { s.classList.add('hide'); }
+}
+
+/* ============ 时间问候（§2.4 🌙 晚上好，{用户名}） ============ */
+function greet(){
+  var h = new Date().getHours();
+  var hi = document.getElementById('greet-hi');
+  if (!hi) return;
+  if (h >= 5 && h < 11)      hi.textContent = '🌅 早上好，旅人';
+  else if (h >= 11 && h < 14) hi.textContent = '☀️ 中午好，旅人';
+  else if (h >= 14 && h < 18) hi.textContent = '🌤 下午好，旅人';
+  else if (h >= 18 && h < 23) hi.textContent = '🌙 晚上好，旅人';
+  else                        hi.textContent = '🌌 夜深了，旅人';
+}
+greet();
+
+/* ============ 继续游玩进度条入场动画（45%） ============ */
+setTimeout(function(){
+  var f = document.getElementById('cc-fill');
+  if (f) f.style.width = '45%';
+}, 400);
+
+/* ============ Toast ============ */
+function showToast(kind, title, msg){
+  var c = document.getElementById('toast');
+  var t = document.createElement('div');
+  t.className = 'toast-item ' + (kind || 'ok');
+  t.innerHTML = '<span class="ti"></span><span><b>' + title + '</b>' +
+    (msg ? '<span style="opacity:.65"> · ' + msg + '</span>' : '') + '</span>';
+  c.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 3200);
+}
+
+/* ============ V17-A · 真实加载 tabbar.js 验证（沉浸页豁免，根目录对应 home） ============ */
+var s = document.createElement('script');
+s.src = 'output/preview/js/tabbar.js';
+s.defer = true;
+document.body.appendChild(s);
+
+/* ============ V17-A demo · 演示 tabbar.js 行为 ============ */
+(function(){
+  // V17-A 演示 tabbar（id=v17a-tabbar-demo）独立模拟切换，不依赖真实 LJTabbar.mount
+  var demo = document.getElementById('v17a-tabbar-demo');
+  if (!demo) return;
+  var tabs = demo.querySelectorAll('.tab');
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(e){
+      e.preventDefault();
+      tabs.forEach(function(x){ x.classList.remove('active'); });
+      t.classList.add('active');
+      // 同步演示 localStorage 记忆（写入真实 key 证明持久化生效）
+      try {
+        localStorage.setItem('lingjing_v5170_current_tab', t.getAttribute('data-tab'));
+      } catch(_) {}
+      showToast('ok', 'V17-A 演示', '已写入 lingjing_v5170_current_tab = ' + t.getAttribute('data-tab'));
+    });
+  });
+  // 页面加载时从 localStorage 读回记忆（如有）
+  try {
+    var saved = localStorage.getItem('lingjing_v5170_current_tab');
+    if (saved) {
+      tabs.forEach(function(x){
+        x.classList.remove('active');
+        if (x.getAttribute('data-tab') === saved) x.classList.add('active');
+      });
+    }
+  } catch(_) {}
+})();
+</script>
+</body>
+</html>

@@ -314,6 +314,125 @@
   .ds-waterfall { gap: 8px; }
   .ds-wf-cov { padding-top: 130%; }
 }
+
+/* ---------- V18-D · 心屿推/创世杯/福利 子区 ---------- */
+.ds-board-sub{font-size:11px;color:var(--sub);font-weight:400}
+
+/* 心屿推 */
+.echo-list{display:flex;flex-direction:column;gap:10px;margin:0 var(--margin)}
+.echo-card{
+  padding:14px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--line);
+}
+.echo-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.echo-avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.echo-user{font-size:13px;font-weight:600;color:var(--text)}
+.echo-tag{font-size:9px;padding:2px 6px;border-radius:4px;background:rgba(255,179,71,.18);color:var(--warn);border:1px solid rgba(255,179,71,.3);margin-left:auto}
+.echo-work{font-size:12px;color:var(--xinyu);font-weight:600;margin-bottom:6px}
+.echo-review{font-size:12px;color:var(--sub);line-height:1.6}
+
+.yl-rank-list{display:flex;flex-direction:column;gap:8px;margin:0 var(--margin)}
+.yl-rank-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--card);border:1px solid var(--line)}
+.yl-rank-num{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.yl-rank-1{background:linear-gradient(135deg,#FFD700,#FFA500)}
+.yl-rank-2{background:linear-gradient(135deg,#C0C0C0,#909090)}
+.yl-rank-3{background:linear-gradient(135deg,#CD7F32,#8B4513)}
+.yl-avatar{font-size:20px;flex-shrink:0}
+.yl-body{flex:1;min-width:0}
+.yl-name{font-size:13px;font-weight:600;color:var(--text)}
+.yl-title{font-size:11px;color:var(--sub)}
+.yl-score{font-size:12px;font-weight:700;color:var(--warn);flex-shrink:0}
+
+/* 排行榜 */
+.rank-list{display:flex;flex-direction:column;gap:8px;margin:0 var(--margin)}
+.rank-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:var(--card);border:1px solid var(--line)}
+.rank-num{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.rank-num-top{background:linear-gradient(135deg,#E94560,#FFB347)}
+.rank-num-normal{background:rgba(255,255,255,.1);color:var(--sub)}
+.rank-cov{width:42px;height:42px;border-radius:8px;display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.rank-body{flex:1;min-width:0}
+.rank-title{font-size:13px;font-weight:600;color:var(--text)}
+.rank-meta{font-size:11px;color:var(--sub);margin-top:3px}
+
+/* 创世杯 */
+.csb-banner{
+  margin:14px var(--margin);padding:18px;border-radius:var(--radius);
+  background:linear-gradient(135deg,#FFB347,#E94560);
+  display:flex;align-items:center;gap:14px;color:#fff;
+}
+.csb-b-emoji{font-size:36px;flex-shrink:0}
+.csb-b-title{font-size:16px;font-weight:700}
+.csb-b-period{font-size:11px;opacity:.85;margin-top:2px}
+.csb-stage{display:flex;gap:8px;margin:0 var(--margin) 12px;padding:6px;background:var(--card-2);border-radius:10px}
+.csb-stage-item{flex:1;text-align:center;padding:6px 0;font-size:12px;color:var(--sub);border-radius:6px;cursor:pointer}
+.csb-stage-item.active{background:#FFB347;color:#1A1A2E;font-weight:600}
+
+.csb-timeline{display:flex;justify-content:space-between;gap:10px;margin:0 var(--margin) 14px;padding:12px;background:var(--card);border-radius:10px;border:1px solid var(--line)}
+.csb-tl-item{display:flex;align-items:center;gap:8px;flex:1;font-size:11px;color:var(--sub)}
+.csb-tl-item.active{color:var(--warn);font-weight:600}
+.csb-tl-dot{font-size:14px}
+.csb-tl-title{font-weight:600}
+.csb-tl-period{font-size:10px;opacity:.8}
+
+.csb-rank-list{display:flex;flex-direction:column;gap:8px;margin:0 var(--margin)}
+.csb-rank-row{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;background:var(--card);border:1px solid var(--line)}
+.csb-rank-num{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.csb-rank-1{background:linear-gradient(135deg,#FFD700,#FFA500)}
+.csb-rank-2{background:linear-gradient(135deg,#C0C0C0,#909090)}
+.csb-rank-3{background:linear-gradient(135deg,#CD7F32,#8B4513)}
+.csb-rank-4{background:rgba(255,255,255,.15);color:var(--text)}
+.csb-rank-cov{width:42px;height:42px;border-radius:8px;display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.csb-rank-body{flex:1;min-width:0}
+.csb-rank-title{font-size:13px;font-weight:600;color:var(--text)}
+.csb-rank-meta{font-size:11px;color:var(--sub);margin-top:3px}
+.csb-cheer-btn{
+  flex-shrink:0;padding:6px 14px;border-radius:8px;
+  background:linear-gradient(135deg,var(--warn),#E94560);color:#fff;
+  font-size:11px;font-weight:600;
+  box-shadow:0 4px 10px rgba(255,179,71,.3);
+}
+.csb-float{display:flex;gap:8px;margin:12px var(--margin)}
+.csb-fb{
+  flex:1;height:36px;border-radius:8px;
+  background:rgba(255,179,71,.1);border:1px solid rgba(255,179,71,.3);
+  color:var(--warn);font-size:11px;font-weight:600;
+}
+
+/* 福利 */
+.wf-sub-nav{display:flex;gap:4px;margin:14px var(--margin);padding:6px;background:var(--card-2);border-radius:10px}
+.wf-sub{flex:1;text-align:center;padding:6px 0;font-size:12px;color:var(--sub);border-radius:6px;cursor:pointer}
+.wf-sub.active{background:#FFB347;color:#1A1A2E;font-weight:600}
+.wf-banner{
+  margin:14px var(--margin);padding:18px;border-radius:var(--radius);
+  background:linear-gradient(135deg,#FFB347,#FF8C42);
+  display:flex;align-items:center;gap:14px;color:#fff;
+}
+.wf-b-emoji{font-size:36px;flex-shrink:0}
+.wf-b-title{font-size:14px;font-weight:700}
+.wf-b-sub{font-size:11px;opacity:.85;margin-top:4px}
+
+.wf-tier-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 var(--margin)}
+.wf-tier-card{
+  padding:14px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--line);
+}
+.wf-tier-popular{border-color:var(--warn);background:linear-gradient(135deg,rgba(255,179,71,.08),rgba(233,69,96,.05))}
+.wf-t-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.wf-t-name{font-size:13px;font-weight:600;color:var(--text)}
+.wf-t-amount{font-size:14px;font-weight:700;color:var(--warn)}
+.wf-t-reward{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--sub);margin-bottom:10px}
+.wf-t-extra{font-size:10px;color:var(--xinyu);margin-top:2px}
+.wf-t-btn{
+  display:block;width:100%;height:32px;border-radius:6px;
+  background:linear-gradient(135deg,var(--warn),#E94560);color:#fff;
+  font-size:12px;font-weight:600;
+}
+.wf-note{
+  margin:16px var(--margin);padding:12px;border-radius:8px;
+  background:rgba(78,204,163,.08);border:1px solid rgba(78,204,163,.25);
+  color:var(--sub);font-size:11px;line-height:1.6;
+}
+@media (max-width:380px){.wf-tier-list{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -408,6 +527,7 @@
 <div id="toast"></div>
 
 <script src="js/world-data.js"></script>
+<script src="js/economy.js"></script>
 <script src="js/world.js"></script>
 <script src="js/tabbar.js"></script>
 </body>

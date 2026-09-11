@@ -2,663 +2,488 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>灵境 · 双生 · 剧情对话运行 · v5.14</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>小说世界 · 灵境 · 双生</title>
+<meta name="description" content="v18.0 · plot-runner 沉浸页 · 6 层叠加（场景/立绘/对话框/选项/工具栏/属性）+ 30ms 打字机 + 选项悬浮 + 数值跳动 + 地图 + 存档 + 6 类结局" />
+<meta name="theme-color" content="#1A1A2E" />
 <style>
-  * { box-sizing: border-box; }
-  html, body {
-    margin: 0; padding: 0; min-height: 100%;
-    background: #08071a; color: #edf1f6;
-    font-family: 'Noto Sans SC', 'Inter', system-ui, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    overflow: hidden;
-    user-select: none;
-  }
-  a { color: inherit; text-decoration: none; }
-  button { font-family: inherit; }
-  img { -webkit-user-drag: none; }
+/* =================================================================
+ * 灵境 · 双生 V18.0 — 小说世界游戏（plot-runner 沉浸页）
+ * 6 层叠加：背景 / 立绘 / 对话框 / 选项 / 工具栏 / 属性
+ * z-index: 1 背景 / 2 立绘 / 3 对话框 / 4 选项 / 5 工具栏 / 6 属性面板 / 7 弹窗
+ * ================================================================= */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:#000;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit}
 
-  /* ============= 顶部菜单栏（沉浸剧情经典） ============= */
-  .plot-topbar {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-    height: 50px;
-    background: linear-gradient(180deg, rgba(8,7,26,.92), rgba(8,7,26,.55));
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255,255,255,.08);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 18px; gap: 12px;
-  }
-  .tb-left { display: flex; align-items: center; gap: 14px; }
-  .tb-back {
-    font-size: 12px; color: rgba(255,255,255,.85);
-    padding: 5px 12px; border-radius: 9999px;
-    border: 1px solid rgba(255,209,128,.4);
-    background: rgba(255,209,128,.08);
-    transition: all .2s;
-  }
-  .tb-back:hover { background: rgba(255,209,128,.18); color: #ffd980; }
-  .tb-title {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 16px; font-weight: 600;
-    color: #fff;
-    letter-spacing: .04em;
-    max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  }
-  .tb-right { display: flex; align-items: center; gap: 6px; }
-  .tb-btn {
-    font-size: 12px; color: rgba(255,255,255,.78);
-    padding: 6px 10px; border-radius: 8px;
-    border: 1px solid rgba(255,255,255,.1);
-    background: rgba(255,255,255,.04);
-    cursor: pointer;
-    transition: all .2s;
-  }
-  .tb-btn:hover { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.25); }
-  .tb-btn.on { background: rgba(110,198,255,.18); color: #6ec6ff; border-color: rgba(110,198,255,.4); }
+/* ---------- 沉浸舞台 ---------- */
+#plot-stage{
+  position:fixed;inset:0;
+  max-width:480px;margin:0 auto;
+  overflow:hidden;
+  cursor:pointer;
+  background:#000;
+}
 
-  /* ============= 数值面板 ============= */
-  .plot-stats {
-    position: fixed; top: 64px; right: 14px; z-index: 50;
-    width: 180px;
-    padding: 12px 14px;
-    background: rgba(20,18,46,.7);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,.1);
-    border-radius: 12px;
-    color: #fff;
-    font: 12px/1.6 'Noto Sans SC';
-  }
-  .stats-title { font-weight: 600; font-size: 13px; margin-bottom: 6px; color: #ffd980; letter-spacing: .04em; }
-  .stats-row { display: flex; justify-content: space-between; margin-bottom: 2px; }
-  .stats-row b { font-weight: 700; }
-  .stats-cov { margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,.08); font-size: 11px; }
-  .cov-line { color: rgba(255,255,255,.78); margin-bottom: 2px; }
-  .cov-ok { color: #7cf6c0; margin-top: 4px; }
-  .cov-warn { color: #f6a6d8; margin-top: 4px; }
-  .stats-jump { display: flex; gap: 6px; margin-top: 10px; }
-  .stats-jump button {
-    flex: 1;
-    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
-    color: #fff; border-radius: 6px;
-    padding: 5px 6px; font-size: 11px; cursor: pointer;
-    transition: all .2s;
-  }
-  .stats-jump button:hover { background: rgba(255,255,255,.14); }
+/* 第 1 层：场景背景 */
+.plot-bg{
+  position:absolute;inset:0;
+  background:linear-gradient(160deg,#2E3A6E,#4A3A8C);
+  transition:background .8s ease;
+  z-index:1;
+}
 
-  /* ============= 场景层（全屏背景图） ============= */
-  .plot-scene {
-    position: fixed; inset: 0; z-index: 0;
-    background-size: cover; background-position: center; background-repeat: no-repeat;
-    background-color: #08071a;
-    transition: background-image .8s ease-in-out;
-    opacity: 0;
-    animation: scene-fade-in .8s ease-out forwards;
-  }
-  @keyframes scene-fade-in { to { opacity: 1; } }
-  .plot-scene::after {
-    /* 底部渐变遮罩，让对话框更清晰 */
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(180deg, transparent 50%, rgba(8,7,26,.5) 75%, rgba(8,7,26,.85) 100%);
-    pointer-events: none;
-  }
-  .plot-scene.fade-in { animation: scene-fade-in .8s ease-out forwards; }
+/* 第 2 层：角色立绘 */
+.plot-portrait{
+  position:absolute;
+  bottom:30%;left:50%;transform:translateX(-50%);
+  width:auto;min-width:140px;height:60%;
+  max-height:65vh;
+  display:flex;align-items:flex-end;justify-content:center;
+  font-size:140px;line-height:1;
+  filter:drop-shadow(0 8px 24px rgba(0,0,0,.6));
+  z-index:2;
+  opacity:1;
+  transition:opacity .4s, filter .4s;
+}
 
-  /* ============= 立绘层 ============= */
-  .plot-chars {
-    position: fixed; inset: 0; z-index: 5;
-    pointer-events: none;
-    display: flex; align-items: flex-end; justify-content: center;
-    padding-bottom: 30vh; /* 立绘脚部落在对话框上方 */
-  }
-  .plot-chars[data-layout="single"] { gap: 0; }
-  .plot-chars[data-layout="double"] { gap: 0; padding: 0 6vw 30vh; justify-content: space-between; }
-  .portrait {
-    height: 60vh; max-height: 560px;
-    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-    opacity: 0;
-    animation: portrait-in .6s ease-out forwards;
-    filter: drop-shadow(0 12px 32px rgba(0,0,0,.7));
-  }
-  @keyframes portrait-in {
-    from { opacity: 0; transform: translateY(40px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .portrait.fade-in { animation: portrait-in .6s ease-out forwards; }
-  .portrait.pos-center { width: 28vw; max-width: 360px; }
-  .portrait.pos-left { width: 26vw; max-width: 320px; transform: translateX(-3vw); }
-  .portrait.pos-right { width: 26vw; max-width: 320px; transform: translateX(3vw); }
-  .portrait-img {
-    max-height: 100%; max-width: 100%;
-    object-fit: contain;
-    border-radius: 12px;
-    pointer-events: none;
-  }
-  .portrait-placeholder {
-    width: 240px; height: 360px;
-    background: linear-gradient(160deg, rgba(255,255,255,.06), rgba(139,124,246,.18));
-    border-radius: 16px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    color: #fff;
-    font: 18px 'Noto Serif SC', serif;
-  }
-  .pp-name { font-weight: 600; }
-  .pp-role { font-size: 12px; margin-top: 8px; opacity: .8; letter-spacing: .2em; }
+/* 第 4 层：数值跳动 */
+.plot-popup{
+  position:absolute;top:80px;right:20px;
+  display:flex;flex-direction:column;gap:8px;
+  z-index:4;
+  pointer-events:none;
+}
+.plot-popup-item{
+  font-size:16px;font-weight:700;
+  padding:6px 14px;border-radius:8px;
+  background:rgba(0,0,0,.5);
+  animation:popMove 2s cubic-bezier(.16,1,.3,1) forwards;
+}
+.pop-up{color:#4ECCA3;border:1px solid rgba(78,204,163,.5)}
+.pop-down{color:#E94560;border:1px solid rgba(233,69,96,.5)}
+@keyframes popMove{
+  0%{opacity:0;transform:translateY(8px)}
+  10%{opacity:1;transform:none}
+  80%{opacity:1}
+  100%{opacity:0;transform:translateY(-30px)}
+}
 
-  /* ============= 章节标题卡（沉浸剧情式） ============= */
-  .chapter-title-card {
-    position: fixed; inset: 0; z-index: 30;
-    display: grid; place-items: center;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity .6s;
-  }
-  .chapter-title-card.show { opacity: 1; }
-  .ctc-frame {
-    background: rgba(8,7,26,.85);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,209,128,.4);
-    padding: 24px 48px;
-    border-radius: 4px;
-    display: flex; flex-direction: column; align-items: center; gap: 12px;
-    box-shadow: 0 16px 48px rgba(0,0,0,.6);
-  }
-  .ctc-bar { height: 2px; width: 80px; background: linear-gradient(90deg, transparent, #ffd980, transparent); }
-  .ctc-text {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 22px; font-weight: 600;
-    color: #ffd980;
-    letter-spacing: .15em;
-    text-align: center;
-  }
+/* 第 3 层：对话框 */
+.plot-dialog{
+  position:absolute;bottom:0;left:0;right:0;
+  height:25%;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:blur(8px);
+  border-top:1px solid rgba(255,255,255,.1);
+  padding:18px 20px 22px;
+  z-index:3;
+  display:flex;flex-direction:column;
+  /* 顶部纹理 */
+}
+.plot-dialog::before{
+  content:'';position:absolute;top:0;left:20%;right:20%;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+}
+.plot-name{
+  font-size:20px;font-weight:700;color:#fff;
+  margin-bottom:8px;
+  letter-spacing:.5px;
+}
+.plot-text{
+  flex:1;
+  font-size:18px;line-height:1.6;color:#fff;
+  overflow:hidden;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+.plot-continue{
+  position:absolute;bottom:14px;right:24px;
+  font-size:14px;color:rgba(255,255,255,.6);
+  opacity:0;transition:opacity .3s;
+  animation:bounceArrow 1.4s ease-in-out infinite;
+}
+@keyframes bounceArrow{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
 
-  /* ============= 对话框（沉浸剧情经典） ============= */
-  .plot-dlg {
-    position: fixed; left: 5vw; right: 5vw; bottom: 2vh;
-    z-index: 10;
-    min-height: 28vh; max-height: 38vh;
-    background: linear-gradient(180deg, rgba(11,9,31,.92), rgba(11,9,31,.85));
-    backdrop-filter: blur(14px);
-    border: 1px solid rgba(255,209,128,.35);
-    border-radius: 4px; /* 沉浸剧情方角风格 */
-    box-shadow: 0 12px 40px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,209,128,.08);
-    padding: 0 28px 18px;
-    color: #fff;
-    display: flex; flex-direction: column;
-    opacity: 0;
-    animation: dlg-in .5s ease-out .2s forwards;
-    cursor: pointer;
-  }
-  @keyframes dlg-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  .plot-dlg.fade-in { animation: dlg-in .5s ease-out forwards; }
+/* 第 4 层：选项按钮 */
+.plot-choices{
+  position:absolute;
+  bottom:30%;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;gap:12px;
+  width:60%;
+  z-index:4;
+}
+.plot-choice{
+  height:50px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:#fff;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:12px;
+  backdrop-filter:blur(8px);
+  cursor:pointer;
+  animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both;
+  transition:transform .15s, background .2s;
+}
+.plot-choice:active{transform:scale(.96);background:rgba(255,255,255,.2)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 
-  /* 名字条（顶部，沉浸剧情经典黑底金边） */
-  .dlg-namebar {
-    display: flex; align-items: center; gap: 12px;
-    height: 40px; flex-shrink: 0;
-    border-bottom: 1px solid rgba(255,209,128,.2);
-    margin: 0 -28px 14px;
-    padding: 0 28px;
-  }
-  .dlg-name {
-    display: inline-block;
-    font-family: 'Noto Serif SC', serif;
-    font-size: 18px; font-weight: 600;
-    color: #f6a6d8;
-    padding: 4px 14px;
-    background: linear-gradient(180deg, #2a1a3e, #1a0e2e);
-    border: 1.5px solid;
-    border-image: linear-gradient(180deg, #f6a6d8, #8b7cf6) 1;
-    border-radius: 2px;
-    letter-spacing: .12em;
-  }
-  .dlg-tag { display: flex; gap: 6px; align-items: center; }
-  .hl-badge {
-    background: rgba(255,209,128,.16); color: #ffd980;
-    padding: 2px 8px; border-radius: 4px;
-    font-size: 11px; font-weight: 500;
-    letter-spacing: .12em;
-    border: 1px solid rgba(255,209,128,.3);
-  }
-  .dlg-chap {
-    margin-left: auto;
-    font-size: 11px; color: rgba(255,255,255,.4);
-    letter-spacing: .12em;
-  }
+/* 第 5 层：顶部工具栏 */
+.plot-toolbar{
+  position:absolute;top:0;left:0;right:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;
+  z-index:5;
+  background:linear-gradient(180deg,rgba(0,0,0,.55),transparent);
+}
+.plot-back{
+  width:38px;height:38px;border-radius:50%;
+  display:grid;place-items:center;font-size:18px;
+  background:rgba(0,0,0,.4);
+  border:1px solid rgba(255,255,255,.15);
+  color:#fff;
+}
+.plot-tb-acts{display:flex;gap:10px}
+.plot-tb-btn{
+  width:34px;height:34px;border-radius:50%;
+  display:grid;place-items:center;font-size:15px;
+  background:rgba(0,0,0,.4);
+  border:1px solid rgba(255,255,255,.15);
+  color:#fff;
+}
 
-  /* 正文（typewriter） */
-  .dlg-text {
-    flex: 1; overflow-y: auto;
-    font-family: 'Noto Serif SC', serif;
-    font-size: 17px; line-height: 2;
-    color: #f6f1e0;
-    letter-spacing: .05em;
-    text-shadow: 0 1px 2px rgba(0,0,0,.6);
-    white-space: pre-wrap;
-    padding-right: 8px;
-    min-height: 60px;
-  }
-  .dlg-text::-webkit-scrollbar { width: 4px; }
-  .dlg-text::-webkit-scrollbar-thumb { background: rgba(255,209,128,.4); border-radius: 2px; }
+/* 右下角功能按钮 */
+.plot-func-bar{
+  position:absolute;
+  bottom:calc(25% + 14px);right:14px;
+  display:flex;flex-direction:column;gap:8px;
+  z-index:5;
+}
+.plot-func{
+  width:42px;height:42px;border-radius:10px;
+  display:grid;place-items:center;font-size:14px;
+  background:rgba(0,0,0,.5);
+  border:1px solid rgba(255,255,255,.15);
+  color:#fff;
+  font-size:11px;font-weight:600;
+}
 
-  /* 继续提示 ▼ 闪烁 */
-  .dlg-continue {
-    position: absolute; right: 28px; bottom: 12px;
-    color: #ffd980; font-size: 18px;
-    animation: continue-blink 1.4s ease-in-out infinite;
-    pointer-events: none;
-    display: none;
-  }
-  @keyframes continue-blink {
-    0%, 100% { opacity: .4; transform: translateY(0); }
-    50% { opacity: 1; transform: translateY(4px); }
-  }
+/* 第 6 层：属性面板（默认隐藏） */
+.plot-attr-panel{
+  position:absolute;top:60px;right:14px;
+  padding:12px 14px;
+  background:rgba(0,0,0,.7);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:10px;
+  font-size:12px;color:#fff;
+  z-index:6;
+  display:none;
+}
+.plot-attr-panel.open{display:block}
+.attr-row{display:flex;justify-content:space-between;gap:14px;padding:3px 0}
+.attr-key{color:rgba(255,255,255,.6)}
+.attr-val{color:#FFB347;font-weight:700}
 
-  /* 选项按钮（沉浸剧情蓝绿色） */
-  .dlg-options {
-    margin-top: 14px;
-    display: grid; gap: 8px;
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 720px) and (orientation: landscape) {
-    .dlg-options { grid-template-columns: repeat(2, 1fr); }
-  }
-  .opt-btn {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 16px;
-    background: linear-gradient(180deg, rgba(40,80,140,.85), rgba(20,40,80,.85));
-    border: 1.5px solid rgba(110,198,255,.6);
-    border-radius: 4px;
-    color: #fff;
-    font-family: 'Noto Sans SC', sans-serif;
-    font-size: 15px;
-    text-align: left;
-    cursor: pointer;
-    transition: all .2s;
-    opacity: 0; transform: translateY(8px);
-    position: relative;
-  }
-  .opt-btn.show { opacity: 1; transform: translateY(0); transition: all .3s ease-out; }
-  .opt-btn:hover {
-    background: linear-gradient(180deg, rgba(60,140,220,.9), rgba(40,90,180,.9));
-    border-color: #6ec6ff;
-    transform: translateX(4px);
-    box-shadow: 0 4px 12px rgba(110,198,255,.3);
-  }
-  .opt-num {
-    flex-shrink: 0;
-    width: 24px; height: 24px;
-    background: #ffd980; color: #1a0e2e;
-    border-radius: 50%;
-    font-weight: 700; font-size: 13px;
-    display: grid; place-items: center;
-  }
-  .opt-label { flex: 1; line-height: 1.5; }
-  .fx-tags { display: flex; gap: 4px; flex-shrink: 0; }
-  .fx-tag {
-    font-size: 11px; padding: 2px 6px;
-    border-radius: 4px;
-    background: rgba(255,255,255,.1);
-    color: rgba(255,255,255,.85);
-    border: 1px solid rgba(255,255,255,.15);
-  }
-  .fx-trust { color: #6ec6ff; border-color: rgba(110,198,255,.4); }
-  .fx-int   { color: #f6a6d8; border-color: rgba(246,166,216,.4); }
-  .fx-rep   { color: #7cf6c0; border-color: rgba(124,246,192,.4); }
+/* ---------- 系统菜单（点击"菜单"弹出） ---------- */
+.plot-system-menu{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.7);
+  backdrop-filter:blur(10px);
+  z-index:50;
+  display:none;
+  flex-direction:column;justify-content:center;
+  padding:40px 24px;
+  animation:fadeIn .25s;
+}
+.plot-system-menu.open{display:flex}
+.psm-section-title{
+  font-size:12px;color:rgba(255,255,255,.5);
+  margin:12px 0 8px;letter-spacing:1px;
+}
+.psm-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+  margin-bottom:20px;
+}
+.psm-btn{
+  height:54px;border-radius:10px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  color:#fff;font-size:12px;
+  cursor:pointer;
+}
+.psm-btn:active{transform:scale(.96)}
+.psm-ico{font-size:18px}
 
-  /* ============= 结局模态 ============= */
-  .plot-end-modal {
-    position: fixed; inset: 0; z-index: 60;
-    background: rgba(0,0,0,.78);
-    backdrop-filter: blur(12px);
-    display: grid; place-items: center;
-    opacity: 0;
-    transition: opacity .4s;
-  }
-  .plot-end-modal.show { opacity: 1; }
-  .end-card {
-    background: linear-gradient(180deg, rgba(28,25,57,.96), rgba(11,9,31,.96));
-    border: 1px solid rgba(255,209,128,.4);
-    border-radius: 8px;
-    padding: 36px 40px 28px;
-    max-width: 540px; width: 90%;
-    color: #fff;
-    text-align: center;
-    box-shadow: 0 32px 80px rgba(0,0,0,.7);
-    position: relative;
-  }
-  .end-deco {
-    position: absolute; top: 0; left: 0; right: 0;
-    height: 3px;
-  }
-  .end-rarity {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 12px; font-weight: 600;
-    letter-spacing: .3em;
-    text-transform: uppercase;
-  }
-  .end-title {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 28px; font-weight: 700;
-    margin: 12px 0 6px;
-    color: #ffd980;
-    letter-spacing: .06em;
-  }
-  .end-scene { font-size: 12px; opacity: .65; margin-bottom: 18px; }
-  .end-quote {
-    font: italic 16px/1.8 'Noto Serif SC', serif;
-    color: rgba(255,255,255,.85);
-    margin: 18px 24px 24px;
-    padding: 16px;
-    background: rgba(255,209,128,.05);
-    border-left: 2px solid #ffd980;
-    border-radius: 2px;
-    text-align: left;
-  }
-  .end-stats {
-    display: flex; justify-content: center; gap: 24px;
-    margin: 12px 0 24px;
-    font-size: 13px; opacity: .85;
-  }
-  .end-stats b { font-weight: 700; margin-left: 4px; }
-  .end-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-  .end-btn {
-    padding: 9px 18px;
-    border-radius: 4px;
-    border: 1px solid rgba(255,255,255,.2);
-    background: rgba(255,255,255,.04);
-    color: #fff;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all .2s;
-  }
-  .end-btn:hover { background: rgba(255,255,255,.12); }
-  .end-btn.primary { border-width: 1.5px; }
+/* ---------- 存档面板 ---------- */
+.plot-save-panel{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.85);
+  z-index:55;
+  display:none;
+  flex-direction:column;
+  padding:30px 20px;
+  animation:fadeIn .25s;
+}
+.plot-save-panel.open{display:flex}
+.plot-save-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px;
+}
+.plot-save-head h3{font-size:18px;font-weight:700}
+.plot-close-btn{
+  width:32px;height:32px;border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+  color:#fff;font-size:14px;
+}
+.save-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+  flex:1;overflow-y:auto;
+  align-content:start;
+}
+.save-slot{
+  height:80px;padding:12px;border-radius:10px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  display:flex;flex-direction:column;gap:4px;
+  font-size:12px;color:#fff;
+  cursor:pointer;
+}
+.save-slot.filled{
+  background:rgba(78,204,163,.1);
+  border-color:rgba(78,204,163,.3);
+}
+.save-slot b{font-size:13px;font-weight:700}
+.save-slot span{color:rgba(255,255,255,.5)}
 
-  /* ============= 通用模态（历史/存档/设置） ============= */
-  .plot-modal {
-    position: fixed; inset: 0; z-index: 70;
-    background: rgba(0,0,0,.7);
-    backdrop-filter: blur(8px);
-    display: grid; place-items: center;
-    opacity: 0;
-    transition: opacity .3s;
-  }
-  .plot-modal.show { opacity: 1; }
-  .modal-card {
-    background: linear-gradient(180deg, rgba(28,25,57,.98), rgba(11,9,31,.98));
-    border: 1px solid rgba(255,209,128,.35);
-    border-radius: 8px;
-    max-width: 720px; width: 90%; max-height: 80vh;
-    display: flex; flex-direction: column;
-    box-shadow: 0 24px 60px rgba(0,0,0,.7);
-  }
-  .modal-head {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 20px;
-    border-bottom: 1px solid rgba(255,209,128,.2);
-  }
-  .modal-title { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 600; color: #ffd980; }
-  .modal-close {
-    background: transparent; border: none; color: rgba(255,255,255,.5);
-    font-size: 18px; cursor: pointer; padding: 0; width: 28px; height: 28px;
-  }
-  .modal-close:hover { color: #fff; }
-  .modal-body { padding: 18px 20px; overflow-y: auto; }
+/* ---------- CG 全屏 ---------- */
+.plot-cg{
+  position:absolute;inset:0;
+  z-index:60;
+  background:#000;
+  display:none;
+  align-items:center;justify-content:center;
+  flex-direction:column;
+}
+.plot-cg.open{display:flex;animation:cgFade .4s}
+.plot-cg::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,.7) 100%);
+}
+.cg-title{
+  position:relative;
+  font-size:32px;font-weight:700;color:#fff;
+  letter-spacing:2px;
+  text-shadow:0 4px 16px rgba(0,0,0,.6);
+  animation:cgTitleIn .6s cubic-bezier(.16,1,.3,1);
+}
+@keyframes cgFade{from{opacity:0}to{opacity:1}}
+@keyframes cgTitleIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 
-  /* 历史列表 */
-  .hist-list { display: flex; flex-direction: column; gap: 8px; max-height: 60vh; overflow-y: auto; }
-  .hist-item {
-    padding: 10px 14px;
-    background: rgba(255,255,255,.04);
-    border-left: 2px solid rgba(255,209,128,.4);
-    border-radius: 4px;
-    font: 13px/1.6 'Noto Sans SC';
-  }
-  .hist-time { font-size: 11px; color: rgba(255,255,255,.4); margin-bottom: 4px; }
-  .hist-speaker { color: #ffd980; font-weight: 600; margin-right: 6px; }
-  .hist-text { color: rgba(255,255,255,.85); }
+/* ---------- 地图模式 ---------- */
+.plot-map{
+  position:absolute;inset:0;
+  z-index:3;
+  display:none;
+  background:linear-gradient(160deg,#2E3A6E,#4A3A8C);
+}
+#plot-stage.map-mode .plot-portrait{opacity:0}
+#plot-stage.map-mode .plot-dialog{opacity:0}
+#plot-stage.map-mode .plot-popup{opacity:0}
+#plot-stage.map-mode .plot-choices{opacity:0}
+#plot-stage.map-mode .plot-map{display:block}
+.plot-map-bg{
+  position:absolute;inset:0;
+  background-image:linear-gradient(45deg,rgba(255,255,255,.04) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.04) 75%);
+  background-size:30px 30px;
+}
+.plot-map-content{
+  position:relative;
+  height:100%;
+  display:flex;align-items:center;justify-content:center;
+}
+.plot-map-center{
+  font-size:80px;
+  filter:drop-shadow(0 0 16px rgba(233,69,96,.5));
+}
+.plot-map-buildings{
+  position:absolute;inset:0;
+  display:flex;justify-content:space-around;align-items:flex-start;
+  padding-top:60px;
+}
+.plot-map-bldg{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:12px 18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:12px;
+  font-size:13px;color:#fff;
+  cursor:pointer;
+  transition:transform .15s;
+}
+.plot-map-bldg:active{transform:scale(.94)}
+.plot-map-bldg span{font-size:28px}
 
-  /* 存档槽位 */
-  .slot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
-  .slot {
-    padding: 12px;
-    background: rgba(255,255,255,.04);
-    border: 1px solid rgba(255,255,255,.1);
-    border-radius: 6px;
-  }
-  .slot-head { display: flex; justify-content: space-between; margin-bottom: 6px; }
-  .slot-time { font-size: 11px; color: rgba(255,255,255,.5); }
-  .slot-empty { font-size: 11px; color: rgba(255,255,255,.35); }
-  .slot-info { font-size: 12px; color: rgba(255,255,255,.85); margin-bottom: 8px; min-height: 16px; }
-  .slot-actions { display: flex; gap: 6px; }
-  .slot-btn {
-    flex: 1; font-size: 11px;
-    padding: 5px 8px;
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.15);
-    color: #fff;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  .slot-btn:hover { background: rgba(255,255,255,.14); }
-  .slot-btn.danger { border-color: rgba(255,126,138,.4); color: #ff7e8a; }
-  .slot-btn.primary { background: rgba(110,198,255,.16); border-color: rgba(110,198,255,.4); color: #6ec6ff; }
+/* ---------- 免责声明（底部常驻） ---------- */
+.plot-disclaimer{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:6px 16px calc(6px + env(safe-area-inset-bottom));
+  font-size:9px;color:rgba(255,255,255,.4);
+  text-align:center;
+  background:linear-gradient(0deg,rgba(0,0,0,.7),transparent);
+  z-index:3;
+  pointer-events:none;
+}
 
-  /* 设置 */
-  .set-row { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.08); }
-  .set-row:last-child { border-bottom: none; }
-  .set-label { flex-shrink: 0; width: 90px; font-size: 13px; color: rgba(255,255,255,.85); }
-  .set-toggle {
-    padding: 6px 14px;
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.15);
-    color: #fff;
-    border-radius: 4px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  .set-toggle.on { background: rgba(110,198,255,.18); border-color: rgba(110,198,255,.4); color: #6ec6ff; }
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-  /* Toast */
-  .plot-toast {
-    position: fixed; left: 50%; top: 70px;
-    transform: translateX(-50%) translateY(-10px);
-    background: rgba(20,18,46,.95);
-    border: 1px solid rgba(255,209,128,.4);
-    color: #fff;
-    padding: 10px 22px;
-    border-radius: 9999px;
-    font-size: 13px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.5);
-    z-index: 100;
-    opacity: 0;
-    transition: opacity .3s, transform .3s;
-  }
-  .plot-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  /* ============= v5.16: 选项 fx 弹窗（沉浸剧情：选择后才揭示增减） ============= */
-  .plot-fx-toast {
-    position: fixed; left: 50%; top: 30%; transform: translateX(-50%) translateY(-20px) scale(.92);
-    z-index: 80; opacity: 0; transition: opacity .3s, transform .4s cubic-bezier(.22,.61,.36,1);
-    pointer-events: none;
-  }
-  .plot-fx-toast.show { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); pointer-events: auto; }
-  .fx-toast-inner {
-    width: min(360px, 88vw);
-    background: linear-gradient(180deg, rgba(28,18,52,.96), rgba(11,8,28,.96));
-    border: 1px solid rgba(255,209,128,.45);
-    border-radius: 14px;
-    padding: 16px 18px 12px;
-    box-shadow: 0 20px 56px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.05) inset;
-  }
-  .fx-toast-head { display: flex; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,.08); margin-bottom: 10px; }
-  .fx-toast-head .fx-quote { font-size: 12px; color: #ffd180; font-style: italic; line-height: 1.5; }
-  .fx-toast-list { display: flex; flex-direction: column; gap: 6px; }
-  .fx-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 7px 10px; border-radius: 8px;
-    background: rgba(255,255,255,.04);
-    font-size: 13px;
-    animation: fx-row-in .4s ease-out;
-  }
-  .fx-row.fx-pos { background: rgba(91,197,160,.12); border-left: 3px solid #5bc5a0; }
-  .fx-row.fx-neg { background: rgba(216,91,142,.12); border-left: 3px solid #d85b8e; }
-  .fx-icon { width: 18px; text-align: center; font-size: 14px; }
-  .fx-row.fx-pos .fx-icon { color: #5bc5a0; }
-  .fx-row.fx-neg .fx-icon { color: #ff9eb8; }
-  .fx-name { flex: 0 0 auto; min-width: 38px; color: #fff; font-weight: 600; letter-spacing: .12em; }
-  .fx-arrow { color: #9faec2; font-size: 12px; }
-  .fx-row.fx-pos .fx-arrow { color: #5bc5a0; }
-  .fx-row.fx-neg .fx-arrow { color: #ff9eb8; }
-  .fx-delta { font-weight: 700; min-width: 28px; text-align: right; }
-  .fx-row.fx-pos .fx-delta { color: #5bc5a0; }
-  .fx-row.fx-neg .fx-delta { color: #ff9eb8; }
-  .fx-detail { flex: 1; text-align: right; font-size: 11px; color: #9faec2; }
-  .fx-detail b { color: #fff; font-weight: 700; margin-left: 2px; }
-  .fx-toast-close {
-    margin-top: 12px; width: 100%; padding: 9px 0;
-    background: linear-gradient(120deg, rgba(216,91,142,.25), rgba(142,91,216,.25));
-    border: 1px solid rgba(216,91,142,.45);
-    color: #fff; font-size: 13px; border-radius: 8px;
-    cursor: pointer; font-family: inherit;
-    transition: filter .15s;
-  }
-  .fx-toast-close:hover { filter: brightness(1.18); }
-  @keyframes fx-row-in {
-    from { opacity: 0; transform: translateX(-12px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-
-  /* ============= v5.16: 统一返回箭头 ============= */
-  .back-arrow {
-    position: fixed; top: 14px; left: 14px; z-index: 60;
-    display: flex; align-items: center; gap: 6px;
-    padding: 8px 14px 8px 12px; border-radius: 999px;
-    background: rgba(20,18,46,.75); backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,.15); color: #fff;
-    font-size: 13px; cursor: pointer; font-family: inherit;
-    transition: all .2s;
-  }
-  .back-arrow:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.35); transform: translateX(-2px); }
-  .back-arrow .icon { font-size: 18px; line-height: 1; font-weight: 700; }
-  @media (max-width: 768px) {
-    .back-arrow { top: 10px; left: 10px; padding: 7px 12px 7px 10px; font-size: 12px; }
-  }
-
-  /* ============= 空态（没传 novelId） ============= */
-  .empty-state {
-    position: fixed; inset: 0;
-    background: radial-gradient(60% 60% at 50% 50%, #1c1939, #08071a 70%);
-    display: grid; place-items: center; z-index: 100;
-  }
-  .empty-state .inner {
-    padding: 32px; text-align: center;
-    background: rgba(20,18,46,.85);
-    border: 1px solid rgba(255,255,255,.1);
-    border-radius: 24px;
-    backdrop-filter: blur(12px);
-    max-width: 480px;
-  }
-  .empty-state .inner .emoji { font-size: 48px; margin-bottom: 12px; }
-  .empty-state .inner h1 { font-family: 'Noto Serif SC', serif; font-size: 22px; margin: 0 0 8px; color: #ffd980; }
-  .empty-state .inner p { font-size: 13px; color: rgba(255,255,255,.65); line-height: 1.7; margin: 4px 0; }
-  .empty-state .inner .actions { display: flex; gap: 12px; margin-top: 20px; justify-content: center; }
-  .empty-state .inner .actions a {
-    padding: 8px 18px; border-radius: 4px;
-    border: 1px solid rgba(255,255,255,.15);
-    background: rgba(255,255,255,.04);
-    font-size: 13px;
-    transition: all .2s;
-  }
-  .empty-state .inner .actions a:hover { background: rgba(255,255,255,.14); color: #fff; }
-  .empty-state .inner .actions .primary {
-    background: linear-gradient(120deg, #8b7cf6, #6ec6ff);
-    color: #08071a; border-color: transparent; font-weight: 600;
-  }
-  .empty-state .inner .actions .primary:hover { transform: scale(1.04); color: #08071a; }
+/* 隐藏系统菜单和存档面板时仍能点击舞台推进 */
+#plot-stage:not(.menu-open) .plot-dialog{cursor:pointer}
 </style>
 </head>
 <body>
 
-<!-- 空态（没传 novelId 时显示） -->
-<div id="empty" class="empty-state" style="display:none;">
-  <div class="inner">
-    <div class="emoji">📖</div>
-    <h1>请选择一本小说进入游戏</h1>
-    <p>从小说世界页挑选，或上传你的第一本</p>
-    <p>对应题材的游戏将根据你的小说自动生成</p>
-    <div class="actions">
-      <a href="library.html">回到小说世界</a>
-      <a class="primary" href="novel-upload.html">＋ 上传小说</a>
+<div id="plot-stage">
+
+  <!-- 第 1 层：场景背景 -->
+  <div class="plot-bg" id="plot-bg"></div>
+
+  <!-- 地图模式（全屏） -->
+  <div class="plot-map" id="plot-map">
+    <div class="plot-map-bg"></div>
+    <div class="plot-map-content">
+      <div class="plot-map-buildings">
+        <div class="plot-map-bldg" data-b="后宫"><span>🏯</span>后宫</div>
+        <div class="plot-map-bldg" data-b="御书房"><span>📜</span>御书房</div>
+        <div class="plot-map-bldg" data-b="演武场"><span>⚔️</span>演武场</div>
+      </div>
+      <div class="plot-map-center">🏯</div>
+      <div class="plot-map-buildings" style="bottom:80px;top:auto;align-items:flex-end;padding-top:0;padding-bottom:60px;">
+        <div class="plot-map-bldg" data-b="市集"><span>🏪</span>市集</div>
+        <div class="plot-map-bldg" data-b="农田"><span>🌾</span>农田</div>
+        <div class="plot-map-bldg" data-b="酒楼"><span>🍶</span>酒楼</div>
+      </div>
     </div>
   </div>
+
+  <!-- 第 2 层：角色立绘 -->
+  <div class="plot-portrait" id="plot-portrait">🌙</div>
+
+  <!-- 第 4 层：数值跳动 -->
+  <div class="plot-popup" id="plot-popup"></div>
+
+  <!-- 第 3 层：对话框 -->
+  <div class="plot-dialog">
+    <div class="plot-name" id="plot-name">旁白</div>
+    <div class="plot-text" id="plot-text"></div>
+    <span class="plot-continue" id="plot-continue">点击继续 ›</span>
+  </div>
+
+  <!-- 第 5 层：顶部工具栏 -->
+  <div class="plot-toolbar">
+    <button class="plot-back" id="plot-back" title="返回">←</button>
+    <div class="plot-tb-acts">
+      <button class="plot-tb-btn" id="plot-collapse" title="收起">^</button>
+      <button class="plot-tb-btn" id="plot-menu" title="菜单">☰</button>
+      <button class="plot-tb-btn" id="plot-world" title="地图">🌐</button>
+      <button class="plot-tb-btn" id="plot-fav" title="收藏">★</button>
+      <button class="plot-tb-btn" id="plot-share" title="分享">↗</button>
+      <button class="plot-tb-btn" id="plot-shot" title="截图">📷</button>
+    </div>
+  </div>
+
+  <!-- 功能按钮（右下角） -->
+  <div class="plot-func-bar">
+    <button class="plot-func" data-fn="auto" title="自动">自动</button>
+    <button class="plot-func" data-fn="speed" title="快进">快进</button>
+    <button class="plot-func" data-fn="save" title="存档">存档</button>
+    <button class="plot-func" data-fn="load" title="读档">读档</button>
+    <button class="plot-func" data-fn="history" title="回放">回放</button>
+  </div>
+
+  <!-- 第 4 层：选项按钮 -->
+  <div class="plot-choices" id="plot-choices"></div>
+
+  <!-- 第 6 层：属性面板 -->
+  <div class="plot-attr-panel" id="plot-attr-panel">
+    <div class="attr-row"><span class="attr-key">亲密</span><span class="attr-val" id="attr-intimacy">0</span></div>
+    <div class="attr-row"><span class="attr-key">信任</span><span class="attr-val" id="attr-trust">0</span></div>
+    <div class="attr-row"><span class="attr-key">金钱</span><span class="attr-val">100 灵晶</span></div>
+    <div class="attr-row"><span class="attr-key">才艺</span><span class="attr-val">35</span></div>
+    <div class="attr-row"><span class="attr-key">魅力</span><span class="attr-val">42</span></div>
+    <div class="attr-row"><span class="attr-key">声望</span><span class="attr-val">15</span></div>
+  </div>
+
+  <!-- 系统菜单（点击"菜单"弹出） -->
+  <div class="plot-system-menu" id="plot-system-menu">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <h3 style="font-size:18px;font-weight:700">系统菜单</h3>
+      <button class="plot-close-btn" onclick="document.getElementById('plot-system-menu').classList.remove('open')">✕</button>
+    </div>
+    <div class="psm-section-title">顶层</div>
+    <div class="psm-grid">
+      <div class="psm-btn" onclick="window.LJPlot && (window.LJPlot.toggleSystemMenu(), document.querySelector('[data-fn=save]').click())"><span class="psm-ico">💾</span>存档</div>
+      <div class="psm-btn" onclick="window.LJPlot && (window.LJPlot.toggleSystemMenu(), document.querySelector('[data-fn=load]').click())"><span class="psm-ico">📂</span>读档</div>
+      <div class="psm-btn" onclick="window.LJToast && window.LJToast.show('warn','回放','即将开放')"><span class="psm-ico">⏪</span>回放</div>
+      <div class="psm-btn" onclick="window.LJToast && window.LJToast.show('warn','设置','即将开放')"><span class="psm-ico">⚙️</span>设置</div>
+      <div class="psm-btn" onclick="window.LJToast && window.LJToast.show('warn','商城','即将开放')"><span class="psm-ico">🛒</span>商城</div>
+    </div>
+    <div class="psm-section-title">底层</div>
+    <div class="psm-grid">
+      <div class="psm-btn" onclick="window.LJToast && window.LJToast.show('warn','任务','即将开放')"><span class="psm-ico">📜</span>任务</div>
+      <div class="psm-btn" onclick="window.LJToast && window.LJToast.show('warn','福利','即将开放')"><span class="psm-ico">🎁</span>福利</div>
+      <div class="psm-btn" onclick="window.LJToast && window.LJToast.show('warn','仓库','即将开放')"><span class="psm-ico">📦</span>仓库</div>
+      <div class="psm-btn" onclick="window.LJToast && window.LJToast.show('warn','衣柜','即将开放')"><span class="psm-ico">👗</span>衣柜</div>
+      <div class="psm-btn" onclick="document.getElementById('plot-attr-panel').classList.toggle('open');window.LJPlot && window.LJPlot.toggleSystemMenu()"><span class="psm-ico">📊</span>属性</div>
+    </div>
+  </div>
+
+  <!-- 存档/读档面板 -->
+  <div class="plot-save-panel" id="plot-save-panel">
+    <div class="plot-save-head">
+      <h3>存档 / 读档（10 槽）</h3>
+      <button class="plot-close-btn" onclick="document.getElementById('plot-save-panel').classList.remove('open')">✕</button>
+    </div>
+    <div class="save-grid"></div>
+  </div>
+
+  <!-- CG 全屏 -->
+  <div class="plot-cg" id="plot-cg">
+    <div class="cg-title"></div>
+  </div>
+
+  <!-- 免责声明（底部常驻） -->
+  <div class="plot-disclaimer">⚠ AI 生成内容仅供参考，不构成医疗、法律、心理咨询建议。</div>
+
 </div>
 
-<!-- PlotEngine 注入：topbar / stats / scene / chars / dlg / end-modal / modal / toast -->
-<div id="runner-root"></div>
+<!-- Toast -->
+<div id="toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:max-content;max-width:86vw"></div>
 
-<!-- v6.4 全屏返回按钮：点击回到首页（带历史回退） -->
-<a href="../product-preview.html" id="v64-back" style="position:fixed;top:14px;left:14px;z-index:200;display:flex;align-items:center;gap:6px;padding:8px 14px 8px 12px;border-radius:999px;background:rgba(20,18,46,.78);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:12px;text-decoration:none;transition:all .2s;box-shadow:0 4px 14px rgba(0,0,0,.4);" onmouseover="this.style.background='rgba(20,18,46,.95)'" onmouseout="this.style.background='rgba(20,18,46,.78)'" title="返回首页">
-  <span style="font-size:16px;line-height:1;font-weight:700">←</span><span>返回</span>
-</a>
-<a href="library.html" id="v64-back-2" style="position:fixed;top:14px;left:88px;z-index:200;display:flex;align-items:center;gap:6px;padding:8px 14px 8px 12px;border-radius:999px;background:rgba(20,18,46,.78);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:12px;text-decoration:none;transition:all .2s;box-shadow:0 4px 14px rgba(0,0,0,.4);" title="回到世界">
-  <span style="font-size:16px;line-height:1">📖</span><span>世界</span>
-</a>
-
-<script src="js/genres.js"></script>
-<script src="js/novel-store.js"></script>
-<script src="js/novel-parser.js"></script>
-<script src="js/plot-schema.js"></script>
-<script src="js/audiofx.js"></script>
-<script src="js/plot-engine.js"></script>
-<script src="js/demo-seed.js"></script>
+<script src="js/plot-runner.js"></script>
 <script>
-(function () {
-  const params = new URLSearchParams(location.search);
-  const novelId = params.get('novelId');
-  const root = document.getElementById('runner-root');
-
-  // 没传 novelId → 显示空态
-  if (!novelId) {
-    document.getElementById('empty').style.display = 'grid';
-    return;
+window.LJToast = window.LJToast || {
+  show: function(kind, title, msg){
+    var c = document.getElementById('toast');
+    if (!c) return;
+    var t = document.createElement('div');
+    t.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:10px;font-size:13px;background:rgba(28,37,66,.96);border:1px solid rgba(255,255,255,.15);color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:toastIn .35s cubic-bezier(.16,1,.3,1) both';
+    t.innerHTML = '<span style="width:8px;height:8px;border-radius:50%;background:' + (kind === 'ok' ? '#4ECCA3' : '#FFB347') + '"></span><span><b>' + title + '</b>' + (msg ? '<span style="opacity:.65"> · ' + msg + '</span>' : '') + '</span>';
+    c.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 3000);
   }
-
-  DemoSeed.ensure();
-  const plot = NovelStore.loadNovel(novelId);
-  if (!plot) {
-    document.getElementById('empty').style.display = 'grid';
-    document.querySelector('#empty .inner').innerHTML =
-      '<div class="emoji">⚠️</div>' +
-      '<h1>没找到这本小说</h1>' +
-      '<p>可能已被删除，或参数错误</p>' +
-      '<div class="actions"><a class="primary" href="library.html">回到小说世界</a></div>';
-    return;
-  }
-
-  // 加载存档（如果有）
-  // 这里不主动加载，由玩家手动从读档界面选
-
-  // 首次审计
-  if (!plot.audit) {
-    plot.audit = NovelParser.runAudit({
-      chars: plot.chars,
-      chapters: plot.novel.chapters,
-      highlights: plot.highlights || [],
-      nodes: Object.values(plot.nodes),
-      endings: plot.endings
-    });
-    NovelStore.saveNovel(plot);
-  }
-
-  // 启动引擎
-  PlotEngine.init(plot, root, {
-    onEnd: () => { location.href = 'library.html'; }
+};
+// 地图建筑点击进入子场景
+document.querySelectorAll('.plot-map-bldg').forEach(function(b){
+  b.addEventListener('click', function(e){
+    e.stopPropagation();
+    var name = b.getAttribute('data-b');
+    if (window.LJToast) window.LJToast.show('warn','进入「'+name+'」','剧情即将触发');
+    if (window.LJPlot && window.LJPlot.toggleMapMode) window.LJPlot.toggleMapMode();
   });
-})();
+});
 </script>
 </body>
 </html>

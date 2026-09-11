@@ -44,7 +44,7 @@
     // 控制分类侧边栏快捷按钮可见性
     var catTrigger = $('#ds-cat-trigger');
     if (catTrigger) catTrigger.style.display = (id === 'tongren') ? 'none' : '';
-    // 控制 banner / 四大金刚 / quick-grid 可见性（同人区/搜索时简化）
+    // 控制 banner / 四大金刚 / quick-grid 可见性（仅同人区/搜索时简化）
     var banner = $('#ds-banner');
     var qg = $('#ds-quick-grid');
     var simple = (id === 'tongren' || id === 'search');
@@ -169,9 +169,228 @@
       renderTonggren(main);
     } else if (currentSub === 'search') {
       renderSearch(main);
+    } else if (currentSub === 'xinyu') {
+      renderXinyuTui(main);
+    } else if (currentSub === 'welfare') {
+      renderWelfare(main);
+    } else if (currentSub === 'chuangshibei') {
+      renderChuangshibei(main);
+    } else if (currentSub === 'rank') {
+      renderRank(main);
     } else {
       renderDefault(main);
     }
+  }
+
+  // ---------- 排行榜 ----------
+  function renderRank(main) {
+    main.appendChild(el('div', { class: 'ds-board-head' }, [
+      el('div', { class: 'ds-board-title' }, ['本周榜单']),
+      el('div', { class: 'ds-board-sort' }, [
+        el('span', { class: 'ds-sort active' }, ['本周灵韵']),
+        el('span', { class: 'ds-sort' }, ['本周人气'])
+      ])
+    ]));
+    var all = window.WORLD_DATA.FEATURED.concat(window.WORLD_DATA.HOT);
+    var sorted = all.slice().sort(function (a, b) { return b.score - a.score; });
+    var list = el('div', { class: 'rank-list' });
+    sorted.slice(0, 10).forEach(function (w, idx) {
+      var row = el('div', { class: 'rank-row' }, [
+        el('div', { class: 'rank-num rank-num-' + (idx < 3 ? 'top' : 'normal') }, [String(idx + 1)]),
+        el('div', { class: 'rank-cov', style: 'background:' + w.cov }, [w.emoji]),
+        el('div', { class: 'rank-body' }, [
+          el('div', { class: 'rank-title' }, [w.title]),
+          el('div', { class: 'rank-meta' }, [w.author + ' · ⭐ ' + w.score.toFixed(1) + ' · 本周灵韵 ' + (w.score * 100 | 0)])
+        ])
+      ]);
+      list.appendChild(row);
+    });
+    main.appendChild(list);
+  }
+
+  // ---------- 心屿推（V12.0 3.2）----------
+  function renderXinyuTui(main) {
+    var data = window.ECONOMY.XINYU_TUI;
+    // 顶部：每周回响
+    main.appendChild(el('div', { class: 'ds-board-head' }, [
+      el('div', { class: 'ds-board-title' }, ['每周回响']),
+      el('div', { class: 'ds-board-sub' }, ['每周五 10:00 更新 · 由「引路人」产出'])
+    ]));
+    var echoList = el('div', { class: 'echo-list' });
+    data.weeklyEcho.forEach(function (e) {
+      var card = el('div', { class: 'echo-card' }, [
+        el('div', { class: 'echo-head' }, [
+          el('span', { class: 'echo-avatar' }, [e.avatar]),
+          el('span', { class: 'echo-user' }, [e.user]),
+          el('span', { class: 'echo-tag' }, ['引路人'])
+        ]),
+        el('div', { class: 'echo-work' }, ['推荐：《' + e.workTitle + '》']),
+        el('div', { class: 'echo-review' }, [e.review])
+      ]);
+      echoList.appendChild(card);
+    });
+    main.appendChild(echoList);
+
+    // 中间：引路人积分排行
+    main.appendChild(el('div', { class: 'ds-board-head' }, [
+      el('div', { class: 'ds-board-title' }, ['引路人积分排行']),
+      el('div', { class: 'ds-board-sort' }, [
+        el('span', { class: 'ds-sort active' }, ['周榜']),
+        el('span', { class: 'ds-sort' }, ['月榜'])
+      ])
+    ]));
+    var ylList = el('div', { class: 'yl-rank-list' });
+    data.yinluRank.forEach(function (y) {
+      var row = el('div', { class: 'yl-rank-row' }, [
+        el('div', { class: 'yl-rank-num yl-rank-' + y.rank }, [String(y.rank)]),
+        el('span', { class: 'yl-avatar' }, [y.avatar]),
+        el('div', { class: 'yl-body' }, [
+          el('div', { class: 'yl-name' }, [y.user]),
+          el('div', { class: 'yl-title' }, [y.title])
+        ]),
+        el('div', { class: 'yl-score' }, [String(y.score) + ' 灵韵'])
+      ]);
+      ylList.appendChild(row);
+    });
+    main.appendChild(ylList);
+
+    // 底部：更多推荐
+    main.appendChild(el('div', { class: 'ds-board-head' }, [
+      el('div', { class: 'ds-board-title' }, ['更多推荐']),
+      el('a', { class: 'ds-board-more', href: 'discover.html' }, ['全部 ›'])
+    ]));
+    var grid = el('div', { class: 'ds-waterfall' });
+    renderWaterfall([{ id: 'mr1', title: '《凤求凰》', author: '云间月', catName: '古风', cat: 'gufeng', sub: 'gonggu', score: 9.2, wordCount: '12.3万字', cov: 'linear-gradient(160deg,#8E5BD8,#C95B9C)', emoji: '🌸' }, { id: 'mr2', title: '《三国·吕布篇》', author: '灵境官方', catName: '古风', cat: 'gufeng', sub: 'wangquan', score: 9.0, wordCount: '24.6万字', cov: 'linear-gradient(160deg,#B8863B,#8C5A2B)', emoji: '⚔️' }], grid, {});
+    main.appendChild(grid);
+  }
+
+  // ---------- 创世杯（V12.0 3.4）----------
+  function renderChuangshibei(main) {
+    var data = window.ECONOMY.CHUANGSHIBEI;
+    // 顶部 Banner
+    main.appendChild(el('div', { class: 'csb-banner' }, [
+      el('div', { class: 'csb-b-emoji' }, ['🏆']),
+      el('div', { class: 'csb-b-title' }, [data.banner]),
+      el('div', { class: 'csb-b-period' }, [data.period + ' · 火热进行中'])
+    ]));
+    // 赛程标签
+    main.appendChild(el('div', { class: 'csb-stage' }, [
+      el('span', { class: 'csb-stage-item active' }, ['主赛场']),
+      el('span', { class: 'csb-stage-item' }, ['阶段奖励'])
+    ]));
+    // 时间轴
+    main.appendChild(el('div', { class: 'csb-timeline' }, [
+      el('div', { class: 'csb-tl-item active' }, [
+        el('span', { class: 'csb-tl-dot' }, ['●']),
+        el('div', null, [el('div', { class: 'csb-tl-title' }, ['进行中']), el('div', { class: 'csb-tl-period' }, [data.period])])
+      ]),
+      el('div', { class: 'csb-tl-item' }, [
+        el('span', { class: 'csb-tl-dot' }, ['○']),
+        el('div', null, [el('div', { class: 'csb-tl-title' }, ['复赛']), el('div', { class: 'csb-tl-period' }, ['10.10-10.20'])])
+      ]),
+      el('div', { class: 'csb-tl-item' }, [
+        el('span', { class: 'csb-tl-dot' }, ['○']),
+        el('div', null, [el('div', { class: 'csb-tl-title' }, ['决赛']), el('div', { class: 'csb-tl-period' }, ['10.21-10.31'])])
+      ])
+    ]));
+    // 作品榜单
+    main.appendChild(el('div', { class: 'ds-board-head' }, [
+      el('div', { class: 'ds-board-title' }, ['古风 TOP100 · 当前榜单']),
+      el('div', { class: 'ds-board-sort' }, [
+        el('span', { class: 'ds-sort active' }, ['灵韵']),
+        el('span', { class: 'ds-sort' }, ['人气'])
+      ])
+    ]));
+    var rankList = el('div', { class: 'csb-rank-list' });
+    data.rank.forEach(function (r) {
+      var btn = el('button', { class: 'csb-cheer-btn' }, ['助威']);
+      btn.addEventListener('click', function () {
+        if (window.LJToast) window.LJToast.show('ok', '已助威', '-10 灵晶 · ' + r.workTitle);
+      });
+      var row = el('div', { class: 'csb-rank-row' }, [
+        el('div', { class: 'csb-rank-num csb-rank-' + r.rank }, [String(r.rank)]),
+        el('div', { class: 'csb-rank-cov', style: 'background:' + r.cov }, [r.rank <= 3 ? ['🥇','🥈','🥉'][r.rank-1] : '📕']),
+        el('div', { class: 'csb-rank-body' }, [
+          el('div', { class: 'csb-rank-title' }, [r.workTitle]),
+          el('div', { class: 'csb-rank-meta' }, [r.author + ' · 阶段灵韵 ' + r.score])
+        ]),
+        btn
+      ]);
+      rankList.appendChild(row);
+    });
+    main.appendChild(rankList);
+    // 右侧悬浮功能入口
+    var csbFloat = el('div', { class: 'csb-float' });
+    var csbBtns = [
+      { ico: '💬', label: '同频共振群', msg: '即将开放' },
+      { ico: '📊', label: '投票记录', msg: '即将开放' },
+      { ico: '💭', label: '讨论区', msg: '即将开放' }
+    ];
+    csbBtns.forEach(function (b) {
+      var fb = el('button', { class: 'csb-fb' }, [b.ico + ' ' + b.label]);
+      fb.addEventListener('click', function () {
+        if (window.LJToast) window.LJToast.show('warn', b.label, b.msg);
+      });
+      csbFloat.appendChild(fb);
+    });
+    main.appendChild(csbFloat);
+  }
+
+  // ---------- 福利（V12.0 3.3）----------
+  function renderWelfare(main) {
+    var tiers = window.ECONOMY.RECHARGE_TIERS;
+    // 顶部子标签
+    main.appendChild(el('div', { class: 'wf-sub-nav' }, [
+      el('span', { class: 'wf-sub active' }, ['本月福利']),
+      el('span', { class: 'wf-sub' }, ['活动专区']),
+      el('span', { class: 'wf-sub' }, ['限免广场']),
+      el('span', { class: 'wf-sub' }, ['免费频道'])
+    ]));
+    // 活动 Banner
+    main.appendChild(el('div', { class: 'wf-banner' }, [
+      el('div', { class: 'wf-b-emoji' }, ['🎁']),
+      el('div', { class: 'wf-b-title' }, ['完成充值任务，免费领取限定世界']),
+      el('div', { class: 'wf-b-sub' }, ['所有付费点以「灵晶」结算（1 元 = 100 灵晶）'])
+    ]));
+    // 5 档充值
+    main.appendChild(el('div', { class: 'ds-board-head' }, [
+      el('div', { class: 'ds-board-title' }, ['充值档位（5 档）'])
+    ]));
+    var tierList = el('div', { class: 'wf-tier-list' });
+    tiers.forEach(function (t, idx) {
+      var rechargeBtn = el('button', { class: 'wf-t-btn' }, ['去充值']);
+      rechargeBtn.addEventListener('click', function () {
+        if (window.LJToast) window.LJToast.show('warn', '充值 ' + t.name, '即将开放（' + t.amount + ' 元）');
+      });
+      var card = el('div', { class: 'wf-tier-card' + (idx === 2 ? ' wf-tier-popular' : '') }, [
+        el('div', { class: 'wf-t-head' }, [
+          el('span', { class: 'wf-t-name' }, [t.name]),
+          el('span', { class: 'wf-t-amount' }, [t.amount + ' 元'])
+        ]),
+        el('div', { class: 'wf-t-reward' }, [
+          el('div', null, ['💎 ' + t.lingJing + ' 灵晶']),
+          el('div', null, ['🌙 ' + t.lingYu + ' 灵玉']),
+          t.extra ? el('div', { class: 'wf-t-extra' }, [t.extra]) : null
+        ]),
+        rechargeBtn
+      ]);
+      tierList.appendChild(card);
+    });
+    main.appendChild(tierList);
+    // 免费作品（限免广场）
+    main.appendChild(el('div', { class: 'ds-board-head' }, [
+      el('div', { class: 'ds-board-title' }, ['限免广场 · 灵玉领'])
+    ]));
+    var grid = el('div', { class: 'ds-waterfall' });
+    var freeCards = window.ECONOMY.FREE_WORKS.map(function (f) {
+      return { id: f.id, title: f.title, author: f.author, catName: f.cat, cat: 'gufeng', sub: 'gonggu', score: 9.0, wordCount: '12万字', cov: f.cov, emoji: '🎁' };
+    });
+    renderWaterfall(freeCards, grid, {});
+    main.appendChild(grid);
+    // 底部说明
+    main.appendChild(el('div', { class: 'wf-note' }, [
+      '💡 灵玉可通过每日签到、完成任务免费获取；灵晶需通过充值获得（1 元 = 100 灵晶）。'
+    ]));
   }
 
   function renderDefault(main) {
