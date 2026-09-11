@@ -260,11 +260,264 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
 .ml-card .tag{position:absolute;top:6px;right:6px;font-size:8px;padding:1px 4px;border-radius:4px;background:#FFB347;color:#000;font-weight:600}
 
 .final-foot{margin:30px var(--margin) 100px;padding-top:18px;border-top:1px solid var(--line);text-align:center;font-size:11px;color:rgba(160,160,176,.5);line-height:1.7}
+
+/* ====================================================================
+ * V20-C · 启动页 splash + 注册登录 + 新手引导
+ * ==================================================================== */
+.splash-overlay,.login-overlay,.onb-overlay{
+  position:fixed;inset:0;z-index:999;
+  background:linear-gradient(180deg,#1A1A2E 0%,#16213E 100%);
+  display:flex;flex-direction:column;color:#fff;
+  transition:opacity .4s;
+}
+.splash-overlay{align-items:center;justify-content:center;padding:24px}
+.splash-logo{
+  width:100px;height:100px;border-radius:28px;
+  display:grid;place-items:center;
+  font:700 48px 'Noto Serif SC';
+  background:linear-gradient(135deg,#E94560,#6C5CE7);
+  box-shadow:0 12px 40px rgba(233,69,96,.5);
+  margin-bottom:28px;
+  animation:splash-pulse 2s ease-in-out infinite;
+}
+@keyframes splash-pulse{
+  0%,100%{transform:scale(1);box-shadow:0 12px 40px rgba(233,69,96,.5)}
+  50%{transform:scale(1.06);box-shadow:0 16px 50px rgba(233,69,96,.7)}
+}
+.splash-title{font:700 28px 'Noto Serif SC';letter-spacing:.15em}
+.splash-slogan{font-size:14px;color:rgba(255,255,255,.65);margin-top:10px;letter-spacing:.04em}
+.splash-bar{width:200px;height:3px;background:rgba(255,255,255,.08);border-radius:2px;margin-top:48px;overflow:hidden}
+.splash-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#E94560,#6C5CE7);transition:width .1s}
+.splash-percent{font-size:12px;color:rgba(255,255,255,.55);margin-top:8px;font-variant-numeric:tabular-nums}
+.splash-actions{margin-top:56px;display:flex;flex-direction:column;gap:12px;align-items:center}
+.splash-btn{
+  min-width:220px;height:48px;border-radius:24px;
+  background:linear-gradient(135deg,#E94560,#C73652);
+  color:#fff;font:600 16px/48px 'PingFang SC';
+  box-shadow:0 8px 24px rgba(233,69,96,.4);
+  cursor:pointer;transition:transform .15s;
+}
+.splash-btn:active{transform:scale(.96)}
+.splash-skip{font-size:13px;color:rgba(255,255,255,.5);background:none;border:0;cursor:pointer}
+.splash-skip:hover{color:rgba(255,255,255,.8)}
+.login-overlay{padding:32px 24px;overflow-y:auto}
+.login-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}
+.login-logo-sm{
+  width:40px;height:40px;border-radius:12px;
+  display:grid;place-items:center;
+  font:700 20px 'Noto Serif SC';
+  background:linear-gradient(135deg,#E94560,#6C5CE7);
+}
+.login-close{
+  width:36px;height:36px;border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.06);
+  color:rgba(255,255,255,.8);font-size:18px;cursor:pointer;border:0;
+}
+.login-title{font:700 22px 'Noto Serif SC';margin-bottom:6px}
+.login-sub{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:24px}
+.login-tabs{display:flex;gap:16px;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,.08)}
+.login-tab{
+  padding:10px 0;font-size:14px;color:rgba(255,255,255,.5);
+  cursor:pointer;border-bottom:2px solid transparent;
+}
+.login-tab.active{color:#fff;border-color:#E94560;font-weight:600}
+.login-input{
+  width:100%;height:48px;padding:0 16px;border-radius:10px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  color:#fff;font-size:15px;margin-bottom:12px;box-sizing:border-box;
+}
+.login-input:focus{outline:0;border-color:#E94560;background:rgba(233,69,96,.05)}
+.login-input::placeholder{color:rgba(255,255,255,.35)}
+.login-row{display:flex;gap:10px}
+.login-row .login-input{flex:1}
+.login-code-btn{
+  height:48px;padding:0 16px;border-radius:10px;
+  background:rgba(108,92,231,.15);color:#6C5CE7;
+  font:600 13px/48px 'PingFang SC';
+  border:1px solid rgba(108,92,231,.3);
+  cursor:pointer;white-space:nowrap;
+}
+.login-methods{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+  margin-top:24px;padding-top:24px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.login-method{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:12px 0;border-radius:10px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  cursor:pointer;transition:transform .15s;
+}
+.login-method:active{transform:scale(.96)}
+.login-method-ico{font-size:22px}
+.login-method-n{font-size:11px;color:rgba(255,255,255,.6)}
+.login-agreements{margin-top:18px;font-size:12px;color:rgba(255,255,255,.55);line-height:1.7}
+.login-check{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;cursor:pointer}
+.login-check-box{
+  width:16px;height:16px;border-radius:4px;
+  border:1px solid rgba(255,255,255,.3);
+  display:grid;place-items:center;
+  flex-shrink:0;margin-top:2px;
+}
+.login-check-box.checked{background:#E94560;border-color:#E94560;color:#fff;font-size:10px}
+.login-check-text a{color:#6C5CE7;text-decoration:underline}
+.login-age{
+  margin-top:14px;padding:12px;border-radius:10px;
+  background:rgba(255,179,71,.08);
+  border:1px solid rgba(255,179,71,.25);
+  font-size:12px;color:#FFB347;
+  display:flex;align-items:center;gap:8px;
+}
+.login-submit{
+  width:100%;height:50px;margin-top:20px;border-radius:25px;
+  background:linear-gradient(135deg,#E94560,#C73652);
+  color:#fff;font:600 16px/50px 'PingFang SC';
+  cursor:pointer;border:0;
+  box-shadow:0 6px 20px rgba(233,69,96,.35);
+}
+.login-submit:active{transform:scale(.98)}
+.onb-overlay{padding:0}
+.onb-header{
+  display:flex;align-items:center;justify-content:space-between;padding:16px 20px;
+}
+.onb-skip{font-size:13px;color:rgba(255,255,255,.5);background:none;border:0;cursor:pointer}
+.onb-progress{display:flex;gap:6px;flex:1;justify-content:center}
+.onb-dot{
+  width:24px;height:4px;border-radius:2px;
+  background:rgba(255,255,255,.12);transition:background .25s;
+}
+.onb-dot.active{background:#E94560}
+.onb-dot.done{background:rgba(233,69,96,.4)}
+.onb-body{flex:1;padding:32px 24px;display:flex;flex-direction:column}
+.onb-step-eyebrow{font-size:12px;color:#6C5CE7;font-weight:600;letter-spacing:.12em;margin-bottom:8px}
+.onb-step-title{font:700 24px 'Noto Serif SC';margin-bottom:6px}
+.onb-step-sub{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:28px}
+.onb-options{display:grid;gap:10px}
+.onb-option{
+  padding:14px 16px;border-radius:12px;
+  background:rgba(255,255,255,.04);
+  border:1.5px solid rgba(255,255,255,.08);
+  cursor:pointer;display:flex;align-items:center;gap:12px;
+  transition:all .15s;
+}
+.onb-option:active{transform:scale(.98)}
+.onb-option.selected{background:rgba(233,69,96,.08);border-color:#E94560}
+.onb-option-ico{font-size:22px}
+.onb-option-text{flex:1}
+.onb-option-title{font-size:15px;font-weight:600;color:#fff}
+.onb-option-sub{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+.onb-option-check{
+  width:20px;height:20px;border-radius:50%;
+  border:1.5px solid rgba(255,255,255,.25);
+  display:grid;place-items:center;color:transparent;font-size:12px;
+}
+.onb-option.selected .onb-option-check{background:#E94560;border-color:#E94560;color:#fff}
+.onb-input{
+  width:100%;height:52px;padding:0 16px;border-radius:12px;
+  background:rgba(255,255,255,.04);
+  border:1.5px solid rgba(255,255,255,.12);
+  color:#fff;font-size:16px;box-sizing:border-box;
+}
+.onb-input:focus{outline:0;border-color:#E94560;background:rgba(233,69,96,.04)}
+.onb-input::placeholder{color:rgba(255,255,255,.35)}
+.onb-footer{padding:16px 24px 24px;display:flex;gap:10px}
+.onb-btn-prev,.onb-btn-next{
+  flex:1;height:50px;border-radius:25px;
+  font:600 15px/50px 'PingFang SC';
+  cursor:pointer;border:0;
+}
+.onb-btn-prev{background:rgba(255,255,255,.06);color:rgba(255,255,255,.7)}
+.onb-btn-next{
+  background:linear-gradient(135deg,#E94560,#C73652);
+  color:#fff;box-shadow:0 6px 20px rgba(233,69,96,.35);
+}
+.onb-btn-next:disabled{background:rgba(255,255,255,.1);color:rgba(255,255,255,.3);box-shadow:none;cursor:not-allowed}
+.onb-btn-prev:disabled{opacity:0;pointer-events:none}
+.hidden{display:none !important}
 </style>
 </head>
 <body>
 
-<div id="app">
+<!-- ============ V20-C · 启动页 splash ============ -->
+<div class="splash-overlay" id="splash-overlay">
+  <div class="splash-logo">灵</div>
+  <div class="splash-title">灵境 · 双生</div>
+  <div class="splash-slogan">一个角色，两种人生</div>
+  <div class="splash-bar"><div class="splash-bar-fill" id="splash-bar-fill"></div></div>
+  <div class="splash-percent" id="splash-percent">0%</div>
+  <div class="splash-actions">
+    <button class="splash-btn" id="splash-enter">进入灵境</button>
+    <button class="splash-skip" id="splash-skip">跳过</button>
+  </div>
+</div>
+
+<!-- ============ V20-C · 注册登录 ============ -->
+<div class="login-overlay hidden" id="login-overlay">
+  <div class="login-header">
+    <div class="login-logo-sm">灵</div>
+    <button class="login-close" id="login-close">✕</button>
+  </div>
+  <div class="login-title">欢迎来到灵境</div>
+  <div class="login-sub">登录后开启你的沉浸之旅</div>
+
+  <div class="login-tabs">
+    <div class="login-tab active" data-tab="phone">手机登录</div>
+    <div class="login-tab" data-tab="email">邮箱登录</div>
+  </div>
+
+  <div id="login-pane-phone">
+    <input class="login-input" id="login-phone" placeholder="请输入手机号" maxlength="11" />
+    <div class="login-row">
+      <input class="login-input" id="login-code" placeholder="6 位验证码" maxlength="6" />
+      <button class="login-code-btn" id="login-send-code">获取验证码</button>
+    </div>
+  </div>
+
+  <div id="login-pane-email" class="hidden">
+    <input class="login-input" id="login-email" placeholder="邮箱地址" />
+    <input class="login-input" id="login-password" type="password" placeholder="密码（6 位以上）" />
+  </div>
+
+  <div class="login-methods">
+    <div class="login-method" data-method="wechat"><div class="login-method-ico">💬</div><div class="login-method-n">微信</div></div>
+    <div class="login-method" data-method="apple"><div class="login-method-ico"></div><div class="login-method-n">Apple</div></div>
+    <div class="login-method" data-method="qq"><div class="login-method-ico">🐧</div><div class="login-method-n">QQ</div></div>
+    <div class="login-method" data-method="guest"><div class="login-method-ico">👤</div><div class="login-method-n">访客</div></div>
+  </div>
+
+  <div class="login-agreements">
+    <div class="login-check" data-agree="1"><div class="login-check-box" id="agree-1"></div><div class="login-check-text">我已阅读并同意 <a>《用户服务协议》</a></div></div>
+    <div class="login-check" data-agree="2"><div class="login-check-box" id="agree-2"></div><div class="login-check-text">我已阅读并同意 <a>《隐私政策》</a></div></div>
+    <div class="login-check" data-agree="3"><div class="login-check-box" id="agree-3"></div><div class="login-check-text">我已阅读并同意 <a>《未成年人保护声明》</a></div></div>
+  </div>
+
+  <div class="login-age" id="login-age">⚠ 本产品含成人内容，登录即视为已满 18 周岁</div>
+
+  <button class="login-submit" id="login-submit">登录 / 注册</button>
+</div>
+
+<!-- ============ V20-C · 新手引导 ============ -->
+<div class="onb-overlay hidden" id="onb-overlay">
+  <div class="onb-header">
+    <button class="onb-skip" id="onb-skip">跳过</button>
+    <div class="onb-progress" id="onb-progress">
+      <div class="onb-dot active"></div>
+      <div class="onb-dot"></div>
+      <div class="onb-dot"></div>
+      <div class="onb-dot"></div>
+    </div>
+    <div style="width:32px"></div>
+  </div>
+  <div class="onb-body" id="onb-body"></div>
+  <div class="onb-footer">
+    <button class="onb-btn-prev" id="onb-prev" disabled>上一步</button>
+    <button class="onb-btn-next" id="onb-next">下一步</button>
+  </div>
+</div>
+
+<div id="app" class="hidden">
 
   <!-- ============ 顶部品牌条 ============ -->
   <div class="brand-bar">
@@ -296,6 +549,16 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
   <div class="shot-wide">
     <img src="output/preview/screenshots/v18-a-home-bottom.png" alt="首页底部">
     <div class="cap"><b>4 个推荐板块</b>今日推荐 · 陪伴动态 · 世界更新 · 热门活动</div>
+  </div>
+
+  <!-- ============ V20-C · 首次访问流程 ============ -->
+  <div class="section-h" style="margin-top:36px"><span class="em">👋</span><h3>首次访问 · 启动 + 登录 + 引导</h3><span class="sub">3 步开启沉浸之旅</span></div>
+  <div class="shot-grid">
+    <div class="shot"><img src="output/preview/screenshots/v20-c-splash.png" alt="启动页"><div class="cap"><b>启动页</b>品牌 logo · 加载进度 · 进入灵境</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v20-c-login.png" alt="注册登录"><div class="cap"><b>注册登录</b>4 种登录方式 · 3 项协议 · 18+ 提示</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v20-c-onb-step1.png" alt="称呼"><div class="cap"><b>引导 1 / 4 · 称呼</b>更亲切地与你对话</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v20-c-onb-step2.png" alt="性别"><div class="cap"><b>引导 2 / 4 · 性别</b>个性化推荐</div></div>
+    <div class="shot"><img src="output/preview/screenshots/v20-c-onb-step4.png" alt="陪伴类型"><div class="cap"><b>引导 4 / 4 · 陪伴类型</b>心屿会按你的偏好创建角色</div></div>
   </div>
 
   <!-- ============ 世界功能区 ============ -->
@@ -407,6 +670,230 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
 
 <script src="output/preview/js/home.js"></script>
 <script src="output/preview/js/tabbar.js"></script>
+<script>
+/* ====================================================================
+ * V20-C · 启动页 + 注册登录 + 新手引导 串联逻辑
+ * localStorage:
+ *   lingjing_onboarding_done  — 'true' 完成过新手引导
+ *   lingjing_user_profile     — {name, gender, ageRange, companionType}
+ *   lingjing_account_kind     — phone|email|wechat|apple|qq|guest
+ * ==================================================================== */
+(function () {
+  var STORAGE = {
+    ONB_DONE: 'lingjing_onboarding_done',
+    PROFILE: 'lingjing_user_profile',
+    KIND: 'lingjing_account_kind'
+  };
+
+  var splashEl = document.getElementById('splash-overlay');
+  var loginEl = document.getElementById('login-overlay');
+  var onbEl = document.getElementById('onb-overlay');
+  var appEl = document.getElementById('app');
+  var barFill = document.getElementById('splash-bar-fill');
+  var percentTxt = document.getElementById('splash-percent');
+
+  var onbDone = localStorage.getItem(STORAGE.ONB_DONE) === 'true';
+  if (onbDone) {
+    appEl.classList.remove('hidden');
+    splashEl.classList.add('hidden');
+    loginEl.classList.add('hidden');
+    onbEl.classList.add('hidden');
+    return;
+  }
+
+  /* ---------- Splash ---------- */
+  var splashClosed = false;
+  function startSplash() {
+    var pct = 0;
+    var timer = setInterval(function () {
+      pct += 4 + Math.random() * 6;
+      if (pct >= 100) { pct = 100; clearInterval(timer); }
+      barFill.style.width = pct + '%';
+      percentTxt.textContent = Math.floor(pct) + '%';
+    }, 90);
+  }
+  function hideSplash() {
+    if (splashClosed) return;
+    splashClosed = true;
+    splashEl.style.opacity = '0';
+    setTimeout(function () {
+      splashEl.classList.add('hidden');
+      loginEl.classList.remove('hidden');
+    }, 400);
+  }
+  document.getElementById('splash-enter').addEventListener('click', hideSplash);
+  document.getElementById('splash-skip').addEventListener('click', hideSplash);
+  setTimeout(hideSplash, 3000);
+  startSplash();
+
+  /* ---------- Login ---------- */
+  var loginState = { tab: 'phone', agree: {}, method: null };
+  document.querySelectorAll('.login-tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      document.querySelectorAll('.login-tab').forEach(function (x) { x.classList.remove('active'); });
+      t.classList.add('active');
+      loginState.tab = t.dataset.tab;
+      document.getElementById('login-pane-phone').classList.toggle('hidden', loginState.tab !== 'phone');
+      document.getElementById('login-pane-email').classList.toggle('hidden', loginState.tab !== 'email');
+    });
+  });
+  document.querySelectorAll('.login-check').forEach(function (c) {
+    c.addEventListener('click', function () {
+      var k = c.dataset.agree;
+      loginState.agree[k] = !loginState.agree[k];
+      document.getElementById('agree-' + k).classList.toggle('checked', loginState.agree[k]);
+    });
+  });
+  document.querySelectorAll('.login-method').forEach(function (m) {
+    m.addEventListener('click', function () {
+      loginState.method = m.dataset.method;
+      doLogin();
+    });
+  });
+  document.getElementById('login-close').addEventListener('click', hideSplash);
+  document.getElementById('login-send-code').addEventListener('click', function () {
+    var p = document.getElementById('login-phone').value.trim();
+    if (!/^1\d{10}$/.test(p)) {
+      window.LJToast && window.LJToast.show('warn', '手机号格式错误', '请输入 11 位手机号');
+      return;
+    }
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = '已发送 60s';
+    var n = 60;
+    var t = setInterval(function () {
+      n--;
+      btn.textContent = '已发送 ' + n + 's';
+      if (n <= 0) { clearInterval(t); btn.disabled = false; btn.textContent = '获取验证码'; }
+    }, 1000);
+    window.LJToast && window.LJToast.show('ok', '验证码已发送', '请查收短信（演示）');
+  });
+  document.getElementById('login-submit').addEventListener('click', doLogin);
+
+  function doLogin() {
+    if (!loginState.agree[1] || !loginState.agree[2] || !loginState.agree[3]) {
+      window.LJToast && window.LJToast.show('warn', '请先勾选协议', '3 项必勾');
+      return;
+    }
+    if (!loginState.method && loginState.tab === 'phone') {
+      var p = document.getElementById('login-phone').value.trim();
+      var c = document.getElementById('login-code').value.trim();
+      if (!/^1\d{10}$/.test(p)) { window.LJToast && window.LJToast.show('warn', '手机号错误', ''); return; }
+      if (c.length < 4) { window.LJToast && window.LJToast.show('warn', '验证码错误', ''); return; }
+    } else if (!loginState.method && loginState.tab === 'email') {
+      var e = document.getElementById('login-email').value.trim();
+      var pw = document.getElementById('login-password').value;
+      if (!/^[\w.+-]+@[\w-]+\.[\w.-]+$/.test(e)) { window.LJToast && window.LJToast.show('warn', '邮箱格式错误', ''); return; }
+      if (pw.length < 6) { window.LJToast && window.LJToast.show('warn', '密码过短', '6 位以上'); return; }
+    }
+    var kind = loginState.method || loginState.tab;
+    localStorage.setItem(STORAGE.KIND, kind);
+    loginEl.classList.add('hidden');
+    onbEl.classList.remove('hidden');
+    renderOnbStep(0);
+  }
+
+  /* ---------- Onboarding ---------- */
+  var onbSteps = [
+    { eyebrow: '第 1 步 / 共 4 步', title: '你希望我们怎么称呼你？', sub: '我们会更亲切地与你对话', type: 'input', placeholder: '输入你的称呼（1-12 字）', key: 'name', min: 1, max: 12 },
+    { eyebrow: '第 2 步 / 共 4 步', title: '你的性别是？', sub: '用于个性化推荐', type: 'options', key: 'gender',
+      options: [
+        { v: 'female', t: '女', s: '更细腻的剧情向', i: '♀' },
+        { v: 'male', t: '男', s: '更宏大的英雄叙事', i: '♂' },
+        { v: 'other', t: '其他 / 不愿透露', s: '保持中立', i: '⚧' }
+      ] },
+    { eyebrow: '第 3 步 / 共 4 步', title: '你的年龄段是？', sub: '用于内容分级推荐', type: 'options', key: 'ageRange',
+      options: [
+        { v: '18-24', t: '18-24', s: '青春 · 校园 · 都市', i: '🌱' },
+        { v: '25-34', t: '25-34', s: '都市 · 职场 · 情感', i: '🌿' },
+        { v: '35-49', t: '35-49', s: '成熟 · 家庭 · 历史', i: '🌳' },
+        { v: '50+', t: '50+', s: '怀旧 · 经典 · 家庭', i: '🍂' }
+      ] },
+    { eyebrow: '第 4 步 / 共 4 步', title: '你想要怎样的陪伴？', sub: '心屿会按你的偏好创建角色', type: 'options', key: 'companionType',
+      options: [
+        { v: 'warm', t: '温柔倾听型', s: '像老朋友，陪你聊心事', i: '💝' },
+        { v: 'lively', t: '活泼开朗型', s: '轻松幽默，活跃气氛', i: '🌟' },
+        { v: 'rational', t: '理性分析型', s: '帮你梳理逻辑，给建议', i: '💡' },
+        { v: 'story', t: '剧情演绎型', s: '一起进入小说世界冒险', i: '📖' }
+      ] }
+  ];
+  var onbState = { step: 0, data: {} };
+
+  function renderOnbStep(idx) {
+    onbState.step = idx;
+    var s = onbSteps[idx];
+    document.querySelectorAll('.onb-dot').forEach(function (d, i) {
+      d.classList.remove('active', 'done');
+      if (i < idx) d.classList.add('done');
+      else if (i === idx) d.classList.add('active');
+    });
+    document.getElementById('onb-prev').disabled = (idx === 0);
+
+    var canNext = onbState.data[s.key] !== undefined && onbState.data[s.key] !== '';
+    if (s.type === 'input') canNext = onbState.data[s.key] && onbState.data[s.key].length >= s.min;
+    document.getElementById('onb-next').disabled = !canNext;
+    document.getElementById('onb-next').textContent = idx === onbSteps.length - 1 ? '开始体验' : '下一步';
+
+    var body = document.getElementById('onb-body');
+    if (s.type === 'input') {
+      body.innerHTML = '<div class="onb-step-eyebrow">' + s.eyebrow + '</div>' +
+        '<div class="onb-step-title">' + s.title + '</div>' +
+        '<div class="onb-step-sub">' + s.sub + '</div>' +
+        '<input class="onb-input" id="onb-input" placeholder="' + s.placeholder + '" maxlength="' + s.max + '" value="' + (onbState.data[s.key] || '') + '" />';
+      var inp = document.getElementById('onb-input');
+      setTimeout(function () { inp.focus(); }, 50);
+      inp.addEventListener('input', function () {
+        onbState.data[s.key] = inp.value.trim();
+        var ok = onbState.data[s.key].length >= s.min;
+        document.getElementById('onb-next').disabled = !ok;
+      });
+    } else {
+      var html = '<div class="onb-step-eyebrow">' + s.eyebrow + '</div>' +
+        '<div class="onb-step-title">' + s.title + '</div>' +
+        '<div class="onb-step-sub">' + s.sub + '</div>' +
+        '<div class="onb-options">';
+      s.options.forEach(function (o) {
+        var sel = onbState.data[s.key] === o.v;
+        html += '<div class="onb-option' + (sel ? ' selected' : '') + '" data-v="' + o.v + '">' +
+          '<div class="onb-option-ico">' + o.i + '</div>' +
+          '<div class="onb-option-text"><div class="onb-option-title">' + o.t + '</div><div class="onb-option-sub">' + o.s + '</div></div>' +
+          '<div class="onb-option-check">✓</div>' +
+          '</div>';
+      });
+      html += '</div>';
+      body.innerHTML = html;
+      body.querySelectorAll('.onb-option').forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          onbState.data[s.key] = opt.dataset.v;
+          renderOnbStep(idx);
+        });
+      });
+    }
+  }
+
+  document.getElementById('onb-next').addEventListener('click', function () {
+    if (onbState.step === onbSteps.length - 1) {
+      localStorage.setItem(STORAGE.PROFILE, JSON.stringify(onbState.data));
+      localStorage.setItem(STORAGE.ONB_DONE, 'true');
+      onbEl.classList.add('hidden');
+      appEl.classList.remove('hidden');
+      window.LJToast && window.LJToast.show('ok', '欢迎，' + (onbState.data.name || '旅人'), '你的沉浸之旅已开启');
+    } else {
+      renderOnbStep(onbState.step + 1);
+    }
+  });
+  document.getElementById('onb-prev').addEventListener('click', function () {
+    if (onbState.step > 0) renderOnbStep(onbState.step - 1);
+  });
+  document.getElementById('onb-skip').addEventListener('click', function () {
+    if (window.confirm('跳过新手引导？\n（设置 → 我的 → 重置引导可重新进入）')) {
+      localStorage.setItem(STORAGE.ONB_DONE, 'true');
+      onbEl.classList.add('hidden');
+      appEl.classList.remove('hidden');
+    }
+  });
+})();
+</script>
 <script>
 window.LJToast = window.LJToast || {
   show: function(kind, title, msg){
