@@ -25,7 +25,7 @@
   if (window.DB) return;
 
   const PREFIX = 'lingjing_v517_';
-  const VERSION = 'v5.17.0';
+  const VERSION = 'v5.18.0-V17G';
 
   // ====== 11 张表 schema ======
   const SCHEMAS = {
@@ -166,8 +166,75 @@
       fields: ['id', 'character_id', 'user_id', 'behavior_type',
                'content', 'is_read', 'read_at',
                'trigger_source', 'created_at']
+    },
+    // ===== V17-G 创作者分成阶梯（追加 2 张表） =====
+    creator_tiers: {
+      key: 'id',
+      fields: ['id', 'tier_code', 'tier_name', 'tier_emoji', 'share_ratio',
+               'threshold_revenue', 'threshold_word_count', 'threshold_rating',
+               'threshold_months', 'threshold_other',
+               'privileges', 'obligations', 'evaluation_period', 'created_at']
+    },
+    creator_tier_history: {
+      key: 'id',
+      fields: ['id', 'creator_id', 'from_tier', 'to_tier', 'change_type',
+               'reason', 'evidence', 'effective_at', 'created_at']
     }
   };
+
+  // ====== V17-G 创作者分成阶梯种子数据（5 档） ======
+  const SEED_CREATOR_TIERS = [
+    {
+      id: 'tier-L1-bronze', tier_code: 'L1', tier_name: '青铜创作者', tier_emoji: '🥉',
+      share_ratio: 50,
+      threshold_revenue: 0, threshold_word_count: 0, threshold_rating: 0,
+      threshold_months: 0, threshold_other: '注册创作者 + 发布 1 部作品',
+      privileges: '平台基础曝光 / 收益结算 / 社区基础权限',
+      obligations: '遵守平台创作规范 / 不得违规发布',
+      evaluation_period: '即时（注册即生效）',
+      created_at: now()
+    },
+    {
+      id: 'tier-L2-silver', tier_code: 'L2', tier_name: '白银创作者', tier_emoji: '🥈',
+      share_ratio: 60,
+      threshold_revenue: 50000, threshold_word_count: 80000, threshold_rating: 7.5,
+      threshold_months: 0, threshold_other: '累计流水 ≥ 500 元 + 完本或稳定连载',
+      privileges: '优先客服 / 作品专题页推荐 / 数据看板',
+      obligations: '保持稳定更新（每月 ≥ 1 万字）/ 不得断更超过 14 天',
+      evaluation_period: '每月 1 日',
+      created_at: now()
+    },
+    {
+      id: 'tier-L3-gold', tier_code: 'L3', tier_name: '黄金创作者', tier_emoji: '🥇',
+      share_ratio: 70,
+      threshold_revenue: 200000, threshold_word_count: 150000, threshold_rating: 8.0,
+      threshold_months: 0, threshold_other: '月流水 ≥ 2000 元 + 评分 ≥ 8.0 + 独家发布',
+      privileges: '首页推荐位 / 专属编辑对接 / 灵玉月福利',
+      obligations: '独家发布 / 不得在竞品平台同步更新 / 配合平台活动',
+      evaluation_period: '每月 1 日 + 季度复评',
+      created_at: now()
+    },
+    {
+      id: 'tier-L4-diamond', tier_code: 'L4', tier_name: '钻石创作者', tier_emoji: '💎',
+      share_ratio: 75,
+      threshold_revenue: 500000, threshold_word_count: 300000, threshold_rating: 8.5,
+      threshold_months: 3, threshold_other: '稳定更新 3 个月 + 阅读时长 ≥ 30 分钟 + 无违规',
+      privileges: '创作者沙龙 / 改编优先权 / 灵晶季度大奖 / VIP 客服',
+      obligations: '稳定更新 3 个月 / 阅读均时长 ≥ 30 分钟 / 严格零违规',
+      evaluation_period: '每月 1 日 + 季度复评 + 年度签约',
+      created_at: now()
+    },
+    {
+      id: 'tier-L5-legend', tier_code: 'L5', tier_name: '传奇创作者', tier_emoji: '🏆',
+      share_ratio: 80,
+      threshold_revenue: 1000000, threshold_word_count: 500000, threshold_rating: 9.0,
+      threshold_months: 6, threshold_other: '平台主动签约 + 独家 + 月更新 ≥ 5 万字 + 完本承诺 + 版权授权清晰',
+      privileges: '保底收入 / 影视改编直通 / IP 孵化 / 年度盛典席位',
+      obligations: '月更新 ≥ 5 万字 / 完本承诺 / 配合平台运营 / 版权授权清晰',
+      evaluation_period: '年度签约评审',
+      created_at: now()
+    }
+  ];
 
   // ====== 工具：UUID + 时间 ======
   function uuid() {
@@ -289,7 +356,10 @@
     scene: 'scene_cards',
     dialogue: 'dialogue_cards',
     question: 'ai_questions',
-    foreshadow: 'foreshadowing_tracker'
+    foreshadow: 'foreshadowing_tracker',
+    // V17-G 创作者分成阶梯
+    tiers: 'creator_tiers',
+    tierHistory: 'creator_tier_history'
   };
 
   function buildTableAPI(tableName) {
@@ -323,5 +393,11 @@
     uuid, now
   };
 
-  console.log('[v5.17] DB 加载完成 · 17 表 schema · localStorage 持久化');
+  // ====== V17-G 种子初始化（首次访问自动写入） ======
+  if (!readTable('creator_tiers').length) {
+    writeTable('creator_tiers', SEED_CREATOR_TIERS);
+    console.log('[V17-G] 创作者分成阶梯 5 档种子数据已写入');
+  }
+
+  console.log('[v5.18-V17G] DB 加载完成 · 19 表 schema（含 creator_tiers + tier_history）· localStorage 持久化');
 })();

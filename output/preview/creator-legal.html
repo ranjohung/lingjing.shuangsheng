@@ -3,270 +3,181 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>创作者法律指南 · 灵境 · 双生</title>
-<meta name="description" content="v6.3 · 第三卷·第五章 · 13 份创作者专属法律文书 · 仅作者可见" />
-<meta name="theme-color" content="#0d0b22" />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<title>创作者协议 · 灵境 · 双生</title>
+<meta name="description" content="V17-G 创作者分成阶梯协议 · 5 档义务 + 考核周期 + 退出机制 · 仅作者可见" />
+<meta name="theme-color" content="#1A1A2E" />
 <link rel="stylesheet" href="css/design-system.css" />
 <style>
-  .legal-page{min-height:100vh;padding-bottom:100px;background:var(--ink-1);}
-  .legal-banner{
-    padding:24px 16px;background:linear-gradient(135deg,rgba(232,199,90,.15),rgba(139,124,246,.06));
-    border-bottom:1px solid var(--ink-4);
-  }
-  .legal-banner h1{font-family:var(--font-display);font-size:24px;font-weight:600;color:#fff;margin:0;display:flex;align-items:center;gap:10px;}
-  .legal-banner p{font-size:13px;color:rgba(255,255,255,.6);margin-top:6px;line-height:1.6;}
-  .legal-grid{display:grid;grid-template-columns:1fr;gap:8px;padding:16px;}
-  .legal-card{
-    padding:18px;background:var(--ink-2);
-    border:1px solid var(--ink-4);border-radius:var(--r-4);
-    text-decoration:none;color:inherit;display:block;
-    transition:all var(--dur-fast) var(--ease-spring);
-  }
-  .legal-card:hover{transform:translateY(-2px);border-color:var(--brand-gold);background:rgba(232,199,90,.04);}
-  .legal-card .head{display:flex;align-items:flex-start;gap:14px;}
-  .legal-card .ico{
-    font-size:24px;width:48px;height:48px;
-    display:grid;place-items:center;background:var(--ink-4);
-    border-radius:var(--r-3);flex-shrink:0;
-  }
-  .legal-card .body{flex:1;min-width:0;}
-  .legal-card .title{font-size:15px;color:#fff;font-weight:600;margin-bottom:4px;}
-  .legal-card .desc{font-size:12px;color:rgba(255,255,255,.6);line-height:1.6;margin-bottom:8px;}
-  .legal-card .tags{display:flex;gap:4px;flex-wrap:wrap;}
-  .legal-card .status{margin-left:auto;}
+  body{padding:0 !important;max-width:none !important;}
+  .top-nav{display:flex;align-items:center;gap:16px;padding:0 24px;height:64px;border-bottom:1px solid var(--border-subtle);margin-bottom:0;background:rgba(8,7,26,.7);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);position:sticky;top:0;z-index:40;}
+  .top-nav .back{font-size:12px;color:var(--text-secondary);padding:6px 12px;border-radius:var(--r-full);border:1px solid var(--border-subtle);background:var(--bg-muted);transition:all var(--dur-fast);}
+  .top-nav .back:hover{background:var(--bg-elevated);color:var(--text-primary);}
+  .top-nav h1{font-size:18px;color:var(--brand-gold);letter-spacing:.01em;}
+  .top-nav .sub{font-size:10px;color:var(--text-muted);letter-spacing:.2em;text-transform:uppercase;margin-left:8px;}
+  .cl-main{max-width:1180px;margin:0 auto;padding:32px 36px 80px;}
+  .cl-banner{padding:24px;border-radius:16px;background:linear-gradient(135deg,rgba(255,179,71,.16),rgba(233,69,96,.08));border:1px solid rgba(255,179,71,.35);margin-bottom:28px;display:flex;gap:18px;align-items:center;}
+  .cl-banner .em{font-size:48px;}
+  .cl-banner .b h2{font:600 22px 'Noto Serif SC';margin-bottom:6px;color:#fff;}
+  .cl-banner .b p{font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;}
+  .cl-section{margin-bottom:28px;padding:22px 24px;background:rgba(255,255,255,.025);border:1px solid var(--border-subtle);border-radius:12px;}
+  .cl-section h3{font:600 16px 'Noto Serif SC';margin-bottom:14px;color:var(--brand-gold);display:flex;align-items:center;gap:8px;}
+  .cl-section p{font-size:13px;color:rgba(255,255,255,.78);margin-bottom:8px;line-height:1.7;}
+  .cl-section ul{padding-left:20px;font-size:13px;color:rgba(255,255,255,.78);line-height:1.85;}
+  .cl-section ul li{margin-bottom:6px;}
+  .cl-tier-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:14px;}
+  .cl-ts{padding:12px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--border-subtle);text-align:center;}
+  .cl-ts.cur{border-color:#FFB347;background:linear-gradient(180deg,rgba(255,179,71,.18),rgba(255,179,71,.04));}
+  .cl-ts .e{font-size:24px;}
+  .cl-ts .n{font:600 13px 'Noto Serif SC';color:#fff;margin:4px 0 2px;}
+  .cl-ts .r{font:600 16px 'Noto Serif SC';color:#FFB347;}
+  .cl-callout{padding:14px 16px;border-radius:10px;background:rgba(78,204,163,.08);border:1px solid rgba(78,204,163,.3);font-size:12px;color:#4ECCA3;margin:14px 0;}
+  .cl-callout.warn{background:rgba(255,179,71,.08);border-color:rgba(255,179,71,.3);color:#FFB347;}
+  @media (max-width:780px){.cl-tier-summary{grid-template-columns:repeat(2,1fr);}.cl-main{padding:24px 18px 60px;}.cl-banner{flex-direction:column;text-align:center;}}
 </style>
 </head>
 <body>
-<div class="legal-page">
-  <div style="padding:16px 16px 0;"><a href="creator-center.html" class="ds-back-arrow">‹ 返回创作者中心</a></div>
-
-  <div class="legal-banner">
-    <h1>📜 创作者法律指南</h1>
-    <p><strong style="color:var(--brand-gold);">第三卷·第五章</strong> · 13 份创作者专属法律文书 · 仅作者可见<br/>
-    首次进入强制阅读前 5 项 · 创作者实名后解锁全部</p>
-  </div>
-
-  <!-- 必读前置 -->
-  <div class="ds-callout" data-type="warning" style="margin:16px;">
-    <span class="ico">⚠️</span>
-    <div class="body">
-      <strong>创作者必读：</strong> 签署前 5 项后才能上架作品<br/>
-      <strong>工具型文书：</strong> 版权证书 / 导出版权附页 / 双生角色告知 可在需要时查阅
+  <header class="top-nav">
+    <a class="back" href="commerce.html">← 返回分成</a>
+    <h1>📜 创作者协议</h1>
+    <span class="sub">V17-G · 仅作者可见</span>
+    <div class="meta">
+      <span>灵境 · 双生</span>
     </div>
-  </div>
+  </header>
 
-  <!-- 必读 5 项 -->
-  <div style="padding:0 16px 8px;">
-    <h3 style="font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-bottom:8px;">必读 · 5 项</h3>
-  </div>
-
-  <div class="legal-grid">
-    <a href="docs/legal/AI_COPYRIGHT_NOTICE.html" class="legal-card">
-      <div class="head">
-        <div class="ico" style="background:rgba(139,124,246,.15);">🤖</div>
-        <div class="body">
-          <div class="title">AI 创作版权声明</div>
-          <div class="desc">AI 辅助生成内容的版权归属 · 创作者权益 · 平台权益 · 用户权益边界</div>
-          <div class="tags">
-            <span class="ds-badge ds-badge-violet">必读 · 1</span>
-            <span class="ds-tag ds-tag-violet">AI 创作</span>
-            <span class="ds-tag ds-tag-cyan">版权归属</span>
-          </div>
-        </div>
-        <span class="ds-status-pill" data-status="pending">未读</span>
+  <main class="cl-main">
+    <div class="cl-banner">
+      <div class="em">📜</div>
+      <div class="b">
+        <h2>灵境 · 双生 创作者分成阶梯协议</h2>
+        <p>本协议适用于在灵境 · 双生平台注册并发布作品的所有创作者。5 档分成阶梯（青铜 / 白银 / 黄金 / 钻石 / 传奇）按贡献度分配收益，配套考核周期、义务条款与退出机制。本协议为 <b style="color:#FFB347">v1.0 草案</b>，正式发布前经法务核验。</p>
       </div>
-    </a>
+    </div>
 
-    <a href="docs/legal/UPLOAD_THIRD_PARTY_NOTICE.html" class="legal-card">
-      <div class="head">
-        <div class="ico" style="background:rgba(232,199,90,.15);">🛡️</div>
-        <div class="body">
-          <div class="title">第三方素材上传声明</div>
-          <div class="desc">字体 · 音乐 · 图片 · 角色立绘 · 第三方素材的版权要求与审核标准</div>
-          <div class="tags">
-            <span class="ds-badge ds-badge-violet">必读 · 2</span>
-            <span class="ds-tag ds-tag-amber">第三方</span>
-            <span class="ds-tag ds-tag-gold">素材</span>
-          </div>
-        </div>
-        <span class="ds-status-pill" data-status="pending">未读</span>
+    <div class="cl-section">
+      <h3>🪜 一、5 档分成阶梯速览</h3>
+      <p>作者依据累计流水、字数、评分、更新稳定性等综合指标，自动匹配到对应档位，享受相应分成比例与平台特权。</p>
+      <div class="cl-tier-summary" id="cl-summary"></div>
+    </div>
+
+    <div class="cl-section">
+      <h3>📋 二、5 档义务条款</h3>
+      <ul>
+        <li><b style="color:#CD7F32">🥉 L1 青铜（50%）</b> · 义务：遵守平台创作规范 / 不得违规发布 · 考核：即时</li>
+        <li><b style="color:#C0C0C0">🥈 L2 白银（60%）</b> · 义务：保持稳定更新（每月 ≥ 1 万字）/ 不得断更超过 14 天 · 考核：每月 1 日</li>
+        <li><b style="color:#FFD700">🥇 L3 黄金（70%）</b> · 义务：独家发布 / 不得在竞品平台同步更新 / 配合平台活动 · 考核：每月 1 日 + 季度复评</li>
+        <li><b style="color:#B9F2FF">💎 L4 钻石（75%）</b> · 义务：稳定更新 3 个月 / 阅读均时长 ≥ 30 分钟 / 严格零违规 · 考核：每月 + 季度 + 年度签约</li>
+        <li><b style="color:#FFB347">🏆 L5 传奇（80%）</b> · 义务：月更新 ≥ 5 万字 / 完本承诺 / 配合平台运营 / 版权授权清晰 · 考核：年度签约评审</li>
+      </ul>
+      <div class="cl-callout">
+        ✅ 平台承诺：所有档位升级基于客观数据（流水 / 字数 / 评分 / 稳定性），不依赖人工主观判断。如对档位判定有异议，可通过站内信发起「档位复核申请」，平台将在 5 个工作日内回复。
       </div>
-    </a>
+    </div>
 
-    <a href="legal-pending.html" class="legal-card" onclick="showToast('warning','待建','著作权授权协议 · v6.4 上线')">
-      <div class="head">
-        <div class="ico" style="background:rgba(232,155,90,.15);">📜</div>
-        <div class="body">
-          <div class="title">著作权授权协议</div>
-          <div class="desc">作品版权归属 · 授权范围（独家/非独家）· 期限与终止条款</div>
-          <div class="tags">
-            <span class="ds-badge ds-badge-violet">必读 · 3</span>
-            <span class="ds-tag ds-tag-violet">待建</span>
-          </div>
-        </div>
-        <span class="ds-status-pill" data-status="pending">待建</span>
+    <div class="cl-section">
+      <h3>📆 三、考核周期与档位升降</h3>
+      <p><b>3.1 月度评估：</b>每月 1 日 00:00 自动跑批，根据上月数据重新匹配档位。新档位次日生效，分成比例按新档位计算。</p>
+      <p><b>3.2 季度复评：</b>每季度首月 1 日对 L3+ 创作者做综合评估，包含作品质量评分、读者反馈、违规记录。</p>
+      <p><b>3.3 年度签约：</b>每年 12 月 31 日对 L4 / L5 创作者做年度签约评审，签订下一年度合作协议。</p>
+      <p><b>3.4 即时降档触发：</b>发生以下情况之一，立即降档至 L1 且 90 天内不得申请升级：</p>
+      <ul>
+        <li>违规发布（涉政 / 涉黄 / 涉暴 / 抄袭 / 洗稿）</li>
+        <li>数据造假（刷流水 / 刷评分 / 刷阅读时长）</li>
+        <li>违反独家协议（在竞品平台同步更新 L3+ 档作品）</li>
+      </ul>
+      <div class="cl-callout warn">
+        ⚠️ 重要：档位调整系统会自动通知站内信 + 邮件（如已绑定）。如有异议请在收到通知后 7 天内提交复核，逾期视为接受新档位。
       </div>
-    </a>
+    </div>
 
-    <a href="legal-pending.html" class="legal-card" onclick="showToast('warning','待建','改编授权协议 · v6.4 上线')">
-      <div class="head">
-        <div class="ico" style="background:rgba(155,91,224,.15);">🔄</div>
-        <div class="body">
-          <div class="title">改编授权协议</div>
-          <div class="desc">改编游戏 / 漫画 / 影视 / 周边时的权益分配与授权流程</div>
-          <div class="tags">
-            <span class="ds-badge ds-badge-violet">必读 · 4</span>
-            <span class="ds-tag ds-tag-coral">待建</span>
-          </div>
-        </div>
-        <span class="ds-status-pill" data-status="pending">待建</span>
+    <div class="cl-section">
+      <h3>💰 四、分成结算规则</h3>
+      <p><b>4.1 结算周期：</b>每月 1 日结算上月收益（自然月）。T+5 工作日内到账。</p>
+      <p><b>4.2 起付金额：</b>单月累计可结算金额 ≥ 100 灵晶（折合 1 元）方可提现，不足部分累计到下月。</p>
+      <p><b>4.3 货币体系：</b>所有付费收入以「灵晶」结算（1 元 = 100 灵晶）。平台承担支付宝 / 微信支付手续费，作者按税前金额分成。</p>
+      <p><b>4.4 税费：</b>单笔结算金额 ≥ 800 元时，平台代扣代缴个人所得税（劳务报酬）。具体税率依国家规定。</p>
+      <p><b>4.5 退款：</b>玩家在 7 天内申请退款且符合退款规则的，相应金额从作者下月结算中扣除。</p>
+    </div>
+
+    <div class="cl-section">
+      <h3>🚪 五、退出机制</h3>
+      <p><b>5.1 作者主动退出：</b>提交「作品下架申请」后，已发布作品进入「仅自己可见」状态，30 天后自动下架。已结算收入不受影响。</p>
+      <p><b>5.2 作品永久下架：</b>如作者违反社区规范，平台有权立即下架违规内容，并根据情节严重程度决定是否保留档位。</p>
+      <p><b>5.3 数据归属：</b>作品下架后，作者的人物设定 / 大纲 / 剧情卡归作者所有，平台不承担保管义务。请自行备份。</p>
+      <p><b>5.4 协议变更：</b>平台保留修订本协议的权利。重大变更将通过站内信 + 弹窗提前 30 天通知，继续使用平台视为接受新协议。</p>
+    </div>
+
+    <div class="cl-section">
+      <h3>⚖️ 六、知识产权与改编授权</h3>
+      <p><b>6.1 作品版权：</b>作品完整版权归作者所有，平台仅获平台分发与展示授权。</p>
+      <p><b>6.2 AI 辅助：</b>使用 AI 辅助创作（小说辅助模拟器）的部分，作者应主动标注 AI 占比。涉及版权分层时，AI 占比 ≥ 50% 的作品不可申请独家 / 改编授权。</p>
+      <p><b>6.3 改编授权：</b>影视 / 游戏 / 漫画等改编需单独签订「改编授权协议」，平台抽成 10-30%（详见 commerce.html 改编授权模块）。</p>
+      <p><b>6.4 违规处理：</b>抄袭 / 洗稿一经查实，立即取消档位 + 永久封禁 + 公示处理。</p>
+    </div>
+
+    <div class="cl-section">
+      <h3>🛡️ 七、免责声明</h3>
+      <p>本协议为灵境 · 双生平台与创作者之间的合作框架。平台不对以下情况承担责任：</p>
+      <ul>
+        <li>因不可抗力（自然灾害 / 政策变化 / 监管要求）导致的服务中断</li>
+        <li>作者作品内容引发的法律纠纷（作者自行承担）</li>
+        <li>第三方支付平台（支付宝 / 微信）故障导致的结算延迟</li>
+      </ul>
+      <div class="cl-callout">
+        📞 商务咨询：站内信 → 创作者服务 → 商务对接<br>
+        📧 法务咨询：legal@lingjing.example（占位邮箱，正式发布后启用）
       </div>
-    </a>
+    </div>
 
-    <a href="legal-pending.html" class="legal-card" onclick="showToast('warning','待建','收益分成协议 · v6.4 上线')">
-      <div class="head">
-        <div class="ico" style="background:rgba(110,198,255,.15);">💰</div>
-        <div class="body">
-          <div class="title">收益分成协议</div>
-          <div class="desc">双币种 / 订阅 / 抽成的具体比例 · 5 档分成 · 提现规则</div>
-          <div class="tags">
-            <span class="ds-badge ds-badge-violet">必读 · 5</span>
-            <span class="ds-tag ds-tag-cyan">待建</span>
-          </div>
-        </div>
-        <span class="ds-status-pill" data-status="pending">待建</span>
-      </div>
-    </a>
-  </div>
+    <div class="cl-section">
+      <h3>✅ 八、签署确认</h3>
+      <p>点击下方按钮代表您已阅读并理解本协议全部条款。本协议自作者首次发布作品时自动生效。</p>
+      <button class="add-btn" id="cl-ack-btn" style="background:#FFB347;color:#000;font-weight:600;">我已阅读并理解本协议</button>
+    </div>
 
-  <!-- 选读 8 项 -->
-  <div style="padding:0 16px 8px;margin-top:16px;">
-    <h3 style="font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-bottom:8px;">选读 · 工具型</h3>
-  </div>
+    <div style="text-align:center;font-size:11px;color:rgba(255,255,255,.4);padding:20px 0;">
+      V17-G v1.0 草案 · 2026-09-11 · 灵境 · 双生 创作者协议<br>
+      本协议在正式发布前需经法务审核，开发者不对条款法律效力承担责任
+    </div>
+  </main>
 
-  <div class="legal-grid">
-    <a href="docs/legal/COPYRIGHT_CERTIFICATE.html" class="legal-card">
-      <div class="head">
-        <div class="ico">📄</div>
-        <div class="body">
-          <div class="title">版权证书模板</div>
-          <div class="desc">导出 PDF · 作为上架凭证</div>
-          <div class="tags"><span class="ds-tag ds-tag-gold">工具</span><span class="ds-tag ds-tag-cyan">PDF</span></div>
-        </div>
-        <span class="ds-icon-btn">›</span>
-      </div>
-    </a>
+  <div class="toast" id="toast"></div>
 
-    <a href="docs/legal/EXPORT_COPYRIGHT_PAGE.html" class="legal-card">
-      <div class="head">
-        <div class="ico">📤</div>
-        <div class="body">
-          <div class="title">导出版权附页</div>
-          <div class="desc">导出 TXT / PDF 时附带的版权页模板</div>
-          <div class="tags"><span class="ds-tag ds-tag-gold">工具</span></div>
-        </div>
-        <span class="ds-icon-btn">›</span>
-      </div>
-    </a>
-
-    <a href="docs/legal/DUAL_SOUL_CHARACTER_NOTICE.html" class="legal-card">
-      <div class="head">
-        <div class="ico">🌉</div>
-        <div class="body">
-          <div class="title">双生角色告知</div>
-          <div class="desc">带角色进心屿前必须签署的角色使用告知</div>
-          <div class="tags"><span class="ds-tag ds-tag-violet">双界</span></div>
-        </div>
-        <span class="ds-icon-btn">›</span>
-      </div>
-    </a>
-
-    <a href="legal-pending.html" class="legal-card" onclick="showToast('warning','待建','内容审核标准 · v6.4 上线')">
-      <div class="head">
-        <div class="ico">✅</div>
-        <div class="body">
-          <div class="title">内容审核标准（创作者必读）</div>
-          <div class="desc">5 维审核 · 6 级评定 · S/A/B/C/D · 上架前自查</div>
-          <div class="tags"><span class="ds-tag ds-tag-cyan">审核</span></div>
-        </div>
-        <span class="ds-status-pill" data-status="pending">待建</span>
-      </div>
-    </a>
-
-    <a href="legal-pending.html" class="legal-card" onclick="showToast('warning','待建','创作者实名认证规则 · v6.4 上线')">
-      <div class="head">
-        <div class="ico">🆔</div>
-        <div class="body">
-          <div class="title">创作者实名认证规则</div>
-          <div class="desc">创作前必读 · 18+ 验证 · 身份核验 · 创作资质</div>
-          <div class="tags"><span class="ds-tag ds-tag-amber">实名</span></div>
-        </div>
-        <span class="ds-status-pill" data-status="pending">待建</span>
-      </div>
-    </a>
-
-    <a href="legal-pending.html" class="legal-card" onclick="showToast('warning','待建','创作者税务与发票 · v6.4 上线')">
-      <div class="head">
-        <div class="ico">🧾</div>
-        <div class="body">
-          <div class="title">创作者税务与发票</div>
-          <div class="desc">收入结算方式 · 开票流程 · 个税代扣</div>
-          <div class="tags"><span class="ds-tag ds-tag-violet">税务</span></div>
-        </div>
-        <span class="ds-status-pill" data-status="pending">待建</span>
-      </div>
-    </a>
-
-    <a href="legal-pending.html" class="legal-card" onclick="showToast('warning','待建','创作者侧投诉与申诉 · v6.4 上线')">
-      <div class="head">
-        <div class="ico">⚖️</div>
-        <div class="body">
-          <div class="title">创作者侧投诉与申诉</div>
-          <div class="desc">作品被下架/被投诉的维权流程 · 申诉渠道</div>
-          <div class="tags"><span class="ds-tag ds-tag-coral">申诉</span></div>
-        </div>
-        <span class="ds-status-pill" data-status="pending">待建</span>
-      </div>
-    </a>
-
-    <a href="docs/LEGAL_INTEGRATION_PLAN.html" class="legal-card" style="background:linear-gradient(135deg,rgba(232,199,90,.06),rgba(139,124,246,.04));border-color:rgba(232,199,90,.2);">
-      <div class="head">
-        <div class="ico">📋</div>
-        <div class="body">
-          <div class="title" style="color:var(--brand-gold);">完整法律文书清单</div>
-          <div class="desc">LEGAL_INTEGRATION_PLAN.md · 23 份文书 · 卷次归属</div>
-          <div class="tags"><span class="ds-tag ds-tag-gold">总方案</span></div>
-        </div>
-        <span class="ds-icon-btn">›</span>
-      </div>
-    </a>
-  </div>
-</div>
-
-<!-- 5 Tab 底部 -->
-<nav class="ds-bottom-tabs">
-  <a class="ds-bottom-tab" href="../../product-preview.html"><span class="ico">🏠</span><span>总览</span></a>
-  <a class="ds-bottom-tab" href="library.html"><span class="ico">📚</span><span>小说世界</span></a>
-  <a class="ds-bottom-tab" href="heart-island.html"><span class="ico">🏝️</span><span>心屿</span></a>
-  <a class="ds-bottom-tab active" href="creator-center.html"><span class="ico">✍️</span><span>创作</span></a>
-  <a class="ds-bottom-tab" href="me.html"><span class="ico">👤</span><span>我的</span></a>
-</nav>
-
-<div class="ds-toast-container" id="toast-container"></div>
-
-<script src="js/db.js"></script>
+<script src="js/tier.js"></script>
 <script>
-function showToast(type, title, msg) {
-  const c = document.getElementById('toast-container');
-  const icons = { success: '✓', warning: '⚠', danger: '✕', info: 'ℹ' };
-  const t = document.createElement('div');
-  t.className = 'ds-toast ' + type;
-  t.innerHTML = `<span class="ico">${icons[type]}</span><div class="msg"><strong>${title}</strong>${msg ? '<div style="font-size:11px;opacity:.7;margin-top:2px;">' + msg + '</div>' : ''}</div><button class="close" onclick="this.parentElement.remove()">×</button>`;
-  c.appendChild(t);
-  setTimeout(() => t.remove(), 4000);
+function renderCLSummary() {
+  if (!window.LJTier) return;
+  var box = document.getElementById('cl-summary');
+  if (!box) return;
+  var tiers = window.LJTier.getAll();
+  box.innerHTML = '';
+  tiers.forEach(function (t) {
+    var card = document.createElement('div');
+    card.className = 'cl-ts';
+    card.innerHTML =
+      '<div class="e">' + t.tier_emoji + '</div>' +
+      '<div class="n">L' + t.tier_code.slice(1) + ' ' + t.tier_name + '</div>' +
+      '<div class="r">' + t.share_ratio + '%</div>';
+    box.appendChild(card);
+  });
 }
-try { console.log('[v6.3 creator-legal] 加载完成'); } catch(e) {}
+function toast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type || 'ok');
+  clearTimeout(t._t);
+  t._t = setTimeout(function () { t.className = 'toast'; }, 2400);
+}
+document.addEventListener('DOMContentLoaded', function () {
+  renderCLSummary();
+  var btn = document.getElementById('cl-ack-btn');
+  if (btn) btn.addEventListener('click', function () {
+    try { localStorage.setItem('lingjing_v5170_creator_legal_ack', 'v17g-v1'); } catch (e) {}
+    toast('✅ 已确认阅读协议');
+    btn.disabled = true;
+    btn.textContent = '✓ 已确认';
+  });
+});
 </script>
 </body>
 </html>

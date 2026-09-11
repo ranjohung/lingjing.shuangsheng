@@ -87,29 +87,6 @@
   .stat-card .label{font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.1em;text-transform:uppercase;}
   .stat-card .value{font:24px 'Noto Serif SC';color:#fff;margin-top:4px;}
   .stat-card .sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px;}
-
-  /* ============ V17-G 分成阶梯 ============ */
-  .v17g-current{display:flex;align-items:center;gap:18px;padding:18px;border-radius:14px;background:linear-gradient(135deg,rgba(255,179,71,.12),rgba(233,69,96,.08));border:1px solid rgba(255,179,71,.4);margin-bottom:18px;}
-  .v17g-c-emoji{font-size:42px;width:64px;height:64px;display:grid;place-items:center;background:rgba(255,179,71,.18);border-radius:14px;}
-  .v17g-c-body{flex:1;min-width:0;}
-  .v17g-c-name{font:600 20px 'Noto Serif SC';color:#fff;margin-bottom:4px;}
-  .v17g-c-meta{font-size:12px;color:rgba(255,255,255,.6);margin-bottom:8px;}
-  .v17g-progress{height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;}
-  .v17g-progress>div{height:100%;background:linear-gradient(90deg,#FFB347,#E94560);transition:width .4s;}
-  .v17g-c-share{margin-left:auto;text-align:right;}
-  .v17g-c-share .v{font:600 36px 'Noto Serif SC';color:#FFB347;}
-  .v17g-c-share .l{font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.1em;}
-  .v17g-ladder{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:14px;}
-  .v17g-lt{padding:14px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);position:relative;transition:all .2s;}
-  .v17g-lt.current{border-color:#FFB347;background:linear-gradient(180deg,rgba(255,179,71,.18),rgba(255,179,71,.06));box-shadow:0 4px 16px rgba(255,179,71,.2);transform:translateY(-2px);}
-  .v17g-lt.passed{opacity:.55;border-color:rgba(255,255,255,.18);}
-  .v17g-lt.locked{opacity:.35;}
-  .v17g-lt .emoji{font-size:28px;display:block;margin-bottom:4px;}
-  .v17g-lt .name{font:600 13px 'Noto Serif SC';color:#fff;margin-bottom:2px;}
-  .v17g-lt .ratio{font:600 16px 'Noto Serif SC';color:#FFB347;margin:6px 0;}
-  .v17g-lt .thresh{font-size:10px;color:rgba(255,255,255,.55);line-height:1.5;min-height:36px;}
-  .v17g-lt .badge{position:absolute;top:8px;right:8px;font-size:9px;padding:2px 6px;border-radius:6px;background:#FFB347;color:#000;font-weight:600;}
-  @media (max-width:780px){.v17g-ladder{grid-template-columns:repeat(2,1fr);}.v17g-c-share{display:none;}.v17g-current{flex-direction:column;align-items:flex-start;}}
   .stat-card.pending .value{color:#ffd980;}
   .stat-card.settled .value{color:#7cf6c0;}
 
@@ -317,32 +294,6 @@
   </div>
 </div>
 
-<!-- V17-G 创作者分成阶梯 -->
-<div class="section" id="v17g-tier-section">
-  <div class="section-head">
-    <h2>🪜 创作者分成阶梯</h2>
-    <span class="badge">V17-G · 5 档</span>
-    <span class="desc">青铜 50% → 传奇 80%，多维门槛 + 协议义务</span>
-  </div>
-
-  <div class="card">
-    <!-- 当前档位卡 -->
-    <div class="v17g-current" id="v17g-current-card">
-      <!-- 动态渲染：当前档位 / 升级进度 / 分成比例 -->
-    </div>
-
-    <!-- 5 档阶梯表 -->
-    <div class="v17g-ladder" id="v17g-ladder">
-      <!-- 动态渲染：5 张档位卡（含 current / passed / locked） -->
-    </div>
-
-    <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border-subtle);display:flex;gap:10px;flex-wrap:wrap;">
-      <a class="add-btn" href="creator-legal.html" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;">📜 创作者协议（5 档义务）</a>
-      <button class="add-btn" style="background:transparent;border:1px solid var(--border-subtle);color:var(--text-secondary);" onclick="if(window.LJToast)window.LJToast.show('warn','下载对账单','即将开放 · 联系商务')">📥 下载对账单</button>
-    </div>
-  </div>
-</div>
-
 <!-- 四、质量审核 -->
 <div class="section" data-page-node-id="soKhKOQjsWPdElCi8Vqkqo">
   <div class="section-head" data-page-node-id="RtRjgYqne0szgZZOOAul2T">
@@ -406,55 +357,7 @@
 <script src="js/monetization.js"></script>
 <script src="js/quality-review.js"></script>
 <script src="js/ai-helper.js"></script>
-<script src="js/tier.js"></script>
 <script>
-function renderV17GTier() {
-  if (!window.LJTier) return;
-  // mock 当前创作者数据
-  var metrics = { totalRevenue: 320000, totalWords: 180000, avgRating: 8.2, stableMonths: 2, hasViolation: false };
-  var tiers = window.LJTier.getAll();
-  var current = window.LJTier.calcTier(metrics);
-  var currentIdx = 0;
-  for (var i = 0; i < tiers.length; i++) if (tiers[i].tier_code === current.tier_code) currentIdx = i;
-  var progress = window.LJTier.getProgress(current.tier_code, metrics);
-  var thresholdText = window.LJTier.formatThreshold(current);
-
-  var cur = document.getElementById('v17g-current-card');
-  if (cur) {
-    var next = currentIdx < tiers.length - 1 ? tiers[currentIdx + 1] : null;
-    var nextHint = next ? ('距 L' + next.tier_code.slice(1) + ' ' + next.tier_name + ' 还差 ' + (progress < 100 ? ((100 - progress) + '% 进度') : '已满足，待复评')) : '已达顶级，享受 80% 分成';
-    cur.innerHTML = '' +
-      '<div class="v17g-c-emoji">' + current.tier_emoji + '</div>' +
-      '<div class="v17g-c-body">' +
-        '<div class="v17g-c-name">L' + current.tier_code.slice(1) + ' · ' + current.tier_name + '</div>' +
-        '<div class="v17g-c-meta">' + nextHint + ' · 考核周期：' + current.evaluation_period + '</div>' +
-        '<div class="v17g-progress"><div style="width:' + progress + '%"></div></div>' +
-      '</div>' +
-      '<div class="v17g-c-share">' +
-        '<div class="v">' + current.share_ratio + '%</div>' +
-        '<div class="l">作者分成比例</div>' +
-      '</div>';
-  }
-
-  var ladder = document.getElementById('v17g-ladder');
-  if (ladder) {
-    ladder.innerHTML = '';
-    for (var j = 0; j < tiers.length; j++) {
-      var t = tiers[j];
-      var klass = j === currentIdx ? 'current' : (j < currentIdx ? 'passed' : 'locked');
-      var badge = j === currentIdx ? '<span class="badge">当前</span>' : (j < currentIdx ? '<span class="badge" style="background:#4ECCA3;color:#fff;">已过</span>' : '');
-      var card = document.createElement('div');
-      card.className = 'v17g-lt ' + klass;
-      card.innerHTML = badge +
-        '<span class="emoji">' + t.tier_emoji + '</span>' +
-        '<div class="name">L' + t.tier_code.slice(1) + ' · ' + t.tier_name + '</div>' +
-        '<div class="ratio">' + t.share_ratio + '%</div>' +
-        '<div class="thresh">' + window.LJTier.formatThreshold(t) + '</div>';
-      ladder.appendChild(card);
-    }
-  }
-}
-document.addEventListener('DOMContentLoaded', renderV17GTier);
 (function () {
   let currentNovel = null;
   let currentNovelId = null;
