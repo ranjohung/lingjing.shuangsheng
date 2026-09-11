@@ -85,6 +85,8 @@
 | 11b | 注册登录 | `product-preview.html` login | 手机/邮箱 tab + 微信/Apple/QQ/访客 4 快登 + 3 项协议勾选 + 18+ 拦截 | ✅ V20-C |
 | 11c | 新手引导 | `product-preview.html` onb | 4 步 wizard（称呼/性别/年龄段/陪伴类型）+ 进度点 + 跳过/上一步/下一步 | ✅ V20-C |
 | 11d | 退出登录 | `me.html` 账号区 | 当前登录方式展示 + 退出确认弹窗（dialog）+ 清登录态回启动页 + 可换账号 | ✅ V20-F |
+| 11e | 手机版全局锁定 | `css/mobile-lock.css`（31 页全量引入） | body max-width:480px 居中 + desktop 手机屏观感（阴影/边框）；杜绝任何页面铺满宽度的"网页版"布局 | ✅ V20-G |
+| 11f | 法律阅读页 | `legal-view.html?doc=XXX` | 手机版壳（返回+标题）+ fetch docs/legal/*.md + 极简 md 渲染（h1-h3/列表/粗体/引用）；16 份法律文书统一入口 | ✅ V20-G |
 | 12 | **钱包** | （待建）`wallet.html` | Tab：灵玉/灵晶/订阅/充值/交易记录/退款申请 | ❌ 缺失 |
 | 13 | **设置 + 法律中心** | （待建）`settings.html` | 9 Tab：账号/安全/通知/隐私/显示/声音/AI 偏好/法律（15 份接入）/关于/注销 | ❌ 缺失 |
 
