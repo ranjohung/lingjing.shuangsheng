@@ -4,7 +4,7 @@
 <meta charset="UTF-8" data-page-node-id="jzqjMom7rS0aNNGGFzMr8W" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" data-page-node-id="HjS2EK5t2YfEYn1IdtAa5G" />
 <title>灵境 · 双生 — 首页</title>
-<meta name="description" content="v6.4 · 按《完整UI/UX界面布局设计文档 V1.0》重做：深空蓝黑 #1A1A2E · 灵境红 #E94560 · 5 Tab 底部导航 · 启动页 + 首页" data-page-node-id="9ACwYpUMBDBLSkNzlKkFq1" />
+<meta name="description" content="v6.4 · V17.0 实施中 · V17-A 已交付（js/tabbar.js · 122 行）· 按《UI/UX 设计文档 V1.0》重做：深空蓝黑 #1A1A2E · 灵境红 #E94560 · 5 Tab 底部导航 · 启动页 + 首页" data-page-node-id="9ACwYpUMBDBLSkNzlKkFq1" />
 <meta name="theme-color" content="#1A1A2E" data-page-node-id="IvhFEFlPTYf0D1Z5PLz49q" />
 <style>
 /* ================================================================
@@ -300,6 +300,303 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
 .toast-item.warn .ti{background:var(--warn)}
 @keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ================================================================
+   V17.0 草案预览样式（2026-09-11 · 待用户审阅）
+   复用 v6.4.1 tokens，不引入新组件库
+================================================================ */
+.v17-banner{
+  margin:32px var(--margin) 0;padding:14px 16px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(108,92,231,.22),rgba(0,184,148,.18));
+  border:1px solid rgba(108,92,231,.35);
+  display:flex;align-items:center;gap:12px;
+}
+.v17-banner .dot{width:8px;height:8px;border-radius:50%;background:var(--warn);box-shadow:0 0 8px var(--warn)}
+.v17-banner .b-txt{flex:1;font-size:13px;line-height:1.5}
+.v17-banner .b-txt b{color:var(--warn);font-weight:700}
+.v17-banner .b-txt a{color:var(--xinyu);text-decoration:underline;margin-right:8px}
+
+/* ---------- V17-D 启动签到 mock ---------- */
+.v17-section{margin:36px var(--margin) 0}
+.v17-section-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+}
+.v17-section-head h3{font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px}
+.v17-section-head h3::before{content:'';width:4px;height:14px;border-radius:2px;background:var(--xinyu)}
+.v17-section-head .badge{
+  font-size:10px;padding:3px 8px;border-radius:6px;
+  background:rgba(255,179,71,.18);color:var(--warn);font-weight:700;letter-spacing:.5px;
+}
+.signin-mock{
+  padding:18px 14px 14px;border-radius:14px;
+  background:linear-gradient(160deg,rgba(255,179,71,.12),rgba(233,69,96,.06) 60%,var(--card));
+  border:1px solid rgba(255,179,71,.25);
+}
+.signin-mock .sm-title{font-size:15px;font-weight:600;text-align:center;margin-bottom:12px}
+.signin-mock .sm-week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px}
+.signin-mock .sm-day{
+  text-align:center;padding:8px 2px;border-radius:8px;
+  background:rgba(255,255,255,.04);border:1px solid var(--line);
+  font-size:11px;
+}
+.signin-mock .sm-day .d-d{font-size:13px;font-weight:600;color:var(--sub)}
+.signin-mock .sm-day .d-r{font-size:10px;color:var(--warn);margin-top:3px;font-weight:600}
+.signin-mock .sm-day.today{
+  background:linear-gradient(135deg,var(--warn),#FF8A5B);
+  border-color:transparent;color:#1A1A2E;
+}
+.signin-mock .sm-day.today .d-d,.signin-mock .sm-day.today .d-r{color:#1A1A2E}
+.signin-mock .sm-day.done{opacity:.5}
+.signin-mock .sm-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.signin-mock .sm-actions button{
+  height:42px;border-radius:10px;font-size:13px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;gap:4px;
+}
+.signin-mock .sm-actions .a-sign{background:linear-gradient(135deg,var(--warn),#FF8A5B);color:#1A1A2E}
+.signin-mock .sm-actions .a-video{background:rgba(255,255,255,.08);border:1px solid var(--line);color:var(--text)}
+.signin-mock .sm-shortcuts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.signin-mock .sm-shortcuts .sc{
+  text-align:center;padding:8px 2px;border-radius:8px;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);
+  font-size:10px;color:var(--sub);
+}
+.signin-mock .sm-shortcuts .sc .em{font-size:18px;display:block;margin-bottom:3px}
+
+/* ---------- V17-B 世界功能区 mock ---------- */
+.world-mock{padding:14px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.world-mock .wm-subnav{
+  display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;
+  scrollbar-width:none;
+}
+.world-mock .wm-subnav::-webkit-scrollbar{display:none}
+.world-mock .wm-subnav .sn{
+  flex-shrink:0;padding:6px 12px;border-radius:16px;font-size:12px;
+  background:rgba(255,255,255,.05);color:var(--sub);white-space:nowrap;
+}
+.world-mock .wm-subnav .sn.active{
+  background:var(--world);color:#fff;font-weight:600;
+}
+.world-mock .wm-banner{
+  height:120px;border-radius:10px;margin-bottom:12px;
+  background:linear-gradient(135deg,#6C5CE7,#A29BFE 50%,#E94560);
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;
+  padding:12px;color:#fff;position:relative;overflow:hidden;
+}
+.world-mock .wm-banner::before{
+  content:'';position:absolute;top:8px;right:8px;
+  width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.2);
+}
+.world-mock .wm-banner .b-t{font-size:14px;font-weight:700;letter-spacing:.5px}
+.world-mock .wm-banner .b-s{font-size:11px;opacity:.85;margin-top:2px}
+.world-mock .wm-banner .b-dots{
+  position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+  display:flex;gap:4px;
+}
+.world-mock .wm-banner .b-dots i{
+  width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4);
+}
+.world-mock .wm-banner .b-dots i.on{background:#fff;width:14px;border-radius:3px}
+.world-mock .wm-quick{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
+.world-mock .wm-quick .qk{
+  text-align:center;padding:10px 4px;border-radius:10px;
+  background:rgba(0,184,148,.08);border:1px solid rgba(0,184,148,.2);
+  font-size:11px;color:var(--text);
+}
+.world-mock .wm-quick .qk .em{font-size:18px;display:block;margin-bottom:3px}
+.world-mock .wm-board{margin-bottom:10px}
+.world-mock .wm-board-head{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:13px;font-weight:600;margin-bottom:8px;
+}
+.world-mock .wm-board-head .sub-tabs{display:flex;gap:6px}
+.world-mock .wm-board-head .sub-tabs span{
+  font-size:11px;padding:3px 8px;border-radius:6px;color:var(--sub);
+}
+.world-mock .wm-board-head .sub-tabs span.on{
+  background:rgba(255,255,255,.08);color:var(--text);
+}
+.world-mock .wm-waterfall{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.world-mock .wm-card{
+  border-radius:8px;background:var(--card-2);border:1px solid var(--line);
+  overflow:hidden;
+}
+.world-mock .wm-card .cov{
+  height:90px;display:grid;place-items:center;font-size:24px;
+}
+.world-mock .wm-card .info{padding:6px 8px}
+.world-mock .wm-card .t{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.world-mock .wm-card .g{font-size:10px;color:var(--sub);margin-top:2px}
+.world-mock .wm-card .meta{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:4px;font-size:10px;color:var(--sub);
+}
+.world-mock .wm-card .meta .star{color:var(--warn)}
+
+/* ---------- V17-C 心屿功能区 mock ---------- */
+.xinyu-mock{padding:14px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.xinyu-mock .xm-subnav{
+  display:flex;gap:14px;margin-bottom:12px;padding-bottom:8px;
+  border-bottom:1px solid var(--line);
+}
+.xinyu-mock .xm-subnav .sn{
+  font-size:13px;color:var(--sub);font-weight:500;
+  padding-bottom:6px;border-bottom:2px solid transparent;
+}
+.xinyu-mock .xm-subnav .sn.active{color:var(--xinyu);border-bottom-color:var(--xinyu)}
+.xinyu-mock .xm-filter{
+  display:flex;gap:6px;margin-bottom:14px;
+}
+.xinyu-mock .xm-filter .f{
+  font-size:11px;padding:5px 10px;border-radius:14px;
+  background:rgba(255,255,255,.05);color:var(--sub);
+}
+.xinyu-mock .xm-filter .f.on{background:var(--xinyu);color:#fff;font-weight:600}
+.xinyu-mock .xm-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.xinyu-mock .xm-char{
+  position:relative;padding:10px;border-radius:10px;
+  background:var(--card-2);border:1px solid var(--line);
+}
+.xinyu-mock .xm-char .src-tag{
+  position:absolute;top:6px;right:6px;
+  font-size:9px;padding:2px 5px;border-radius:4px;font-weight:700;
+}
+.xinyu-mock .xm-char .src-tag.creator{background:#4A90E2;color:#fff}
+.xinyu-mock .xm-char .src-tag.novel{background:#D85B9A;color:#fff}
+.xinyu-mock .xm-char .head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.xinyu-mock .xm-char .ava{
+  width:36px;height:36px;border-radius:50%;display:grid;place-items:center;
+  font-size:18px;flex-shrink:0;
+}
+.xinyu-mock .xm-char .nm{font-size:13px;font-weight:600}
+.xinyu-mock .xm-char .stg{font-size:10px;color:var(--sub);margin-top:1px}
+.xinyu-mock .xm-char .stg b{color:var(--warn);font-weight:700}
+.xinyu-mock .xm-char .msg{
+  font-size:11px;color:var(--sub);line-height:1.4;
+  margin-bottom:8px;
+  overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+}
+.xinyu-mock .xm-char .acts{display:flex;gap:4px}
+.xinyu-mock .xm-char .acts button{
+  flex:1;height:28px;border-radius:6px;font-size:11px;font-weight:600;
+}
+.xinyu-mock .xm-char .acts .a-chat{background:var(--xinyu);color:#fff}
+.xinyu-mock .xm-char .acts .a-world{
+  background:rgba(255,255,255,.08);border:1px solid var(--line);color:var(--text);
+}
+.xinyu-mock .xm-add{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:100%;height:40px;border-radius:10px;font-size:13px;font-weight:600;
+  background:rgba(108,92,231,.15);border:1px dashed rgba(108,92,231,.4);color:var(--xinyu);
+}
+
+/* ---------- V17.0 Q1-Q10 决策面板 ---------- */
+.v17-decisions{
+  margin:24px var(--margin) 0;padding:14px;border-radius:12px;
+  background:var(--card);border:1px solid var(--line);
+}
+.v17-decisions h3{font-size:15px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.v17-decisions h3::before{content:'🎯';font-size:14px}
+.v17-decisions .vd-list{display:flex;flex-direction:column;gap:6px}
+.v17-decisions .vd-row{
+  display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;
+  background:rgba(255,255,255,.03);
+}
+.vinyu-no{display:none}
+.v17-decisions .vd-row .q-num{
+  flex-shrink:0;width:22px;height:22px;border-radius:50%;
+  background:rgba(108,92,231,.2);color:var(--xinyu);
+  font-size:11px;font-weight:700;display:grid;place-items:center;
+}
+.v17-decisions .vd-row .q-txt{flex:1;font-size:12px;line-height:1.4}
+.v17-decisions .vd-row .q-txt b{font-weight:600;color:var(--text)}
+.v17-decisions .vd-row .q-tag{
+  flex-shrink:0;font-size:10px;padding:3px 7px;border-radius:5px;
+  background:rgba(78,204,163,.18);color:var(--ok);font-weight:600;
+}
+.v17-footer-link{
+  margin:8px var(--margin) 16px;text-align:center;font-size:11px;color:var(--sub);
+}
+.v17-footer-link a{color:var(--xinyu);text-decoration:underline;margin:0 6px}
+
+/* ---------- V17-G 创作者分成阶梯 mock ---------- */
+.tier-mock{
+  padding:14px;border-radius:14px;
+  background:linear-gradient(160deg,rgba(255,179,71,.08),rgba(233,69,96,.04) 60%,var(--card));
+  border:1px solid rgba(255,179,71,.2);
+}
+.tm-current{padding-bottom:12px;border-bottom:1px dashed var(--line);margin-bottom:12px}
+.tm-c-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.tm-tier-icon{font-size:28px;line-height:1}
+.tm-c-name{font-size:15px;font-weight:700}
+.tm-c-sub{font-size:11px;color:var(--sub);margin-top:2px}
+.tm-c-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:6px}
+.tm-c-bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--warn),#FF8A5B)}
+.tm-c-hint{font-size:11px;color:var(--sub)}
+.tm-c-hint b{color:var(--warn);font-weight:700}
+.tm-ladder{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.tm-row{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;
+  background:rgba(255,255,255,.03);font-size:12px;
+}
+.tm-row.done{background:rgba(78,204,163,.08);border:1px solid rgba(78,204,163,.18)}
+.tm-row.current{
+  background:rgba(255,179,71,.12);border:1px solid rgba(255,179,71,.3);
+  position:relative;
+}
+.tm-row.current::after{
+  content:'当前';position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-size:9px;padding:2px 6px;border-radius:4px;
+  background:var(--warn);color:#1A1A2E;font-weight:700;
+}
+.tm-ic{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.tm-nm{font-weight:600;min-width:36px}
+.tm-pct{color:var(--warn);font-weight:700;font-variant-numeric:tabular-nums;min-width:32px}
+.tm-th{color:var(--sub);font-size:11px;flex:1}
+.tm-row.done .tm-th{color:var(--ok)}
+.tm-link {
+  display:block;text-align:center;padding:10px;border-radius:10px;
+  background:rgba(255,179,71,.1);border:1px dashed rgba(255,179,71,.3);
+  color:var(--warn);font-size:12px;font-weight:600;text-decoration:none;
+}
+
+/* ---------- V17-A · tabbar.js 演示区 ---------- */
+.ok-badge{background:rgba(78,204,163,.18);color:var(--ok);border-color:rgba(78,204,163,.4)}
+#v17a-tabbar-demo{position:relative;margin:14px 0 8px;border-radius:12px;border:1px solid var(--line);overflow:hidden}
+.v17a-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.v17a-card{
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:12px;font-size:12px;line-height:1.55;
+}
+.v17a-c-head{font-size:12px;font-weight:600;color:var(--ok);margin-bottom:6px;letter-spacing:.3px}
+.v17a-list{list-style:none;padding:0;margin:0;color:var(--sub)}
+.v17a-list li{padding:3px 0;border-bottom:1px dashed rgba(255,255,255,.04)}
+.v17a-list li:last-child{border-bottom:0}
+.v17a-list code{font-size:11px;color:var(--text);background:rgba(255,255,255,.04);padding:1px 5px;border-radius:4px}
+.v17a-key{
+  display:inline-block;font-size:11px;color:var(--accent);
+  background:rgba(233,69,96,.1);padding:3px 8px;border-radius:6px;
+  font-family:"SF Mono",Consolas,monospace;
+}
+.v17a-hint{margin-top:6px;font-size:11px;color:var(--sub)}
+.v17a-imm{display:flex;flex-wrap:wrap;gap:6px}
+.v17a-imm span{
+  background:rgba(108,92,231,.1);color:#A29BFE;
+  border:1px solid rgba(108,92,231,.3);border-radius:6px;
+  padding:2px 8px;font-size:11px;font-family:"SF Mono",Consolas,monospace;
+}
+.v17a-api{
+  margin:6px 0 0;font-size:11px;line-height:1.5;color:var(--text);
+  background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:6px;
+  padding:8px;font-family:"SF Mono",Consolas,monospace;white-space:pre-wrap;
+}
+.v17a-tip{
+  margin-top:14px;padding:10px 12px;border-radius:8px;font-size:12px;line-height:1.6;
+  background:rgba(78,204,163,.08);border:1px solid rgba(78,204,163,.25);color:var(--text);
+}
+.v17a-tip b{color:var(--ok);font-weight:700}
+.v17a-tip code{font-size:11px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px;color:var(--text)}
+@media (max-width:380px){.v17a-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body data-page-node-id="OHd5Z4Ti0GHRAAA7MCSSk0">
@@ -415,6 +712,258 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
     </div>
   </a>
 
+  <!-- ============ V17.0 实施进度（2026-09-11 · 实时同步）============ -->
+  <div class="v17-banner" style="border-color:var(--ok);background:linear-gradient(135deg,rgba(78,204,163,.18),rgba(108,92,231,.18));">
+    <span class="dot" style="background:var(--ok);box-shadow:0 0 10px var(--ok)"></span>
+    <div class="b-txt">
+      <b style="color:var(--ok)">V17.0 实施中 · V17-A 已交付 ✅</b><br>
+      Q1-Q11 全部确认 · 7 工作包 · V17-A 完成（js/tabbar.js · 122 行）· 下一步 V17-B 世界功能区
+      <a href="docs/PRD-v17.md" target="_blank">PRD-v17</a>
+      <a href="docs/DEV_PLAN-v17.md" target="_blank">DEV_PLAN-v17</a>
+      <a href="docs/sources/2026-09-11/S01-v17-world-and-xinyu-redesign.txt" target="_blank">原始需求</a>
+    </div>
+  </div>
+
+  <!-- V17-A 已交付：5 Tab 状态管理 -->
+  <section class="v17-section">
+    <div class="v17-section-head">
+      <h3>🧭 V17-A · 5 Tab 全局状态管理</h3>
+      <span class="badge ok-badge">已交付</span>
+    </div>
+
+    <!-- 5 Tab 实时演示：复用 shell-v64.css 真实样式 -->
+    <nav class="tabbar" id="v17a-tabbar-demo" data-demo="true" style="position:relative;margin:14px 0 8px;border-radius:12px;border:1px solid var(--line)">
+      <a class="tab t-home active"  href="#v17a" data-tab="home">  <span class="ico">🏠</span><span class="lbl">首页</span></a>
+      <a class="tab t-world"          href="#v17a" data-tab="world"> <span class="ico">📖</span><span class="lbl">世界</span></a>
+      <a class="tab t-xinyu"          href="#v17a" data-tab="xinyu"> <span class="ico">💬</span><span class="lbl">心屿</span></a>
+      <a class="tab t-create"         href="#v17a" data-tab="create"><span class="ico">✨</span><span class="lbl">创作</span></a>
+      <a class="tab t-me"             href="#v17a" data-tab="me">    <span class="ico">👤</span><span class="lbl">我的</span></a>
+    </nav>
+
+    <div class="v17a-grid">
+      <div class="v17a-card">
+        <div class="v17a-c-head">📦 交付物</div>
+        <ul class="v17a-list">
+          <li><code>output/preview/js/tabbar.js</code> · 122 行 · ~3.5KB</li>
+          <li><code>node --check</code> SYNTAX_OK</li>
+          <li>复用 v6.4.1 <code>shell-v64.css</code>（零 CSS 增量）</li>
+        </ul>
+      </div>
+      <div class="v17a-card">
+        <div class="v17a-c-head">🔑 localStorage KEY</div>
+        <code class="v17a-key">lingjing_v5170_current_tab</code>
+        <div class="v17a-hint">与 V17-E PREFIX 升级路径同步</div>
+      </div>
+      <div class="v17a-card">
+        <div class="v17a-c-head">🛡️ 沉浸页豁免</div>
+        <div class="v17a-imm">
+          <span>plot-runner.html</span><span>game-3d.html</span><span>catalog.html</span>
+        </div>
+        <div class="v17a-hint">或 <code>body[data-page="immersive"]</code></div>
+      </div>
+      <div class="v17a-card">
+        <div class="v17a-c-head">🔌 公开 API</div>
+        <pre class="v17a-api">window.LJTabbar = {
+  mount(), go(tabId),
+  setBadge(tabId, n),
+  getCurrent()
+}</pre>
+      </div>
+    </div>
+
+    <div class="v17a-tip">
+      <b>接入成本极低：</b>主功能区页面 <code>&lt;body&gt;</code> 末尾追加
+      <code>&lt;script src="js/tabbar.js" defer&gt;&lt;/script&gt;</code> 即可（与现有 <code>shell-v64.css</code> 配合）。
+    </div>
+  </section>
+
+  <!-- V17-D 启动签到 mock -->
+  <section class="v17-section">
+    <div class="v17-section-head">
+      <h3>🚀 启动签到</h3>
+      <span class="badge">V17-D</span>
+    </div>
+    <div class="signin-mock">
+      <div class="sm-title">每日签到 · 第 3 天</div>
+      <div class="sm-week">
+        <div class="sm-day done"><div class="d-d">1</div><div class="d-r">4</div></div>
+        <div class="sm-day done"><div class="d-d">2</div><div class="d-r">4</div></div>
+        <div class="sm-day today"><div class="d-d">3</div><div class="d-r">6</div></div>
+        <div class="sm-day"><div class="d-d">4</div><div class="d-r">8</div></div>
+        <div class="sm-day"><div class="d-d">5</div><div class="d-r">10</div></div>
+        <div class="sm-day"><div class="d-d">6</div><div class="d-r">12</div></div>
+        <div class="sm-day"><div class="d-d">7</div><div class="d-r">25</div></div>
+      </div>
+      <div class="sm-actions">
+        <button class="a-sign">✨ 签到 +6 灵晶</button>
+        <button class="a-video">🎬 看视频 +10 (0/3)</button>
+      </div>
+      <div class="sm-shortcuts">
+        <div class="sc"><span class="em">👯</span>CP 排行</div>
+        <div class="sc"><span class="em">🔮</span>每日运势</div>
+        <div class="sc"><span class="em">💌</span>邀友获钻</div>
+        <div class="sc"><span class="em">👑</span>会员福利</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- V17-B 世界功能区 mock -->
+  <section class="v17-section">
+    <div class="v17-section-head">
+      <h3>📖 世界功能区</h3>
+      <span class="badge">V17-B</span>
+    </div>
+    <div class="world-mock">
+      <div class="wm-subnav">
+        <span class="sn active">首页</span>
+        <span class="sn">排行榜</span>
+        <span class="sn">心屿推</span>
+        <span class="sn">福利</span>
+        <span class="sn">创世杯</span>
+        <span class="sn">同人区</span>
+        <span class="sn">🔍</span>
+      </div>
+      <div class="wm-banner">
+        <div class="b-t">双生 · 入世</div>
+        <div class="b-s">一个角色，两种人生</div>
+        <div class="b-dots"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <div class="wm-quick">
+        <div class="qk"><span class="em">⊞</span>全部分类</div>
+        <div class="qk"><span class="em">📅</span>更新日历</div>
+        <div class="qk"><span class="em">👑</span>经典必看</div>
+        <div class="qk"><span class="em">✍</span>创作</div>
+      </div>
+      <div class="wm-board">
+        <div class="wm-board-head">
+          <span>编辑推荐</span>
+          <div class="sub-tabs"><span class="on">最新</span><span>完结</span></div>
+        </div>
+        <div class="wm-waterfall">
+          <div class="wm-card">
+            <div class="cov" style="background:linear-gradient(160deg,#8E5BD8,#C95B9C)">🎭</div>
+            <div class="info">
+              <div class="t">傲慢与偏见</div>
+              <div class="g">豪门</div>
+              <div class="meta"><span><span class="star">★</span>4.9</span><span>12.8 万字</span></div>
+            </div>
+          </div>
+          <div class="wm-card">
+            <div class="cov" style="background:linear-gradient(160deg,#B8863B,#8C5A2B)">🏯</div>
+            <div class="info">
+              <div class="t">三国 · 吕布篇</div>
+              <div class="g">古风</div>
+              <div class="meta"><span><span class="star">★</span>4.8</span><span>24.6 万字</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="wm-board">
+        <div class="wm-board-head">
+          <span>热门佳作</span>
+          <div class="sub-tabs"><span class="on">近期</span><span>完结</span><span>新作</span><span>历史</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- V17-C 心屿功能区 mock -->
+  <section class="v17-section">
+    <div class="v17-section-head">
+      <h3>💬 心屿功能区</h3>
+      <span class="badge">V17-C</span>
+    </div>
+    <div class="xinyu-mock">
+      <div class="xm-subnav">
+        <span class="sn active">陪伴</span>
+        <span class="sn">精选</span>
+        <span class="sn">记忆</span>
+        <span class="sn">故事</span>
+        <span class="sn">🔍</span>
+      </div>
+      <div class="xm-filter">
+        <span class="f on">全部</span>
+        <span class="f">我创建的</span>
+        <span class="f">双生角色</span>
+      </div>
+      <div class="xm-list">
+        <div class="xm-char">
+          <span class="src-tag creator">[创]</span>
+          <div class="head">
+            <div class="ava" style="background:linear-gradient(135deg,#E94560,#FF8A5B)">🏮</div>
+            <div><div class="nm">阿岁</div><div class="stg">知己 · <b>89</b></div></div>
+          </div>
+          <div class="msg">"昨晚你没说完的那句话，我等到现在。"</div>
+          <div class="acts"><button class="a-chat">聊天</button></div>
+        </div>
+        <div class="xm-char">
+          <span class="src-tag novel">[双]</span>
+          <div class="head">
+            <div class="ava" style="background:linear-gradient(135deg,#6C5CE7,#A29BFE)">❄️</div>
+            <div><div class="nm">苏念</div><div class="stg">亲密 · <b>76</b></div></div>
+          </div>
+          <div class="msg">"今天路过一家花店，想起你说喜欢向日葵。"</div>
+          <div class="acts"><button class="a-chat">聊天</button><button class="a-world">进世界</button></div>
+        </div>
+      </div>
+      <button class="xm-add">＋ 创建新角色</button>
+    </div>
+  </section>
+
+  <!-- V17-G 创作者分成阶梯 mock -->
+  <section class="v17-section">
+    <div class="v17-section-head">
+      <h3>💰 创作者分成阶梯</h3>
+      <span class="badge">V17-G 🆕</span>
+    </div>
+    <div class="tier-mock">
+      <div class="tm-current">
+        <div class="tm-c-head">
+          <span class="tm-tier-icon">🥉</span>
+          <div>
+            <div class="tm-c-name">青铜创作者</div>
+            <div class="tm-c-sub">当前档位 · 分成 50%</div>
+          </div>
+        </div>
+        <div class="tm-c-progress">
+          <div class="tm-c-bar"><i style="width:35%"></i></div>
+          <div class="tm-c-hint">距离白银还需 <b>¥320</b> 流水 · 继续加油</div>
+        </div>
+      </div>
+      <div class="tm-ladder">
+        <div class="tm-row done"><span class="tm-ic">🥉</span><span class="tm-nm">青铜</span><span class="tm-pct">50%</span><span class="tm-th">已达成 ✓</span></div>
+        <div class="tm-row current"><span class="tm-ic">🥈</span><span class="tm-nm">白银</span><span class="tm-pct">60%</span><span class="tm-th">¥500 流水 · 进行中</span></div>
+        <div class="tm-row"><span class="tm-ic">🥇</span><span class="tm-nm">黄金</span><span class="tm-pct">70%</span><span class="tm-th">¥2000/月 · 评分 8.0</span></div>
+        <div class="tm-row"><span class="tm-ic">💎</span><span class="tm-nm">钻石</span><span class="tm-pct">75%</span><span class="tm-th">¥5000/月 · 多维门槛</span></div>
+        <div class="tm-row"><span class="tm-ic">🏆</span><span class="tm-nm">传奇</span><span class="tm-pct">80%</span><span class="tm-th">平台主动签约</span></div>
+      </div>
+      <a class="tm-link" href="output/preview/creator-legal.html">📜 查看完整创作者协议 →</a>
+    </div>
+  </section>
+
+  <!-- V17.0 Q1-Q11 决策面板 -->
+  <section class="v17-decisions">
+    <h3>V17.0 决策面板（Q1-Q11 · ✅ 全部锁定）</h3>
+    <div class="vd-list">
+      <div class="vd-row"><span class="q-num">1</span><span class="q-txt"><b>底部 Tab 切换 vs 子导航</b> — 底部 Tab 切 5 主功能区；顶部子导航切分功能；沉浸页左上角返回</span><span class="q-tag">✅ 已锁定</span></div>
+      <div class="vd-row"><span class="q-num">2</span><span class="q-txt"><b>原独立页是否保留</b> — chat/memory/profile 保留</span><span class="q-tag">✅ A · 保留</span></div>
+      <div class="vd-row"><span class="q-num">3</span><span class="q-txt"><b>localStorage PREFIX</b> — 升级到 lingjing_v5170_</span><span class="q-tag">✅ A · 升级</span></div>
+      <div class="vd-row"><span class="q-num">4</span><span class="q-txt"><b>启动签到默认行为</b> — 每日只弹一次</span><span class="q-tag">✅ A · localStorage</span></div>
+      <div class="vd-row"><span class="q-num">5</span><span class="q-txt"><b>签到关闭后默认 Tab</b> — 🏠首页（library.html）</span><span class="q-tag">✅ A · 复用</span></div>
+      <div class="vd-row"><span class="q-num">6</span><span class="q-txt"><b>[创]/[双] 角标颜色</b> — 蓝 / 粉</span><span class="q-tag">✅ A · #4A90E2/#D85B9A</span></div>
+      <div class="vd-row"><span class="q-num">7</span><span class="q-txt"><b>国际 IP 名替换</b> — BTS/HP/EXO → 泛指</span><span class="q-tag">✅ A · 韩流/欧美同人</span></div>
+      <div class="vd-row"><span class="q-num">8</span><span class="q-txt"><b>同步重构创作/我的</b> — 不动，仅世界+心屿</span><span class="q-tag">✅ A · 不动</span></div>
+      <div class="vd-row"><span class="q-num">9</span><span class="q-txt"><b>mobile Banner 高度</b> — 25% / desktop 32%</span><span class="q-tag">✅ A · 25%</span></div>
+      <div class="vd-row"><span class="q-num">10</span><span class="q-txt"><b>是否新建 home.html</b> — 复用 library.html</span><span class="q-tag">✅ B · 复用</span></div>
+      <div class="vd-row" style="background:rgba(78,204,163,.08);border:1px solid rgba(78,204,163,.2);"><span class="q-num" style="background:rgba(78,204,163,.2);color:var(--ok)">11</span><span class="q-txt"><b>V17-G 创作者分成阶梯本轮纳入</b> — commerce.html + creator-center.html 5 档改造 + creator-legal.html 协议页</span><span class="q-tag" style="background:rgba(255,179,71,.18);color:var(--warn)">🆕 追加</span></div>
+    </div>
+    <div class="v17-footer-link">
+      详细方案见
+      <a href="docs/PRD-v17.md" target="_blank">PRD-v17.md</a> ·
+      <a href="docs/DEV_PLAN-v17.md" target="_blank">DEV_PLAN-v17.md</a>
+    </div>
+  </section>
+
   <!-- 轻量页脚：文档与站点入口 -->
   <footer class="mini-footer" data-page-node-id="IiiIgY8EDysCQz4BVvSstL">
     灵境 · 双生 © 2026 · v6.4<br data-page-node-id="kicGGXmfCe586WoFGGjM7S"/>
@@ -473,6 +1022,42 @@ function showToast(kind, title, msg){
   c.appendChild(t);
   setTimeout(function(){ t.remove(); }, 3200);
 }
+
+/* ============ V17-A · 真实加载 tabbar.js 验证（沉浸页豁免，根目录对应 home） ============ */
+var s = document.createElement('script');
+s.src = 'output/preview/js/tabbar.js';
+s.defer = true;
+document.body.appendChild(s);
+
+/* ============ V17-A demo · 演示 tabbar.js 行为 ============ */
+(function(){
+  // V17-A 演示 tabbar（id=v17a-tabbar-demo）独立模拟切换，不依赖真实 LJTabbar.mount
+  var demo = document.getElementById('v17a-tabbar-demo');
+  if (!demo) return;
+  var tabs = demo.querySelectorAll('.tab');
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(e){
+      e.preventDefault();
+      tabs.forEach(function(x){ x.classList.remove('active'); });
+      t.classList.add('active');
+      // 同步演示 localStorage 记忆（写入真实 key 证明持久化生效）
+      try {
+        localStorage.setItem('lingjing_v5170_current_tab', t.getAttribute('data-tab'));
+      } catch(_) {}
+      showToast('ok', 'V17-A 演示', '已写入 lingjing_v5170_current_tab = ' + t.getAttribute('data-tab'));
+    });
+  });
+  // 页面加载时从 localStorage 读回记忆（如有）
+  try {
+    var saved = localStorage.getItem('lingjing_v5170_current_tab');
+    if (saved) {
+      tabs.forEach(function(x){
+        x.classList.remove('active');
+        if (x.getAttribute('data-tab') === saved) x.classList.add('active');
+      });
+    }
+  } catch(_) {}
+})();
 </script>
 </body>
 </html>

@@ -2,6 +2,16 @@
 
 > **当前最新版本**：v5.20（心屿陪伴功能区 · 官方命名落地）/ v5.19（知己 AI 陪伴功能区重建）/ v5.18（创作者中心设计系统重构）/ v5.17（商业化降级 + 小说辅助模拟器）/ v5.16（UX 修复）/ v5.15（代码审查）/ v5.14（商业化 4 大系统）/ v5.13（沉浸剧情 UI）/ v5.12（30 题材库）
 >
+> **🔵 V17.0 草案（2026-09-11）— 待用户审阅**：
+>
+> 6 个工作包（V17-A 全局底部 5 Tab / V17-B 世界功能区 / V17-C 心屿功能区 / V17-D 启动签到 / V17-E 数据表 / V17-F 回归测试），总计 ~5430 行代码 / 5 轮工作量。
+>
+> 详见 **[DEV_PLAN-v17.md](DEV_PLAN-v17.md)** + 配套 **[PRD-v17.md](PRD-v17.md)** + 原始需求 [sources/2026-09-11/S01](sources/2026-09-11/S01-v17-world-and-xinyu-redesign.txt)。
+>
+> 用户审阅 DEV_PLAN-v17 §11 的 Q1-Q10 后启动 V17-A~F；当前 DEVELOPMENT_PLAN.md 仅做指向，不替代既有 v5.20 内容。
+>
+> **v17.0 与 v5.20 的关系**：v17.0 是世界功能区 + 心屿功能区的全局重构（底部 5 Tab 整合 + 启动签到 + 角色来源角标 + 职业问答能力），规模显著大于 v5.20 的命名升级。
+>
 > **v5.20 关键变更**：
 > - 4 张新数据表：`heart_island_characters` / `dual_soul_bringout_records` / `daily_interactions` / `proactive_behaviors`（17 → 21 张）
 > - 4 页面正式以 **「心屿」** 命名：heart-island.html / chat.html / memory.html / profile.html
