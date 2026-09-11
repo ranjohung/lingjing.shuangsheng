@@ -1,4 +1,4 @@
-"""截图 product-preview.html 数据看板（更新到 100/100）"""
+"""数据看板截图（v4 — element_handle.screenshot，最稳健）"""
 import asyncio
 from pathlib import Path
 from playwright.async_api import async_playwright
@@ -13,24 +13,20 @@ async def main():
         page = await ctx.new_page()
         await page.goto("http://localhost:8767/product-preview.html", wait_until="domcontentloaded")
         await page.wait_for_timeout(800)
-        # 截数据看板区
-        loc = page.locator(".section-h").nth(6)
-        try:
-            await loc.scroll_into_view_if_needed(timeout=3000)
-            await page.wait_for_timeout(300)
-            box = await loc.bounding_box()
-            if box:
-                # 截从 section-h 上方 100 到下方 350 的整片区域
-                await page.screenshot(
-                    path=str(OUT / "v17a-fix-data-board.png"),
-                    clip={"x": 0, "y": max(0, box["y"] - 20), "width": 480, "height": 350}
-                )
-        except Exception as e:
-            print(f"fallback: {e}")
-            await page.screenshot(path=str(OUT / "v17a-fix-data-board.png"), full_page=True)
-        print("data board screenshot saved")
+        # 取 section header + kv-list 一起
+        section = page.locator(".section-h:has-text('累计回归')").first
+        await section.scroll_into_view_if_needed()
+        await page.wait_for_timeout(300)
+        # 直接对 element screenshot
+        await section.screenshot(path=str(OUT / "data-board-section.png"))
+        # 整个数据看板（包括 section + kv-list）
+        # 找 .section-h 之后第一个 .kv-list
+        kvs = page.locator(".kv-list").first
+        await kvs.scroll_into_view_if_needed()
+        await page.wait_for_timeout(200)
+        await kvs.screenshot(path=str(OUT / "data-board-list.png"))
+        print("✓ data-board-section.png + data-board-list.png saved")
         await browser.close()
 
 
-if __name__ == "__main__":
-    asyncio.run(main())
+asyncio.run(main())

@@ -67,8 +67,8 @@
 .ds-banner {
   position: relative;
   margin: 10px var(--margin) 0;
-  height: 22vh;
-  max-height: 180px;
+  height: 32vh;
+  max-height: 240px;
   border-radius: var(--radius);
   overflow: hidden;
   border: 1px solid var(--line);
@@ -309,10 +309,137 @@
 .ds-cat-trigger:active { transform: translateX(-50%) scale(.92); }
 
 @media (max-width: 380px) {
-  .ds-banner { height: 20vh; max-height: 160px; }
+  .ds-banner { height: 28vh; max-height: 200px; }
   .ds-bs-title { font-size: 18px; }
   .ds-waterfall { gap: 8px; }
   .ds-wf-cov { padding-top: 130%; }
+}
+
+/* ---------- V17.0 §2.6 筛选结果页 ---------- */
+.filter-sort-bar {
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 var(--margin) 14px;
+  padding: 10px 14px;
+  background: rgba(0, 184, 148, .08);
+  border: 1px solid rgba(0, 184, 148, .25);
+  border-radius: 10px;
+}
+.filter-sort-item {
+  font-size: 13px; padding: 6px 12px;
+  border-radius: 6px; color: var(--sub);
+  cursor: pointer; transition: all .15s;
+}
+.filter-sort-item.active {
+  background: var(--world);
+  color: #0d0d1a; font-weight: 600;
+}
+.filter-back {
+  margin-left: auto;
+  font-size: 12px; padding: 5px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .06);
+  color: var(--sub);
+  cursor: pointer;
+  border: 1px solid var(--line);
+}
+.filter-dim-row {
+  display: flex; align-items: center; gap: 10px;
+  margin: 10px var(--margin);
+  font-size: 12px;
+}
+.filter-dim-label {
+  width: 56px; flex-shrink: 0;
+  color: var(--sub); font-size: 11px;
+}
+.filter-dim-chips {
+  flex: 1; display: flex; gap: 6px;
+  flex-wrap: wrap;
+}
+.filter-chip {
+  font-size: 11px; padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .04);
+  color: var(--sub);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.filter-chip.active {
+  background: rgba(0, 184, 148, .18);
+  border-color: var(--world);
+  color: var(--world);
+  font-weight: 600;
+}
+
+/* ---------- V17.0 §2.3 更新日历 ---------- */
+.cal-list {
+  display: flex; flex-direction: column;
+  gap: 10px;
+  margin: 0 var(--margin);
+}
+.cal-item {
+  display: flex; gap: 14px;
+  padding: 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.cal-date {
+  flex-shrink: 0; width: 60px;
+  text-align: center;
+  padding: 6px 0;
+  background: rgba(0, 184, 148, .1);
+  border: 1px solid rgba(0, 184, 148, .25);
+  border-radius: 8px;
+  color: var(--world);
+}
+.cal-date-d { font-size: 16px; font-weight: 700; }
+.cal-date-l { font-size: 10px; margin-top: 2px; opacity: .8; }
+.cal-works { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.cal-work {
+  font-size: 12px; color: var(--text);
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, .04);
+  border-radius: 6px;
+}
+
+/* ---------- V17.0 §2.7 同人区（侧边栏布局）---------- */
+.tr-layout {
+  display: flex;
+  gap: 10px;
+  margin: 0 var(--margin);
+}
+.tr-left-nav {
+  flex-shrink: 0;
+  width: 84px;
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 10px 0;
+  background: var(--card-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+.tr-cat {
+  font-size: 12px; font-weight: 600;
+  color: var(--sub); padding: 8px 10px 4px;
+}
+.tr-sub {
+  font-size: 12px;
+  padding: 7px 10px;
+  color: var(--sub);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+}
+.tr-sub.active,
+.tr-sub:active {
+  background: var(--bg);
+  color: var(--world);
+  border-left-color: var(--world);
+  font-weight: 600;
+}
+.tr-layout .ds-waterfall {
+  flex: 1; margin: 0;
 }
 
 /* ---------- V18-D · 心屿推/创世杯/福利 子区 ---------- */

@@ -135,6 +135,44 @@
     ['亲情二三事', '暖阳', '动人情感', 'dongren', 'qinqing', 7.6, '6.5万字', 'done']
   ];
 
+  // 卡片公共字段：status=新/连载中/完结；level=编推/精装/L3/L2；price=灵晶定价（0 表示免费）
+  // wordCountNum 用于字数筛选；publishYear 用于年份筛选
+  var META = {
+    // FEATURED 8 张
+    '凤求凰':       { status: 'ing',  level: 'pd',  wc: 12.3, price: 60,  year: 2026 },
+    '长夜城':       { status: 'ing',  level: 'pd',  wc: 24.6, price: 128, year: 2026 },
+    '深海回声':     { status: 'ing',  level: 'pd',  wc: 18.2, price: 88,  year: 2025 },
+    '快穿之攻略反派': { status: 'ing', level: 'lz', wc: 16.5, price: 50,  year: 2025 },
+    '锦衣卫日记':   { status: 'ing',  level: 'lz',  wc: 21.0, price: 98,  year: 2025 },
+    '回到 1998':    { status: 'new',  level: 'L3',  wc: 15.8, price: 30,  year: 2026 },
+    '仙侠奇缘录':   { status: 'ing',  level: 'L3',  wc: 28.4, price: 188, year: 2024 },
+    '偶像练习手记': { status: 'done', level: 'L2',  wc: 10.2, price: 50,  year: 2024 },
+    // HOT 12 张
+    '赛博长夜':     { status: 'ing',  level: 'pd',  wc: 12.8, price: 50,  year: 2026 },
+    '末日余晖':     { status: 'ing',  level: 'pd',  wc: 22.6, price: 128, year: 2026 },
+    '民国旧梦':     { status: 'done', level: 'lz',  wc: 19.5, price: 88,  year: 2025 },
+    '豪门千金':     { status: 'ing',  level: 'lz',  wc: 13.7, price: 60,  year: 2025 },
+    '刑侦档案':     { status: 'ing',  level: 'L3',  wc: 17.0, price: 60,  year: 2025 },
+    '逃杀游戏':     { status: 'ing',  level: 'L3',  wc: 14.1, price: 50,  year: 2024 },
+    '奇谭怪谈录':   { status: 'new',  level: 'L2',  wc: 11.2, price: 30,  year: 2026 },
+    '灵境红楼梦':   { status: 'ing',  level: 'pd',  wc: 120,  price: 0,   year: 2026 },
+    '英伦贵族':     { status: 'done', level: 'L3',  wc: 20.1, price: 88,  year: 2024 },
+    '幻想言情':     { status: 'ing',  level: 'L2',  wc: 9.8,  price: 30,  year: 2026 },
+    '校园风云':     { status: 'done', level: 'L2',  wc: 8.5,  price: 0,   year: 2024 },
+    '星际开拓':     { status: 'ing',  level: 'L3',  wc: 26.0, price: 128, year: 2025 },
+    // NEW_DONE 10 张
+    '穿成反派他娘': { status: 'done', level: 'pd',  wc: 14.6, price: 88,  year: 2025 },
+    '公主成长录':   { status: 'done', level: 'lz',  wc: 11.4, price: 60,  year: 2024 },
+    '古代生活小记': { status: 'done', level: 'L2',  wc: 9.7,  price: 30,  year: 2024 },
+    '平行之约':     { status: 'done', level: 'L3',  wc: 13.2, price: 60,  year: 2025 },
+    '职场浮沉':     { status: 'done', level: 'L3',  wc: 12.0, price: 50,  year: 2025 },
+    '友情万岁':     { status: 'done', level: 'L2',  wc: 7.5,  price: 0,   year: 2024 },
+    '末日救援':     { status: 'done', level: 'pd',  wc: 18.0, price: 88,  year: 2025 },
+    '回到过去找你': { status: 'done', level: 'L3',  wc: 10.6, price: 30,  year: 2024 },
+    '少年锦衣':     { status: 'done', level: 'L2',  wc: 8.8,  price: 0,   year: 2024 },
+    '亲情二三事':   { status: 'done', level: 'L2',  wc: 6.5,  price: 0,   year: 2024 }
+  };
+
   function toCard(row, idx) {
     var palette = [
       'linear-gradient(160deg,#2E3A6E,#4A3A8C)',
@@ -147,6 +185,7 @@
       'linear-gradient(160deg,#1C2542,#6C5CE7)'
     ];
     var emojiPool = ['🌸','🏯','🌌','⚡','🌙','🎭','🗡','🌊','🦋','📜','🪄','🎪','🧭','💫','🌿','🐉'];
+    var meta = META[row[0]] || { status: 'ing', level: 'L3', wc: 10, price: 30, year: 2026 };
     return {
       id: 'w' + (idx + 1),
       title: row[0],
@@ -159,9 +198,15 @@
       board: row[7],
       cov: palette[idx % palette.length],
       emoji: emojiPool[idx % emojiPool.length],
-      isNew: idx < 6,
-      isDone: row[7] === 'done',
-      isPublicDomain: row[3] === 'mingxing'
+      isNew: meta.status === 'new',
+      isDone: meta.status === 'done' || row[7] === 'done',
+      isPublicDomain: row[3] === 'mingxing',
+      // 5 维筛选字段（V17.0 §2.6）
+      status: meta.status,
+      level: meta.level,
+      wc: meta.wc,
+      price: meta.price,
+      year: meta.year
     };
   }
 
@@ -187,6 +232,58 @@
     { id: 'pd10', title: '影视改编：琅琊', author: '灵境官方', catName: '公版同人', cat: 'mingxing', sub: 'yingxi', score: 8.9, wordCount: '15.2万字', cov: 'linear-gradient(160deg,#5E2E3A,#6C5CE7)', emoji: '🎭', desc: '权谋古装剧 · 同人续写', publicDomain: false }
   ];
 
+  // ---------- 顶部排序：本周灵韵 / 本周人气 ----------
+  var SORTS = [
+    { id: 'ly', name: '本周灵韵' },
+    { id: 'rq', name: '本周人气' }
+  ];
+
+  // ---------- 5 维筛选条件（V17.0 §2.6）----------
+  var FILTERS = {
+    status: [
+      { id: 'all',   name: '不限' },
+      { id: 'new',   name: '新作' },
+      { id: 'ing',   name: '连载中' },
+      { id: 'done',  name: '完结' }
+    ],
+    level: [
+      { id: 'all',   name: '不限' },
+      { id: 'pd',    name: '编推' },
+      { id: 'lz',    name: '精装' },
+      { id: 'L3',    name: 'L3' },
+      { id: 'L2',    name: 'L2' }
+    ],
+    words: [
+      { id: 'all',     name: '不限' },
+      { id: 'short',   name: '短（3 万以下）' },
+      { id: 'mid',     name: '中（3-8 万）' },
+      { id: 'long',    name: '长（8 万以上）' }
+    ],
+    price: [
+      { id: 'all',     name: '不限' },
+      { id: 'p0',      name: '50 灵晶以内' },
+      { id: 'p1',      name: '51-100 灵晶' },
+      { id: 'p2',      name: '101-200 灵晶' }
+    ],
+    year: [
+      { id: 'all',     name: '不限' },
+      { id: '2026',    name: '2026' },
+      { id: '2025',    name: '2025' },
+      { id: '2024',    name: '2024' }
+    ]
+  };
+
+  // ---------- 更新日历（V17.0 §2.3 四大金刚-更新日历）----------
+  // 7 天内的更新作品
+  var CALENDAR = [
+    { date: '09-11', label: '今天', works: ['凤求凰 · 第 24 章 · 后宫风云', '长夜城 · 第 31 章 · 御书房对弈'] },
+    { date: '09-10', label: '昨天', works: ['深海回声 · 第 18 章 · 实验室', '回到 1998 · 第 12 章 · 重逢'] },
+    { date: '09-09', label: '前天', works: ['锦衣卫日记 · 第 22 章 · 围剿'] },
+    { date: '09-08', label: '本周', works: ['赛博长夜 · 第 14 章 · AI 觉醒', '末日余晖 · 第 27 章 · 曙光'] },
+    { date: '09-07', label: '本周', works: ['灵境红楼梦 · 新解读上线', '灵境解读三国 · 第二季开启'] },
+    { date: '09-06', label: '更早', works: ['快穿之攻略反派 · 第 9 章 · 反派逆袭'] }
+  ];
+
   window.WORLD_DATA = {
     BANNERS: BANNERS,
     CATEGORIES: CATEGORIES,
@@ -194,6 +291,9 @@
     HOT: HOT,
     NEW_DONE: NEW_DONE,
     PUBLIC_DOMAIN: PUBLIC_DOMAIN,
+    SORTS: SORTS,
+    FILTERS: FILTERS,
+    CALENDAR: CALENDAR,
     tagColor: tagColor
   };
 })();

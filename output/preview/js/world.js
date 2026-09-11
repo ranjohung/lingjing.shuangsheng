@@ -124,7 +124,7 @@
       b.addEventListener('click', function () {
         var action = b.getAttribute('data-action');
         if (action === 'cat') openDrawer();
-        else if (action === 'calendar') showToast('warn', '更新日历', '即将开放');
+        else if (action === 'calendar') { currentSub = 'calendar'; setSubNav('calendar'); }
         else if (action === 'classic') { currentSub = 'tongren'; setSubNav('tongren'); }
         else if (action === 'create') { window.location.href = 'creator-center.html'; }
       });
@@ -177,6 +177,10 @@
       renderChuangshibei(main);
     } else if (currentSub === 'rank') {
       renderRank(main);
+    } else if (currentSub === 'calendar') {
+      renderCalendarView(main);
+    } else if (currentSub === 'filter') {
+      renderFilterPage(main, currentFilter.catId, currentFilter.subId);
     } else {
       renderDefault(main);
     }
@@ -207,6 +211,126 @@
     });
     main.appendChild(list);
   }
+
+  // ---------- 更新日历（V17.0 §2.3 四大金刚-更新日历）----------
+  function renderCalendarView(main) {
+    main.appendChild(el('div', { class: 'ds-board-head' }, [
+      el('div', { class: 'ds-board-title' }, ['更新日历']),
+      el('div', { class: 'ds-board-sub' }, ['近期作品更新 · 时间轴'])
+    ]));
+    var calendar = window.WORLD_DATA.CALENDAR;
+    var list = el('div', { class: 'cal-list' });
+    calendar.forEach(function (item) {
+      var row = el('div', { class: 'cal-item' }, [
+        el('div', { class: 'cal-date' }, [
+          el('div', { class: 'cal-date-d' }, [item.date]),
+          el('div', { class: 'cal-date-l' }, [item.label])
+        ]),
+        el('div', { class: 'cal-works' }, item.works.map(function (w) {
+          return el('div', { class: 'cal-work' }, [w]);
+        }))
+      ]);
+      list.appendChild(row);
+    });
+    main.appendChild(list);
+  }
+
+  // ---------- 筛选结果页（V17.0 §2.6）----------
+  // 顶部排序"本周灵韵 | 本周人气" + 5 维筛选 chip + 双列瀑布流
+  var filterState = {
+    sort: 'ly',  // ly / rq
+    status: 'all',
+    level: 'all',
+    words: 'all',
+    price: 'all',
+    year: 'all'
+  };
+
+  function applyFilter(cards) {
+    return cards.filter(function (c) {
+      if (filterState.status !== 'all' && c.status !== filterState.status) return false;
+      if (filterState.level !== 'all' && c.level !== filterState.level) return false;
+      if (filterState.words === 'short' && c.wc >= 3) return false;
+      if (filterState.words === 'mid' && (c.wc < 3 || c.wc > 8)) return false;
+      if (filterState.words === 'long' && c.wc <= 8) return false;
+      if (filterState.price === 'p0' && c.price > 50) return false;
+      if (filterState.price === 'p1' && (c.price < 51 || c.price > 100)) return false;
+      if (filterState.price === 'p2' && (c.price < 101 || c.price > 200)) return false;
+      if (filterState.year !== 'all' && String(c.year) !== filterState.year) return false;
+      return true;
+    });
+  }
+
+  function renderFilterPage(main, catId, subId) {
+    var cats = window.WORLD_DATA.CATEGORIES;
+    var cat = null, sub = null;
+    cats.forEach(function (c) {
+      if (c.id === catId) {
+        cat = c;
+        c.children.forEach(function (s) { if (s.id === subId) sub = s; });
+      }
+    });
+    var title = cat ? (cat.name + ' / ' + (sub ? sub.name : '')) : '全部分类';
+
+    // 面包屑 + 顶部排序
+    main.appendChild(el('div', { class: 'ds-board-head' }, [
+      el('div', { class: 'ds-board-title' }, [title])
+    ]));
+    main.appendChild(el('div', { class: 'filter-sort-bar' }, [
+      el('span', { class: 'filter-sort-item' + (filterState.sort === 'ly' ? ' active' : ''), 'data-sort': 'ly' }, ['本周灵韵']),
+      el('span', { class: 'filter-sort-item' + (filterState.sort === 'rq' ? ' active' : ''), 'data-sort': 'rq' }, ['本周人气']),
+      el('button', { class: 'filter-back', 'data-action': 'back-home' }, ['‹ 返回'])
+    ]));
+
+    // 5 维筛选
+    var dims = [
+      { key: 'status', label: '作品状态', data: window.WORLD_DATA.FILTERS.status },
+      { key: 'level',  label: '作品等级', data: window.WORLD_DATA.FILTERS.level },
+      { key: 'words',  label: '作品字数', data: window.WORLD_DATA.FILTERS.words },
+      { key: 'price',  label: '灵晶定价', data: window.WORLD_DATA.FILTERS.price },
+      { key: 'year',   label: '发布时间', data: window.WORLD_DATA.FILTERS.year }
+    ];
+    dims.forEach(function (dim) {
+      var row = el('div', { class: 'filter-dim-row' }, [
+        el('span', { class: 'filter-dim-label' }, [dim.label])
+      ]);
+      var chips = el('div', { class: 'filter-dim-chips' });
+      dim.data.forEach(function (opt) {
+        var chip = el('span', {
+          class: 'filter-chip' + (filterState[dim.key] === opt.id ? ' active' : ''),
+          'data-dim': dim.key,
+          'data-v': opt.id
+        }, [opt.name]);
+        chips.appendChild(chip);
+      });
+      row.appendChild(chips);
+      main.appendChild(row);
+    });
+
+    // 取该分类下的作品
+    var all = window.WORLD_DATA.FEATURED.concat(window.WORLD_DATA.HOT).concat(window.WORLD_DATA.NEW_DONE);
+    var scoped = all.filter(function (c) {
+      if (!catId) return true;
+      if (c.cat !== catId) return false;
+      if (subId && c.sub !== subId) return false;
+      return true;
+    });
+    var filtered = applyFilter(scoped);
+
+    // 瀑布流（可显示角标）
+    main.appendChild(el('div', { class: 'ds-board-head' }, [
+      el('div', { class: 'ds-board-title' }, ['共 ' + filtered.length + ' 部作品'])
+    ]));
+    if (filtered.length === 0) {
+      main.appendChild(el('div', { class: 'ds-empty' }, ['该筛选下暂无作品，换个条件试试']));
+    } else {
+      var grid = el('div', { class: 'ds-waterfall' });
+      renderWaterfall(filtered, grid, { showTags: true });
+      main.appendChild(grid);
+    }
+  }
+
+  // ---------- 排行榜结束，下面是心屿推 ----------
 
   // ---------- 心屿推（V12.0 3.2）----------
   function renderXinyuTui(main) {
@@ -394,28 +518,21 @@
   }
 
   function renderDefault(main) {
-    // 3 板块标题 + 双列瀑布流
-    var secTitle = '';
-    if (currentSub === 'home') secTitle = '编辑推荐';
-    else if (currentSub === 'rank') secTitle = '本周榜单';
-    else if (currentSub === 'xinyu') secTitle = '心屿推荐';
-    else if (currentSub === 'welfare') secTitle = '限时福利';
-    else if (currentSub === 'chuangshibei') secTitle = '创世杯作品';
+    // V17.0 §2.4：3 个独立板块，每个板块独立右侧排序
 
+    // 板块 1：编辑推荐（§2.4.1）
     main.appendChild(el('div', { class: 'ds-board-head' }, [
-      el('div', { class: 'ds-board-title' }, [secTitle]),
+      el('div', { class: 'ds-board-title' }, ['编辑推荐']),
       el('div', { class: 'ds-board-sort' }, [
-        el('span', { class: 'ds-sort' + (currentFilter.sort === 'ly' ? ' active' : '') }, ['本周灵韵']),
-        el('span', { class: 'ds-sort' + (currentFilter.sort === 'rq' ? ' active' : '') }, ['本周人气'])
+        el('span', { class: 'ds-sort active' }, ['最新']),
+        el('span', { class: 'ds-sort' }, ['完结'])
       ])
     ]));
+    var grid1 = el('div', { class: 'ds-waterfall' });
+    renderWaterfall(window.WORLD_DATA.FEATURED, grid1, {});
+    main.appendChild(grid1);
 
-    var allCards = window.WORLD_DATA.FEATURED.concat(window.WORLD_DATA.HOT).concat(window.WORLD_DATA.NEW_DONE);
-    var grid = el('div', { class: 'ds-waterfall' });
-    renderWaterfall(allCards.slice(0, 12), grid, {});
-    main.appendChild(grid);
-
-    // 第二板块（热门佳作）
+    // 板块 2：热门佳作（§2.4.2）
     main.appendChild(el('div', { class: 'ds-board-head' }, [
       el('div', { class: 'ds-board-title' }, ['热门佳作']),
       el('div', { class: 'ds-board-sort' }, [
@@ -429,7 +546,7 @@
     renderWaterfall(window.WORLD_DATA.HOT, grid2, {});
     main.appendChild(grid2);
 
-    // 第三板块（最新完结）
+    // 板块 3：最新完结（§2.4.3）
     main.appendChild(el('div', { class: 'ds-board-head' }, [
       el('div', { class: 'ds-board-title' }, ['最新完结']),
       el('div', { class: 'ds-board-sort' }, [
@@ -442,17 +559,62 @@
     main.appendChild(grid3);
   }
 
+  // ---------- 同人区（V17.0 §2.7：侧边栏布局 + 灵境专属术语）----------
   function renderTonggren(main) {
+    var cats = [
+      { id: 'gongbao', name: '公版名著', subs: [
+        { id: 'hlm', name: '红楼梦' },
+        { id: 'sgy', name: '三国演义' },
+        { id: 'xyj', name: '西游记' },
+        { id: 'shz', name: '水浒传' },
+        { id: 'liaozhai', name: '聊斋志异' }
+      ]},
+      { id: 'tongren', name: '同人专区', subs: [
+        { id: 'hnt', name: '韩流同人' },
+        { id: 'omt', name: '欧美同人' },
+        { id: 'ri', name: '日系同人' },
+        { id: 'yingxi', name: '影视改编' }
+      ]}
+    ];
     main.appendChild(el('div', { class: 'ds-board-head' }, [
-      el('div', { class: 'ds-board-title' }, ['同人区 · 公版作品']),
-      el('div', { class: 'ds-board-sort' }, [
-        el('span', { class: 'ds-sort active' }, ['公版优先']),
-        el('span', { class: 'ds-sort' }, ['全部'])
-      ])
+      el('div', { class: 'ds-board-title' }, ['同人区 · 公版与同人']),
+      el('div', { class: 'ds-board-sub' }, ['灵境专属术语 · 不出现任何国际 IP 名'])
     ]));
+    // 复用 .ds-drawer 样式但作为内嵌布局（不弹层）
+    var layout = el('div', { class: 'tr-layout' });
+    var leftNav = el('div', { class: 'tr-left-nav' });
     var grid = el('div', { class: 'ds-waterfall' });
-    renderWaterfall(window.WORLD_DATA.PUBLIC_DOMAIN, grid, { publicDomain: true });
-    main.appendChild(grid);
+
+    var showAll = function () {
+      grid.innerHTML = '';
+      renderWaterfall(window.WORLD_DATA.PUBLIC_DOMAIN, grid, { publicDomain: true });
+    };
+
+    cats.forEach(function (cat, i) {
+      var catHead = el('div', { class: 'tr-cat' }, [cat.name]);
+      leftNav.appendChild(catHead);
+      cat.subs.forEach(function (sub) {
+        var tag = el('div', { class: 'tr-sub' }, [sub.name]);
+        tag.addEventListener('click', function () {
+          $$('.tr-sub', leftNav).forEach(function (x) { x.classList.remove('active'); });
+          tag.classList.add('active');
+          // 简单按 sub 字段筛选
+          grid.innerHTML = '';
+          var matched = window.WORLD_DATA.PUBLIC_DOMAIN.filter(function (w) { return w.sub === sub.id; });
+          if (matched.length === 0) {
+            grid.innerHTML = '<div class="ds-empty">该子类暂无作品</div>';
+          } else {
+            renderWaterfall(matched, grid, { publicDomain: true });
+          }
+        });
+        leftNav.appendChild(tag);
+      });
+    });
+
+    layout.appendChild(leftNav);
+    layout.appendChild(grid);
+    main.appendChild(layout);
+    showAll();
   }
 
   function renderSearch(main) {
@@ -478,7 +640,7 @@
     }
   }
 
-  // ---------- 分类侧边栏 ----------
+  // ---------- 渲染分类侧边栏 ----------
   function openDrawer() {
     var drawer = $('#ds-drawer');
     var mask = $('#ds-drawer-mask');
@@ -515,9 +677,22 @@
       cat.children.forEach(function (sub) {
         var t = el('div', { class: 'ds-d-tag', 'data-sub': sub.id }, [sub.name]);
         t.addEventListener('click', function () {
-          // 关闭侧边栏，进入筛选结果
+          // V17.0 §2.6：关闭侧边栏，进入筛选结果页
           closeDrawer();
-          showToast('ok', '筛选 · ' + cat.name + ' / ' + sub.name, '即将开放');
+          currentSub = 'filter';
+          currentFilter.catId = cat.id;
+          currentFilter.subId = sub.id;
+          filterState = { sort: 'ly', status: 'all', level: 'all', words: 'all', price: 'all', year: 'all' };
+          // 让顶部 banner/金刚显示（filter 视图是搜索筛选结果页）
+          var banner = $('#ds-banner');
+          var qg = $('#ds-quick-grid');
+          var searchBox = $('#ds-search-box');
+          var catTrigger = $('#ds-cat-trigger');
+          if (banner) banner.style.display = '';
+          if (qg) qg.style.display = '';
+          if (searchBox) searchBox.style.display = 'none';
+          if (catTrigger) catTrigger.style.display = '';
+          renderContent();
         });
         tags.appendChild(t);
       });
@@ -564,6 +739,38 @@
         var group = t.parentElement;
         $$('.ds-sort', group).forEach(function (x) { x.classList.remove('active'); });
         t.classList.add('active');
+      }
+    });
+    // 筛选页事件代理：本周灵韵/本周人气 + 5 维筛选 chip + 返回
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      if (!t) return;
+      // 本周灵韵 / 本周人气 切换
+      if (t.classList && t.classList.contains('filter-sort-item')) {
+        filterState.sort = t.getAttribute('data-sort');
+        renderContent();
+        return;
+      }
+      // 返回首页
+      if (t.getAttribute && t.getAttribute('data-action') === 'back-home') {
+        currentSub = 'home';
+        filterState = { sort: 'ly', status: 'all', level: 'all', words: 'all', price: 'all', year: 'all' };
+        currentFilter = { board: 'featured', sort: 'ly', catId: null, subId: null };
+        setSubNav('home');
+        return;
+      }
+      // 5 维筛选 chip
+      if (t.classList && t.classList.contains('filter-chip')) {
+        var dim = t.getAttribute('data-dim');
+        var v = t.getAttribute('data-v');
+        if (dim && v) {
+          // 同一 dim 内的其他 chip 取消 active
+          var chips = t.parentElement.querySelectorAll('.filter-chip');
+          chips.forEach(function (x) { x.classList.remove('active'); });
+          t.classList.add('active');
+          filterState[dim] = v;
+          renderContent();
+        }
       }
     });
   }
