@@ -1,0 +1,168 @@
+{
+ "broken_links": [
+  [
+   "output\\preview\\novel-ai-helper.html",
+   [
+    [
+     "href",
+     "javascript:void(0)"
+    ]
+   ]
+  ],
+  [
+   "output/preview/js/tabbar.js",
+   [
+    [
+     "js-str",
+     "product-preview.html"
+    ]
+   ]
+  ]
+ ],
+ "missing_assets": [],
+ "fetch_missing": [],
+ "ls_keys": {
+  "lingjing_v514_novel_outline": {
+   "set": [
+    "output\\preview\\creator-create.html"
+   ],
+   "get": [
+    "output\\preview\\creator-create.html"
+   ],
+   "rm": []
+  },
+  "lingjing_v5170_creator_legal_ack": {
+   "set": [
+    "output\\preview\\creator-legal.html"
+   ],
+   "get": [],
+   "rm": []
+  },
+  "ljss_save_v5_6": {
+   "set": [
+    "output\\preview\\game-3d.html"
+   ],
+   "get": [
+    "output\\preview\\game-3d.html",
+    "output\\preview\\game-3d.html"
+   ],
+   "rm": []
+  },
+  "lingjing_account_kind": {
+   "set": [],
+   "get": [
+    "output\\preview\\me.html"
+   ],
+   "rm": [
+    "output\\preview\\me.html"
+   ]
+  },
+  "lingjing_user_profile": {
+   "set": [],
+   "get": [
+    "output\\preview\\me.html"
+   ],
+   "rm": [
+    "output\\preview\\me.html"
+   ]
+  },
+  "lingjing_onboarding_done": {
+   "set": [],
+   "get": [],
+   "rm": [
+    "output\\preview\\me.html"
+   ]
+  },
+  "lingjing_v514_novel_outline_v_": {
+   "set": [
+    "output\\preview\\novel-ai-helper.html"
+   ],
+   "get": [
+    "output\\preview\\novel-ai-helper.html"
+   ],
+   "rm": []
+  },
+  "lingjing_v519_realname_done": {
+   "set": [
+    "output\\preview\\plot-runner.html"
+   ],
+   "get": [
+    "output\\preview\\plot-runner.html",
+    "output\\preview\\plot-runner.html"
+   ],
+   "rm": []
+  },
+  "lingjing_v519_realname_tries": {
+   "set": [
+    "output\\preview\\plot-runner.html"
+   ],
+   "get": [
+    "output\\preview\\plot-runner.html",
+    "output\\preview\\plot-runner.html"
+   ],
+   "rm": []
+  },
+  "ljss_gallery_v5_9": {
+   "set": [
+    "output\\preview\\redesign.html"
+   ],
+   "get": [
+    "output\\preview\\redesign.html"
+   ],
+   "rm": []
+  },
+  "ljss_save_v5_8": {
+   "set": [
+    "output\\preview\\redesign.html"
+   ],
+   "get": [],
+   "rm": []
+  },
+  "lingjing_v5170_xinyu_intro_seen": {
+   "set": [
+    "output/preview/js/heart.js"
+   ],
+   "get": [
+    "output/preview/js/heart.js"
+   ],
+   "rm": []
+  },
+  "lingjing_v5170_user": {
+   "set": [
+    "output/preview/js/home.js",
+    "output/preview/js/home.js"
+   ],
+   "get": [
+    "output/preview/js/home.js"
+   ],
+   "rm": []
+  },
+  "lingjing_v5170_signin_log": {
+   "set": [
+    "output/preview/js/home.js"
+   ],
+   "get": [
+    "output/preview/js/home.js"
+   ],
+   "rm": []
+  },
+  "plotrunner.save.${PLOT.novel.id}.${i}": {
+   "set": [
+    "output/preview/js/plot-engine.js"
+   ],
+   "get": [],
+   "rm": [
+    "output/preview/js/plot-engine.js"
+   ]
+  },
+  "plotrunner.opts": {
+   "set": [],
+   "get": [
+    "output/preview/js/plot-engine.js"
+   ],
+   "rm": []
+  }
+ },
+ "page_count": 32,
+ "links_by_page": {}
+}

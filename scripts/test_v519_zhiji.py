@@ -11,7 +11,7 @@ SHOT_DIR.mkdir(parents=True, exist_ok=True)
 
 PAGES = [
     ("01-library",     "library.html",     "30 题材库（顶部 nav 已加 知己）"),
-    ("02-companion",   "companion.html",   "陪伴主页 · 6 位角色动态卡"),
+    ("02-companion",   "heart-island.html",   "心屿 · AI 角色陪伴主页"),
     ("03-chat",        "chat.html",        "1v1 陪聊 · 阿岁"),
     ("04-memory",      "memory.html",      "共享记忆时间线 · 情绪曲线"),
     ("05-profile",     "profile.html",     "个人主页 · 用户画像 · 5 menu 卡片"),

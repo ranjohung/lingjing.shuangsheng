@@ -215,7 +215,29 @@
       window.location.href = 'sanguo-world.html';
       return;
     }
-    window.location.href = 'plot-runner.html?novel=' + id;
+    // V20-I 审查修复：其余公版书尚未建世界，明确提示而不是跳到错误内容
+    var book = ((window.PUBLIC_DOMAIN_DATA && window.PUBLIC_DOMAIN_DATA.books) || []).filter(function (b) { return b.id === id; })[0];
+    var name = book ? book.title : '该作品';
+    showWorldToast('「' + name + '」小说世界制作中 · v5.21+ 即将开放');
+  }
+
+  // V20-I：轻量 toast（公版库页原本无 toast 组件）
+  function showWorldToast(msg) {
+    var old = document.getElementById('pd-world-toast');
+    if (old) old.remove();
+    var t = document.createElement('div');
+    t.id = 'pd-world-toast';
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;left:50%;bottom:96px;transform:translateX(-50%);z-index:9999;'
+      + 'background:rgba(26,26,46,.92);border:1px solid rgba(255,255,255,.18);color:#fff;'
+      + 'padding:10px 18px;border-radius:999px;font-size:13px;backdrop-filter:blur(8px);'
+      + 'box-shadow:0 6px 20px rgba(0,0,0,.35);max-width:86vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+    document.body.appendChild(t);
+    setTimeout(function () {
+      t.style.transition = 'opacity .4s';
+      t.style.opacity = '0';
+      setTimeout(function () { t.remove(); }, 420);
+    }, 2200);
   }
 
   // ---------- 事件绑定 ----------

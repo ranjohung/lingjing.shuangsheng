@@ -1,13 +1,13 @@
 /* =================================================================
  * 灵境 · 双生 V18.0 — 经济体系文案 + 5 档充值 + 福利列表
  * 数据源：window.ECONOMY.{LANG_REPLACE, RECHARGE_TIERS, FEATURED_WORKS}
- * V12.0 严格执行：全文零橙光文案
+ * 红线执行：全文零第三方平台文案
  * ================================================================= */
 (function () {
   'use strict';
   if (window.ECONOMY) return;
 
-  // ---------- 橙光→灵境 名词替换（V12.0 第二红线）----------
+  // ---------- 旧名词 → 灵境术语 清洗替换（红线机制）----------
   // 用法：LANG_REPLACE.forEach(r => text = text.replace(r.from, r.to));
   var LANG_REPLACE = [
     { from: '丸子', to: '灵韵' },

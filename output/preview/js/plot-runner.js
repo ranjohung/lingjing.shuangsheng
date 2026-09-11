@@ -122,10 +122,15 @@
 
   // ---------- 初始化 ----------
   function init() {
-    // 解析 URL 参数：?novelId=xx&characterId=yy
+    // 解析 URL 参数：?novelId=xx（v5.13 链路）/ ?novel=xx（v6.4 plot-detail 与公版库链路）
+    // V20-I 审查修复：兼容两种参数名，且未知 ID 不再静默回退到《长夜城》
     var params = new URLSearchParams(window.location.search);
-    var novelId = params.get('novelId') || 'changyecheng';
-    currentNovel = NOVELS[novelId] || NOVELS.changyecheng;
+    var novelId = params.get('novelId') || params.get('novel') || 'changyecheng';
+    currentNovel = NOVELS[novelId] || null;
+    if (!currentNovel) {
+      renderUnsupported(novelId);
+      return;
+    }
     currentChapterIdx = 0;
     currentSceneIdx = 0;
     stats = { intimacy: 0, trust: 0 };
@@ -135,6 +140,31 @@
     setTimeout(function () {
       if (window.LJToast) window.LJToast.show('ok', '剧情已加载', currentNovel.title + ' · 第一章');
     }, 600);
+  }
+
+  // V20-I：未知小说 ID 的明确提示页（不再加载错误的默认小说）
+  function renderUnsupported(novelId) {
+    var title = novelId;
+    try {
+      if (window.NovelStore && window.NovelStore.loadNovel) {
+        var p = window.NovelStore.loadNovel(novelId);
+        if (p && p.novel && p.novel.title) title = p.novel.title;
+      }
+    } catch (e) {}
+    var esc = String(title).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+    var stage = $('#plot-stage');
+    if (stage) {
+      stage.insertAdjacentHTML('beforeend',
+        '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#1A1A2E,#16213E);z-index:60;">'
+        + '<div style="text-align:center;padding:36px 28px;max-width:300px;color:#fff;">'
+        + '<div style="font-size:44px;margin-bottom:14px;">📖</div>'
+        + '<div style="font-size:17px;font-weight:700;margin-bottom:8px;">「' + esc + '」</div>'
+        + '<div style="font-size:13px;color:rgba(255,255,255,.68);line-height:1.9;margin-bottom:22px;">该小说暂未接入此运行器<br>通用小说世界引擎 v5.21+ 即将开放</div>'
+        + '<a href="library.html" style="display:inline-block;padding:10px 28px;border-radius:999px;background:#E94560;color:#fff;font-size:14px;text-decoration:none;font-weight:600;">返回题材库</a>'
+        + '</div></div>');
+    }
   }
 
   function bindUI() {

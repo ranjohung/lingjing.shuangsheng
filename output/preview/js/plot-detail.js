@@ -213,7 +213,8 @@
     });
     var buyBtn = $('#pl-act-buy');
     if (buyBtn) buyBtn.addEventListener('click', function () {
-      window.location.href = '../creator-center.html';
+      // V20-I 审查修复：原跳 '../creator-center.html' 为 404 断链；购买流程 v5.21+ 即将开放
+      showToast('warn', '购买', 'v5.21+ 即将开放');
     });
     var cmtBtn = $('#pl-act-cmt');
     if (cmtBtn) cmtBtn.addEventListener('click', function () {

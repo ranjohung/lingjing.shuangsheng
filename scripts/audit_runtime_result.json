@@ -1,0 +1,265 @@
+{
+ "/product-preview.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 37,
+  "nav_links": 0
+ },
+ "/output/preview/catalog.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 60,
+  "nav_links": 0
+ },
+ "/output/preview/character-create.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 8,
+  "nav_links": 0
+ },
+ "/output/preview/character-detail.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 9,
+  "nav_links": 0
+ },
+ "/output/preview/chat.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 17,
+  "nav_links": 0
+ },
+ "/output/preview/commerce.html": {
+  "load_errors": [
+   "Cannot set properties of null (setting 'textContent')"
+  ],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 10,
+  "nav_links": 0
+ },
+ "/output/preview/creator-center.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 24,
+  "nav_links": 0
+ },
+ "/output/preview/creator-create.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 12,
+  "nav_links": 0
+ },
+ "/output/preview/creator-legal.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 2,
+  "nav_links": 0
+ },
+ "/output/preview/discover.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 10,
+  "nav_links": 0
+ },
+ "/output/preview/game-3d.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 36,
+  "nav_links": 0
+ },
+ "/output/preview/games.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 10,
+  "nav_links": 0
+ },
+ "/output/preview/heart-island.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 23,
+  "nav_links": 0
+ },
+ "/output/preview/legal-view.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 1,
+  "nav_links": 0
+ },
+ "/output/preview/library.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 45,
+  "nav_links": 0
+ },
+ "/output/preview/me.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 29,
+  "nav_links": 0
+ },
+ "/output/preview/memory.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 10,
+  "nav_links": 0
+ },
+ "/output/preview/novel-ai-helper.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 29,
+  "nav_links": 0
+ },
+ "/output/preview/novel-edit.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 45,
+  "nav_links": 0
+ },
+ "/output/preview/novel-upload.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 10,
+  "nav_links": 0
+ },
+ "/output/preview/plot-detail.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [
+   {
+    "label": "🛒\n    购买",
+    "pageerrors": [],
+    "console": [
+     "Failed to load resource: the server responded with a status of 404 (File not found)"
+    ]
+   }
+  ],
+  "click_total": 15,
+  "nav_links": 0
+ },
+ "/output/preview/plot-history.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 2,
+  "nav_links": 0
+ },
+ "/output/preview/plot-runner.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 34,
+  "nav_links": 0
+ },
+ "/output/preview/plot-save.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 8,
+  "nav_links": 0
+ },
+ "/output/preview/plot-settings.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 8,
+  "nav_links": 0
+ },
+ "/output/preview/profile.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 17,
+  "nav_links": 0
+ },
+ "/output/preview/public-domain.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 39,
+  "nav_links": 0
+ },
+ "/output/preview/redesign.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 60,
+  "nav_links": 0
+ },
+ "/output/preview/sanguo-world.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 10,
+  "nav_links": 0
+ },
+ "/output/preview/scene-select.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 2,
+  "nav_links": 0
+ },
+ "/output/preview/settings.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 39,
+  "nav_links": 0
+ },
+ "/output/preview/wallet.html": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 21,
+  "nav_links": 0
+ },
+ "/output/preview/plot-runner.html?novel=demo": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 34,
+  "nav_links": 0
+ },
+ "/output/preview/legal-view.html?doc=TERMS_OF_SERVICE": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [],
+  "click_total": 1,
+  "nav_links": 0
+ },
+ "/output/preview/plot-detail.html?id=demo": {
+  "load_errors": [],
+  "load_404": [],
+  "click_errors": [
+   {
+    "label": "🛒\n    购买",
+    "pageerrors": [],
+    "console": [
+     "Failed to load resource: the server responded with a status of 404 (File not found)"
+    ]
+   }
+  ],
+  "click_total": 15,
+  "nav_links": 0
+ }
+}

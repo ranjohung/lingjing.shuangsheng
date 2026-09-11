@@ -194,3 +194,19 @@
 | `docs/ALL_FUNCTIONS.md` | 增 §14 法律拆分表 + §15 站点目录 |
 | `.workbuddy/memory/MEMORY.md` | 增 §3.3 法律归属硬规则 |
 | `.workbuddy/memory/2026-09-11.md` | 当日追加 v6.1.2 章节 |
+
+---
+
+## 站点目录补遗（2026-09-12 · V20-I 审查同步）
+
+V17-V20 新增页面此前未入目录，现补记：
+
+| 卷 | 页面 | 说明 |
+|---|---|---|
+| 第二卷 · 世界 | `public-domain.html` | 公版名著库（40 本真实语料 · V20-A/H） |
+| 第二卷 · 世界（沉浸） | `sanguo-world.html` | 三国演义小说世界（120 回卷制 · V20-H） |
+| 附录 · 法律 | `legal-view.html?doc=XXX` | 法律阅读页（16 份文书统一入口 · V20-G） |
+| 第二卷 · 世界（沉浸） | `plot-detail.html` | 作品详情页（V19-A · ⚠️ O-4 孤儿页待接入） |
+| 第三卷 · 创作 | `commerce.html` | 上架与定价（作者专属 · 从顶级功能区降级入创作卷） |
+
+页面全量清单以 [ALL_FUNCTIONS.md](ALL_FUNCTIONS.md) §2 与 [AUDIT_2026-09-12.md](AUDIT_2026-09-12.md) §四（35 入口审计表）为准。

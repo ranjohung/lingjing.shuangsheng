@@ -57,6 +57,11 @@ def check_residue():
                 continue
             if any(part.startswith(".workbuddy") for part in rel.parts):
                 continue
+            # 2026-09-12 V20-I 审查修正扫描范围：
+            # 铁律 #2 管的是 UI 交付物，内部文档（docs/ 计划/审查）与 scripts/ 允许内部参考；
+            # corpus/ apps/ node_modules/ 亦非 UI 交付物
+            if rel.parts and rel.parts[0] in {"docs", "scripts", "corpus", "apps", "node_modules", ".git"}:
+                continue
         except ValueError:
             continue
 
@@ -72,8 +77,16 @@ def check_residue():
 
         matches = []
         for line_num, line in enumerate(content.splitlines(), start=1):
-            if "橙光" in line:
-                matches.append((line_num, line.strip()[:100]))
+            if "橙光" not in line:
+                continue
+            # 排除功能性清洗数据本身（economy.js LANG_REPLACE 映射表：from 键是被替换的旧词）
+            if ("from:" in line and "to:" in line) or "from: '橙光" in line:
+                continue
+            # 排除 JS/CSS/HTML 注释行（内部说明，不渲染进 UI）
+            stripped = line.strip()
+            if stripped.startswith(("//", "/*", "*", "<!--")) or stripped.endswith("*/"):
+                continue
+            matches.append((line_num, line.strip()[:100]))
 
         if matches:
             residue_files.append((p, matches))
@@ -98,10 +111,10 @@ def run_ui_tests():
     print("=" * 70)
 
     pages_to_test = [
-        ("plot-runner", "/plot-runner.html?novelId=demo_palace", "试玩剧本对话：场景图 + 立绘 + 对话框"),
-        ("library", "/library.html", "30 题材库（导航：小说世界/创作者中心/5题材/v5.8）"),
-        ("creator-center", "/creator-center.html", "创作者中心（3 大按键）"),
-        ("commerce", "/commerce.html", "上架与定价（仅作者可见）"),
+        ("plot-runner", "/output/preview/plot-runner.html?novelId=changyecheng", "试玩剧本对话：场景图 + 立绘 + 对话框"),
+        ("library", "/output/preview/library.html", "30 题材库（导航：小说世界/创作者中心/5题材/v5.8）"),
+        ("creator-center", "/output/preview/creator-center.html", "创作者中心（3 大按键）"),
+        ("commerce", "/output/preview/commerce.html", "上架与定价（仅作者可见）"),
     ]
 
     # product-preview 在项目根，用 file:// 直接打开
