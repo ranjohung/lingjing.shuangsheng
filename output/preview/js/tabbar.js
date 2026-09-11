@@ -103,11 +103,19 @@
         el('span', { class: 'ico', 'aria-hidden': 'true' }, [t.ico]),
         el('span', { class: 'lbl' }, [t.label])
       ]);
+      // pointer-events 在父级强制开启
+      a.style.pointerEvents = 'auto';
       a.addEventListener('click', function () {
         writeStored(t.id);
       });
       bar.appendChild(a);
     });
+    // V20-B：tabbar 永远在最顶层，z-index 200 高于所有 mask/dialog
+    bar.style.zIndex = '200';
+    bar.style.position = 'fixed';
+    bar.style.bottom = '0';
+    bar.style.left = '0';
+    bar.style.right = '0';
     return bar;
   }
 
@@ -136,6 +144,8 @@
     } else if (mountPoint.classList && mountPoint.classList.contains('tabbar')) {
       // 已有静态 .tabbar，替换内容但保留元素
       mountPoint.innerHTML = '';
+      // 关键：把 inline z-index 也复制到 mountPoint（避免被静态元素 z-index 60 覆盖）
+      mountPoint.style.zIndex = bar.style.zIndex;
       var children = Array.prototype.slice.call(bar.childNodes);
       for (var i = 0; i < children.length; i++) mountPoint.appendChild(children[i]);
     } else {

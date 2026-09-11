@@ -273,6 +273,10 @@
       mask.remove();
       if (opt.onOk) opt.onOk();
     });
+    // V20-B：点击空白处关闭（不再锁定用户）
+    mask.addEventListener('click', function (e) {
+      if (e.target === mask) mask.remove();
+    });
   }
 
   // ---------- 初始化 ----------
