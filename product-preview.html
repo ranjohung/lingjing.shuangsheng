@@ -597,6 +597,35 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
 .v17a-tip b{color:var(--ok);font-weight:700}
 .v17a-tip code{font-size:11px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px;color:var(--text)}
 @media (max-width:380px){.v17a-grid{grid-template-columns:1fr}}
+
+/* ---------- V17-B · 世界功能区演示区 ---------- */
+.v17b-shot{
+  margin:0 0 14px;border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--card);overflow:hidden;
+}
+.v17b-shot img{width:100%;display:block}
+.v17b-shot a{display:block;cursor:zoom-in}
+.v17b-cap{
+  padding:10px 12px;font-size:12px;color:var(--sub);
+  border-bottom:1px solid var(--line);background:rgba(0,0,0,.2);
+}
+.v17b-cap b{color:var(--ok);font-weight:700;margin-right:4px}
+.v17b-shots-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+@media(max-width:380px){.v17b-shots-grid{grid-template-columns:1fr}}
+.v17b-shots-grid .v17b-shot{margin-bottom:0}
+.v17b-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.v17b-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;font-size:12px;line-height:1.55}
+.v17b-c-head{font-size:12px;font-weight:600;color:var(--world);margin-bottom:6px;letter-spacing:.3px}
+.v17b-list{list-style:none;padding:0;margin:0;color:var(--sub)}
+.v17b-list li{padding:3px 0;border-bottom:1px dashed rgba(255,255,255,.04)}
+.v17b-list li:last-child{border-bottom:0}
+.v17b-list code{font-size:11px;color:var(--text);background:rgba(255,255,255,.04);padding:1px 5px;border-radius:4px}
+.v17b-tip{
+  margin-top:14px;padding:10px 12px;border-radius:8px;font-size:12px;line-height:1.6;
+  background:rgba(255,179,71,.08);border:1px solid rgba(255,179,71,.25);color:var(--text);
+}
+.v17b-tip b{color:var(--warn);font-weight:700}
+@media (max-width:380px){.v17b-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body data-page-node-id="OHd5Z4Ti0GHRAAA7MCSSk0">
@@ -716,10 +745,11 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
   <div class="v17-banner" style="border-color:var(--ok);background:linear-gradient(135deg,rgba(78,204,163,.18),rgba(108,92,231,.18));">
     <span class="dot" style="background:var(--ok);box-shadow:0 0 10px var(--ok)"></span>
     <div class="b-txt">
-      <b style="color:var(--ok)">V17.0 实施中 · V17-A 已交付 ✅</b><br>
-      Q1-Q11 全部确认 · 7 工作包 · V17-A 完成（js/tabbar.js · 122 行）· 下一步 V17-B 世界功能区
+      <b style="color:var(--ok)">V17.0 实施中 · V17-A + V17-B 已交付 ✅</b><br>
+      Q1-Q11 全部确认 · 7 工作包 · V17-A（js/tabbar.js · 122 行）+ V17-B（library.html 重写 · world.js/data.js · 5 文件）完成 · 下一步 V17-C 心屿
       <a href="docs/PRD-v17.md" target="_blank">PRD-v17</a>
       <a href="docs/DEV_PLAN-v17.md" target="_blank">DEV_PLAN-v17</a>
+      <a href="output/preview/library.html" target="_blank">世界功能区</a>
       <a href="docs/sources/2026-09-11/S01-v17-world-and-xinyu-redesign.txt" target="_blank">原始需求</a>
     </div>
   </div>
@@ -807,63 +837,85 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
     </div>
   </section>
 
-  <!-- V17-B 世界功能区 mock -->
+  <!-- V17-B 已交付：世界功能区（library.html 重写） -->
   <section class="v17-section">
     <div class="v17-section-head">
-      <h3>📖 世界功能区</h3>
-      <span class="badge">V17-B</span>
+      <h3>📖 V17-B · 世界功能区重构</h3>
+      <span class="badge ok-badge">已交付</span>
     </div>
-    <div class="world-mock">
-      <div class="wm-subnav">
-        <span class="sn active">首页</span>
-        <span class="sn">排行榜</span>
-        <span class="sn">心屿推</span>
-        <span class="sn">福利</span>
-        <span class="sn">创世杯</span>
-        <span class="sn">同人区</span>
-        <span class="sn">🔍</span>
+
+    <div class="v17b-shot">
+      <div class="v17b-cap">
+        <b>首页</b> · 7 子导航 + Banner 5 张 + 四大金刚 + 瀑布流
       </div>
-      <div class="wm-banner">
-        <div class="b-t">双生 · 入世</div>
-        <div class="b-s">一个角色，两种人生</div>
-        <div class="b-dots"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+      <a href="output/preview/library.html" target="_blank"><img src="output/preview/screenshots/v17-b-world-home.png" alt="V17-B 首页" /></a>
+    </div>
+
+    <div class="v17b-shots-grid">
+      <div class="v17b-shot">
+        <div class="v17b-cap"><b>同人区</b> · 公版角标 + 灵境术语</div>
+        <a href="output/preview/library.html" target="_blank"><img src="output/preview/screenshots/v17-b-world-tongren.png" alt="V17-B 同人区" /></a>
       </div>
-      <div class="wm-quick">
-        <div class="qk"><span class="em">⊞</span>全部分类</div>
-        <div class="qk"><span class="em">📅</span>更新日历</div>
-        <div class="qk"><span class="em">👑</span>经典必看</div>
-        <div class="qk"><span class="em">✍</span>创作</div>
+      <div class="v17b-shot">
+        <div class="v17b-cap"><b>分类抽屉</b> · 10 一级 + 多二级</div>
+        <a href="output/preview/library.html" target="_blank"><img src="output/preview/screenshots/v17-b-world-drawer.png" alt="V17-B 抽屉" /></a>
       </div>
-      <div class="wm-board">
-        <div class="wm-board-head">
-          <span>编辑推荐</span>
-          <div class="sub-tabs"><span class="on">最新</span><span>完结</span></div>
-        </div>
-        <div class="wm-waterfall">
-          <div class="wm-card">
-            <div class="cov" style="background:linear-gradient(160deg,#8E5BD8,#C95B9C)">🎭</div>
-            <div class="info">
-              <div class="t">傲慢与偏见</div>
-              <div class="g">豪门</div>
-              <div class="meta"><span><span class="star">★</span>4.9</span><span>12.8 万字</span></div>
-            </div>
-          </div>
-          <div class="wm-card">
-            <div class="cov" style="background:linear-gradient(160deg,#B8863B,#8C5A2B)">🏯</div>
-            <div class="info">
-              <div class="t">三国 · 吕布篇</div>
-              <div class="g">古风</div>
-              <div class="meta"><span><span class="star">★</span>4.8</span><span>24.6 万字</span></div>
-            </div>
-          </div>
-        </div>
+    </div>
+
+    <div class="v17b-shot">
+      <div class="v17b-cap">
+        <b>搜索子区</b> · 搜「长夜」→ 长夜城 + 赛博长夜
       </div>
-      <div class="wm-board">
-        <div class="wm-board-head">
-          <span>热门佳作</span>
-          <div class="sub-tabs"><span class="on">近期</span><span>完结</span><span>新作</span><span>历史</span></div>
-        </div>
+      <a href="output/preview/library.html" target="_blank"><img src="output/preview/screenshots/v17-b-world-search.png" alt="V17-B 搜索" /></a>
+    </div>
+
+    <div class="v17b-grid">
+      <div class="v17b-card">
+        <div class="v17b-c-head">📦 交付物（5 文件）</div>
+        <ul class="v17b-list">
+          <li><code>output/preview/library.html</code> · 重写 ~410 行</li>
+          <li><code>output/preview/js/world-data.js</code> · 200 行 mock</li>
+          <li><code>output/preview/js/world.js</code> · 280 行交互</li>
+          <li><code>scripts/test_v17b_world.py</code> · 14 项验证</li>
+          <li><code>output/preview/library.html.v517.bak</code> · 原版备份</li>
+        </ul>
       </div>
+      <div class="v17b-card">
+        <div class="v17b-c-head">🔑 关键验收</div>
+        <ul class="v17b-list">
+          <li>7 子导航（首页/排行榜/心屿推/福利/创世杯/同人区/🔍）</li>
+          <li>Banner 5 张 · 5s 自动轮播 + 触摸滑动</li>
+          <li>四大金刚 4 项 · ⊞ 分类/📅 日历/👑 经典/✍ 创作</li>
+          <li>双列瀑布流 · 30 张 + 角标（新作/完结/公版）</li>
+          <li>分类侧边栏 10 一级 + 多二级 · 从左滑出</li>
+          <li>同人区 10 张公版 · 灵境专属术语</li>
+          <li>搜索子区 · 实时过滤作品名/作者/题材</li>
+        </ul>
+      </div>
+      <div class="v17b-card">
+        <div class="v17b-c-head">🛡️ 第三方案规</div>
+        <ul class="v17b-list">
+          <li>BTS/HP/EXO → 韩流同人/欧美同人（PRD 9.1 R7）</li>
+          <li>底部 5 Tab 沿用 v17.0 V17-A 组件</li>
+          <li>创作 Tab → creator-center.html</li>
+          <li>不显示游玩人数/来源标签</li>
+          <li>公版作品以"灵境版"专属术语呈现</li>
+        </ul>
+      </div>
+      <div class="v17b-card">
+        <div class="v17b-c-head">✅ Playwright 验证</div>
+        <ul class="v17b-list">
+          <li>14/14 项 PASS</li>
+          <li>LJWorld + WORLD_DATA 双挂载</li>
+          <li>5 Tab 完整渲染</li>
+          <li>子导航切换 / 抽屉开关 / 搜索过滤</li>
+          <li>0 个错误/告警</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="v17b-tip">
+      <b>下一步 V17-C</b>：心屿功能区重构（heart-island.html → 5 子标签 + 角色来源角标 [创]/[双]）— 等用户审阅启动。
     </div>
   </section>
 

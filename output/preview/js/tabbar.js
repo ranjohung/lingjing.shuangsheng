@@ -127,7 +127,7 @@
     } else if (mountPoint.classList && mountPoint.classList.contains('tabbar')) {
       // 已有静态 .tabbar，替换内容但保留元素
       mountPoint.innerHTML = '';
-      var children = bar.childNodes;
+      var children = Array.prototype.slice.call(bar.childNodes);
       for (var i = 0; i < children.length; i++) mountPoint.appendChild(children[i]);
     } else {
       mountPoint.appendChild(bar);

@@ -4,75 +4,315 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>世界 · 灵境 · 双生</title>
-<meta name="description" content="v6.4 · 第一卷·灵界万象 · 30 题材全分类 · 我的故事 · 官方库 · 玩家创作" />
+<meta name="description" content="v17.0 · 世界功能区 · 7 子导航 + Banner 轮播 + 四大金刚 + 双列瀑布流 + 分类侧边栏 + 筛选结果页 + 同人区 + 搜索" />
 <meta name="theme-color" content="#1A1A2E" />
 <link rel="stylesheet" href="css/shell-v64.css" />
 <style>
-/* ---------- 搜索框 ---------- */
-.search{
-  display:flex;align-items:center;gap:10px;
-  margin:14px var(--margin) 0;
-  padding:12px 16px;border-radius:var(--radius);
-  background:var(--card);border:1px solid var(--line);
+/* =================================================================
+ * 灵境 · 双生 V17.0 — 世界功能区样式（V17-B）
+ * 命名：ds-* 全部进 design-system.css 候选；本页内嵌便于单独预览
+ * ================================================================= */
+:root {
+  --world: #00B894;
+  --radius: 12px;
 }
-.search input{flex:1;background:none;border:0;outline:0;color:var(--text);font-size:15px}
-.search input::placeholder{color:rgba(160,160,176,.55)}
-.search .ico{color:var(--sub)}
 
-/* ---------- 分类 chips ---------- */
-.chips{display:flex;gap:8px;overflow-x:auto;padding:14px var(--margin) 4px;scrollbar-width:none}
-.chips::-webkit-scrollbar{display:none}
-.chip{
-  flex-shrink:0;padding:7px 14px;border-radius:999px;font-size:13px;
-  background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--sub);
-  transition:all .15s;
+/* ---------- 顶部子导航（7 项） ---------- */
+.ds-sub-nav {
+  position: sticky; top: 56px; z-index: 40;
+  display: flex; gap: 0;
+  margin: 0;
+  background: rgba(26, 26, 46, .88);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: none;
 }
-.chip.active{background:rgba(233,69,96,.15);border-color:rgba(233,69,96,.4);color:var(--accent);font-weight:600}
+.ds-sub-nav::-webkit-scrollbar { display: none; }
+.ds-sub-nav .ds-sn {
+  flex: 1; min-width: 64px;
+  padding: 12px 8px;
+  font-size: 13px; color: var(--sub);
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  transition: color .2s;
+  white-space: nowrap;
+}
+.ds-sub-nav .ds-sn.active { color: var(--world); font-weight: 600; }
+.ds-sub-nav .ds-sn.active::after {
+  content: ''; position: absolute;
+  bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 24px; height: 2px; border-radius: 1px;
+  background: var(--world);
+}
+.ds-sub-nav .ds-sn:active { opacity: .6; }
 
-/* ---------- 数据概览 4 卡 ---------- */
-.stats{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
-  margin:14px var(--margin) 0;
+/* ---------- 搜索框（仅 search 子项显示） ---------- */
+.ds-search-box {
+  display: none;
+  align-items: center; gap: 10px;
+  margin: 14px var(--margin) 0;
+  padding: 12px 16px; border-radius: var(--radius);
+  background: var(--card); border: 1px solid var(--line);
 }
-.stat{
-  padding:10px 6px;border-radius:10px;text-align:center;
-  background:var(--card);border:1px solid var(--line);
+.ds-search-box input {
+  flex: 1; background: none; border: 0; outline: 0;
+  color: var(--text); font-size: 15px;
 }
-.stat .v{font-size:20px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,serif}
-.stat .l{font-size:10px;color:var(--sub);margin-top:2px}
-.stat .v.c1{color:var(--world)}
-.stat .v.c2{color:var(--accent)}
-.stat .v.c3{color:var(--xinyu)}
-.stat .v.c4{color:var(--warn)}
+.ds-search-box input::placeholder { color: rgba(160, 160, 176, .55); }
+.ds-search-box .ico { color: var(--sub); }
 
-/* ---------- 我的故事 列表卡 ---------- */
-.story-list{margin:0 var(--margin);display:flex;flex-direction:column;gap:10px}
-.story{
-  display:flex;gap:12px;align-items:center;padding:12px;border-radius:var(--radius);
-  background:var(--card);border:1px solid var(--line);
-  transition:transform .2s cubic-bezier(.16,1,.3,1);
+/* ---------- Banner 轮播 ---------- */
+.ds-banner {
+  position: relative;
+  margin: 10px var(--margin) 0;
+  height: 22vh;
+  max-height: 180px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
 }
-.story:active{transform:scale(.98)}
-.story .cov{
-  width:54px;height:70px;border-radius:8px;flex-shrink:0;
-  display:grid;place-items:center;font-size:24px;
+.ds-banner-track {
+  display: flex; height: 100%;
+  transition: transform .5s cubic-bezier(.16, 1, .3, 1);
 }
-.story .body{flex:1;min-width:0}
-.story .t{font-size:15px;font-weight:600;line-height:1.3}
-.story .s{font-size:12px;color:var(--sub);margin-top:3px}
-.story .meta{display:flex;gap:10px;font-size:11px;color:rgba(160,160,176,.7);margin-top:5px;align-items:center}
-.story .meta .star{color:var(--warn)}
-.story .meta .play{color:var(--world);margin-left:auto}
+.ds-banner-slide {
+  flex: 0 0 100%; height: 100%;
+  position: relative; display: block;
+}
+.ds-bs-bg { position: absolute; inset: 0; }
+.ds-bs-mask {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, .6) 100%);
+}
+.ds-bs-content {
+  position: absolute; left: 20px; bottom: 22px; right: 20px;
+  color: #fff;
+}
+.ds-bs-emoji { font-size: 28px; margin-bottom: 6px; }
+.ds-bs-title { font-size: 22px; font-weight: 700; line-height: 1.2; margin-bottom: 4px; }
+.ds-bs-sub { font-size: 13px; opacity: .8; }
+.ds-banner-dots {
+  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px;
+}
+.ds-banner-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255, 255, 255, .35);
+  cursor: pointer; transition: all .2s;
+}
+.ds-banner-dot.active { width: 18px; border-radius: 3px; background: #fff; }
 
-/* ---------- 进度条 ---------- */
-.pb{margin-top:6px;height:4px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden}
-.pb>div{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--warn))}
+/* ---------- 四大金刚 ---------- */
+.ds-quick-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 8px; margin: 14px var(--margin) 0;
+}
+.ds-qg-item {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px; padding: 12px 0;
+  background: linear-gradient(135deg, rgba(108, 92, 231, .12), rgba(233, 69, 96, .08));
+  border: 1px solid var(--line); border-radius: var(--radius);
+  color: var(--text); font-size: 11px;
+  cursor: pointer;
+  transition: transform .15s;
+}
+.ds-qg-item:active { transform: scale(.94); }
+.ds-qg-item .ds-qg-ico { font-size: 22px; line-height: 1; }
+.ds-qg-item .ds-qg-txt { color: var(--sub); }
 
-/* ---------- 跳转完整版链接 ---------- */
-.more-link{
-  display:block;margin:18px var(--margin) 0;text-align:center;
-  font-size:12px;color:var(--sub);padding:10px;
-  border:1px dashed var(--line);border-radius:10px;
+/* ---------- 板块标题 + 右侧排序 ---------- */
+.ds-board-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin: 22px var(--margin) 12px;
+}
+.ds-board-title {
+  font-size: 16px; font-weight: 600; color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+}
+.ds-board-title::before {
+  content: ''; width: 4px; height: 14px; border-radius: 2px;
+  background: var(--world);
+}
+.ds-board-sort { display: flex; gap: 4px; }
+.ds-sort {
+  font-size: 11px; padding: 4px 8px; border-radius: 6px;
+  color: var(--sub); cursor: pointer;
+}
+.ds-sort.active {
+  color: var(--world);
+  background: rgba(0, 184, 148, .12);
+  font-weight: 600;
+}
+
+/* ---------- 双列瀑布流 ---------- */
+.ds-waterfall {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 0 var(--margin);
+}
+.ds-wf-card {
+  display: flex; flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  color: var(--text);
+  transition: transform .15s;
+}
+.ds-wf-card:active { transform: scale(.97); }
+.ds-wf-cov {
+  position: relative;
+  width: 100%; padding-top: 140%; /* 1.4 倍高 */
+  display: grid; place-items: center;
+}
+.ds-wf-emoji {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  font-size: 36px;
+}
+.ds-corner-tag {
+  position: absolute; top: 6px; left: 6px;
+  padding: 2px 7px; border-radius: 4px;
+  font-size: 10px; font-weight: 700; color: #fff;
+}
+.ds-tag-new { background: rgba(78, 204, 163, .9); }
+.ds-tag-done { background: rgba(0, 184, 148, .9); }
+.ds-tag-pd { background: rgba(255, 179, 71, .9); }
+.ds-wf-body { padding: 10px 12px 12px; }
+.ds-wf-title {
+  font-size: 14px; font-weight: 600; line-height: 1.3;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ds-wf-author {
+  font-size: 11px; color: var(--sub);
+  margin-top: 4px; white-space: nowrap; overflow: hidden;
+}
+.ds-wf-tags { margin-top: 6px; }
+.ds-wf-tag {
+  font-size: 10px; padding: 2px 6px; border-radius: 4px;
+  background: rgba(255, 255, 255, .04);
+}
+.ds-wf-meta {
+  display: flex; justify-content: space-between;
+  margin-top: 8px; font-size: 11px; color: var(--sub);
+}
+.ds-wf-score { color: var(--warn); }
+
+/* ---------- 分类侧边栏 ---------- */
+.ds-drawer-mask {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, .5);
+  z-index: 70;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s;
+}
+.ds-drawer-mask.open { opacity: 1; pointer-events: auto; }
+
+.ds-drawer {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: 86vw; max-width: 420px;
+  background: var(--bg);
+  border-right: 1px solid var(--line);
+  z-index: 71;
+  transform: translateX(-100%);
+  transition: transform .3s cubic-bezier(.16, 1, .3, 1);
+  display: flex; flex-direction: column;
+}
+.ds-drawer.open { transform: translateX(0); }
+.ds-drawer-head {
+  padding: 14px var(--margin);
+  border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.ds-drawer-head h3 { font-size: 16px; font-weight: 600; }
+.ds-drawer-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid var(--line);
+  font-size: 14px;
+}
+.ds-drawer-body {
+  flex: 1; display: flex;
+  overflow: hidden;
+}
+.ds-drawer-cat-list {
+  width: 30%;
+  background: var(--card-2);
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+}
+.ds-d-cat {
+  padding: 14px 16px;
+  font-size: 14px; color: var(--sub);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all .15s;
+}
+.ds-d-cat.active {
+  background: var(--bg);
+  color: var(--world);
+  border-left-color: var(--world);
+  font-weight: 600;
+}
+.ds-drawer-tag-list {
+  flex: 1;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  align-content: start;
+  overflow-y: auto;
+}
+.ds-d-tag {
+  padding: 10px 12px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 13px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .15s;
+}
+.ds-d-tag:active {
+  background: rgba(0, 184, 148, .15);
+  border-color: var(--world);
+  color: var(--world);
+}
+
+/* ---------- 空状态 ---------- */
+.ds-empty {
+  margin: 40px var(--margin);
+  text-align: center; color: var(--sub); font-size: 13px;
+  padding: 40px 20px;
+  background: var(--card);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+}
+
+/* ---------- 全部分类快捷按钮（顶部悬浮） ---------- */
+.ds-cat-trigger {
+  position: fixed;
+  bottom: 84px; left: 50%; transform: translateX(-50%);
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--world), #00D2A8);
+  color: #fff;
+  display: grid; place-items: center;
+  font-size: 22px;
+  box-shadow: 0 8px 24px rgba(0, 184, 148, .4);
+  z-index: 50;
+  border: 1px solid rgba(255, 255, 255, .2);
+  transition: transform .15s;
+}
+.ds-cat-trigger:active { transform: translateX(-50%) scale(.92); }
+
+@media (max-width: 380px) {
+  .ds-banner { height: 20vh; max-height: 160px; }
+  .ds-bs-title { font-size: 18px; }
+  .ds-waterfall { gap: 8px; }
+  .ds-wf-cov { padding-top: 130%; }
 }
 </style>
 </head>
@@ -84,193 +324,91 @@
   <header class="topbar">
     <div class="topbar-title"><span class="dot"></span>世界</div>
     <div class="topbar-acts">
-      <button class="icon-btn" onclick="showToast('ok','搜索已就绪','试试搜三国 / 林黛玉')" title="搜索">🔍</button>
-      <a class="icon-btn" href="novel-upload.html" title="上传">📤</a>
-      <button class="icon-btn" onclick="showToast('warn','3 条未读通知','通知中心即将开放')">🔔<span class="badge">3</span></button>
+      <button class="icon-btn" onclick="window.LJWorld.goSub('search')" title="搜索">🔍</button>
+      <button class="icon-btn" onclick="window.LJWorld.showToast('warn','3 条未读','通知中心即将开放')" title="通知">🔔<span class="badge">3</span></button>
       <a class="icon-btn" href="me.html" title="我的">👤</a>
     </div>
   </header>
 
   <main>
-    <!-- 搜索框 -->
-    <div class="search">
+    <!-- 7 项顶部子导航 -->
+    <nav class="ds-sub-nav" id="ds-sub-nav">
+      <div class="ds-sn active" data-sn="home">首页</div>
+      <div class="ds-sn" data-sn="rank">排行榜</div>
+      <div class="ds-sn" data-sn="xinyu">心屿推</div>
+      <div class="ds-sn" data-sn="welfare">福利</div>
+      <div class="ds-sn" data-sn="chuangshibei">创世杯</div>
+      <div class="ds-sn" data-sn="tongren">同人区</div>
+      <div class="ds-sn" data-sn="search">🔍</div>
+    </nav>
+
+    <!-- 搜索框（仅 search 子项可见） -->
+    <div class="ds-search-box" id="ds-search-box">
       <span class="ico">🔍</span>
-      <input type="search" placeholder="搜题材 / 小说 / 角色" id="search-input" oninput="filterStories(this.value)" />
+      <input type="search" id="ds-search-input" placeholder="搜作品名 / 作者名 / 题材" />
     </div>
 
-    <!-- 分类 chips -->
-    <div class="chips" id="chips">
-      <div class="chip active" data-cat="all">全部</div>
-      <div class="chip" data-cat="古风">古风</div>
-      <div class="chip" data-cat="都市">都市</div>
-      <div class="chip" data-cat="悬疑">悬疑</div>
-      <div class="chip" data-cat="仙侠">仙侠</div>
-      <div class="chip" data-cat="科幻">科幻</div>
-      <div class="chip" data-cat="恋爱">恋爱</div>
-      <div class="chip" data-cat="玄幻">玄幻</div>
-      <div class="chip" data-cat="校园">校园</div>
-      <div class="chip" data-cat="武侠">武侠</div>
-    </div>
+    <!-- Banner 轮播（首页/其他子项共用） -->
+    <section class="ds-banner" id="ds-banner" style="display:none">
+      <div class="ds-banner-track" id="ds-banner-track"></div>
+      <div class="ds-banner-dots" id="ds-banner-dots"></div>
+    </section>
 
-    <!-- 数据概览 -->
-    <div class="stats">
-      <div class="stat"><div class="v c1">30</div><div class="l">题材</div></div>
-      <div class="stat"><div class="v c2">6</div><div class="l">我的故事</div></div>
-      <div class="stat"><div class="v c3">128</div><div class="l">可探索</div></div>
-      <div class="stat"><div class="v c4">12</div><div class="l">结局</div></div>
-    </div>
+    <!-- 四大金刚 -->
+    <section class="ds-quick-grid" id="ds-quick-grid">
+      <div class="ds-qg-item" data-action="cat">
+        <span class="ds-qg-ico">⊞</span>
+        <span class="ds-qg-txt">全部分类</span>
+      </div>
+      <div class="ds-qg-item" data-action="calendar">
+        <span class="ds-qg-ico">📅</span>
+        <span class="ds-qg-txt">更新日历</span>
+      </div>
+      <div class="ds-qg-item" data-action="classic">
+        <span class="ds-qg-ico">👑</span>
+        <span class="ds-qg-txt">经典必看</span>
+      </div>
+      <div class="ds-qg-item" data-action="create">
+        <span class="ds-qg-ico">✍</span>
+        <span class="ds-qg-txt">创作</span>
+      </div>
+    </section>
 
-    <!-- 我的故事（进行中） -->
-    <h2 class="sec">我的故事 <a class="more" href="me.html#play">查看全部</a></h2>
-    <div class="story-list" id="my-stories">
-      <a class="story" href="plot-runner.html?novelId=changye">
-        <div class="cov" style="background:linear-gradient(160deg,#2E3A6E,#4A3A8C)">🏯</div>
-        <div class="body">
-          <div class="t">《长夜城》</div>
-          <div class="s">第3章 · 初入长夜城</div>
-          <div class="pb"><div style="width:45%"></div></div>
-          <div class="meta"><span>45%</span><span class="play">继续 →</span></div>
-        </div>
-      </a>
-      <a class="story" href="plot-runner.html?novelId=jinxiu">
-        <div class="cov" style="background:linear-gradient(160deg,#5E2E3A,#E94560)">🌸</div>
-        <div class="body">
-          <div class="t">《锦绣未央》</div>
-          <div class="s">第3章 · 雨夜抉择</div>
-          <div class="pb"><div style="width:35%;background:linear-gradient(90deg,#E94560,#FFB347)"></div></div>
-          <div class="meta"><span>35%</span><span class="play">继续 →</span></div>
-        </div>
-      </a>
-      <a class="story" href="plot-runner.html?novelId=saibo">
-        <div class="cov" style="background:linear-gradient(160deg,#2E5E56,#00B894)">🤖</div>
-        <div class="body">
-          <div class="t">《赛博长夜》</div>
-          <div class="s">共通线 · 5/20</div>
-          <div class="pb"><div style="width:25%;background:linear-gradient(90deg,#00B894,#4ECCA3)"></div></div>
-          <div class="meta"><span>25%</span><span class="play">继续 →</span></div>
-        </div>
-      </a>
-    </div>
-
-    <!-- 官方故事库 -->
-    <h2 class="sec">官方故事库 <a class="more" href="catalog.html">全部题材 →</a></h2>
-    <div class="story-list" id="official-stories">
-      <a class="story" data-cat="古风" href="catalog.html?g=guofeng">
-        <div class="cov" style="background:linear-gradient(160deg,#B8863B,#8C5A2B)">🎭</div>
-        <div class="body">
-          <div class="t">《三国演义》· 吕布篇</div>
-          <div class="s">穿越成吕布，改写三国命运</div>
-          <div class="meta">
-            <span>古风</span><span>5 转折</span><span>6 结局</span>
-            <span class="star">★</span><span>4.8</span>
-            <span class="play">开始 →</span>
-          </div>
-        </div>
-      </a>
-      <a class="story" data-cat="恋爱" href="catalog.html?g=haomen">
-        <div class="cov" style="background:linear-gradient(160deg,#8E5BD8,#C95B9C)">🎭</div>
-        <div class="body">
-          <div class="t">《傲慢与偏见》· 达西篇</div>
-          <div class="s">英伦豪门，重写你与达西的相遇</div>
-          <div class="meta">
-            <span>豪门</span><span>4 转折</span><span>5 结局</span>
-            <span class="star">★</span><span>4.9</span>
-            <span class="play">开始 →</span>
-          </div>
-        </div>
-      </a>
-      <a class="story" data-cat="悬疑" href="catalog.html?g=xuanyi">
-        <div class="cov" style="background:linear-gradient(160deg,#2E5E56,#00B894)">🧛</div>
-        <div class="body">
-          <div class="t">《德古拉》</div>
-          <div class="s">哥特暗夜，与吸血鬼共写命运</div>
-          <div class="meta">
-            <span>哥特</span><span>6 转折</span><span>7 结局</span>
-            <span class="star">★</span><span>4.7</span>
-            <span class="play">开始 →</span>
-          </div>
-        </div>
-      </a>
-    </div>
-
-    <!-- 玩家创作 -->
-    <h2 class="sec">玩家创作 <a class="more" href="discover.html">发现广场 →</a></h2>
-    <div class="story-list">
-      <a class="story" href="catalog.html?u=123">
-        <div class="cov" style="background:linear-gradient(160deg,#3A2E5E,#6C5CE7)">🌌</div>
-        <div class="body">
-          <div class="t">《深海回声》by 林清雪</div>
-          <div class="s">悬疑 · 8 转折 · 12 结局</div>
-          <div class="meta">
-            <span>悬疑</span><span>⭐ 4.8</span><span>2.3 万人游玩</span>
-            <span class="play">开始 →</span>
-          </div>
-        </div>
-      </a>
-      <a class="story" href="catalog.html?u=456">
-        <div class="cov" style="background:linear-gradient(160deg,#5A6B8E,#C95B9C)">⚡</div>
-        <div class="body">
-          <div class="t">《长夜未央》by 顾长夜</div>
-          <div class="s">玄幻 · 7 转折 · 9 结局</div>
-          <div class="meta">
-            <span>玄幻</span><span>⭐ 4.6</span><span>1.1 万人游玩</span>
-            <span class="play">开始 →</span>
-          </div>
-        </div>
-      </a>
-    </div>
-
-    <!-- 完整版入口 -->
-    <a class="more-link" href="library.html?full=1" onclick="showToast('warn','已是移动版','完整版桌面视图请用 PC 打开');return false;">
-      📋 查看 30 题材完整对照表（即将开放）
-    </a>
+    <!-- 主内容容器（动态渲染） -->
+    <div id="ds-main"></div>
   </main>
 
+  <!-- 全部分类悬浮按钮（仅非同人区显示） -->
+  <button class="ds-cat-trigger" id="ds-cat-trigger" title="全部分类">⊞</button>
+
+  <!-- 分类侧边栏 -->
+  <div class="ds-drawer-mask" id="ds-drawer-mask"></div>
+  <aside class="ds-drawer" id="ds-drawer">
+    <div class="ds-drawer-head">
+      <h3>全部分类</h3>
+      <button class="ds-drawer-close" id="ds-drawer-close">✕</button>
+    </div>
+    <div class="ds-drawer-body">
+      <div class="ds-drawer-cat-list" id="ds-drawer-cat-list"></div>
+      <div class="ds-drawer-tag-list" id="ds-drawer-tag-list"></div>
+    </div>
+  </aside>
+
   <!-- 5 Tab 底部（世界 active） -->
-  <nav class="tabbar">
-    <a class="tab" href="../product-preview.html"><span class="ico">🏠</span><span>首页</span></a>
+  <nav class="tabbar" id="tabbar-mount">
+    <a class="tab t-home"  href="product-preview.html"><span class="ico">🏠</span><span>首页</span></a>
     <a class="tab t-world active" href="library.html"><span class="ico">📖</span><span>世界</span></a>
     <a class="tab t-xinyu" href="heart-island.html"><span class="ico">💬</span><span>心屿</span></a>
     <a class="tab t-create" href="creator-center.html"><span class="ico">✨</span><span>创作</span></a>
-    <a class="tab" href="me.html"><span class="ico">👤</span><span>我的</span></a>
+    <a class="tab t-me"    href="me.html"><span class="ico">👤</span><span>我的</span></a>
   </nav>
 </div>
 
 <!-- Toast -->
 <div id="toast"></div>
 
-<script>
-function showToast(kind, title, msg){
-  var c = document.getElementById('toast');
-  var t = document.createElement('div');
-  t.className = 'toast-item ' + (kind || 'ok');
-  t.innerHTML = '<span class="ti"></span><span><b>' + title + '</b>' + (msg ? '<span style="opacity:.65"> · ' + msg + '</span>' : '') + '</span>';
-  c.appendChild(t);
-  setTimeout(function(){ t.remove(); }, 3000);
-}
-
-// 分类筛选
-document.querySelectorAll('#chips .chip').forEach(function(ch){
-  ch.addEventListener('click', function(){
-    document.querySelectorAll('#chips .chip').forEach(function(x){ x.classList.remove('active'); });
-    ch.classList.add('active');
-    var cat = ch.dataset.cat;
-    document.querySelectorAll('#official-stories .story').forEach(function(s){
-      s.style.display = (cat === 'all' || s.dataset.cat === cat) ? 'flex' : 'none';
-    });
-  });
-});
-
-// 搜索筛选
-function filterStories(q){
-  q = (q || '').toLowerCase();
-  ['my-stories','official-stories'].forEach(function(group){
-    document.querySelectorAll('#' + group + ' .story').forEach(function(s){
-      var t = s.querySelector('.t').textContent.toLowerCase();
-      s.style.display = (!q || t.indexOf(q) > -1) ? 'flex' : 'none';
-    });
-  });
-}
-</script>
+<script src="js/world-data.js"></script>
+<script src="js/world.js"></script>
+<script src="js/tabbar.js"></script>
 </body>
 </html>
