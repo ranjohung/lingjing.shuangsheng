@@ -325,6 +325,51 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
 }
 .plot-map-bldg:active{transform:scale(.94)}
 .plot-map-bldg span{font-size:28px}
+/* V20-L 设计文档 §7.4：地图人物头像（点击弹互动菜单） */
+.plot-map-chars{
+  position:absolute;left:0;right:0;bottom:180px;
+  display:flex;justify-content:center;gap:28px;
+}
+.plot-map-char{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  cursor:pointer;transition:transform .15s;
+}
+.plot-map-char:active{transform:scale(.92)}
+.plot-map-char .pmc-ava{
+  width:52px;height:52px;border-radius:50%;
+  display:grid;place-items:center;font-size:24px;
+  background:rgba(255,255,255,.12);
+  border:2px solid rgba(255,255,255,.45);
+  box-shadow:0 4px 14px rgba(0,0,0,.4);
+}
+.plot-map-char .pmc-name{
+  font-size:11px;color:#fff;
+  padding:2px 8px;border-radius:8px;
+  background:rgba(0,0,0,.4);
+}
+/* V20-L §7.4：人物互动菜单（对话/送礼/邀约/攻略） */
+.plot-interact-menu{
+  position:absolute;left:50%;bottom:120px;transform:translateX(-50%);
+  z-index:20;display:none;
+  background:#16213E;border:1px solid rgba(255,255,255,.15);
+  border-radius:14px;padding:14px 16px;min-width:230px;
+  box-shadow:0 12px 32px rgba(0,0,0,.5);
+}
+.plot-interact-menu.open{display:block}
+.plot-interact-menu .pim-head{
+  font-size:13px;font-weight:600;color:#fff;
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;
+}
+.plot-interact-menu .pim-close{
+  border:0;background:none;color:rgba(255,255,255,.5);
+  font-size:13px;cursor:pointer;
+}
+.plot-interact-menu .pim-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.plot-interact-menu .pim-btn{
+  padding:10px 6px;border-radius:9px;border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);color:#fff;font-size:12px;cursor:pointer;
+}
+.plot-interact-menu .pim-btn:active{transform:scale(.95)}
 
 /* ---------- 免责声明（底部常驻） ---------- */
 .plot-disclaimer{
@@ -411,6 +456,22 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
         <div class="plot-map-bldg" data-b="农田"><span>🌾</span>农田</div>
         <div class="plot-map-bldg" data-b="酒楼"><span>🍶</span>酒楼</div>
       </div>
+      <!-- V20-L 设计文档 §7.4：地图人物头像（点击弹互动菜单） -->
+      <div class="plot-map-chars" id="plot-map-chars">
+        <div class="plot-map-char" data-c="林清雪"><div class="pmc-ava">🌸</div><div class="pmc-name">林清雪</div></div>
+        <div class="plot-map-char" data-c="陛下"><div class="pmc-ava">👑</div><div class="pmc-name">陛下</div></div>
+        <div class="plot-map-char" data-c="小厮"><div class="pmc-ava">🏮</div><div class="pmc-name">小厮</div></div>
+      </div>
+    </div>
+    <!-- V20-L §7.4：人物互动菜单（对话/送礼/邀约/攻略） -->
+    <div class="plot-interact-menu" id="plot-interact-menu">
+      <div class="pim-head"><span id="pim-name">互动</span><button class="pim-close" id="pim-close">✕</button></div>
+      <div class="pim-grid">
+        <button class="pim-btn" data-iact="talk">💬 对话</button>
+        <button class="pim-btn" data-iact="gift">🎁 送礼</button>
+        <button class="pim-btn" data-iact="invite">🌙 邀约</button>
+        <button class="pim-btn" data-iact="strategy">📖 攻略</button>
+      </div>
     </div>
   </div>
 
@@ -433,6 +494,8 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
     <div class="plot-tb-acts">
       <button class="plot-tb-btn" id="plot-collapse" title="收起">^</button>
       <button class="plot-tb-btn" id="plot-menu" title="菜单">☰</button>
+      <!-- V20-L 设计文档 §7.2：灵境平台标识按钮 -->
+      <button class="plot-tb-btn plot-tb-brand" id="plot-brand" title="灵境">🔮</button>
       <button class="plot-tb-btn" id="plot-world" title="地图">🌐</button>
       <button class="plot-tb-btn" id="plot-fav" title="收藏">★</button>
       <button class="plot-tb-btn" id="plot-share" title="分享">↗</button>
@@ -452,13 +515,16 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
   <!-- 第 4 层：选项按钮 -->
   <div class="plot-choices" id="plot-choices"></div>
 
-  <!-- 第 6 层：属性面板 -->
+  <!-- 第 6 层：属性面板（V20-L 设计文档 §7.5：金钱/才艺/魅力/体魄/智谋/好感度/声望 + 剧情亲密/信任） -->
   <div class="plot-attr-panel" id="plot-attr-panel">
     <div class="attr-row"><span class="attr-key">亲密</span><span class="attr-val" id="attr-intimacy">0</span></div>
     <div class="attr-row"><span class="attr-key">信任</span><span class="attr-val" id="attr-trust">0</span></div>
     <div class="attr-row"><span class="attr-key">金钱</span><span class="attr-val">100 灵晶</span></div>
     <div class="attr-row"><span class="attr-key">才艺</span><span class="attr-val">35</span></div>
     <div class="attr-row"><span class="attr-key">魅力</span><span class="attr-val">42</span></div>
+    <div class="attr-row"><span class="attr-key">体魄</span><span class="attr-val" id="attr-tipo">28</span></div>
+    <div class="attr-row"><span class="attr-key">智谋</span><span class="attr-val" id="attr-zhimou">31</span></div>
+    <div class="attr-row"><span class="attr-key">好感度</span><span class="attr-val" id="attr-haogan">46</span></div>
     <div class="attr-row"><span class="attr-key">声望</span><span class="attr-val">15</span></div>
   </div>
 

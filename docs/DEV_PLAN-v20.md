@@ -202,3 +202,42 @@ V20-A 立即启动（4 文件 + 12 测试 + 5 截图）：
 预计代码量：~1250 行
 预计测试用例：12 项
 预计截图：5 张
+---
+
+## V20-L · 全应用功能区对照补齐（2026-09-12 已交付）
+
+> 需求：《全应用功能区完整设计文档 V1.0》（`docs/sources/2026-09-12/S01-v20l-full-app-design-doc.txt`）
+> 目标：文档有的补上，项目多出的保留（24 项缺口全补 / 0 删除）。
+
+### 改动文件（12）
+
+| 文件 | 改动 |
+|---|---|
+| `js/home.js` | 签到中心抽屉（7 天格子+视频+4 快捷入口）；陪伴动态→chat?cid、世界更新→plot-detail |
+| `js/world-data.js` | RANKS 10→16（+Fans/综合/同人/新晋完结/勤更/稀有卡）；DESCS 30 条一句话简介；明星同人/完结改名 |
+| `js/world.js` | 卡片渲染 desc；新榜 Tab 过滤（同人/新晋完结）+ 4 排序维度（fans/zh/qingeng/xika） |
+| `library.html` | `.ds-wf-desc` 样式 |
+| `js/heart.js` | 创建角色→character-create；故事区双按钮；记忆 查看/编辑/删除 |
+| `heart-island.html` | `.si-btns` / `.mi-ops` 样式 |
+| `chat.html` | **重写**：?cid= 动态角色 + AI 主动开场 + 职业问答 13 职业 + 敏感三通道（120/12348/12356）+ 底部免责 + 首用弹窗 + 双生[进入 TA 的世界] + 5 Tab 名对齐 |
+| `character-detail.html` | 职业问答说明卡 + 底部免责 + 陪聊带 cid |
+| `creator-center.html` | 顶栏关闭+草稿箱；两大按钮；3+4 创建入口；工作台 5 入口 |
+| `me.html` | 创作数据区（lingjing_is_creator 门控）+ 侵权投诉 + 订阅权益说明 |
+| `plot-runner.html` + `js/plot-runner.js` | 工具栏 🔮灵境；属性 6→9；地图建筑→子场景（停打字机）；人物互动菜单（对话/送礼/邀约/攻略） |
+| `product-preview.html` | 签到中心样式 + V20-L 状态镜像 mock |
+
+### 测试
+
+- 新增 `scripts/test_v20l_gap_fill.py`：29/29 PASS（设计文档 §九 12 条验收全覆盖 + 0 pageerror）
+- 更新 2 处过期期望：v18c 工具栏 6→8、v20k 榜单 10→16
+- 回归：v17b 17 / v18a 16 / v18b 21 / v18c 9 / v20j 15 / v20k 17 / v20i 13 — **全绿**
+
+### 工作包台账（V20.x 累计 12 包）
+
+V20-A 公版库 → B 收费点 → C 启动页 → D 钱包 → E tabbar → F 退出登录 → G 全局锁定 → H 真实语料 → I 接口审查 → J 游玩链路 → K 分类扩充 → **L 功能区对照补齐（本轮）**
+
+### 遗留（沿袭 V20-I 登记）
+
+- O-1 通用小说世界引擎（最高优先，plot-runner 目前仅支持 4 本 mock + 三国）
+- O-8 测试债 12 套过期期望 / O-9 plot-runner 无独立绿套件（本轮 v18c 已部分补齐）
+- 聊天职业问答为规则引擎 mock，接真 LLM 时替换 `buildReply()`（保留 window.AIHelper 钩子约束）

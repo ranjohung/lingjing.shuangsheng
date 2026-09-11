@@ -83,7 +83,8 @@
         '<button class="sc-btn" id="signin-btn">立即签到</button>' +
         '</div>';
       var btn = document.getElementById('signin-btn');
-      if (btn) btn.addEventListener('click', function () {
+      if (btn) btn.addEventListener('click', function (e) {
+        e.stopPropagation();
         var r = doSignin();
         if (r.ok) {
           renderSignin(container);
@@ -95,12 +96,85 @@
         '<div class="signin-card signed">' +
         '<span class="sc-emoji">✅</span>' +
         '<div class="sc-body">' +
-        '<div class="sc-title">今日已签到 · 明天再来</div>' +
+        '<div class="sc-title">今日已签到 · 明日再来</div>' +
         '<div class="sc-sub">连续第 ' + log.streak + ' 天，本周累计已领 ' + (log.totalEarned || 0) + ' 灵晶</div>' +
         '</div>' +
         '<span class="sc-status">已签到</span>' +
         '</div>';
     }
+    // V20-L 设计文档 §2.2：点击签到卡片 → 完整签到界面
+    var card = container.querySelector('.signin-card');
+    if (card) card.addEventListener('click', function () { openSigninCenter(); });
+  }
+
+  // ---------- 完整签到界面（V20-L 设计文档 §2.2：7 天签到 + 看视频领灵晶 + 4 快捷入口） ----------
+  function openSigninCenter() {
+    var old = document.getElementById('lj-signin-center');
+    if (old) old.remove();
+    var log = getSigninLog();
+    var signed = isSignedToday();
+    var days = ['一', '二', '三', '四', '五', '六', '日'];
+    var cells = '';
+    for (var i = 0; i < 7; i++) {
+      var reached = log.streak > i || (log.streak === 0 && false);
+      var isToday = (log.streak === i + 1) && signed;
+      cells +=
+        '<div class="sc-day-cell' + (isToday ? ' today' : (reached ? ' done' : '')) + '">' +
+        '<div class="sc-day-lbl">第' + days[i] + '天</div>' +
+        '<div class="sc-day-emoji">' + (reached || isToday ? '💎' : '·') + '</div>' +
+        '<div class="sc-day-val">' + SIGN_REWARDS[i] + '</div>' +
+        '</div>';
+    }
+    var quickLinks = [
+      { ico: '📖', label: '继续阅读', href: 'output/preview/library.html' },
+      { ico: '💬', label: '陪伴', href: 'output/preview/heart-island.html#accompany' },
+      { ico: '✨', label: '创作', href: 'output/preview/creator-center.html' },
+      { ico: '🎁', label: '每日福利', href: 'output/preview/library.html?sub=welfare' }
+    ];
+    var quickHtml = quickLinks.map(function (q) {
+      return '<a class="sc-quick-item" href="' + q.href + '"><span class="sq-ico">' + q.ico + '</span><span class="sq-lbl">' + q.label + '</span></a>';
+    }).join('');
+
+    var mask = document.createElement('div');
+    mask.id = 'lj-signin-center';
+    mask.style.cssText = 'position:fixed;inset:0;z-index:300;background:rgba(10,10,26,.72);display:flex;align-items:flex-end;justify-content:center;';
+    var panel = document.createElement('div');
+    panel.style.cssText = 'width:100%;max-width:480px;max-height:82vh;overflow-y:auto;background:#16213E;border-radius:18px 18px 0 0;padding:20px 18px 26px;';
+    panel.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">' +
+      '<div style="font-size:17px;font-weight:600;color:#fff">签到中心</div>' +
+      '<button class="sc-close" style="width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:none;color:rgba(255,255,255,.7);font-size:14px;cursor:pointer">✕</button>' +
+      '</div>' +
+      '<div style="font-size:12px;color:rgba(255,255,255,.55);margin-bottom:12px">连续签到 ' + log.streak + ' 天 · 本周累计已领 ' + (log.totalEarned || 0) + ' 灵晶</div>' +
+      '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:18px">' + cells + '</div>' +
+      '<button id="sc-sign-btn" style="width:100%;height:44px;border-radius:12px;border:0;background:' + (signed ? 'rgba(255,255,255,.08)' : 'linear-gradient(135deg,#E94560,#C73652)') + ';color:' + (signed ? 'rgba(255,255,255,.5)' : '#fff') + ';font-size:15px;font-weight:600;cursor:pointer;margin-bottom:14px">' +
+      (signed ? '今日已签到 · 明日再来' : '立即签到（+' + SIGN_REWARDS[Math.min(log.streak, 6)] + ' 灵晶）') + '</button>' +
+      '<button id="sc-video-btn" style="width:100%;height:44px;border-radius:12px;border:1px solid rgba(255,179,71,.4);background:rgba(255,179,71,.12);color:#FFB347;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:18px">📺 看视频领灵晶（+5）</button>' +
+      '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:8px">快捷入口</div>' +
+      '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">' + quickHtml + '</div>';
+    mask.appendChild(panel);
+    document.body.appendChild(mask);
+
+    mask.addEventListener('click', function (e) { if (e.target === mask) mask.remove(); });
+    panel.querySelector('.sc-close').addEventListener('click', function () { mask.remove(); });
+    var signBtn = panel.querySelector('#sc-sign-btn');
+    if (signBtn) signBtn.addEventListener('click', function () {
+      if (isSignedToday()) return;
+      var r = doSignin();
+      if (r.ok) {
+        mask.remove();
+        renderSignin(document.getElementById('home-signin'));
+        if (window.LJToast) window.LJToast.show('ok', '签到成功', '+' + r.reward + ' 灵晶 · 连续 ' + r.streak + ' 天');
+      }
+    });
+    var videoBtn = panel.querySelector('#sc-video-btn');
+    if (videoBtn) videoBtn.addEventListener('click', function () {
+      var user = getUser();
+      user.lingJing = (user.lingJing || 0) + 5;
+      try { localStorage.setItem('lingjing_v5170_user', JSON.stringify(user)); } catch (e) {}
+      renderStatus(document.getElementById('home-status'));
+      if (window.LJToast) window.LJToast.show('ok', '视频奖励已到账', '+5 灵晶');
+    });
   }
 
   // ---------- 4 快捷入口 ----------
@@ -135,18 +209,18 @@
     { id: 'shenhuihuisheng', title: '深海回声', author: '林清雪', cat: '悬疑', score: 8.8, desc: '悬疑 · 18.2万字 · 共写命运', cov: 'linear-gradient(160deg,#2E5E56,#00B894)', emoji: '🌊' }
   ];
 
-  // 陪伴动态（来自心屿角色最近消息）
+  // 陪伴动态（来自心屿角色最近消息 · V20-L：点击进入角色聊天）
   var COMPANION_FEED = [
-    { name: '林清雪', avatar: '🌸', text: '今天路过一家花店，想起你说喜欢向日葵。', time: '2小时前' },
-    { name: '苏晚', avatar: '🌙', text: '你来了。我刚好泡了茶，要不要一起喝？', time: '5小时前' },
-    { name: '阿岁', avatar: '🏮', text: '今晚月色很好，要不要一起去走走？', time: '昨天' }
+    { cid: 'c06', name: '林清雪', avatar: '🌸', text: '今天路过一家花店，想起你说喜欢向日葵。', time: '2小时前' },
+    { cid: 'c01', name: '苏晚', avatar: '🌙', text: '你来了。我刚好泡了茶，要不要一起喝？', time: '5小时前' },
+    { cid: 'c04', name: '阿岁', avatar: '🏮', text: '今晚月色很好，要不要一起去走走？', time: '昨天' }
   ];
 
-  // 世界更新
+  // 世界更新（V20-L：点击进入世界详情）
   var WORLD_UPDATE = [
-    { title: '《赛博长夜》', chapter: '更新至第12章', author: '云雀', time: '30分钟前', cov: 'linear-gradient(160deg,#5A6B8E,#C95B9C)' },
-    { title: '《长夜城》', chapter: '更新至第5章', author: '夜归人', time: '2小时前', cov: 'linear-gradient(160deg,#2E3A6E,#4A3A8C)' },
-    { title: '《快穿之攻略反派》', chapter: '更新至第8章', author: '苏沐橙', time: '今天', cov: 'linear-gradient(160deg,#8E5BD8,#C95B9C)' }
+    { id: 'saibochangye', title: '《赛博长夜》', chapter: '更新至第12章', author: '云雀', time: '30分钟前', cov: 'linear-gradient(160deg,#5A6B8E,#C95B9C)' },
+    { id: 'changyecheng', title: '《长夜城》', chapter: '更新至第5章', author: '夜归人', time: '2小时前', cov: 'linear-gradient(160deg,#2E3A6E,#4A3A8C)' },
+    { id: 'kuachuan', title: '《快穿之攻略反派》', chapter: '更新至第8章', author: '苏沐橙', time: '今天', cov: 'linear-gradient(160deg,#8E5BD8,#C95B9C)' }
   ];
 
   // 热门活动
@@ -177,12 +251,12 @@
     });
     html += '</div></section>';
 
-    // 板块 2：陪伴动态
+    // 板块 2：陪伴动态（V20-L 设计文档 §2.4：点击进入角色聊天）
     html += '<section class="home-board"><div class="home-board-head"><h3>陪伴动态</h3><a class="home-board-more" href="output/preview/heart-island.html#accompany">全部 ›</a></div>';
     html += '<div class="home-feed">';
     COMPANION_FEED.forEach(function (c) {
       html +=
-        '<a class="home-feed-item" href="output/preview/heart-island.html#accompany">' +
+        '<a class="home-feed-item" href="output/preview/chat.html?cid=' + c.cid + '">' +
         '<span class="hf-avatar">' + c.avatar + '</span>' +
         '<div class="hf-body">' +
         '<div class="hf-name">' + c.name + '</div>' +
@@ -193,12 +267,12 @@
     });
     html += '</div></section>';
 
-    // 板块 3：世界更新
+    // 板块 3：世界更新（V20-L 设计文档 §2.4：点击进入世界详情）
     html += '<section class="home-board"><div class="home-board-head"><h3>世界更新</h3><a class="home-board-more" href="output/preview/library.html">全部 ›</a></div>';
     html += '<div class="home-update-list">';
     WORLD_UPDATE.forEach(function (u) {
       html +=
-        '<a class="home-update-item" href="output/preview/discover.html">' +
+        '<a class="home-update-item" href="output/preview/plot-detail.html?novel=' + u.id + '">' +
         '<div class="hu-cov-mini" style="background:' + u.cov + '"></div>' +
         '<div class="hu-body">' +
         '<div class="hu-title">' + u.title + '<span class="hu-tag">更新</span></div>' +
@@ -248,6 +322,7 @@
     renderQuick: renderQuick,
     renderRecommend: renderRecommend,
     renderStatus: renderStatus,
+    openSigninCenter: openSigninCenter,
     getUser: getUser,
     doSignin: doSignin,
     SIGN_REWARDS: SIGN_REWARDS,

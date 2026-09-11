@@ -269,6 +269,28 @@
   white-space: nowrap;
   box-shadow: 0 4px 12px rgba(233,69,96,.3);
 }
+/* V20-L §4.8：故事区双按钮（进入世界 + 专属剧情） */
+.si-btns { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+.si-btn.si-btn-story {
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--line);
+  box-shadow: none;
+  color: var(--text);
+  font-weight: 500;
+}
+/* V20-L §4.7：记忆操作按钮（查看/编辑/删除） */
+.mi-ops { display: flex; gap: 6px; margin-top: 8px; }
+.mi-op {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  color: var(--sub);
+  font-size: 10px;
+  cursor: pointer;
+}
+.mi-op:active { transform: scale(.95); }
+.mi-op.mi-op-del { color: var(--accent); border-color: rgba(233,69,96,.35); }
 
 /* ---------- 搜索框 ---------- */
 .mem-search-bar {

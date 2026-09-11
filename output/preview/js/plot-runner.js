@@ -178,6 +178,12 @@
     });
     var tMenu = $('#plot-menu');
     if (tMenu) tMenu.addEventListener('click', toggleSystemMenu);
+    // V20-L 设计文档 §7.2：灵境平台标识按钮（🔮）
+    var tBrand = $('#plot-brand');
+    if (tBrand) tBrand.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (window.LJToast) window.LJToast.show('info', '灵境 · 双生', '命运卡画廊 v5.21+ 即将开放');
+    });
     var tWorld = $('#plot-world');
     if (tWorld) tWorld.addEventListener('click', toggleMapMode);
     var tFav = $('#plot-fav');
@@ -216,6 +222,8 @@
       if (window.history.length > 1) window.history.back();
       else window.location.href = 'library.html';
     });
+    // V20-L §7.4：地图建筑 / 人物交互
+    bindMapEvents();
   }
 
   // ---------- 渲染场景 ----------
@@ -473,13 +481,96 @@
     if (!stage) return;
     stage.classList.toggle('map-mode');
     if (stage.classList.contains('map-mode')) {
-      if (window.LJToast) window.LJToast.show('ok', '进入地图探索', '点击建筑进入子场景');
+      if (window.LJToast) window.LJToast.show('ok', '进入地图探索', '点击建筑进入子场景 · 点击人物互动');
       // 恢复立绘隐藏
       var portraitEl = $('#plot-portrait');
       if (portraitEl) portraitEl.style.opacity = '0';
+      // 关闭互动菜单残留
+      closeInteractMenu();
     } else {
       renderScene();
     }
+  }
+
+  // ---------- V20-L 设计文档 §7.4：点击建筑进入子场景 ----------
+  function enterBuilding(name) {
+    // 停掉进行中的打字机，避免覆盖子场景文案
+    if (sceneTypingTimer) { clearInterval(sceneTypingTimer); sceneTypingTimer = null; }
+    var stage = $('#plot-stage');
+    if (stage) stage.classList.remove('map-mode');
+    // 子场景：切换背景 + 一句场景文案 + 选项
+    var bgEl = $('#plot-bg');
+    if (bgEl) bgEl.style.background = currentNovel.bgNight || currentNovel.bg;
+    var nameEl = $('#plot-name');
+    var textEl = $('#plot-text');
+    if (nameEl) nameEl.textContent = '旁白';
+    if (textEl) {
+      textEl.textContent = '你来到了【' + name + '】。这里人来人往，似乎藏着不少故事……';
+    }
+    var portraitEl = $('#plot-portrait');
+    if (portraitEl) portraitEl.style.opacity = '1';
+    if (window.LJToast) window.LJToast.show('ok', '进入子场景', name);
+  }
+
+  // ---------- V20-L 设计文档 §7.4：点击人物弹互动菜单（对话/送礼/邀约/攻略） ----------
+  function openInteractMenu(charName) {
+    var menu = $('#plot-interact-menu');
+    if (!menu) return;
+    var nameEl = menu.querySelector('#pim-name');
+    if (nameEl) nameEl.textContent = charName;
+    menu.classList.add('open');
+  }
+  function closeInteractMenu() {
+    var menu = $('#plot-interact-menu');
+    if (menu) menu.classList.remove('open');
+  }
+  function handleInteract(charName, act) {
+    closeInteractMenu();
+    if (act === 'talk') {
+      // 对话：退出地图，进入一段人物对话（先停打字机）
+      if (sceneTypingTimer) { clearInterval(sceneTypingTimer); sceneTypingTimer = null; }
+      var stage = $('#plot-stage');
+      if (stage) stage.classList.remove('map-mode');
+      var nameEl = $('#plot-name');
+      var textEl = $('#plot-text');
+      if (nameEl) nameEl.textContent = charName;
+      if (textEl) textEl.textContent = '「' + charName + '：你竟然找到这里来了。有什么事吗？」';
+      var portraitEl = $('#plot-portrait');
+      if (portraitEl) portraitEl.style.opacity = '1';
+    } else if (act === 'gift') {
+      stats.intimacy += 3;
+      if (window.LJToast) window.LJToast.show('ok', '送礼成功', charName + ' · 亲密 +3');
+      updateAttr();
+    } else if (act === 'invite') {
+      if (window.LJToast) window.LJToast.show('warn', '邀约', charName + ' 说今晚有事 · 多聊聊再试试');
+    } else if (act === 'strategy') {
+      if (window.LJToast) window.LJToast.show('info', '攻略进度', charName + ' · 好感 46/100 · 继续加油');
+    }
+  }
+  function bindMapEvents() {
+    // 建筑 → 子场景
+    $$('.plot-map-bldg').forEach(function (b) {
+      b.addEventListener('click', function (e) {
+        e.stopPropagation();
+        enterBuilding(b.getAttribute('data-b') || '未知地点');
+      });
+    });
+    // 人物 → 互动菜单
+    $$('.plot-map-char').forEach(function (c) {
+      c.addEventListener('click', function (e) {
+        e.stopPropagation();
+        openInteractMenu(c.getAttribute('data-c') || '路人');
+      });
+    });
+    var pimClose = $('#pim-close');
+    if (pimClose) pimClose.addEventListener('click', function (e) { e.stopPropagation(); closeInteractMenu(); });
+    $$('.plot-interact-menu .pim-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var nameEl = $('#pim-name');
+        handleInteract(nameEl ? nameEl.textContent : '路人', btn.getAttribute('data-iact'));
+      });
+    });
   }
 
   window.LJPlot = {
@@ -487,6 +578,8 @@
     advanceScene: advanceScene,
     toggleSystemMenu: toggleSystemMenu,
     toggleMapMode: toggleMapMode,
+    enterBuilding: enterBuilding,
+    openInteractMenu: openInteractMenu,
     __mounted: true
   };
 

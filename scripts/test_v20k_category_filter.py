@@ -114,7 +114,7 @@ with sync_playwright() as p:
     # 13. 排行榜
     pg.click('.ds-sn[data-sn="rank"]'); pg.wait_for_timeout(600)
     ranks = pg.evaluate("Array.from(document.querySelectorAll('.rank-tab')).map(x=>x.textContent)")
-    check('13a. 排行榜 10 榜 Tab', len(ranks) == 10 and '💎 付费榜' in ranks, str(ranks))
+    check('13a. 排行榜 16 榜 Tab（V20-L +设计文档六榜）', len(ranks) == 16 and '💎 付费榜' in ranks, str(ranks))
     pg.click(".rank-tab[data-rank='free']"); pg.wait_for_timeout(500)
     free_titles = pg.evaluate("Array.from(document.querySelectorAll('.rank-row .rank-title')).map(x=>x.textContent)")
     all_cards = pg.evaluate("""(() => {

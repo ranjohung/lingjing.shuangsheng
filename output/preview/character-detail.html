@@ -81,8 +81,18 @@
 
   <!-- 关键操作 -->
   <div style="display:flex;gap:8px;padding:0 16px;margin-bottom:12px;">
-    <a href="chat.html" class="ds-btn ds-btn-primary" style="flex:1;">💬 陪聊</a>
+    <a href="chat.html?cid=c04" class="ds-btn ds-btn-primary" style="flex:1;">💬 陪聊</a>
     <button class="ds-btn ds-btn-ghost" style="flex:1;" onclick="showToast('info','已发送','阿岁将收到你的挂念')">💌 挂念</button>
+  </div>
+
+  <!-- V20-L 设计文档 §4.3：角色职业 + 职业问答说明 -->
+  <div class="cd-card">
+    <div class="cd-card-title">💼 职业 · 心理咨询师</div>
+    <div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.8;padding:0 4px;">
+      阿岁有职业设定，可以回答职业相关的科普问题（如情绪知识、沟通方法）。<br />
+      ⚠️ 涉及<span style="color:#ffd9a0;">诊断、法律意见、心理治疗</span>等敏感问题时，TA 会引导你咨询专业人士：
+      <span style="color:#ffd9a0;">急救 120 · 法律援助 12348 · 心理援助 12356</span>。
+    </div>
   </div>
 
   <!-- 双界穿梭 -->
@@ -210,14 +220,19 @@
       <div class="body"><strong>现实社交：</strong> 检测到你同时使用其他社交应用 · 平衡良好</div>
     </div>
   </div>
+
+  <!-- V20-L 设计文档 §4.3：免责声明小字 -->
+  <div style="text-align:center;font-size:10px;color:rgba(255,255,255,.32);line-height:1.6;padding:14px 24px 0;">
+    角色由 AI 生成 · 非真人 · 不构成医疗 / 法律 / 心理专业建议<br />敏感问题请咨询专业人士（120 / 12348 / 12356）
+  </div>
 </div>
 
-<!-- 5 Tab 底部 -->
+<!-- 5 Tab 底部（V20-L：标签名对齐 v6.4 铁律） -->
 <nav class="ds-bottom-tabs">
-  <a class="ds-bottom-tab" href="../../product-preview.html"><span class="ico">🏠</span><span>总览</span></a>
-  <a class="ds-bottom-tab" href="library.html"><span class="ico">📚</span><span>小说世界</span></a>
-  <a class="ds-bottom-tab active" href="heart-island.html"><span class="ico">🏝️</span><span>心屿</span></a>
-  <a class="ds-bottom-tab" href="creator-center.html"><span class="ico">✍️</span><span>创作</span></a>
+  <a class="ds-bottom-tab" href="../../product-preview.html"><span class="ico">🏠</span><span>首页</span></a>
+  <a class="ds-bottom-tab" href="library.html"><span class="ico">📖</span><span>世界</span></a>
+  <a class="ds-bottom-tab active" href="heart-island.html"><span class="ico">💬</span><span>心屿</span></a>
+  <a class="ds-bottom-tab" href="creator-center.html"><span class="ico">✨</span><span>创作</span></a>
   <a class="ds-bottom-tab" href="me.html"><span class="ico">👤</span><span>我的</span></a>
 </nav>
 

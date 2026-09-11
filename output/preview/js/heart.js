@@ -140,11 +140,19 @@
     main.appendChild(grid);
   }
 
-  // ---------- 渲染记忆（时间线） ----------
+  // ---------- 渲染记忆（时间线 · V20-L §4.7：可查看、编辑、删除） ----------
   function renderMemories(main) {
     main.innerHTML = '';
     var list = el('div', { class: 'mem-list' });
     window.HEART_DATA.MEMORIES.forEach(function (m) {
+      // V20-L 设计文档 §4.7：记忆可查看 / 编辑 / 删除
+      var ops = el('div', { class: 'mi-ops' }, [
+        el('button', { class: 'mi-op', title: '查看', onclick: function () {
+          openDialog({ title: '记忆 · ' + m.character, body: '<div style="text-align:left;font-size:13px;line-height:1.7"><p style="color:var(--sub);font-size:11px;margin-bottom:8px">' + m.time + ' · ' + m.type + '</p><p>' + m.content + '</p></div>', okText: '关闭' });
+        } }, ['查看']),
+        el('button', { class: 'mi-op', title: '编辑', onclick: function () { editMemory(m); } }, ['编辑']),
+        el('button', { class: 'mi-op mi-op-del', title: '删除', onclick: function () { deleteMemory(m, main); } }, ['删除'])
+      ]);
       var item = el('div', { class: 'mem-item' }, [
         el('span', { class: 'mi-avatar' }, [m.avatar]),
         el('div', { class: 'mi-body' }, [
@@ -153,12 +161,63 @@
             el('span', { class: 'mi-type ' + (m.type === '里程碑' || m.type === '初次相遇' ? 'mi-special' : '') }, [m.type]),
             el('span', { class: 'mi-time' }, [m.time])
           ]),
-          el('div', { class: 'mi-content' }, [m.content])
+          el('div', { class: 'mi-content' }, [m.content]),
+          ops
         ])
       ]);
       list.appendChild(item);
     });
     main.appendChild(list);
+    if (window.HEART_DATA.MEMORIES.length === 0) {
+      main.appendChild(el('div', { class: 'heart-empty' }, ['暂无记忆 · 去心屿陪 TA 聊聊天吧']));
+    }
+  }
+
+  // ---------- 记忆编辑（V20-L §4.7） ----------
+  function editMemory(m) {
+    var mask = document.createElement('div');
+    mask.className = 'heart-dialog-mask';
+    var dlg = document.createElement('div');
+    dlg.className = 'heart-dialog';
+    dlg.innerHTML =
+      '<h3>编辑记忆</h3>' +
+      '<div class="hd-body">' +
+      '<div style="font-size:11px;color:var(--sub);margin-bottom:8px">' + m.character + ' · ' + m.time + '</div>' +
+      '<textarea id="mem-edit-area" style="width:100%;min-height:88px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--text);font-size:13px;padding:10px;box-sizing:border-box">' + m.content + '</textarea>' +
+      '</div>' +
+      '<div style="display:flex;gap:8px">' +
+      '<button class="hd-btn" style="flex:1;opacity:.7" id="mem-edit-cancel">取消</button>' +
+      '<button class="hd-btn" style="flex:1" id="mem-edit-save">保存</button>' +
+      '</div>';
+    mask.appendChild(dlg);
+    document.body.appendChild(mask);
+    mask.addEventListener('click', function (e) { if (e.target === mask) mask.remove(); });
+    dlg.querySelector('#mem-edit-cancel').addEventListener('click', function () { mask.remove(); });
+    dlg.querySelector('#mem-edit-save').addEventListener('click', function () {
+      var area = dlg.querySelector('#mem-edit-area');
+      if (area && area.value.trim()) {
+        m.content = area.value.trim();
+        renderContent();
+        if (window.LJToast) window.LJToast.show('ok', '记忆已更新', m.character);
+      }
+      mask.remove();
+    });
+  }
+
+  // ---------- 记忆删除（V20-L §4.7 · <dialog>/弹窗确认，不用 confirm） ----------
+  function deleteMemory(m, main) {
+    openDialog({
+      title: '删除这条记忆？',
+      body: '<div style="text-align:left;font-size:13px;line-height:1.6"><p style="color:var(--sub);font-size:11px;margin-bottom:8px">' + m.character + ' · ' + m.time + '</p><p>' + m.content + '</p><p style="color:var(--accent);font-size:11px;margin-top:10px">删除后不可恢复</p></div>',
+      okText: '确认删除',
+      onOk: function () {
+        var arr = window.HEART_DATA.MEMORIES;
+        var i = arr.indexOf(m);
+        if (i > -1) arr.splice(i, 1);
+        renderContent();
+        if (window.LJToast) window.LJToast.show('ok', '记忆已删除', m.character);
+      }
+    });
   }
 
   // ---------- 渲染故事（仅双生） ----------
@@ -171,6 +230,11 @@
     }
     var list = el('div', { class: 'story-list' });
     stories.forEach(function (s) {
+      var btns = el('div', { class: 'si-btns' }, [
+        // V20-L 设计文档 §4.8：进入 TA 的世界 + 角色专属剧情入口
+        el('a', { class: 'si-btn', href: 'plot-runner.html?novelId=' + s.novel_id + '&characterId=' + s.id }, ['进入 TA 的世界']),
+        el('a', { class: 'si-btn si-btn-story', href: 'plot-runner.html?novelId=' + s.novel_id + '&characterId=' + s.id + '&mode=exclusive' }, ['📖 专属剧情'])
+      ]);
       var item = el('div', { class: 'story-item' }, [
         el('div', { class: 'si-avatar' }, [s.avatar]),
         el('div', { class: 'si-body' }, [
@@ -178,7 +242,7 @@
           el('div', { class: 'si-novel' }, ['来自《' + s.novel_name + '》']),
           el('div', { class: 'si-progress' }, [s.progress])
         ]),
-        el('a', { class: 'si-btn', href: 'plot-runner.html?novelId=' + s.novel_id + '&characterId=' + s.id }, ['进入 TA 的世界'])
+        btns
       ]);
       list.appendChild(item);
     });
@@ -289,7 +353,8 @@
     });
     var createBtn = $('#heart-create');
     if (createBtn) createBtn.addEventListener('click', function () {
-      if (window.LJToast) window.LJToast.show('warn', '创建新角色', '即将开放');
+      // V20-L 设计文档 §4.2：创建新角色 → 角色创建向导（character-create.html 7 层向导）
+      window.location.href = 'character-create.html';
     });
     // 处理 #accompany hash 直接跳到陪伴
     if (window.location.hash === '#accompany') setSub('accompany');

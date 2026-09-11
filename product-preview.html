@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="output/preview/css/shell-v64.css" data-page-node-id="ON6HHDsyHYBzd3If5Z0tAo" />
 <style>
 /* =================================================================
- * 灵境 · 双生 — 产品体验主页（v20.1 · 客户视角）
+ * 灵境 · 双生 — 产品体验主页（v20.12 · 客户视角 · V20-L 全功能区对照补齐）
  * 0 开发元数据 · 0 PASS · 0 章节编号 · 0 Git commits
  * 只展示产品本身（客户/作者体验的功能区）
  * ================================================================= */
@@ -108,6 +108,23 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
   border:1px solid rgba(78,204,163,.3);
   flex-shrink:0;
 }
+/* V20-L 签到中心（完整签到界面）：7 天格子 + 快捷入口 */
+.sc-day-cell{
+  border-radius:8px;padding:8px 2px;text-align:center;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+}
+.sc-day-cell.done{background:rgba(78,204,163,.12);border-color:rgba(78,204,163,.35)}
+.sc-day-cell.today{background:rgba(233,69,96,.18);border-color:rgba(233,69,96,.5)}
+.sc-day-lbl{font-size:9px;color:rgba(255,255,255,.5)}
+.sc-day-emoji{font-size:14px;margin:3px 0}
+.sc-day-val{font-size:10px;color:#FFB347;font-weight:600}
+.sc-quick-item{
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:10px 2px;border-radius:10px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+}
+.sq-ico{font-size:18px}
+.sq-lbl{font-size:10px;color:rgba(255,255,255,.7)}
 
 /* ---------- 第三层：4 快捷入口 ---------- */
 .home-quick{
@@ -545,6 +562,8 @@ button{font-family:inherit;border:0;cursor:pointer;background:none;color:inherit
     <div style="margin-bottom:6px;color:rgba(160,160,176,.8)" data-page-node-id="WJmc3iYv4DZsADPnf8zToz">灵境 · 双生</div>
     <div data-page-node-id="HgGw2o4e3mywM3yKORLY1I">© 2026 一个角色，两种人生</div>
     <div style="margin-top:8px" data-page-node-id="qlYDQH2YHGdR3SmYUAEnCT">首页 · 世界 · 心屿 · 创作 · 我的</div>
+    <!-- V20-L 状态镜像：点击签到卡可打开完整签到中心（7 天 + 视频 + 快捷入口） -->
+    <div style="margin-top:10px;font-size:10px;color:rgba(160,160,176,.45)" data-page-node-id="v20l-mirror">v20.12 · V20-L 全功能区对照补齐 · 16 榜 / 24 缺口 / 29 测试全绿</div>
   </div>
 
 </div>

@@ -150,6 +150,8 @@
           el('div', { class: 'ds-wf-tags' }, [
             el('span', { class: 'ds-wf-tag', style: 'color:' + window.WORLD_DATA.tagColor(c.catName) }, [c.catName])
           ]),
+          // V20-L 设计文档 §3.4：卡片含一句话简介
+          c.desc ? el('div', { class: 'ds-wf-desc' }, [c.desc]) : null,
           el('div', { class: 'ds-wf-meta' }, [
             el('span', { class: 'ds-wf-score' }, ['⭐ ' + c.score.toFixed(1)]),
             el('span', { class: 'ds-wf-wc' }, [c.wordCount])
@@ -205,13 +207,15 @@
     });
     main.appendChild(tabs);
 
-    // 当前榜单作品集（新书/完本/付费/免费榜 = 先过滤再排序）
+    // 当前榜单作品集（新书/完本/付费/免费/同人/新晋完结榜 = 先过滤再排序）
     var all = window.WORLD_DATA.FEATURED.concat(window.WORLD_DATA.HOT).concat(window.WORLD_DATA.NEW_DONE);
     var pool = all;
     if (currentRank === 'new') pool = all.filter(function (c) { return c.isNew; });
+    else if (currentRank === 'xinjin') pool = all.filter(function (c) { return c.isDone; });
     else if (currentRank === 'done') pool = all.filter(function (c) { return c.isDone; });
     else if (currentRank === 'fee') pool = all.filter(function (c) { return c.price > 0; });
     else if (currentRank === 'free') pool = all.filter(function (c) { return c.price === 0; });
+    else if (currentRank === 'tongren') pool = all.filter(function (c) { return c.cat === 'mingxing'; });
     var sorted = sortCards(pool, currentRank);
 
     var list = el('div', { class: 'rank-list' });
@@ -308,6 +312,11 @@
       case 'fabu':     return arr.sort(function (a, b) { return (b.year - a.year) || byScore(a, b); });
       case 'pinglun':  return arr.sort(function (a, b) { return (b.score * 12) - (a.score * 12); });
       case 'resou':    return arr.sort(function (a, b) { return (b.score * 700 + b.wc * 7) - (a.score * 700 + a.wc * 7); });
+      // V20-L 设计文档六榜：Fans / 综合 / 勤更 / 稀有卡
+      case 'fans':     return arr.sort(function (a, b) { return (b.score * 800 + b.wc * 5) - (a.score * 800 + a.wc * 5); });
+      case 'zh':       return arr.sort(function (a, b) { return (b.score * 600 + b.wc * 4 + (b.isDone ? 300 : 0)) - (a.score * 600 + a.wc * 4 + (a.isDone ? 300 : 0)); });
+      case 'qingeng':  return arr.sort(function (a, b) { return ((b.isNew ? 1 : 0) * 500 + b.score * 300 + (b.status === 'ing' ? 200 : 0)) - ((a.isNew ? 1 : 0) * 500 + a.score * 300 + (a.status === 'ing' ? 200 : 0)); });
+      case 'xika':     return arr.sort(function (a, b) { return ((b.attrs || []).length * 400 + b.score * 100) - ((a.attrs || []).length * 400 + a.score * 100); });
       default:         return arr.sort(function (a, b) { return (b.score * 1000) - (a.score * 1000); }); // ly 本周灵韵
     }
   }

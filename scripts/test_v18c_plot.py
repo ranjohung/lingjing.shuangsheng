@@ -30,9 +30,9 @@ with sync_playwright() as p:
     })""")
     print(f"[2] 6 层 z-index: {layers}  -> {'OK' if layers['bg']=='1' and layers['choices']=='4' and layers['toolbar']=='5' else 'FAIL'}")
 
-    # 3. 顶部工具栏 6 个按钮
+    # 3. 顶部工具栏按钮（V20-L 后 8 个：返回/收起/菜单/灵境/地图/收藏/分享/截图）
     tb_btns = page.evaluate("document.querySelectorAll('.plot-toolbar .plot-tb-btn, .plot-toolbar .plot-back').length")
-    print(f"[3] 顶部工具栏 6 按钮: {tb_btns} 个  -> {'OK' if tb_btns == 7 else 'FAIL'}")
+    print(f"[3] 顶部工具栏 8 按钮(V20-L +灵境): {tb_btns} 个  -> {'OK' if tb_btns == 8 else 'FAIL'}")
 
     # 4. 沉浸页豁免（无 5 Tab）
     tab_count = page.evaluate("document.querySelectorAll('.tabbar .tab').length")
