@@ -1,0 +1,510 @@
+[
+  {
+    "id": "hongloumeng",
+    "title": "红楼梦",
+    "author": "曹雪芹",
+    "lang": "zh",
+    "words": 709691,
+    "chapters": 120,
+    "sizeBytes": 2522941,
+    "sampleTitles": [
+      "第一回  甄士隐梦幻识通灵　贾雨村风尘怀闺秀",
+      "第二回  贾夫人仙逝扬州城　冷子兴演说荣国府",
+      "第三回   贾雨村夤缘复旧职　林黛玉抛父进京都",
+      "第四回  薄命女偏逢薄命郎　葫芦僧乱判葫芦案",
+      "第五回  游幻境指迷十二钗　饮仙醪曲演红楼梦"
+    ]
+  },
+  {
+    "id": "xiyouji",
+    "title": "西游记",
+    "author": "吴承恩",
+    "lang": "zh",
+    "words": 588922,
+    "chapters": 100,
+    "sizeBytes": 1999155,
+    "sampleTitles": [
+      "第一回 灵根育孕源流出 心性修持大道生",
+      "第二回 悟彻菩提真妙理 断魔归本合元神",
+      "第三回 四海千山皆拱伏 九幽十类尽除名",
+      "第四回 官封弼马心何足 名注齐天意未宁",
+      "第五回 乱蟠桃大圣偷丹 反天宫诸神捉怪"
+    ]
+  },
+  {
+    "id": "sanguoyanyi",
+    "title": "三国演义",
+    "author": "罗贯中",
+    "lang": "zh",
+    "words": 485415,
+    "chapters": 120,
+    "sizeBytes": 1795037,
+    "sampleTitles": [
+      "第一回 宴桃园豪杰三结义 斩黄巾英雄首立功",
+      "第二回 张翼德怒鞭督邮 何国舅谋诛宦竖",
+      "第三回 议温明董卓叱丁原 馈金珠李肃说吕布",
+      "第四回 废汉帝陈留践位 谋董贼孟德献刀",
+      "第五回 发矫诏诸镇应曹公 破关兵三英战吕布"
+    ]
+  },
+  {
+    "id": "shuihuzhuan",
+    "title": "水浒传",
+    "author": "施耐庵",
+    "lang": "zh",
+    "words": 705855,
+    "chapters": 120,
+    "sizeBytes": 2580146,
+    "sampleTitles": [
+      "第一回　王教头私走延安府　九纹龙大闹史家村",
+      "第二回　史大郎夜走华阴县　鲁提辖拳打镇关西",
+      "第三回　赵员外重修文殊院　鲁智深大闹五台山",
+      "第四回　小霸王醉入销金帐　花和尚大闹桃花村",
+      "第五回　九纹龙翦径赤松林　鲁智深火烧瓦官寺"
+    ]
+  },
+  {
+    "id": "shishuo",
+    "title": "世说新语",
+    "author": "刘义庆",
+    "lang": "zh",
+    "words": 61736,
+    "chapters": 1,
+    "sizeBytes": 242971,
+    "sampleTitles": []
+  },
+  {
+    "id": "shiji",
+    "title": "史记",
+    "author": "司马迁",
+    "lang": "zh",
+    "words": 499436,
+    "chapters": 1,
+    "sizeBytes": 1848555,
+    "sampleTitles": []
+  },
+  {
+    "id": "sanshi",
+    "title": "三十六计",
+    "author": "佚名",
+    "lang": "zh",
+    "words": 875,
+    "chapters": 1,
+    "sizeBytes": 3403,
+    "sampleTitles": []
+  },
+  {
+    "id": "shanhai",
+    "title": "山海经",
+    "author": "佚名",
+    "lang": "zh",
+    "words": 24251,
+    "chapters": 1,
+    "sizeBytes": 90742,
+    "sampleTitles": []
+  },
+  {
+    "id": "caigen",
+    "title": "菜根谭",
+    "author": "洪应明",
+    "lang": "zh",
+    "words": 13915,
+    "chapters": 1,
+    "sizeBytes": 49259,
+    "sampleTitles": []
+  },
+  {
+    "id": "zizhi",
+    "title": "资治通鉴",
+    "author": "司马光",
+    "lang": "zh",
+    "words": 2590377,
+    "chapters": 1,
+    "sizeBytes": 9473578,
+    "sampleTitles": []
+  },
+  {
+    "id": "yanshi",
+    "title": "颜氏家训",
+    "author": "颜之推",
+    "lang": "zh",
+    "words": 14052,
+    "chapters": 1,
+    "sizeBytes": 52185,
+    "sampleTitles": []
+  },
+  {
+    "id": "jinghuayuan",
+    "title": "镜花缘",
+    "author": "李汝珍",
+    "lang": "zh",
+    "words": 338385,
+    "chapters": 200,
+    "sizeBytes": 1244811,
+    "sampleTitles": [
+      "第一回",
+      "第二回",
+      "第三回",
+      "第四回",
+      "第五回"
+    ]
+  },
+  {
+    "id": "dongzhou",
+    "title": "东周列国志",
+    "author": "冯梦龙",
+    "lang": "zh",
+    "words": 554223,
+    "chapters": 216,
+    "sizeBytes": 2064191,
+    "sampleTitles": [
+      "第一回",
+      "第二回",
+      "第三回",
+      "第四回",
+      "第五回"
+    ]
+  },
+  {
+    "id": "laocan",
+    "title": "老残游记",
+    "author": "刘鹗",
+    "lang": "zh",
+    "words": 144408,
+    "chapters": 74,
+    "sizeBytes": 517931,
+    "sampleTitles": [
+      "第一回 土不制水历年成患 风能鼓浪到处可危",
+      "第二回 历山山下古帝遗踪 明湖湖边美人绝调",
+      "第三回 金线东来寻黑虎 布帆西去访苍鹰",
+      "第四回 宫保爱才求贤若渴 太尊治盗疾恶如仇",
+      "第五回 烈妇有心殉节 乡人无意逢殃"
+    ]
+  },
+  {
+    "id": "suitang",
+    "title": "隋唐演义",
+    "author": "褚人获",
+    "lang": "zh",
+    "words": 521577,
+    "chapters": 200,
+    "sizeBytes": 1897535,
+    "sampleTitles": [
+      "第一回",
+      "第一回",
+      "第二回",
+      "第二回",
+      "第三回"
+    ]
+  },
+  {
+    "id": "shuoyue",
+    "title": "说岳全传",
+    "author": "钱彩",
+    "lang": "zh",
+    "words": 349777,
+    "chapters": 162,
+    "sizeBytes": 1286660,
+    "sampleTitles": [
+      "第一回",
+      "第一回",
+      "第二回",
+      "第二回",
+      "第三回"
+    ]
+  },
+  {
+    "id": "guanchang",
+    "title": "官场现形记",
+    "author": "李宝嘉",
+    "lang": "zh",
+    "words": 561140,
+    "chapters": 120,
+    "sizeBytes": 1971626,
+    "sampleTitles": [
+      "第一回",
+      "第一回",
+      "第二回",
+      "第二回",
+      "第三回"
+    ]
+  },
+  {
+    "id": "ershiyi",
+    "title": "二十年目睹之怪现状",
+    "author": "吴趼人",
+    "lang": "zh",
+    "words": 462661,
+    "chapters": 99,
+    "sizeBytes": 1650043,
+    "sampleTitles": [
+      "第一回     楔子",
+      "第二回     守常经不使疏逾戚　睹怪状几疑贼是官",
+      "第三回     走穷途忽遇良朋　谈仁路初闻怪状",
+      "第四回     吴继之正言规好友　苟观察致敬送嘉宾",
+      "第五回     珠宝店巨金骗去　州县官实价开来"
+    ]
+  },
+  {
+    "id": "liaozhai",
+    "title": "聊斋志异",
+    "author": "蒲松龄",
+    "lang": "zh",
+    "words": 384328,
+    "chapters": 1,
+    "sizeBytes": 1460171,
+    "sampleTitles": []
+  },
+  {
+    "id": "rulinwaishi",
+    "title": "儒林外史",
+    "author": "吴敬梓",
+    "lang": "zh",
+    "words": 272731,
+    "chapters": 1,
+    "sizeBytes": 974770,
+    "sampleTitles": []
+  },
+  {
+    "id": "fengshenyanyi",
+    "title": "封神演义",
+    "author": "许仲琳",
+    "lang": "zh",
+    "words": 485245,
+    "chapters": 1,
+    "sizeBytes": 1771656,
+    "sampleTitles": []
+  },
+  {
+    "id": "zhuangzi",
+    "title": "庄子",
+    "author": "庄周",
+    "lang": "zh",
+    "words": 77690,
+    "chapters": 1,
+    "sizeBytes": 288364,
+    "sampleTitles": []
+  },
+  {
+    "id": "sunzi",
+    "title": "孙子兵法",
+    "author": "孙武",
+    "lang": "zh",
+    "words": 6088,
+    "chapters": 1,
+    "sizeBytes": 22517,
+    "sampleTitles": []
+  },
+  {
+    "id": "daode",
+    "title": "道德经",
+    "author": "老子",
+    "lang": "zh",
+    "words": 5568,
+    "chapters": 1,
+    "sizeBytes": 20775,
+    "sampleTitles": []
+  },
+  {
+    "id": "lunyu",
+    "title": "论语",
+    "author": "孔子弟子",
+    "lang": "zh",
+    "words": 15998,
+    "chapters": 1,
+    "sizeBytes": 66981,
+    "sampleTitles": []
+  },
+  {
+    "id": "pride-prejudice",
+    "title": "傲慢与偏见",
+    "author": "简·奥斯汀",
+    "lang": "en",
+    "words": 128565,
+    "chapters": 59,
+    "sizeBytes": 751931,
+    "sampleTitles": [
+      "CHAPTER II.",
+      "CHAPTER III.",
+      "CHAPTER IV.",
+      "CHAPTER V.",
+      "CHAPTER VI."
+    ]
+  },
+  {
+    "id": "wuthering",
+    "title": "呼啸山庄",
+    "author": "艾米莉·勃朗特",
+    "lang": "en",
+    "words": 119368,
+    "chapters": 34,
+    "sizeBytes": 673917,
+    "sampleTitles": [
+      "CHAPTER I",
+      "CHAPTER II",
+      "CHAPTER III",
+      "CHAPTER IV",
+      "CHAPTER V"
+    ]
+  },
+  {
+    "id": "jane-eyre",
+    "title": "简·爱",
+    "author": "夏洛蒂·勃朗特",
+    "lang": "en",
+    "words": 189604,
+    "chapters": 38,
+    "sizeBytes": 1064804,
+    "sampleTitles": [
+      "CHAPTER I",
+      "CHAPTER II",
+      "CHAPTER III",
+      "CHAPTER IV",
+      "CHAPTER V"
+    ]
+  },
+  {
+    "id": "dracula",
+    "title": "德古拉",
+    "author": "布拉姆·斯托克",
+    "lang": "en",
+    "words": 163401,
+    "chapters": 54,
+    "sizeBytes": 870411,
+    "sampleTitles": [
+      "CHAPTER I. Jonathan Harker’s Journal",
+      "CHAPTER II. Jonathan Harker’s Journal",
+      "CHAPTER III. Jonathan Harker’s Journal",
+      "CHAPTER IV. Jonathan Harker’s Journal",
+      "CHAPTER V. Letters—Lucy and Mina"
+    ]
+  },
+  {
+    "id": "anna-karenina",
+    "title": "安娜·卡列尼娜",
+    "author": "列夫·托尔斯泰",
+    "lang": "en",
+    "words": 358375,
+    "chapters": 1,
+    "sizeBytes": 2048068,
+    "sampleTitles": []
+  },
+  {
+    "id": "les-miserables",
+    "title": "悲惨世界",
+    "author": "维克多·雨果",
+    "lang": "en",
+    "words": 575614,
+    "chapters": 358,
+    "sizeBytes": 3347525,
+    "sampleTitles": [
+      "CHAPTER I—M. MYRIEL",
+      "CHAPTER II—M. MYRIEL BECOMES M. WELCOME",
+      "CHAPTER III—A HARD BISHOPRIC FOR A GOOD BISHOP",
+      "CHAPTER IV—WORKS CORRESPONDING TO WORDS",
+      "CHAPTER V—MONSEIGNEUR BIENVENU MADE HIS CASSOCKS LAST TOO LONG"
+    ]
+  },
+  {
+    "id": "notre-dame",
+    "title": "巴黎圣母院",
+    "author": "维克多·雨果",
+    "lang": "en",
+    "words": 187794,
+    "chapters": 1,
+    "sizeBytes": 1210379,
+    "sampleTitles": []
+  },
+  {
+    "id": "red-black",
+    "title": "红与黑",
+    "author": "司汤达",
+    "lang": "en",
+    "words": 196970,
+    "chapters": 75,
+    "sizeBytes": 1104281,
+    "sampleTitles": [
+      "CHAPTER I",
+      "CHAPTER II",
+      "CHAPTER III",
+      "CHAPTER IV",
+      "CHAPTER V"
+    ]
+  },
+  {
+    "id": "pere-goriot",
+    "title": "高老头",
+    "author": "巴尔扎克",
+    "lang": "en",
+    "words": 105612,
+    "chapters": 1,
+    "sizeBytes": 592380,
+    "sampleTitles": []
+  },
+  {
+    "id": "eugenie",
+    "title": "欧也妮·葛朗台",
+    "author": "巴尔扎克",
+    "lang": "en",
+    "words": 67630,
+    "chapters": 1,
+    "sizeBytes": 390268,
+    "sampleTitles": []
+  },
+  {
+    "id": "tess",
+    "title": "苔丝",
+    "author": "托马斯·哈代",
+    "lang": "en",
+    "words": 154663,
+    "chapters": 1,
+    "sizeBytes": 875572,
+    "sampleTitles": []
+  },
+  {
+    "id": "great-expectations",
+    "title": "远大前程",
+    "author": "查尔斯·狄更斯",
+    "lang": "en",
+    "words": 189051,
+    "chapters": 1,
+    "sizeBytes": 1038158,
+    "sampleTitles": []
+  },
+  {
+    "id": "tale-two-cities",
+    "title": "双城记",
+    "author": "查尔斯·狄更斯",
+    "lang": "en",
+    "words": 138490,
+    "chapters": 45,
+    "sizeBytes": 787209,
+    "sampleTitles": [
+      "CHAPTER I.",
+      "CHAPTER II.",
+      "CHAPTER III.",
+      "CHAPTER IV.",
+      "CHAPTER V."
+    ]
+  },
+  {
+    "id": "oliver-twist",
+    "title": "雾都孤儿",
+    "author": "查尔斯·狄更斯",
+    "lang": "en",
+    "words": 162230,
+    "chapters": 1,
+    "sizeBytes": 935849,
+    "sampleTitles": []
+  },
+  {
+    "id": "sherlock",
+    "title": "福尔摩斯探案集",
+    "author": "阿瑟·柯南·道尔",
+    "lang": "en",
+    "words": 105863,
+    "chapters": 1,
+    "sizeBytes": 587668,
+    "sampleTitles": []
+  }
+]

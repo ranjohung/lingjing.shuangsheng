@@ -210,6 +210,11 @@
 
   function enterPlot(id) {
     closeDetail();
+    // 三国演义 → 专属小说世界（卷制 + 双轨道具）
+    if (id === 'sanguoyanyi') {
+      window.location.href = 'sanguo-world.html';
+      return;
+    }
     window.location.href = 'plot-runner.html?novel=' + id;
   }
 
