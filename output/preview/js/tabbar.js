@@ -28,6 +28,15 @@
     { id: 'me',     label: '我的', ico: '👤', href: 'me.html',                match: ['me', 'profile', 'wallet'],           klass: 't-me' }
   ];
 
+  function resolveTabHref(n) {
+    var p = (window.location.pathname || '').toLowerCase();
+    var inSub = p.indexOf('/output/preview/') >= 0;
+    // home 永远回到根目录的 product-preview.html
+    if (n === 'product-preview.html') return inSub ? '../../product-preview.html' : n;
+    // 其他 tab：根 + 前缀，子目录直链
+    return inSub ? n : 'output/preview/' + n;
+  }
+
   // ---------- 工具 ----------
   function $(s, p) { return (p || document).querySelector(s); }
   function el(tag, attrs, children) {
@@ -90,7 +99,7 @@
     var bar = el('nav', { class: 'tabbar', role: 'navigation', 'aria-label': '主功能区' });
     TABS.forEach(function (t) {
       var klass = 'tab ' + t.klass + (t.id === currentId ? ' active' : '');
-      var a = el('a', { class: klass, href: t.href, 'data-tab': t.id }, [
+      var a = el('a', { class: klass, href: resolveTabHref(t.href), 'data-tab': t.id }, [
         el('span', { class: 'ico', 'aria-hidden': 'true' }, [t.ico]),
         el('span', { class: 'lbl' }, [t.label])
       ]);
@@ -145,7 +154,7 @@
     var found = TABS.filter(function (t) { return t.id === tabId; })[0];
     if (!found) return false;
     writeStored(found.id);
-    window.location.href = found.href;
+    window.location.href = resolveTabHref(found.href);
     return true;
   }
 
