@@ -1,0 +1,225 @@
+{
+  "results": [
+    {
+      "page": "static",
+      "item": "图 sg_v01_cover.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 709
+    },
+    {
+      "page": "static",
+      "item": "图 sg_v02_cover.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 549
+    },
+    {
+      "page": "static",
+      "item": "图 sg_v03_cover.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 564
+    },
+    {
+      "page": "static",
+      "item": "图 sg_v04_cover.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 574
+    },
+    {
+      "page": "static",
+      "item": "图 sg_v05_cover.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 576
+    },
+    {
+      "page": "static",
+      "item": "图 sg_v06_cover.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 567
+    },
+    {
+      "page": "static",
+      "item": "图 sg_v07_cover.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 632
+    },
+    {
+      "page": "static",
+      "item": "图 sg_v08_cover.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 548
+    },
+    {
+      "page": "static",
+      "item": "图 sg_v09_cover.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 568
+    },
+    {
+      "page": "static",
+      "item": "图 sg_v10_cover.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 624
+    },
+    {
+      "page": "static",
+      "item": "图 sg_v11_cover.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 552
+    },
+    {
+      "page": "static",
+      "item": "图 sg_v12_cover.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 573
+    },
+    {
+      "page": "static",
+      "item": "图 sg_ch05_huaxiong.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 574
+    },
+    {
+      "page": "static",
+      "item": "图 sg_ch06_3v1lvmbu.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 620
+    },
+    {
+      "page": "static",
+      "item": "图 sg_ch25_threevisits.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 652
+    },
+    {
+      "page": "static",
+      "item": "图 sg_ch30_wuchao.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 607
+    },
+    {
+      "page": "static",
+      "item": "图 sg_ch44_caoqianjiejian.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 398
+    },
+    {
+      "page": "static",
+      "item": "图 sg_ch47_zhouyu.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 607
+    },
+    {
+      "page": "static",
+      "item": "图 sg_ch49_huarong.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 585
+    },
+    {
+      "page": "static",
+      "item": "图 sg_ch61_zhaoyun.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 638
+    },
+    {
+      "page": "static",
+      "item": "图 sg_ch74_guagu.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 580
+    },
+    {
+      "page": "static",
+      "item": "图 sg_ch76_maicheng.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 627
+    },
+    {
+      "page": "static",
+      "item": "图 sg_ch91_baidi.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 611
+    },
+    {
+      "page": "static",
+      "item": "图 sg_ch95_emptycity.jpg 存在",
+      "result": "PASS",
+      "sizeKB": 576
+    },
+    {
+      "page": "sanguo-world.html",
+      "item": "Hero 背景图加载卷一封面",
+      "result": "PASS",
+      "evidence": "url(\"../../assets/scenes/sg_v01_cover.jpg\"), linear-gradient(160deg, rgb(107, 39"
+    },
+    {
+      "page": "sanguo-world.html",
+      "item": "12 卷缩略图渲染",
+      "result": "PASS",
+      "n": 12
+    },
+    {
+      "page": "sanguo-world.html",
+      "item": "12 卷缩略图 URL 含 sg_v 真人图",
+      "result": "PASS",
+      "n": 12
+    },
+    {
+      "page": "sanguo-world.html",
+      "item": "钱包显示（灵玉 100 / 灵晶 1000）",
+      "result": "PASS"
+    },
+    {
+      "page": "sanguo-world.html",
+      "item": "签到按钮 +10 灵玉",
+      "result": "PASS",
+      "after": "110"
+    },
+    {
+      "page": "sanguo-world.html",
+      "item": "阅读券兑换弹窗打开",
+      "result": "PASS"
+    },
+    {
+      "page": "sanguo-world.html",
+      "item": "兑换 1 张阅读券",
+      "result": "PASS",
+      "tickets": 1
+    },
+    {
+      "page": "sanguo-world.html",
+      "item": "付费卷解锁弹窗打开",
+      "result": "PASS"
+    },
+    {
+      "page": "sanguo-world.html",
+      "item": "买卷 2 扣 20 灵晶",
+      "result": "PASS",
+      "crystal": "980"
+    },
+    {
+      "page": "sanguo-world.html",
+      "item": "买全书券 128 灵晶解锁所有卷",
+      "result": "PASS"
+    },
+    {
+      "page": "sanguo-world.html",
+      "item": "读第 11 回阅读器打开",
+      "result": "PASS"
+    },
+    {
+      "page": "sanguo-world.html",
+      "item": "关键回 5（温酒斩华雄）章顶主图",
+      "result": "PASS"
+    },
+    {
+      "page": "sanguo-world.html",
+      "item": "关键回 95（空城计）章顶主图",
+      "result": "PASS"
+    },
+    {
+      "page": "sanguo-world.html",
+      "item": "非关键回 1 无章顶主图（正确）",
+      "result": "PASS"
+    }
+  ],
+  "pageerrors": []
+}

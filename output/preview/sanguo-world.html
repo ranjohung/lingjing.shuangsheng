@@ -31,9 +31,11 @@ body{background:var(--sg-bg);color:var(--sg-text);font-family:'Noto Serif SC',se
 .sg-wc b{font-family:var(--font-mono,'monospace')}
 
 /* 横幅封面 */
-.sg-hero{margin:6px 16px 0;border-radius:16px;overflow:hidden;position:relative;background:linear-gradient(160deg,#1A1610 0%,#2A1A12 45%,#141419 100%);border:1px solid rgba(232,195,106,.25)}
-.sg-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%,rgba(232,195,106,.14),transparent 55%),radial-gradient(ellipse at 15% 85%,rgba(201,64,58,.18),transparent 50%)}
-.sg-hero-in{position:relative;padding:22px 18px 16px}
+.sg-hero{margin:6px 16px 0;border-radius:16px;overflow:hidden;position:relative;background:linear-gradient(160deg,#1A1610 0%,#2A1A12 45%,#141419 100%);border:1px solid rgba(232,195,106,.25);min-height:140px}
+.sg-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.85;z-index:0}
+.sg-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%,rgba(232,195,106,.14),transparent 55%),radial-gradient(ellipse at 15% 85%,rgba(201,64,58,.18),transparent 50%);z-index:1}
+.sg-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,13,18,.45) 0%,rgba(13,13,18,.78) 100%);z-index:1}
+.sg-hero-in{position:relative;padding:22px 18px 16px;z-index:2}
 .sg-hero-emoji{font-size:40px;filter:drop-shadow(0 4px 12px rgba(232,195,106,.35))}
 .sg-hero h1{font-size:26px;color:var(--sg-gold);letter-spacing:6px;margin:8px 0 4px;font-weight:700}
 .sg-hero .sg-by{font-size:11px;color:var(--sg-sub);letter-spacing:2px;margin-bottom:12px}
@@ -68,8 +70,11 @@ body{background:var(--sg-bg);color:var(--sg-text);font-family:'Noto Serif SC',se
 .sg-catalog{margin:18px 16px 0}
 .sg-vol{margin-bottom:14px;border:1px solid var(--sg-line);border-radius:14px;overflow:hidden;background:var(--sg-panel)}
 .sg-vol-head{display:flex;align-items:center;gap:10px;padding:12px 14px;background:rgba(232,195,106,.04);border-bottom:1px solid var(--sg-line)}
-.sg-vol-head .v-ico{font-size:15px}
-.sg-vol-head .v-name{flex:1;font-size:13px;font-weight:700;letter-spacing:1px}
+.sg-vol-thumb{width:54px;height:72px;border-radius:8px;background-size:cover;background-position:center;flex:none;box-shadow:0 4px 12px rgba(0,0,0,.35);position:relative}
+.sg-vol-thumb::after{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,.55) 100%)}
+.sg-vol-head .v-meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.sg-vol-head .v-ico{font-size:15px;display:none}
+.sg-vol-head .v-name{font-size:13px;font-weight:700;letter-spacing:1px}
 .sg-vol-head .v-tag{font-size:10px;padding:3px 10px;border-radius:99px}
 .sg-vol-head .v-tag.free{color:var(--sg-free);border:1px solid rgba(78,204,163,.4)}
 .sg-vol-head .v-tag.lock{color:var(--sg-gold);border:1px solid rgba(232,195,106,.4);cursor:pointer}
@@ -94,6 +99,8 @@ body{background:var(--sg-bg);color:var(--sg-text);font-family:'Noto Serif SC',se
 .sg-article{max-width:480px;margin:0 auto;padding:26px 22px 120px}
 .sg-article h2{font-size:19px;color:var(--sg-gold);letter-spacing:2px;line-height:1.6;margin-bottom:6px;text-align:center}
 .sg-article .a-no{text-align:center;font-size:10px;color:var(--sg-sub);letter-spacing:3px;margin-bottom:24px}
+.sg-chapter-img{display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px}
+.sg-chapter-caption{font-size:10px;color:rgba(255,255,255,.85);letter-spacing:3px;background:rgba(0,0,0,.45);padding:4px 12px;border-radius:99px;backdrop-filter:blur(4px);text-shadow:0 1px 3px rgba(0,0,0,.6)}
 .sg-article p{font-size:17px;line-height:1.95;margin:0 0 14px;text-indent:2em;color:var(--sg-text)}
 .sg-article p.sg-verse{text-indent:0;text-align:center;color:var(--sg-gold);font-size:15px}
 .sg-nav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;display:flex;gap:10px;padding:12px 16px 22px;background:linear-gradient(0deg,rgba(13,13,18,.98) 40%,transparent)}
@@ -150,8 +157,9 @@ body{background:var(--sg-bg);color:var(--sg-text);font-family:'Noto Serif SC',se
     </div>
   </div>
 
-  <!-- 横幅 -->
-  <div class="sg-hero" data-page-node-id="M3NuBwzmmHUSPIJzj3MmLp">
+  <!-- 横幅（V20-Q：真人摄影卷一封面图作为背景） -->
+  <div class="sg-hero" id="sg-hero" data-page-node-id="M3NuBwzmmHUSPIJzj3MmLp">
+    <div class="sg-hero-bg" id="sg-hero-bg" data-page-node-id="v20q-hero-bg"></div>
     <div class="sg-hero-in" data-page-node-id="zHGAA9vY7n6fxV5gVjYrar">
       <div class="sg-hero-emoji" data-page-node-id="EXpbhzNsrNRX3oeyyk5TYS">⚔️</div>
       <h1 data-page-node-id="JXFKM4HxnwxIwTf1h2zk9q">三国演义</h1>
@@ -221,6 +229,57 @@ body{background:var(--sg-bg);color:var(--sg-text);font-family:'Noto Serif SC',se
 <div class="sg-toast-wrap" id="sg-toast-wrap" data-page-node-id="BtNSum48ftkVsplpy9LZ94"></div>
 
 <script>
+/* =================================================================
+ * V20-Q · 三国演义·真人摄影风格升级
+ * 24 张 SD 真人写实图（majicMIX realisticv7）+ 卷封面 + 关键回主图
+ * 文件：../../assets/scenes/sg_*.jpg
+ * ================================================================= */
+var SG_SCENES = {
+  // 12 张卷封面
+  VOL_COVER: {
+    1: 'sg_v01_cover', 2: 'sg_v02_cover', 3: 'sg_v03_cover',
+    4: 'sg_v04_cover', 5: 'sg_v05_cover', 6: 'sg_v06_cover',
+    7: 'sg_v07_cover', 8: 'sg_v08_cover', 9: 'sg_v09_cover',
+    10: 'sg_v10_cover', 11: 'sg_v11_cover', 12: 'sg_v12_cover'
+  },
+  // 12 张关键回主图（ch → file）
+  KEY_CHAPTER: {
+    5: 'sg_ch05_huaxiong',
+    6: 'sg_ch06_3v1lvmbu',
+    25: 'sg_ch25_threevisits',
+    30: 'sg_ch30_wuchao',
+    44: 'sg_ch44_caoqianjiejian',
+    47: 'sg_ch47_zhouyu',
+    49: 'sg_ch49_huarong',
+    61: 'sg_ch61_zhaoyun',
+    74: 'sg_ch74_guagu',
+    76: 'sg_ch76_maicheng',
+    91: 'sg_ch91_baidi',
+    95: 'sg_ch95_emptycity'
+  },
+  ASSET_BASE: '../../assets/scenes/'
+};
+function sgSceneUrl(file) {
+  return SG_SCENES.ASSET_BASE + file + '.jpg';
+}
+function sgFallbackGradient(v) {
+  var grads = [
+    'linear-gradient(160deg,#6B2737,#B8863B)',
+    'linear-gradient(160deg,#2E3A6E,#4A3A8C)',
+    'linear-gradient(160deg,#5A6B8E,#C95B9C)',
+    'linear-gradient(160deg,#3A5E4A,#00B894)',
+    'linear-gradient(160deg,#5A2E1A,#B85535)',
+    'linear-gradient(160deg,#8C1A1A,#C73652)',
+    'linear-gradient(160deg,#2E5A8C,#5A8CC7)',
+    'linear-gradient(160deg,#3A8C5E,#00B894)',
+    'linear-gradient(160deg,#8C3A1A,#E94560)',
+    'linear-gradient(160deg,#1A2E5A,#3A5E8C)',
+    'linear-gradient(160deg,#5A1A3A,#8C2E5A)',
+    'linear-gradient(160deg,#8C5A1A,#E8C36A)'
+  ];
+  return grads[(v - 1) % 12];
+}
+
 /* =================================================================
  * 三国演义小说世界 · 数据与状态
  * 经济体系（灵境双轨制）：
@@ -308,8 +367,14 @@ function renderCatalog() {
     if (v === 1) tagHtml = '<span class="v-tag free">免费</span>';
     else if (hasPass() || owned) tagHtml = '<span class="v-tag owned">已解锁</span>';
     else tagHtml = '<span class="v-tag lock" data-vol="' + v + '">🔒 20 💎 解锁</span>';
-    head.innerHTML = '<span class="v-ico">' + (v === 1 ? '🆓' : (hasPass() || owned ? '📖' : '🔒')) + '</span>' +
-      '<span class="v-name">' + volName(v) + '（第' + ((v-1)*10+1) + '–' + (v*10) + '回）</span>' + tagHtml;
+    // V20-Q：每卷左侧加真人摄影缩略图
+    var thumbFile = SG_SCENES.VOL_COVER[v];
+    var thumbStyle = 'background-image:url(' + sgSceneUrl(thumbFile) + '),' + sgFallbackGradient(v);
+    head.innerHTML =
+      '<div class="sg-vol-thumb" style="' + thumbStyle + '"></div>' +
+      '<div class="v-meta">' +
+      '<span class="v-name">' + volName(v) + '（第' + ((v-1)*10+1) + '–' + (v*10) + '回）</span>' + tagHtml +
+      '</div>';
     vol.appendChild(head);
     for (var c = (v-1)*10 + 1; c <= v*10 && c <= SG.chapters.length; c++) {
       (function (n) {
@@ -342,6 +407,18 @@ function renderChapter(n) {
   document.getElementById('rb-title').textContent = ch.title.slice(0, 18);
   var art = document.getElementById('sg-article');
   art.innerHTML = '';
+  // V20-Q：关键回顶部加真人摄影主图
+  var keyFile = SG_SCENES.KEY_CHAPTER[n];
+  if (keyFile) {
+    var img = document.createElement('div');
+    img.className = 'sg-chapter-img';
+    img.style.cssText = 'width:100%;height:200px;border-radius:10px;background-image:url(' + sgSceneUrl(keyFile) + '),' + sgFallbackGradient(volOf(n)) + ';background-size:cover;background-position:center;margin-bottom:18px;box-shadow:0 6px 20px rgba(0,0,0,.4);position:relative';
+    var imgCaption = document.createElement('div');
+    imgCaption.className = 'sg-chapter-caption';
+    imgCaption.textContent = '— 真人摄影 · AI 写实场景 —';
+    img.appendChild(imgCaption);
+    art.appendChild(img);
+  }
   var h = document.createElement('h2');
   h.textContent = ch.title.slice(ch.title.indexOf('回') + 1).trim();
   var no = document.createElement('div');
@@ -567,6 +644,13 @@ document.getElementById('sg-reader').addEventListener('scroll', readerScroll);
 document.getElementById('sg-sheet').addEventListener('click', function (e) {
   if (e.target === this) closeSheet();
 });
+
+/* ---------- V20-Q：Hero 背景图（卷一封面） ---------- */
+(function initHeroBg(){
+  var bg = document.getElementById('sg-hero-bg');
+  if (!bg) return;
+  bg.style.backgroundImage = 'url(' + sgSceneUrl(SG_SCENES.VOL_COVER[1]) + '),' + sgFallbackGradient(1);
+})();
 renderWallet();
 loadText();
 </script>
