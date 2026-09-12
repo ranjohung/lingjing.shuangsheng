@@ -15,6 +15,8 @@ async def main():
         browser = await p.chromium.launch(headless=True, args=["--disable-web-security", "--no-sandbox"])
         ctx = await browser.new_context(viewport={"width": 390, "height": 844})
         page = await ctx.new_page()
+        # V20-C 启动页 splash 会把主界面藏进 .hidden 容器，预置跳过（同 v18a 做法）
+        await page.add_init_script("try{localStorage.setItem('lingjing_onboarding_done','true')}catch(e){}")
 
         print("=" * 60)
         print("V17-A 路径自适应回归测试 · 修复 product-preview.html → Tab 跳转")

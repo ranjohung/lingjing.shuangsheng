@@ -99,6 +99,28 @@
 
 ---
 
+## 我的 Tab（v6.4 · `me.html` 七区块 + 6 子页）
+
+```
+区块一 个人信息    me.html（头像/ID/签名/实名状态）
+  └─ 编辑资料      profile-edit.html（9 项：头像/用户名/签名/性别/生日/所在地/手机/邮箱/实名）
+区块二 资产总览    me.html（💎灵晶 / 🪙灵玉 / ⭐收藏 三卡）
+  ├─ 钱包          wallet.html（8 Tab：余额/充值 6 档/订阅/消费记录 50 条/充值记录/灵玉获取/灵晶明细/提现）
+  └─ 收藏          favorites.html（四 Tab：小说世界/角色/卡牌/动态 + 筛选 + 取消收藏）
+区块三 我的内容    me.html（四入口）
+  ├─ 我的作品      my-works.html（已发布/草稿箱/审核中/已下架 · 创作者可见）
+  ├─ 我的角色      my-characters.html（[创]/[双]角标 + 亲密度）
+  ├─ 我的世界      my-worlds.html（进度条 + 继续游玩）
+  └─ 我的卡牌      my-cards.html（稀有度 5 档 + 来源筛选 + 分享/设为背景）
+区块四 创作者中心  me.html（等级/收益总览/看板/提现 · lingjing_is_creator 门控）
+  ├─ 收益明细/看板 commerce.html#earnings / #dashboard（三视图 + CSV 导出）
+  └─ 提现          wallet.html#withdraw
+区块五 订阅与消费  me.html（订阅卡 + 升级/取消/历史 + 消费记录）
+区块六 设置        settings.html（10 Tab：账号/安全/通知/隐私/显示/声音/AI 偏好/数据管理/法律/关于）
+区块七 法律与帮助  me.html（法律 5 + 帮助 4 + 关于 4）
+底部              退出登录 + 注销账号（30 天后悔期）
+```
+
 ## 附录·灵境法则（我的 Tab → `me.html` + `settings.html`）
 
 ```
@@ -107,7 +129,7 @@
 章二 背包 & 图鉴   me.html#inventory
   └─ 已解锁角色 / 已收集 CG / 已获命运卡
 章三 钱包          wallet.html
-  └─ 6 Tab：余额 / 充值 / 订阅 / 交易记录 / 灵晶明细 / 提现
+  └─ 8 Tab：余额 / 充值(6 档) / 订阅 / 消费记录 / 充值记录 / 灵玉获取 / 灵晶明细 / 提现
 章四 通知与隐私    settings.html#privacy
 章五 ⭐ 法律中心（通用） settings.html#legal
   ├─ 用户协议

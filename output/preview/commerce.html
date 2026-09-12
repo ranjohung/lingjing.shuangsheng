@@ -300,11 +300,23 @@
 </div>
 
 <!-- 三、收益看板 -->
-<div class="section" data-page-node-id="WZVEvqyShuwaTAWNOPgCyI">
+<div class="section" id="earnings" data-page-node-id="WZVEvqyShuwaTAWNOPgCyI">
   <div class="section-head" data-page-node-id="vkmRRlFnpfUFqBmUliFYDx">
     <h2 data-page-node-id="EU5hf0Av0BmEjCxWkXVquS">③ 收益看板</h2>
     <span class="badge" data-page-node-id="9rZOmAr8L96IineCHaxEw8">EARNINGS</span>
     <span class="desc" data-page-node-id="sjqsClPSJkYjoTYkSL8mFw">作者等级 5 档（青铜 50% → 传奇 80%）+ 阶梯加成</span>
+  </div>
+
+  <!-- V20-M · 设计文档 §5.5 创作数据看板（5 指标） -->
+  <div class="card" id="dashboard" style="margin-bottom:14px;">
+    <h4 style="margin:0 0 10px;font-size:14px;color:#ffd980;">📊 创作数据看板</h4>
+    <div class="stats-grid" id="v20m-dash-grid" style="grid-template-columns:repeat(2,1fr);">
+      <div style="padding:10px;background:rgba(255,255,255,.04);border-radius:10px;"><div style="font-size:18px;font-weight:600;color:#fff;">48,220</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;">作品阅读量</div></div>
+      <div style="padding:10px;background:rgba(255,255,255,.04);border-radius:10px;"><div style="font-size:18px;font-weight:600;color:#fff;">6,481</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;">进入世界次数</div></div>
+      <div style="padding:10px;background:rgba(255,255,255,.04);border-radius:10px;"><div style="font-size:18px;font-weight:600;color:#fff;">23.6 分</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;">用户平均游玩时长</div></div>
+      <div style="padding:10px;background:rgba(255,255,255,.04);border-radius:10px;"><div style="font-size:18px;font-weight:600;color:#fff;">92 分</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;">角色受欢迎程度</div></div>
+      <div style="padding:10px;background:rgba(255,255,255,.04);border-radius:10px;grid-column:span 2;"><div style="font-size:18px;font-weight:600;color:#fff;">18.4%</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;">章节退出率（第 3 章峰值 24%，建议优化开场节奏）</div></div>
+    </div>
   </div>
 
   <div class="card" data-page-node-id="BDOGsTD8hepJLh56QI3wwT">
@@ -313,6 +325,13 @@
     </div>
     <div class="card" style="margin-top:14px;" data-page-node-id="xRflHscGQl1gP94G8m5GGc">
       <h4 style="margin:0 0 10px;font-size:14px;color:#ffd980;" data-page-node-id="xSDc4Jn4vI5LBni8gywVhq">收益明细（最近 20 笔）</h4>
+      <!-- V20-M · §5.3 按作品 / 按收费点 / 按时间 + 导出报表 -->
+      <div id="v20m-earn-toolbar" style="display:flex;gap:6px;align-items:center;margin-bottom:10px;flex-wrap:wrap;">
+        <button class="ds-btn ds-btn-sm" data-earnview="fee" style="background:#e8c75a;color:#1a1a2e;border:0;">按收费点</button>
+        <button class="ds-btn ds-btn-sm" data-earnview="work" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.75);">按作品</button>
+        <button class="ds-btn ds-btn-sm" data-earnview="time" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.75);">按时间</button>
+        <button class="ds-btn ds-btn-sm" id="v20m-earn-export" style="margin-left:auto;background:rgba(124,246,192,.12);border:1px solid rgba(124,246,192,.3);color:#7cf6c0;">📤 导出报表</button>
+      </div>
       <div id="earnings-detail" style="font-size:12px;color:rgba(255,255,255,.7);" data-page-node-id="zl6qAYdDLpbMrLZKcxvHrR">
         <!-- 动态填充 -->
       </div>
@@ -458,6 +477,30 @@ function renderV17GTier() {
   }
 }
 document.addEventListener('DOMContentLoaded', renderV17GTier);
+// V20-M · 收益明细视图切换 + 导出（经 window.LJEarn 桥接，函数定义在下方 IIFE 内）
+document.addEventListener('DOMContentLoaded', function () {
+  setTimeout(function () {
+    if (!window.LJEarn) return;
+    var tb = document.getElementById('v20m-earn-toolbar');
+    if (tb) {
+      tb.querySelectorAll('[data-earnview]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          window.LJEarn.setView(b.dataset.earnview);
+          tb.querySelectorAll('[data-earnview]').forEach(function (x) {
+            x.style.background = 'rgba(255,255,255,.08)';
+            x.style.border = '1px solid rgba(255,255,255,.15)';
+            x.style.color = 'rgba(255,255,255,.75)';
+          });
+          b.style.background = '#e8c75a'; b.style.border = '0'; b.style.color = '#1a1a2e';
+          window.LJEarn.renderBy();
+        });
+      });
+      var ex = document.getElementById('v20m-earn-export');
+      if (ex) ex.addEventListener('click', window.LJEarn.exportReport);
+    }
+    window.LJEarn.renderBy();
+  }, 300);
+});
 (function () {
   let currentNovel = null;
   let currentNovelId = null;
@@ -680,8 +723,69 @@ document.addEventListener('DOMContentLoaded', renderV17GTier);
   }
 
   // ====== 渲染：收益看板 ======
+  // V20-M · 收益明细三视图（按收费点/按作品/按时间）+ 导出
+  var ljEarnBoard = null;
+  var ljEarnView = 'fee';
+  function renderEarningsBy() {
+    const detail = document.getElementById('earnings-detail');
+    if (!detail || !ljEarnBoard || ljEarnBoard.totalCount === 0) return;
+    const items = ljEarnBoard.items || [];
+    var rows = [], h1 = '', h2 = '收益（作者分成）';
+    if (ljEarnView === 'work') {
+      h1 = '作品';
+      var byWork = {};
+      items.forEach(e => {
+        var k = (e.novel_title || e.work || e.source_type || '未分组');
+        byWork[k] = (byWork[k] || 0) + (e.creator_share || 0);
+      });
+      rows = Object.keys(byWork).map(k => [k, byWork[k]]);
+    } else if (ljEarnView === 'time') {
+      h1 = '日期';
+      var byTime = {};
+      items.forEach(e => {
+        var d = (e.created_at || e.time || '').toString().slice(0, 10) || '未知日期';
+        byTime[d] = (byTime[d] || 0) + (e.creator_share || 0);
+      });
+      rows = Object.keys(byTime).sort().reverse().map(k => [k, byTime[k]]);
+    } else {
+      h1 = '收费点 / 来源';
+      var byFee = {};
+      items.forEach(e => {
+        var k = e.source_type || e.fee || '未分组';
+        byFee[k] = (byFee[k] || 0) + (e.creator_share || 0);
+      });
+      rows = Object.keys(byFee).map(k => [k, byFee[k]]);
+    }
+    detail.innerHTML = `
+      <table style="width:100%;border-collapse:collapse;">
+        <thead><tr style="border-bottom:1px solid rgba(255,255,255,.1);">
+          <th style="text-align:left;padding:6px;font-size:11px;color:rgba(255,255,255,.55);font-weight:500;">${h1}</th>
+          <th style="text-align:right;padding:6px;font-size:11px;color:rgba(255,255,255,.55);font-weight:500;">${h2}</th>
+        </tr></thead>
+        <tbody>
+          ${rows.map(r => `
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04);">
+              <td style="padding:6px;">${escapeHtml(String(r[0]))}</td>
+              <td style="text-align:right;padding:6px;color:#7cf6c0;">${r[1]} 💎</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>`;
+  }
+  function exportEarningsReport() {
+    if (!ljEarnBoard || ljEarnBoard.totalCount === 0) { showToast('warning', '暂无收益', '尚无可导出的数据'); return; }
+    const rows = [['source_type', 'gross_amount', 'creator_share', 'platform_share', 'status', 'created_at']]
+      .concat((ljEarnBoard.items || []).map(e => [e.source_type, e.gross_amount, e.creator_share, e.platform_share, e.status, e.created_at || '']));
+    const csv = '\uFEFF' + rows.map(r => r.join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = 'lingjing-earnings-report.csv';
+    a.click();
+    showToast('success', '报表已导出', 'CSV · ' + (ljEarnBoard.items || []).length + ' 条记录');
+  }
+
   function renderEarnings() {
     const board = window.Monetization.getEarningsBoard(currentNovel?.novel?.author || 'demo_author');
+    ljEarnBoard = board;
     const grid = document.getElementById('stats-grid');
     const detail = document.getElementById('earnings-detail');
     if (!board || board.totalCount === 0) {
@@ -1003,6 +1107,12 @@ document.addEventListener('DOMContentLoaded', renderV17GTier);
 
   // 暴露
   window._commerce = { selectNovel, renderAll };
+  // V20-M · 收益明细三视图/导出桥接（供早期 DOMContentLoaded 绑定）
+  window.LJEarn = {
+    setView: function (v) { ljEarnView = v; },
+    renderBy: renderEarningsBy,
+    exportReport: exportEarningsReport
+  };
 
   // 启动
   init();

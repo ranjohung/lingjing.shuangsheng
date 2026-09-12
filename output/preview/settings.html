@@ -43,23 +43,24 @@
 
   <div class="settings-header">
     <h1>⚙️ 设置</h1>
-    <p>9 个 Tab · 涵盖账号、安全、通知、隐私、显示、声音、AI 偏好、法律、关于。</p>
+    <p>10 Tab · 账号、安全、通知、隐私、偏好、声音、AI 偏好、数据管理、法律、关于。</p>
   </div>
 
-  <!-- 9 Tab 横向滚动 -->
+  <!-- 10 Tab 横向滚动 -->
   <div class="settings-tabs">
     <div class="settings-tab" data-active="1" onclick="switchTab(0)">账号</div>
     <div class="settings-tab" onclick="switchTab(1)">安全</div>
     <div class="settings-tab" onclick="switchTab(2)">通知</div>
     <div class="settings-tab" onclick="switchTab(3)">隐私</div>
-    <div class="settings-tab" onclick="switchTab(4)">显示</div>
+    <div class="settings-tab" onclick="switchTab(4)">偏好</div>
     <div class="settings-tab" onclick="switchTab(5)">声音</div>
     <div class="settings-tab" onclick="switchTab(6)">AI 偏好</div>
-    <div class="settings-tab" onclick="switchTab(7)">⛓️ 法律</div>
-    <div class="settings-tab" onclick="switchTab(8)">关于</div>
+    <div class="settings-tab" onclick="switchTab(7)">🗄️ 数据管理</div>
+    <div class="settings-tab" onclick="switchTab(8)">⛓️ 法律</div>
+    <div class="settings-tab" onclick="switchTab(9)">关于</div>
   </div>
 
-  <!-- Tab 0: 账号 -->
+  <!-- Tab 0: 账号（V20-M · §7.1：密码/手机/邮箱/三方/实名/安全） -->
   <section id="tab-0" class="settings-section">
     <div class="settings-row">
       <div class="ico">🆔</div>
@@ -67,19 +68,29 @@
       <span class="ds-status-pill" data-status="active">已认证</span>
     </div>
     <div class="settings-row">
+      <div class="ico">🔐</div>
+      <div class="body"><div class="title">修改密码</div><div class="sub">上次修改 30 天前</div></div>
+      <button class="ds-btn ds-btn-sm ds-btn-ghost" onclick="switchTab(1)">修改</button>
+    </div>
+    <div class="settings-row">
       <div class="ico">📧</div>
       <div class="body"><div class="title">邮箱</div><div class="sub">user@lingjing.com</div></div>
-      <button class="ds-btn ds-btn-sm ds-btn-ghost">修改</button>
+      <button class="ds-btn ds-btn-sm ds-btn-ghost">换绑</button>
     </div>
     <div class="settings-row">
       <div class="ico">📱</div>
-      <div class="body"><div class="title">手机号</div><div class="sub">未绑定</div></div>
+      <div class="body"><div class="title">手机号</div><div class="sub">未绑定 · 支持绑定 / 解绑</div></div>
       <button class="ds-btn ds-btn-sm ds-btn-primary">绑定</button>
     </div>
     <div class="settings-row">
       <div class="ico">🔗</div>
-      <div class="body"><div class="title">第三方账号</div><div class="sub">微信 · Apple ID</div></div>
+      <div class="body"><div class="title">第三方账号</div><div class="sub">微信 · QQ · Apple ID</div></div>
       <button class="ds-btn ds-btn-sm ds-btn-ghost">管理</button>
+    </div>
+    <div class="settings-row">
+      <div class="ico">🛡️</div>
+      <div class="body"><div class="title">账号安全</div><div class="sub">两步验证 · 设备管理</div></div>
+      <button class="ds-btn ds-btn-sm ds-btn-ghost" onclick="switchTab(1)">查看</button>
     </div>
   </section>
 
@@ -102,22 +113,32 @@
     </div>
   </section>
 
-  <!-- Tab 2: 通知 -->
+  <!-- Tab 2: 通知（V20-M · §7.3：系统/角色主动/世界更新/活动/创作者收益） -->
   <section id="tab-2" class="settings-section" style="display:none;">
     <div class="settings-row">
-      <div class="ico">🌙</div>
-      <div class="body"><div class="title">早安/晚安推送</div><div class="sub">角色主动问候（默认开启）</div></div>
-      <div class="ds-switch" data-checked="1" onclick="this.dataset.checked=this.dataset.checked==='1'?'':'1'"></div>
-    </div>
-    <div class="settings-row">
       <div class="ico">🔔</div>
-      <div class="body"><div class="title">系统通知</div><div class="sub">更新 · 活动 · 公告</div></div>
+      <div class="body"><div class="title">系统通知</div><div class="sub">更新 · 公告 · 账号安全提醒</div></div>
       <div class="ds-switch" data-checked="1" onclick="this.dataset.checked=this.dataset.checked==='1'?'':'1'"></div>
     </div>
     <div class="settings-row">
-      <div class="ico">📧</div>
-      <div class="body"><div class="title">邮件订阅</div><div class="sub">周报 · 月报 · 创作者激励</div></div>
+      <div class="ico">💬</div>
+      <div class="body"><div class="title">角色主动消息</div><div class="sub">心屿角色的早安 / 晚安问候</div></div>
+      <div class="ds-switch" data-checked="1" onclick="this.dataset.checked=this.dataset.checked==='1'?'':'1'"></div>
+    </div>
+    <div class="settings-row">
+      <div class="ico">📖</div>
+      <div class="body"><div class="title">世界更新提醒</div><div class="sub">收藏的小说世界有新章节</div></div>
+      <div class="ds-switch" data-checked="1" onclick="this.dataset.checked=this.dataset.checked==='1'?'':'1'"></div>
+    </div>
+    <div class="settings-row">
+      <div class="ico">🎁</div>
+      <div class="body"><div class="title">活动通知</div><div class="sub">创世杯 · 福利 · 限免提醒</div></div>
       <div class="ds-switch" onclick="this.dataset.checked=this.dataset.checked==='1'?'':'1'"></div>
+    </div>
+    <div class="settings-row">
+      <div class="ico">💰</div>
+      <div class="body"><div class="title">创作者收益通知</div><div class="sub">仅创作者可见 · 收费点售出提醒</div></div>
+      <div class="ds-switch" data-checked="1" onclick="this.dataset.checked=this.dataset.checked==='1'?'':'1'"></div>
     </div>
     <div class="ds-callout" data-type="info" style="margin-top:12px;">
       <span class="ico">⏰</span>
@@ -125,36 +146,66 @@
     </div>
   </section>
 
-  <!-- Tab 3: 隐私 -->
+  <!-- Tab 3: 隐私（V20-M · §7.2：资料/互动/收藏/在线状态可见性 + 数据授权 + 政策） -->
   <section id="tab-3" class="settings-section" style="display:none;">
     <div class="settings-row">
-      <div class="ico">👁️</div>
-      <div class="body"><div class="title">个人主页公开</div><div class="sub">陌生人可见你的档案</div></div>
+      <div class="ico">👤</div>
+      <div class="body"><div class="title">个人资料可见性</div><div class="sub">陌生人可见你的档案</div></div>
       <div class="ds-switch" data-checked="1" onclick="this.dataset.checked=this.dataset.checked==='1'?'':'1'"></div>
     </div>
     <div class="settings-row">
-      <div class="ico">📊</div>
-      <div class="body"><div class="title">数据导出</div><div class="sub">下载我的所有数据（JSON）</div></div>
-      <button class="ds-btn ds-btn-sm ds-btn-ghost">导出</button>
+      <div class="ico">💬</div>
+      <div class="body"><div class="title">互动记录可见性</div><div class="sub">他人可见你与角色的互动动态</div></div>
+      <div class="ds-switch" onclick="this.dataset.checked=this.dataset.checked==='1'?'':'1'"></div>
     </div>
     <div class="settings-row">
-      <div class="ico">🗑️</div>
-      <div class="body"><div class="title">注销账号</div><div class="sub">永久删除账号与所有数据（不可恢复）</div></div>
-      <button class="ds-btn ds-btn-sm ds-btn-destructive">注销</button>
+      <div class="ico">⭐</div>
+      <div class="body"><div class="title">收藏可见性</div><div class="sub">他人可见你的收藏列表</div></div>
+      <div class="ds-switch" onclick="this.dataset.checked=this.dataset.checked==='1'?'':'1'"></div>
     </div>
+    <div class="settings-row">
+      <div class="ico">🟢</div>
+      <div class="body"><div class="title">在线状态可见性</div><div class="sub">好友可见你正在心屿陪聊</div></div>
+      <div class="ds-switch" data-checked="1" onclick="this.dataset.checked=this.dataset.checked==='1'?'':'1'"></div>
+    </div>
+    <div class="settings-row">
+      <div class="ico">🔐</div>
+      <div class="body"><div class="title">数据授权管理</div><div class="sub">管理授权过的第三方应用</div></div>
+      <button class="ds-btn ds-btn-sm ds-btn-ghost">管理</button>
+    </div>
+    <a href="legal-view.html?doc=PRIVACY_POLICY" class="settings-row" style="text-decoration:none;">
+      <div class="ico">🛡️</div>
+      <div class="body"><div class="title">隐私政策查看</div><div class="sub">我们如何收集与保护你的数据</div></div>
+      <span class="ds-icon-btn">›</span>
+    </a>
   </section>
 
-  <!-- Tab 4: 显示 -->
+  <!-- Tab 4: 偏好（V20-M · §7.4：语言 / 主题 / 字号 / 自动播放 / 语音） -->
   <section id="tab-4" class="settings-section" style="display:none;">
     <div class="settings-row">
+      <div class="ico">🌍</div>
+      <div class="body"><div class="title">语言设置</div><div class="sub">简体中文 · 繁體中文 · English</div></div>
+      <div class="ds-segmented-v2"><div class="ds-segmented-v2-item" data-active="1">简</div><div class="ds-segmented-v2-item">繁</div><div class="ds-segmented-v2-item">EN</div></div>
+    </div>
+    <div class="settings-row">
       <div class="ico">🌗</div>
-      <div class="body"><div class="title">深色模式</div><div class="sub">默认开启 · 适合长时间阅读</div></div>
-      <div class="ds-switch" data-checked="1" onclick="this.dataset.checked=this.dataset.checked==='1'?'':'1'"></div>
+      <div class="body"><div class="title">主题设置</div><div class="sub">深色 / 浅色 · 默认深色，适合长时间阅读</div></div>
+      <div class="ds-segmented-v2"><div class="ds-segmented-v2-item" data-active="1">深色</div><div class="ds-segmented-v2-item">浅色</div></div>
     </div>
     <div class="settings-row">
       <div class="ico">📏</div>
-      <div class="body"><div class="title">字号</div><div class="sub">小 · 标准 · 大 · 超大</div></div>
+      <div class="body"><div class="title">字号设置</div><div class="sub">小 · 标准 · 大 · 超大</div></div>
       <div class="ds-segmented-v2"><div class="ds-segmented-v2-item">小</div><div class="ds-segmented-v2-item" data-active="1">标准</div><div class="ds-segmented-v2-item">大</div><div class="ds-segmented-v2-item">超大</div></div>
+    </div>
+    <div class="settings-row">
+      <div class="ico">▶️</div>
+      <div class="body"><div class="title">自动播放设置</div><div class="sub">对话自动逐条播放（打字机模式）</div></div>
+      <div class="ds-switch" data-checked="1" onclick="this.dataset.checked=this.dataset.checked==='1'?'':'1'"></div>
+    </div>
+    <div class="settings-row" onclick="switchTab(5)" style="cursor:pointer;">
+      <div class="ico">🔊</div>
+      <div class="body"><div class="title">语音设置</div><div class="sub">主音量 · 背景音乐 · 语音输入 ›</div></div>
+      <span class="ds-icon-btn">›</span>
     </div>
     <div class="settings-row">
       <div class="ico">🎨</div>
@@ -212,8 +263,36 @@
     </div>
   </section>
 
-  <!-- Tab 7: 法律（附录·第五章·通用法律中心 · 10 份） -->
+  <!-- Tab 7: 数据管理（V20-M · §7.5：导出 JSON / 清缓存 / 记忆管理 / 对话历史） -->
   <section id="tab-7" class="settings-section" style="display:none;">
+    <div class="ds-callout" data-type="info" style="margin-bottom:12px;">
+      <span class="ico">🗄️</span>
+      <div class="body"><strong>数据管理：</strong>导出、清理与删除你的个人数据。</div>
+    </div>
+    <div class="settings-row">
+      <div class="ico">📤</div>
+      <div class="body"><div class="title">数据导出</div><div class="sub">导出全部个人数据为 JSON（资料 / 资产 / 进度 / 记忆）</div></div>
+      <button class="ds-btn ds-btn-sm ds-btn-ghost" onclick="exportAllData()">导出</button>
+    </div>
+    <div class="settings-row">
+      <div class="ico">🧹</div>
+      <div class="body"><div class="title">清除缓存</div><div class="sub">清理图片与临时文件 · 不影响账号数据</div></div>
+      <button class="ds-btn ds-btn-sm ds-btn-ghost" onclick="clearCache()">清理</button>
+    </div>
+    <a href="memory.html" class="settings-row" style="text-decoration:none;">
+      <div class="ico">🧠</div>
+      <div class="body"><div class="title">记忆管理</div><div class="sub">查看 / 编辑 / 删除与角色的互动记忆</div></div>
+      <span class="ds-icon-btn">›</span>
+    </a>
+    <a href="chat.html" class="settings-row" style="text-decoration:none;">
+      <div class="ico">💬</div>
+      <div class="body"><div class="title">对话历史管理</div><div class="sub">按角色查看与清空聊天记录</div></div>
+      <span class="ds-icon-btn">›</span>
+    </a>
+  </section>
+
+  <!-- Tab 8: 法律（附录·第五章·通用法律中心 · 10 份） -->
+  <section id="tab-8" class="settings-section" style="display:none;">
     <div class="ds-callout" data-type="info" style="margin-bottom:12px;">
       <span class="ico">⚖️</span>
       <div class="body"><strong>附录·第五章 · 通用法律中心</strong><br/>10 份合规文书 · 所有用户必读</div>
@@ -255,8 +334,8 @@
     </a>
   </section>
 
-  <!-- Tab 8: 关于 -->
-  <section id="tab-8" class="settings-section" style="display:none;">
+  <!-- Tab 9: 关于 -->
+  <section id="tab-9" class="settings-section" style="display:none;">
     <div style="text-align:center;padding:24px 0;">
       <div style="font-family:var(--font-display);font-size:32px;font-weight:700;background:linear-gradient(135deg,#e8c75a,#f6a6d8,#8b7cf6);-webkit-background-clip:text;background-clip:text;color:transparent;">灵境 · 双生</div>
       <div style="font-size:13px;color:rgba(255,255,255,.6);margin-top:6px;">一个角色，两种人生</div>
@@ -271,6 +350,22 @@
       <div class="ico">🛡️</div>
       <div class="body"><div class="title">隐私政策</div><div class="sub">我们如何保护你的数据</div></div>
       <a href="#legal-privacy" class="ds-btn ds-btn-sm ds-btn-ghost">查看</a>
+    </div>
+    <!-- V20-M · §8.3 关于我们：版本 / 更新日志 / 社群 / 商务 -->
+    <div class="settings-row">
+      <div class="ico">📜</div>
+      <div class="body"><div class="title">更新日志</div><div class="sub">V20-L · 功能区对照补齐 24 项（2026-09-12）</div></div>
+      <span class="ds-icon-btn">›</span>
+    </div>
+    <div class="settings-row">
+      <div class="ico">🌐</div>
+      <div class="body"><div class="title">官方社群入口</div><div class="sub">读者群 · 创作者群 · 灵境同城会</div></div>
+      <span class="ds-icon-btn">›</span>
+    </div>
+    <div class="settings-row">
+      <div class="ico">🤝</div>
+      <div class="body"><div class="title">商务合作</div><div class="sub">bd@lingjing.example · IP 授权 / 联运</div></div>
+      <span class="ds-icon-btn">›</span>
     </div>
   </section>
 </div>
@@ -288,15 +383,41 @@
 <script>
 function switchTab(i) {
   document.querySelectorAll('.settings-tab').forEach((t, idx) => t.dataset.active = (idx === i ? '1' : ''));
-  for(let j = 0; j < 9; j++) {
+  for(let j = 0; j < 10; j++) {
     const el = document.getElementById('tab-' + j);
     if(el) el.style.display = (j === i ? '' : 'none');
   }
 }
+// V20-M · §7.5 数据管理动作
+function exportAllData() {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.indexOf('lingjing') === 0) data[k] = localStorage.getItem(k);
+  }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify({ exported_at: new Date().toISOString(), app: 'lingjing-shuangsheng', data }, null, 2)], { type: 'application/json' }));
+  a.download = 'lingjing-my-data.json';
+  a.click();
+}
+function clearCache() {
+  // 演示：仅清理截图缓存标记，不动账号数据
+  localStorage.setItem('lingjing_v52x_cache_cleared_at', String(Date.now()));
+  showToast('success', '缓存已清理', '账号数据与阅读进度不受影响');
+}
+function showToast(type, title, msg) {
+  let c = document.getElementById('lj-settings-toast');
+  if (!c) { c = document.createElement('div'); c.id = 'lj-settings-toast'; c.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:999;'; document.body.appendChild(c); }
+  const t = document.createElement('div');
+  t.style.cssText = 'margin-top:8px;padding:10px 18px;border-radius:10px;background:#16213E;border:1px solid rgba(124,246,192,.4);color:#7cf6c0;font-size:12px;box-shadow:0 8px 24px rgba(0,0,0,.4)';
+  t.textContent = '✓ ' + title + (msg ? ' · ' + msg : '');
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
 // 默认定位到 hash
 window.addEventListener('DOMContentLoaded', () => {
   const hash = location.hash.replace('#','');
-  const map = { account:0, security:1, notification:2, privacy:3, display:4, sound:5, ai:6, legal:7, about:8 };
+  const map = { account:0, security:1, notification:2, privacy:3, display:4, sound:5, ai:6, data:7, export:7, legal:8, about:9, 'legal-terms':8, 'legal-privacy':8, 'legal-minor':8, 'legal-ai':8, 'legal-cancel':8, profile:0 };
   if(map[hash] !== undefined) switchTab(map[hash]);
 });
 </script>

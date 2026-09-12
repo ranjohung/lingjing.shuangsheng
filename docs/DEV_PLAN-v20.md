@@ -241,3 +241,41 @@ V20-A 公版库 → B 收费点 → C 启动页 → D 钱包 → E tabbar → F 
 - O-1 通用小说世界引擎（最高优先，plot-runner 目前仅支持 4 本 mock + 三国）
 - O-8 测试债 12 套过期期望 / O-9 plot-runner 无独立绿套件（本轮 v18c 已部分补齐）
 - 聊天职业问答为规则引擎 mock，接真 LLM 时替换 `buildReply()`（保留 window.AIHelper 钩子约束）
+
+---
+
+## V20-M · 「我的」功能区完整重做（2026-09-12 已交付）
+
+> 需求：《"我的"功能区完整设计文档》（`docs/sources/2026-09-12/S02-v20m-me-tab-design-doc.txt`）
+> 目标：七区块结构 + 编辑资料/收藏/我的作品/我的角色/我的世界/我的卡牌六新页 + 钱包/设置/商业页升级；只加不删。
+
+### 改动文件（11）
+
+| 文件 | 改动 |
+|---|---|
+| `me.html` | **重写**：七区块（个人信息/资产总览/我的内容/创作者中心/订阅消费/设置/法律帮助）+ 底部退出/注销（30 天后悔期弹窗）；保留 `#logout-btn`/`#v20f-list-account`/`v20l-list-creator`/`v20l-t-infringe` 既有选择器 |
+| `profile-edit.html` | **新建**：9 项编辑 + 头像选择 + 弹窗绑定手机/邮箱 + 保存 `lingjing_user_profile` |
+| `favorites.html` | **新建**：四 Tab 收藏 + 筛选 + `<dialog>` 取消收藏（`lingjing_v52x_favs`） |
+| `my-works.html` | **新建**：4 状态 Tab + 作品卡（字数/状态/收益） |
+| `my-characters.html` | **新建**：[创]/[双]角标 + 双生筛选 + 亲密度 |
+| `my-worlds.html` | **新建**：游玩中（进度条+继续游玩）/ 已完成 |
+| `my-cards.html` | **新建**：稀有度 5 档 + 来源筛选 + 详情（分享/设为背景） |
+| `wallet.html` | 8 Tab + 充值 6 档 + 消费 50 条 + 充值/灵玉记录 + 提现区 + hash 路由（hashchange）+ 光斑 pointer-events 修复 |
+| `settings.html` | 10 Tab（+数据管理）+ 隐私 6 项 + 通知 5 开关 + 偏好 5 项 + 关于 4 项 |
+| `commerce.html` | `#earnings`/`#dashboard` 锚点 + 数据看板 5 指标 + 明细三视图 + CSV 导出（window.LJEarn 桥接修复作用域） |
+| `product-preview.html` | v20.13 镜像 + 我的区 mock 更新 |
+
+### 测试
+
+- 新增 `scripts/test_v20m_me_tab.py`：**43/43 PASS**（覆盖设计文档 §十一 全部验收 + 0 pageerror）
+- 修复 2 套：v17a（splash 预置跳过，9/9）、v20l #19 期望更新（29/29）
+- 回归 11 套绿：v17a/v17g/v20e/v20f/v20g/v20i/v20l/v20m/v514/v5172/v519
+- v516_ux / v517 / v641_shell / v518_regression 维持 O-8 测试债登记（非本轮引入）
+
+### 本轮沉淀的坑（已入 MEMORY）
+
+1. **同页 hash 跳转**：Playwright `goto` 到已加载页面的纯 hash 变体不触发重载 → hash 路由必须同时监听 `hashchange`
+2. **装饰伪元素拦截点击**：`::before/::after` 大尺寸光斑会盖住按钮 → 装饰性伪元素一律 `pointer-events:none`
+3. **IIFE 作用域**：外层 DOMContentLoaded 引用 IIFE 内函数 = ReferenceError → 用 `window.XXX` 桥接暴露
+4. **id 笔误静默白屏**：`kd-mask` vs `kc-mask`——DOMContentLoaded 中途抛错后后面的绑定和 render() 全不执行且无显性报错 → 新页必须逐 id 核对 + 动态审计
+5. **探测端口**：8765 根目录是 output/preview，`/output/preview/xxx` 会 404 → 探测一律用 8767（仓库根）

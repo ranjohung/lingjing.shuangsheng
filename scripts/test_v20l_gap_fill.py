@@ -185,7 +185,7 @@ with sync_playwright() as p:
     page.wait_for_timeout(500)
     cd = page.evaluate("var s=document.getElementById('creator-data-section'); s ? getComputedStyle(s).display : 'missing'")
     cd_items = page.evaluate("[...document.querySelectorAll('[data-page-node-id=v20l-list-creator] .t')].map(x=>x.textContent)")
-    check('19. 创作数据区（作品/收益/提现）', cd != 'none' and cd_items == ['作品列表', '收益明细', '提现入口'], f'{cd}/{cd_items}')
+    check('19. 创作数据区（作品/收益/提现/看板）', cd != 'none' and cd_items == ['作品列表', '收益明细', '提现入口', '创作数据看板'], f'{cd}/{cd_items}')
     infringe = page.evaluate("var t=document.querySelector('[data-page-node-id=v20l-t-infringe]'); !!t && t.textContent === '侵权投诉'")
     check('20. 法律区侵权投诉', infringe)
 

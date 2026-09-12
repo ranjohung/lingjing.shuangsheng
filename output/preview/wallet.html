@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>钱包 · 灵境 · 双生</title>
-<meta name="description" content="附录·灵境法则 · 钱包 · 6 Tab：余额/充值/订阅/交易/明细/提现" />
+<meta name="description" content="V20-M · 钱包 · 8 Tab：余额/充值(6档)/订阅/消费记录(50条)/充值记录/灵玉获取/灵晶明细/提现" />
 <meta name="theme-color" content="#0d0b22" />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/design-system.css" />
@@ -17,8 +17,8 @@
     position:relative;overflow:hidden;
     box-shadow:var(--shadow-xl);
   }
-  .balance-card::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(232,199,90,.4) 0%,transparent 70%);}
-  .balance-card::after{content:'';position:absolute;bottom:-30px;left:30%;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(139,124,246,.25) 0%,transparent 70%);}
+  .balance-card::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(232,199,90,.4) 0%,transparent 70%);pointer-events:none;}
+  .balance-card::after{content:'';position:absolute;bottom:-30px;left:30%;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(139,124,246,.25) 0%,transparent 70%);pointer-events:none;}
   .balance-card .label{font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;}
   .balance-card .value{font-family:var(--font-display);font-size:48px;font-weight:700;line-height:1.2;margin-top:8px;display:flex;align-items:baseline;gap:8px;}
   .balance-card .value .ico{font-size:24px;}
@@ -88,14 +88,16 @@
     </div>
   </div>
 
-  <!-- 6 Tab 切换 -->
+  <!-- 8 Tab 切换（V20-M · 设计文档 §3.2：余额 / 充值 / 订阅 / 消费记录(50条) / 充值记录 / 灵玉获取 / 提现） -->
   <div class="wallet-tabs">
     <div class="wallet-tab" data-active="1" onclick="switchTab(0)">余额</div>
     <div class="wallet-tab" onclick="switchTab(1)">充值</div>
     <div class="wallet-tab" onclick="switchTab(2)">订阅</div>
-    <div class="wallet-tab" onclick="switchTab(3)">交易记录</div>
-    <div class="wallet-tab" onclick="switchTab(4)">灵晶明细</div>
-    <div class="wallet-tab" onclick="switchTab(5)">提现</div>
+    <div class="wallet-tab" onclick="switchTab(3)">消费记录</div>
+    <div class="wallet-tab" onclick="switchTab(4)">充值记录</div>
+    <div class="wallet-tab" onclick="switchTab(5)">灵玉获取</div>
+    <div class="wallet-tab" onclick="switchTab(6)">灵晶明细</div>
+    <div class="wallet-tab" onclick="switchTab(7)">提现</div>
   </div>
 
   <!-- Tab 0: 余额 -->
@@ -135,10 +137,20 @@
         <div style="font-family:var(--font-display);font-size:24px;font-weight:700;color:#fff;margin:4px 0;">300 灵晶</div>
         <div class="ds-tag ds-tag-violet">+30 赠送</div>
       </button>
+      <button class="ds-card ds-hover-lift ds-press-scale" style="padding:16px;text-align:left;cursor:pointer;" onclick="recharge(680,'68元')">
+        <div style="font-size:11px;color:rgba(255,255,255,.5);">¥68</div>
+        <div style="font-family:var(--font-display);font-size:24px;font-weight:700;color:#fff;margin:4px 0;">680 灵晶</div>
+        <div class="ds-tag ds-tag-cyan">+80 赠送</div>
+      </button>
       <button class="ds-card ds-hover-lift ds-press-scale" style="padding:16px;text-align:left;cursor:pointer;" onclick="recharge(1280,'128元')">
         <div style="font-size:11px;color:rgba(255,255,255,.5);">¥128</div>
         <div style="font-family:var(--font-display);font-size:24px;font-weight:700;color:#fff;margin:4px 0;">1,280 灵晶</div>
         <div class="ds-tag ds-tag-gold">+280 赠送</div>
+      </button>
+      <button class="ds-card ds-hover-lift ds-press-scale" style="padding:16px;text-align:left;cursor:pointer;" onclick="recharge(3280,'328元')">
+        <div style="font-size:11px;color:rgba(255,255,255,.5);">¥328</div>
+        <div style="font-family:var(--font-display);font-size:24px;font-weight:700;color:#fff;margin:4px 0;">3,280 灵晶</div>
+        <div class="ds-tag ds-tag-gold">+780 赠送</div>
       </button>
       <button class="ds-card ds-hover-lift ds-press-scale" style="padding:16px;text-align:left;cursor:pointer;" onclick="recharge(6480,'648元')">
         <div style="font-size:11px;color:rgba(255,255,255,.5);">¥648</div>
@@ -176,32 +188,75 @@
     </div>
   </section>
 
-  <!-- Tab 3: 交易记录 -->
+  <!-- Tab 3: 消费记录（V20-M · 最近 50 条，JS 生成） -->
   <section id="tab-3" class="wallet-section" style="display:none;">
+    <div class="ds-callout" data-type="info" style="margin-bottom:12px;">
+      <span class="ico">💳</span>
+      <div class="body">最近 50 条消费记录 · 灵晶 / 灵玉 / 订阅消费统一展示</div>
+    </div>
+    <div id="consume-list"><!-- JS 生成 50 条 --></div>
+  </section>
+
+  <!-- Tab 4: 充值记录（V20-M · 设计文档 §3.2） -->
+  <section id="tab-4" class="wallet-section" style="display:none;">
     <div class="wallet-row">
-      <div class="ico">💬</div>
-      <div class="body"><div class="title">语音通话（阿岁）</div><div class="sub">9-10 21:30</div></div>
-      <div class="amount expense">-30</div>
+      <div class="ico">💎</div>
+      <div class="body"><div class="title">灵晶充值 · ¥128</div><div class="sub">2026-09-08 20:14 · 微信支付 · 赠送 280</div></div>
+      <div class="amount">+1,280</div>
+    </div>
+    <div class="wallet-row">
+      <div class="ico">💎</div>
+      <div class="body"><div class="title">灵晶充值 · ¥30</div><div class="sub">2026-08-21 09:32 · 支付宝 · 赠送 30</div></div>
+      <div class="amount">+300</div>
+    </div>
+    <div class="wallet-row">
+      <div class="ico">💎</div>
+      <div class="body"><div class="title">灵晶充值 · ¥6</div><div class="sub">2026-08-01 12:05 · 苹果内购 · 新人首充</div></div>
+      <div class="amount">+60</div>
+    </div>
+    <div class="wallet-row">
+      <div class="ico">👑</div>
+      <div class="body"><div class="title">月卡订阅 · ¥18</div><div class="sub">2026-09-04 08:00 · 微信支付自动续费</div></div>
+      <div class="amount">订阅</div>
+    </div>
+    <p style="font-size:11px;color:rgba(255,255,255,.4);padding:8px 4px;">7 天内未使用的充值可全额退款，详见 <a href="settings.html#legal" style="color:var(--brand-gold);">法律中心</a>。</p>
+  </section>
+
+  <!-- Tab 5: 灵玉获取记录（签到 / 任务 / 活动） -->
+  <section id="tab-5" class="wallet-section" style="display:none;">
+    <div class="ds-callout" data-type="info" style="margin-bottom:12px;">
+      <span class="ico">🪙</span>
+      <div class="body">灵玉为免费货币：签到 · 每日任务 · 活动奖励获取，不可充值</div>
     </div>
     <div class="wallet-row">
       <div class="ico">📅</div>
-      <div class="body"><div class="title">每日签到奖励</div><div class="sub">9-10 09:00</div></div>
-      <div class="amount">+50</div>
+      <div class="body"><div class="title">每日签到</div><div class="sub">2026-09-12 06:00 · 连续 5 天</div></div>
+      <div class="amount" style="color:#7cf6c0;">+50 灵玉</div>
     </div>
     <div class="wallet-row">
-      <div class="ico">🌉</div>
-      <div class="body"><div class="title">双界穿梭（凌霜）</div><div class="sub">9-09 14:22</div></div>
-      <div class="amount expense">-800</div>
+      <div class="ico">🎬</div>
+      <div class="body"><div class="title">看视频领灵晶任务</div><div class="sub">2026-09-11 21:18 · 每日福利</div></div>
+      <div class="amount" style="color:#7cf6c0;">+5 灵晶</div>
     </div>
     <div class="wallet-row">
-      <div class="ico">📚</div>
-      <div class="body"><div class="title">阅读章节解锁</div><div class="sub">9-09 10:15</div></div>
-      <div class="amount expense">-20</div>
+      <div class="ico">🏆</div>
+      <div class="body"><div class="title">创世杯活动奖励</div><div class="sub">2026-09-10 18:00 · 投票瓜分</div></div>
+      <div class="amount" style="color:#7cf6c0;">+200 灵玉</div>
+    </div>
+    <div class="wallet-row">
+      <div class="ico">📖</div>
+      <div class="body"><div class="title">世界更新提醒任务</div><div class="sub">2026-09-09 10:00 · 每日任务</div></div>
+      <div class="amount" style="color:#7cf6c0;">+20 灵玉</div>
+    </div>
+    <div class="wallet-row">
+      <div class="ico">💌</div>
+      <div class="body"><div class="title">角色互动任务 · 阿岁</div><div class="sub">2026-09-08 22:40 · 陪聊 10 分钟</div></div>
+      <div class="amount" style="color:#7cf6c0;">+30 灵玉</div>
     </div>
   </section>
 
-  <!-- Tab 4: 灵晶明细 -->
-  <section id="tab-4" class="wallet-section" style="display:none;">
+  <!-- Tab 6: 灵晶明细 -->
+  <section id="tab-6" class="wallet-section" style="display:none;">
     <div class="ds-callout" data-type="info" style="margin-bottom:12px;">
       <span class="ico">ℹ️</span>
       <div class="body"><strong>灵晶来源：</strong>签到 · 任务 · 创作奖励 · 充值 · 退款<br/><strong>消耗：</strong>语音 · 视频 · 章节解锁 · 双界穿梭 · 立绘</div>
@@ -209,15 +264,27 @@
     <p style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.7;padding:0 4px;">灵晶仅限平台内使用，不可提现为法币。订阅费用按月/年扣除，中途取消不退还已支付部分。具体规则见 <a href="settings.html#legal" style="color:var(--brand-gold);">附录·法律中心</a>。</p>
   </section>
 
-  <!-- Tab 5: 提现 -->
-  <section id="tab-5" class="wallet-section" style="display:none;">
-    <div class="ds-state-card" data-state="error">
-      <div class="illustration">🚧</div>
-      <div class="title">创作者提现 · 暂未开放</div>
-      <div class="desc">提现功能需要完成实名 + 税务信息 + 银行账户绑定，预计 v6.4 上线。</div>
-      <div class="actions">
-        <a href="creator-center.html" class="ds-btn ds-btn-primary">去创作者中心</a>
-      </div>
+  <!-- Tab 7: 提现（V20-M · 设计文档 §5.4：可提现余额 / 申请 / 记录 / 规则） -->
+  <section id="tab-7" class="wallet-section" style="display:none;">
+    <div class="ds-card" style="padding:18px;margin-bottom:12px;border-color:rgba(124,246,192,.25);">
+      <div style="font-size:11px;color:rgba(255,255,255,.5);">可提现余额（已结算创作者分成）</div>
+      <div style="font-family:var(--font-display);font-size:36px;font-weight:700;color:#7cf6c0;margin-top:6px;">¥ 1,720</div>
+      <button class="ds-btn ds-btn-primary ds-press-scale" style="margin-top:12px;" onclick="applyWithdraw()">申请提现</button>
+    </div>
+    <h3 style="font-size:13px;color:rgba(255,255,255,.6);margin:16px 0 10px;">提现记录</h3>
+    <div class="wallet-row">
+      <div class="ico">🏦</div>
+      <div class="body"><div class="title">提现 ¥3,000</div><div class="sub">2026-08-30 · 招商银行 ****8821 · 已到账</div></div>
+      <span class="ds-status-pill" data-status="active">成功</span>
+    </div>
+    <div class="wallet-row">
+      <div class="ico">🏦</div>
+      <div class="body"><div class="title">提现 ¥2,400</div><div class="sub">2026-08-15 · 招商银行 ****8821 · 已到账</div></div>
+      <span class="ds-status-pill" data-status="active">成功</span>
+    </div>
+    <div class="ds-callout" data-type="info" style="margin-top:14px;">
+      <span class="ico">📐</span>
+      <div class="body"><strong>提现规则：</strong>① 单笔 ≥ ¥100，每月最多 4 次；② T+3 个工作日到账；③ 需完成实名认证与税务信息登记；④ 手续费 1%（L4 钻石及以上创作者免手续费）。</div>
     </div>
   </section>
 </div>
@@ -237,12 +304,58 @@
 <script>
 function switchTab(i) {
   document.querySelectorAll('.wallet-tab').forEach((t, idx) => t.dataset.active = (idx === i ? '1' : ''));
-  for(let j = 0; j < 6; j++) document.getElementById('tab-' + j).style.display = (j === i ? '' : 'none');
+  for(let j = 0; j < 8; j++) {
+    const el = document.getElementById('tab-' + j);
+    if (el) el.style.display = (j === i ? '' : 'none');
+  }
 }
 function recharge(num, money) {
   showToast('success', '已发起支付', '支付 ¥' + money.replace('元','') + ' · ' + num + ' 灵晶');
 }
 function openRecharge() { switchTab(1); }
+function applyWithdraw() {
+  showToast('success', '提现申请已提交', '¥1,720 · T+3 个工作日到账');
+}
+/* ---------- V20-M · 消费记录 50 条（设计文档 §3.2） ---------- */
+function genConsumeList() {
+  const box = document.getElementById('consume-list');
+  if (!box || box.childElementCount > 0) return;
+  const tpl = [
+    { ico: '💬', t: '语音通话（阿岁）', c: '灵晶', fee: 30 },
+    { ico: '📚', t: '阅读章节解锁 · 长夜城 第5章', c: '灵晶', fee: 20 },
+    { ico: '🌉', t: '双界穿梭（凌霜）', c: '灵晶', fee: 800 },
+    { ico: '🎨', t: '立绘高级款 · 苏晚', c: '灵晶', fee: 120 },
+    { ico: '✨', t: 'AI 辅助续写', c: '灵晶', fee: 10 },
+    { ico: '🃏', t: '命运卡牌抽卡', c: '灵玉', fee: 100 },
+    { ico: '👗', t: '角色衣柜 · 阿岁冬装', c: '灵玉', fee: 150 },
+    { ico: '👑', t: '月卡订阅自动续费', c: '订阅', fee: 18 },
+  ];
+  let html = '';
+  for (let i = 0; i < 50; i++) {
+    const r = tpl[i % tpl.length];
+    const d = new Date(2026, 8, 12 - Math.floor(i / 3), 9 + (i % 12), (i * 17) % 60);
+    const dateStr = `${d.getMonth()+1}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    html += `
+    <div class="wallet-row">
+      <div class="ico">${r.ico}</div>
+      <div class="body"><div class="title">${r.t}</div><div class="sub">${dateStr} · ${r.c}</div></div>
+      <div class="amount expense">- ${r.fee}</div>
+    </div>`;
+  }
+  box.innerHTML = html;
+}
+// V20-M · hash 路由：#tab-N 直达 / #sub 订阅（同页 hash 变化也响应）
+function applyHashRoute() {
+  const h = location.hash.replace('#','');
+  if (/^tab-\d$/.test(h)) switchTab(parseInt(h.slice(4), 10));
+  else if (h === 'sub' || h === 'subscribe') { switchTab(2); document.getElementById('subscribe')?.scrollIntoView({behavior:'smooth'}); }
+  else if (h === 'withdraw') switchTab(7);
+}
+window.addEventListener('DOMContentLoaded', () => {
+  genConsumeList();
+  applyHashRoute();
+});
+window.addEventListener('hashchange', applyHashRoute);
 function showToast(type, title, msg) {
   const c = document.getElementById('toast-container');
   const icons = { success: '✓', warning: '⚠', danger: '✕', info: 'ℹ' };

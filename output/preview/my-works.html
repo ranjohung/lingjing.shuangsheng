@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>我的作品 · 灵境 · 双生</title>
+<meta name="description" content="V20-M · 我的作品 · 已发布 / 草稿箱 / 审核中 / 已下架 · 作品管理" />
+<meta name="theme-color" content="#0d0b22" />
+<link rel="stylesheet" href="css/shell-v64.css" />
+<style>
+.mw-page{padding-bottom:32px}
+.mw-tabs{display:flex;gap:4px;padding:4px;margin:14px var(--margin);background:var(--card);border:1px solid var(--line);border-radius:12px}
+.mw-tab{flex:1;padding:9px 0;text-align:center;font-size:13px;color:var(--sub);border-radius:9px;cursor:pointer}
+.mw-tab.on{background:linear-gradient(135deg,#FFB347,#E94560);color:#fff;font-weight:600}
+.mw-list{margin:0 var(--margin);display:flex;flex-direction:column;gap:10px}
+.mw-item{display:flex;gap:12px;padding:12px 14px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);text-decoration:none;color:inherit}
+.mw-item .cov{width:56px;height:76px;border-radius:10px;flex-shrink:0;display:grid;place-items:center;font-size:26px}
+.mw-item .body{flex:1;min-width:0}
+.mw-item .t{font-size:14px;font-weight:600}
+.mw-item .s{font-size:11px;color:var(--sub);margin-top:4px;line-height:1.7}
+.mw-item .st{display:inline-block;font-size:10px;padding:2px 8px;border-radius:6px;margin-top:6px;font-weight:600}
+.st.published{background:rgba(78,204,163,.16);color:var(--ok)}
+.st.draft{background:rgba(255,255,255,.08);color:var(--sub)}
+.st.review{background:rgba(255,179,71,.16);color:var(--warn)}
+.st.offline{background:rgba(233,69,96,.14);color:var(--accent)}
+.mw-item .earn{font-size:12px;color:var(--warn);font-weight:600;text-align:right;flex-shrink:0}
+.mw-item .arr{font-size:16px;color:rgba(160,160,176,.4);align-self:center}
+.mw-new{
+  display:block;margin:14px var(--margin) 0;padding:13px 0;border-radius:12px;text-align:center;
+  border:1px dashed rgba(255,179,71,.5);color:var(--warn);font-size:14px;font-weight:600;text-decoration:none;
+}
+.mw-empty{margin:40px var(--margin);text-align:center;color:var(--sub);font-size:13px;line-height:2}
+</style>
+<link rel="stylesheet" href="css/mobile-lock.css" />
+</head>
+<body>
+<div id="app" class="mw-page">
+  <header class="topbar">
+    <a class="icon-btn" href="me.html" title="返回">‹</a>
+    <div class="topbar-title"><span class="dot"></span>我的作品</div>
+    <div class="topbar-acts"><span style="font-size:11px;color:var(--sub);align-self:center">仅创作者可见</span></div>
+  </header>
+
+  <main>
+    <!-- 4 状态 Tab（设计文档 §4.1） -->
+    <div class="mw-tabs" id="mw-tabs">
+      <div class="mw-tab on" data-st="published">已发布</div>
+      <div class="mw-tab" data-st="draft">草稿箱</div>
+      <div class="mw-tab" data-st="review">审核中</div>
+      <div class="mw-tab" data-st="offline">已下架</div>
+    </div>
+    <div class="mw-list" id="mw-list"></div>
+    <div class="mw-empty" id="mw-empty" style="display:none">该状态下暂无作品<br/>去灵境工坊开启新的创作吧</div>
+    <a class="mw-new" href="novel-edit.html">✍️ 新建作品 · 进入灵境工坊</a>
+  </main>
+</div>
+
+<div id="toast"></div>
+<script>
+function showToast(kind, title, msg){
+  var c = document.getElementById('toast');
+  var t = document.createElement('div');
+  t.className = 'toast-item ' + (kind || 'ok');
+  t.innerHTML = '<span class="ti"></span><span><b>' + title + '</b>' + (msg ? '<span style="opacity:.65"> · ' + msg + '</span>' : '') + '</span>';
+  c.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 3000);
+}
+/* 作品数据：封面 / 书名 / 字数 / 状态 / 收益（设计文档 §4.1） */
+var WORKS = [
+  { st: 'published', emoji: '🌙', bg: 'linear-gradient(160deg,#2E3A6E,#4A3A8C)', title: '长夜城', words: '48.2 万字', info: '悬疑灵异 · 连载中 · 更新至第 5 章', earn: '9,860 灵晶', href: 'creator-center.html#works' },
+  { st: 'published', emoji: '🗡️', bg: 'linear-gradient(160deg,#6E5A2E,#8C7A3A)', title: '山河故人', words: '22.7 万字', info: '古风 · 已完结 · 4 个收费点', earn: '2,940 灵晶', href: 'creator-center.html#works' },
+  { st: 'draft', emoji: '🤖', bg: 'linear-gradient(160deg,#3A4A6E,#5B6B9E)', title: '赛博前夜（草稿）', words: '1.3 万字', info: '科幻 · 大纲完成 60% · 3 天前编辑', earn: '—', href: 'novel-edit.html' },
+  { st: 'draft', emoji: '📜', bg: 'linear-gradient(160deg,#4A3A6E,#6C5A8C)', title: '无名书稿', words: '0.2 万字', info: '未设题材 · 仅开头 2 段', earn: '—', href: 'novel-edit.html' },
+  { st: 'review', emoji: '🌸', bg: 'linear-gradient(160deg,#1F5C4D,#2E8B6E)', title: '深海回声 · 改版', words: '31.0 万字', info: '提交于 09-11 · 预计 48 小时内出结果', earn: '—', href: 'creator-center.html#works' },
+  { st: 'offline', emoji: '🕯️', bg: 'linear-gradient(160deg,#5A2E3A,#7A3A4A)', title: '旧日灯火', words: '8.9 万字', info: '因含未授权素材于 08-30 下架 · 可申诉', earn: '412 灵晶', href: 'creator-legal.html' }
+];
+var ST_NAMES = { published: '已发布', draft: '草稿', review: '审核中', offline: '已下架' };
+var curSt = 'published';
+
+function render() {
+  var list = WORKS.filter(function (w) { return w.st === curSt; });
+  var box = document.getElementById('mw-list');
+  box.innerHTML = '';
+  document.getElementById('mw-empty').style.display = list.length ? 'none' : '';
+  list.forEach(function (w) {
+    var a = document.createElement('a');
+    a.className = 'mw-item'; a.href = w.href;
+    a.innerHTML =
+      '<div class="cov" style="background:' + w.bg + '">' + w.emoji + '</div>' +
+      '<div class="body">' +
+        '<div class="t">' + w.title + '</div>' +
+        '<div class="s">' + w.words + ' · ' + w.info + '</div>' +
+        '<span class="st ' + w.st + '">' + ST_NAMES[w.st] + '</span>' +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end">' +
+        '<span class="earn">' + w.earn + '</span><span class="arr">›</span>' +
+      '</div>';
+    box.appendChild(a);
+  });
+}
+document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('mw-tabs').addEventListener('click', function (ev) {
+    var t = ev.target.closest('.mw-tab');
+    if (!t) return;
+    curSt = t.dataset.st;
+    this.querySelectorAll('.mw-tab').forEach(function (x) { x.classList.remove('on'); });
+    t.classList.add('on');
+    render();
+  });
+  render();
+});
+</script>
+<script src="js/tabbar.js"></script>
+</body>
+</html>
