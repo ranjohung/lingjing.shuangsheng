@@ -311,3 +311,50 @@ V20-A 公版库 → B 收费点 → C 启动页 → D 钱包 → E tabbar → F 
 
 v20i 13 / v20l 29 / v20m 43 / v20n 39 — **全绿**（124 PASS / 0 FAIL）
 XEOF\necho DEVPLAN-done
+
+---
+
+## V20-Q · 三国演义·真人摄影风格小说世界（2026-09-12 13:30 · commit 9c1690b）
+
+### 1. 用户反馈与方向
+> 继续开发小说世界游戏，我要真人摄影风格的真实场景画面
+
+决策：本机 SD（majicMIX realisticv7）+ 预生成 24 张图 + sanguo-world.html 视觉升级
+
+### 2. 实施步骤
+- 探测 SD WebUI 7860 → 列模型 → 选 majicMIX realisticv7
+- 测 1 张 prompt → 真人写实·古风·电影感符合需求
+- 设计 24 张图 prompt（12 卷封面 + 12 关键回主图）
+- 写 `scripts/gen_sanguo_photoreal.py` 批量调用 `/sdapi/v1/txt2img`
+- 升级 sanguo-world.html（4 处变更）
+
+### 3. sanguo-world.html 升级点（574 → 658 行）
+1. JS 新增 SG_SCENES 映射表 + sgSceneUrl() + sgFallbackGradient() 12 色 fallback
+2. HTML 加 `<div class="sg-hero-bg" id="sg-hero-bg">` 卷一封面背景
+3. CSS 加 `.sg-hero-bg`（cover + opacity .85 + z-index 0）+ `.sg-hero::after` 暗色叠加
+4. CSS 加 `.sg-vol-thumb`（54x72 cover + 渐变蒙层）
+5. JS 改 renderCatalog() 每卷加缩略图
+6. CSS 加 `.sg-chapter-img` + `.sg-chapter-caption`
+7. JS 改 renderChapter() 12 关键回顶部加主图
+8. JS 加 initHeroBg() 启动时初始化 Hero 背景图
+
+### 4. 关键决策
+- **保留所有收费点/双轨经济**：卷 20💎 + 全书券 128💎 + 阅读券 10 灵玉兑 1 张 + 签到 +10 灵玉/日 100% 保留
+- **fallback 策略**：图加载失败时仍显示 12 色渐变（不破坏 layout）
+- **图片路径**：`../../assets/scenes/sg_*.jpg`（assets 在仓库根）
+- **HTTP server**：8767（仓库根）保证 assets/scenes/ 可达
+
+### 5. 测试结果（test_v20q_sanguo_photoreal.py）
+38 PASS / 0 FAIL / 0 PageError
+- 静态：24/24 张图存在 · 13.8MB
+- 主页：Hero + 12 卷缩略图（全部含 sg_v URL）
+- 钱包：灵玉 100 / 灵晶 1000（充足测全部付费点）
+- 签到 + 阅读券 + 买卷 + 买全书券 + 关键回主图 + 非关键回无图
+
+### 6. 回归（全套 v20）
+v20i 13 + v20l 29 + v20m 43 + v20n 39 + **v20q 38** = **162 PASS / 0 FAIL**
+
+### 7. 沉淀坑（复用）
+1. **批量生图脚本必须 stdout 每张状态**，否则超时判断困难（log 实时可见 6-7s/张）
+2. **Playwright `add_init_script` 预置钱包状态**：直接写 localStorage 简化付费测试
+3. **付费回访问**：必须先 buyVol/buyPass，否则 readChapter() 触发未解锁弹窗而非主图（v20q 第 1 跑踩坑 → 加 buyPass 后修复）
