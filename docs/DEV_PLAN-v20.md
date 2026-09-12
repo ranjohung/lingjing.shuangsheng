@@ -279,3 +279,35 @@ V20-A 公版库 → B 收费点 → C 启动页 → D 钱包 → E tabbar → F 
 3. **IIFE 作用域**：外层 DOMContentLoaded 引用 IIFE 内函数 = ReferenceError → 用 `window.XXX` 桥接暴露
 4. **id 笔误静默白屏**：`kd-mask` vs `kc-mask`——DOMContentLoaded 中途抛错后后面的绑定和 render() 全不执行且无显性报错 → 新页必须逐 id 核对 + 动态审计
 5. **探测端口**：8765 根目录是 output/preview，`/output/preview/xxx` 会 404 → 探测一律用 8767（仓库根）
+
+---
+
+## V20-N · 「我的」Tab 按键逐项实测审计（2026-09-12 已交付）
+
+### 改动文件（3）
+
+| 文件 | 改动 |
+|---|---|
+| `scripts/test_v20n_my_tab.py` | **新建**：Playwright 真点击 39 项断言（me.html 七区块 + 6 子页 + wallet/settings/commerce 关键元素） |
+| `scripts/screenshot_v20n_xinyu.py` 等 3 个 probe 脚本 | 用完即删，留下正式测试套件 |
+| `docs/MY_TAB_AUDIT_2026-09-12.md` | **新建**：39 项 PASS 报告 + 实测抓出的 4 类选择器笔误 |
+
+### 测试结论
+
+**V20-N 「我的」按键审计：39 PASS · 通过**
+
+无 0 FAIL、0 PageError、0 console error，覆盖 10 张页面：
+- me.html 七区块 + 6 跳转入口真点击
+- profile-edit 9 编辑字段 + 保存按钮
+- 4 张「我的内容」子页关键元素
+- wallet/settings/commerce 关键锚点
+
+### 本轮沉淀的坑（写入 MEMORY.md）
+
+1. **JS 数组里 `#xxx` 写法 → 解析为 private field**：`[#v20m-item-works, ...]` 报语法错，必须用字符串数组 + map/filter：`() => ['id1','id2'].map(s => !!document.getElementById(s))`
+2. **审计脚本选择器笔误 ≠ 功能缺失**：`#pe-sig` 实际是 `#pe-sign`；`.mc-card` 是 mc-list 容器类名——功能本来在，是测试写错了。先 Read 实际 HTML 再写 assertion
+
+### 受影响回归
+
+v20i 13 / v20l 29 / v20m 43 / v20n 39 — **全绿**（124 PASS / 0 FAIL）
+XEOF\necho DEVPLAN-done

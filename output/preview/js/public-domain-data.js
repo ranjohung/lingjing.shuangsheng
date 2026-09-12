@@ -70,7 +70,7 @@
       monetization: { chapterLocks: 12, choiceLocks: 4, bonusLocks: 2, avgPrice: 14 } },
     { id: 'shishuo', title: '世说新语', author: '刘义庆', source: '文硕阁',
       cover: 'linear-gradient(135deg,#DEB887,#D2B48C)', emoji: '📜',
-      integrity: { size: 237, chapters: 1, words: 61736, keepRate: 1.0, conclusion: 'pass', real: true },
+      integrity: { size: 237, chapters: 1130, words: 61736, keepRate: 1.0, conclusion: 'pass', real: true },
       monetization: { chapterLocks: 50, choiceLocks: 8, bonusLocks: 3, avgPrice: 10 } },
     { id: 'shiji', title: '史记', author: '司马迁', source: '文硕阁',
       cover: 'linear-gradient(135deg,#800000,#8B0000)', emoji: '👑',

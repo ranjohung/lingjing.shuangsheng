@@ -361,3 +361,31 @@ V20-A 完成后预期：
 ### V20.x 工作包台账（累计 13 包）
 
 V20-A 公版库 → B 收费点 → C 启动页 → D 钱包 → E tabbar → F 退出登录 → G 全局锁定 → H 真实语料 → I 接口审查 → J 游玩链路 → K 分类扩充 → L 功能区对照补齐 → **M 「我的」功能区完整重做（本轮）**
+
+---
+
+## 十三、V20-N · 「我的」Tab 全按键实测审计（2026-09-12 交付）
+
+> 需求驱动：用户要求"挨个功能区挨个按键都做好了吗"，不能凭印象回。
+> 测试脚本：`scripts/test_v20n_my_tab.py`（Playwright 真点击 + DOM 存在性断言）
+> 报告：`docs/MY_TAB_AUDIT_2026-09-12.md`
+
+### 交付：39 PASS / 0 FAIL / 0 PageError
+
+10 张页面 39 项审计点全 PASS：
+- me.html 七区块 + 6 个跳转入口（作品/角色/世界/卡牌/收藏/钱包）真点击 → URL 全部正确
+- profile-edit 9 项编辑字段 + 保存
+- my-works 4 状态 Tab / my-characters 10 角色 + [创]/[双]角标 / my-worlds 进度条 / my-cards 5 档稀有度 + 详情弹窗 + 设背景（写入 `lingjing_v52x_profile_bg`）
+- wallet 8 Tab + 6 档充值 / settings 10 Tab / commerce `#earnings`/`#dashboard` 锚点
+
+### 测试期间发现并修复的选择器笔误（4 类）
+
+| 误用 | 实际 | 备注 |
+|---|---|---|
+| `#pe-sig` | `#pe-sign` | profile-edit 签名 |
+| `#pe-region` | `#pe-location` | profile-edit 所在地 |
+| `.mc-card` | `.mc-list / .mc-item` | my-characters 角色卡容器 |
+| `.mw-progress` | `.wp-bar / .wp-fill` | my-worlds 进度条 |
+
+> 设计文档 §十一验收的 11 条全部 PASS，0 pageerror，0 console error。
+EOF\necho PRD-appended
