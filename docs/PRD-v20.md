@@ -461,3 +461,48 @@ EOF\necho PRD-appended
 3. **门控 onclick 写法**：用 `event.preventDefault()` + `LJRealname.gate(this.href)`（保留 href 让右键/中键打开新窗口时仍可工作）
 
 **回归**：v20u 20 + v20i 13 + v20m 43 + v20n 39 + v20q 38 = **153 PASS / 0 FAIL**
+
+## 十七、V20-V · 通用小说世界引擎 MVP（2026-09-13 09:30）
+
+**背景**：用户上传 50 张「田间记」参考图，明确要求「通用小说世界」：根据上传 txt 自动分章节 + 解析收费点 + 解析道具 + 自动生成玩法（作者可手动覆盖）。
+
+**铁律**（V20-T + §十八）：
+- 货币：灵晶/灵玉（绝不允许田间记的「丸子/铜钱」出现在 UI）
+- 视觉：默认古风插画（田间记样板），保留 V20-Q 三国作为「真人写实」模板
+- 场景可点击交互：所有道具/人物 hotzone 可点；选项按钮只在系统级菜单用
+
+**交付**：
+1. **`corpus/books/demo-taohuayuan.txt`** — 6 章示例小说（含全部 7 种标注）
+2. **`output/preview/js/novel-game-parser.js`**（150 行 · 通用解析器）
+   - 行内标注：`## 章名` / `### 场景：名` / `「角色」对话` / `{道具:name}` / `{人物:name}` / `[选项A|选项B]` / `【收费章节：N灵晶】`
+   - 输出：`{title, chapters[{title, cost, scenes[{name, blocks[{type,...}]}]}]}`
+3. **`output/preview/js/novel-game.js`**（320 行 · 控制器）
+   - 模式：upload / chapters / stage
+   - 上传：FileReader 读 txt → 解析 → 章节列表
+   - 章节列表：6 章卡片网格（免费/付费标签 + 锁定状态）
+   - 进入章节：检查 cost → 未付弹付费弹窗 → 付费扣灵晶 → 写 paidChaps → flatBlocks 逐 block 渲染
+   - 主视图：场景图（letterboxed 古风渐变）+ hotzone（道具/人物）+ 上卷轴对话框 + 下选项按钮
+   - 抽屉交互：点击 hotzone → 道具「🔍查看/放入背包/丢弃」+ 人物「💬对话/🎁赠送/🚶离开」
+   - FAB：背包（实时显示物品）+ 存档（写 localStorage）
+   - 钱包：💎灵晶 + 🟢灵玉（V20-Q 货币体系）
+4. **`output/preview/novel-game.html`**（280 行 · 独立页 · letterboxed 古风视觉）
+   - 顶栏 / 上传页 / 章节列表 / 主视图 / 付费弹窗 / 交互抽屉 / 状态浮动 / FAB / Toast
+   - 暗色主题 + 古风金色（#E8C36A）+ 灵境红（#E94560）+ 心屿紫（#6C5CE7）
+
+**测试**（`scripts/test_v20v_novel_game.py` · 26/26 PASS · 0 FAIL · 0 PageError）：
+- A. 上传页 → 加载示例 → 章节列表（5 项）
+- B. 第一章进 stage + 选项 + 道具识别 + NPC 识别（3 项）
+- C. hotzone 出现 + 点击打开交互抽屉 + 关闭（3 项）
+- D. 选项按钮推进 blockIdx（1 项）
+- E. 付费弹窗 + 取消 + 付费扣灵晶 + 写 paidChaps + 再入不重复扣（7 项）
+- G. 背包 FAB + 物品显示（2 项）
+- H. 存档 FAB + localStorage 写入（1 项）
+- I. 帮助弹窗（1 项）
+- J. 解析器单元测试（2 项：5 类 block + cost 解析）
+
+**累计回归**：v20v 26 + v20u 20 + v20i 13 + v20m 43 + v20n 39 + v20q 38 = **179 PASS / 0 FAIL**
+
+**沉淀坑**：
+1. **测试断言错位（不是产品 bug）**：测试代码推 N 次后断言第 N+1 块是什么时，必须**实际查文本**而不是凭推断
+2. **hotzone click 超时**：场景层与对话框层在 flex column，hotzone 是 absolute 定位，但 selector click 偶尔被对话框挡住 → 用 `page.mouse.click(x, y)` 坐标点击绕开
+3. **evaluate JS 字符串嵌套**：`localStorage.getItem(...)` 在 Python 字符串里嵌 `Math.abs(...)` 容易少括号 → 简化为 `Object.keys(localStorage).some(k=>k.includes('_progress'))`

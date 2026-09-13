@@ -1,0 +1,140 @@
+{
+  "results": [
+    {
+      "item": "上传页默认显示",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "加载示例后进入章节列表",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "小说标题正确: 示例小说 · 桃花源记",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "章节卡片数 = 6",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "付费章节标签数 = 4",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "点击第一章进入 stage",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "出现 1 个选项按钮",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "NPC 块识别 · 白衣女子",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "场景 hotzone 数 = 2",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "点击 hotzone 打开交互抽屉",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "抽屉可关闭",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "按钮点击 blockIdx 推进 5→6",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "第一章完成 → 自动回章节列表",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "点击付费章节弹付费弹窗",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "付费弹窗显示价格 20 灵晶",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "取消按钮关闭付费弹窗",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "付费扣 20 灵晶（200→180）",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "付费后进入 stage",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "已付费章节再次进入不弹付费弹窗",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "已付费章节不再扣灵晶 ({\"crystal\":180,\"jade\":10})",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "点击背包 FAB 打开背包抽屉",
+      "result": "PASS",
+      "ev": "title=🎒 我的背包"
+    },
+    {
+      "item": "背包显示 1 件物品",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "存档写入 localStorage",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "帮助弹窗显示标注说明",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "解析器识别 5 类 block · types=['item', 'npc', 'dialog', 'choice', 'paid_gate']",
+      "result": "PASS",
+      "ev": ""
+    },
+    {
+      "item": "章节收费解析 · cost=10",
+      "result": "PASS",
+      "ev": ""
+    }
+  ],
+  "errs": [],
+  "summary": {
+    "total": 26,
+    "pass": 26,
+    "fail": 0
+  }
+}

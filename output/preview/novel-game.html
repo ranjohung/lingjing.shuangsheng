@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>V20-V · 通用小说世界引擎</title>
+<meta name="description" content="V20-V · 上传 txt 自动分章节 + 行内标注（收费/道具/选项/人物）+ 场景可点击交互 + 古风视觉风格" />
+<meta name="theme-color" content="#1A1A2E" />
+<link rel="stylesheet" href="css/mobile-lock.css" />
+<style>
+/* =====================================================================
+ * V20-V · 通用小说世界 · letterboxed 古风视觉风格（田间记样板）
+ * ===================================================================== */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#1A1A2E;--panel:#16213E;--line:rgba(255,255,255,.08);
+  --primary:#E94560;--gold:#E8C36A;--purple:#6C5CE7;--green:#00B894;
+  --text:#F0EAD6;--sub:rgba(240,234,214,.65);--muted:rgba(240,234,214,.4);
+  --scene-w: 100%;--scene-h: 60vh;--choice-h: 36vh;
+}
+html,body{background:#0A0A14;color:var(--text);font-family:"Songti SC","STZhongsong","Source Han Serif SC",serif;font-size:14px;line-height:1.6;height:100vh;overflow:hidden}
+body{max-width:480px;margin:0 auto;position:relative}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;font-size:inherit;color:inherit;background:none;border:none;cursor:pointer}
+
+/* 顶栏 */
+.ng-top{position:fixed;top:0;left:0;right:0;z-index:50;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:linear-gradient(180deg,rgba(10,10,20,.95),rgba(10,10,20,.7));backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.ng-top-title{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;max-width:60vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ng-top-title::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.ng-top-acts{display:flex;gap:8px}
+.ng-top-acts button{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:14px}
+
+/* 上传栏（首页） */
+.ng-upload{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;padding:24px;text-align:center;gap:18px}
+.ng-upload h1{font-size:22px;color:var(--gold);letter-spacing:4px;font-weight:600}
+.ng-upload .slogan{font-size:13px;color:var(--sub);margin-top:-8px}
+.ng-upload .icon{font-size:64px;margin:24px 0;filter:drop-shadow(0 4px 12px rgba(232,195,106,.4))}
+.ng-upload .picker{padding:12px 28px;border-radius:24px;background:linear-gradient(135deg,var(--primary),#D63A55);color:#fff;font-size:14px;font-weight:500;display:inline-flex;align-items:center;gap:8px;cursor:pointer;transition:transform .15s}
+.ng-upload .picker:active{transform:scale(.96)}
+.ng-upload .picker input{display:none}
+.ng-upload .demo-btn{padding:10px 22px;border-radius:24px;background:rgba(232,195,106,.15);border:1px solid rgba(232,195,106,.4);color:var(--gold);font-size:13px;cursor:pointer}
+.ng-upload .help{margin-top:auto;font-size:11px;color:var(--muted);line-height:1.7}
+.ng-upload .help b{color:var(--sub)}
+
+/* 章节列表 */
+.ng-chapters{position:absolute;top:44px;bottom:0;left:0;right:0;overflow-y:auto;padding:16px 14px 80px}
+.ng-book{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.ng-book h2{font-size:17px;color:var(--gold);margin-bottom:6px;letter-spacing:2px}
+.ng-book .meta{display:flex;gap:10px;font-size:11px;color:var(--muted);margin-bottom:14px}
+.ng-book .meta .badge{padding:2px 8px;border-radius:4px;background:rgba(255,179,71,.2);color:#FFB347}
+.ng-book .meta .badge.free{background:rgba(0,184,148,.18);color:var(--green)}
+.ng-ch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.ng-ch-card{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;transition:transform .15s,background .15s}
+.ng-ch-card:active{transform:scale(.97);background:rgba(255,255,255,.08)}
+.ng-ch-card .no{font-size:11px;color:var(--muted);margin-bottom:4px}
+.ng-ch-card .ttl{font-size:13px;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:6px}
+.ng-ch-card .tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;background:rgba(232,195,106,.2);color:var(--gold)}
+.ng-ch-card .tag.free{background:rgba(0,184,148,.18);color:var(--green)}
+.ng-ch-card.locked{opacity:.55}
+.ng-ch-card.locked .tag{background:rgba(233,69,96,.2);color:var(--primary)}
+
+/* 游戏主视图（letterboxed 居中） */
+.ng-stage{position:absolute;top:44px;bottom:0;left:0;right:0;display:none;flex-direction:column;background:#000}
+.ng-stage.active{display:flex}
+
+/* 场景图（上半）*/
+.ng-scene{flex:1;position:relative;overflow:hidden;background:#000}
+.ng-scene-img{position:absolute;inset:0;background:linear-gradient(160deg,#2A2438 0%,#1A2438 50%,#0F1B2A 100%);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.4);font-size:13px;letter-spacing:4px}
+.ng-scene-img::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(232,195,106,.12),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(108,92,231,.15),transparent 50%)}
+.ng-scene-img span{position:relative;z-index:1;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+/* 道具 / 人物 hotzone（场景可点击交互）*/
+.ng-hot{position:absolute;display:flex;align-items:center;justify-content:center;padding:6px 12px;border-radius:18px;background:rgba(0,0,0,.5);border:1px solid rgba(232,195,106,.5);color:var(--gold);font-size:12px;cursor:pointer;transition:all .2s;backdrop-filter:blur(4px);z-index:5}
+.ng-hot:active{transform:scale(.94);background:rgba(232,195,106,.3)}
+.ng-hot.npc{border-color:rgba(108,92,231,.6);color:#B5A6FF}
+.ng-hot .ico{margin-right:4px;font-size:13px}
+
+/* 上方卷轴对话框 */
+.ng-dialog{padding:14px 18px;background:linear-gradient(180deg,rgba(22,33,62,.96),rgba(22,33,62,.85));border-bottom:1px solid var(--line);max-height:30vh;overflow-y:auto}
+.ng-dialog .speaker{font-size:11px;color:var(--gold);margin-bottom:4px;letter-spacing:2px}
+.ng-dialog .speaker.npc::before{content:'◆ ';color:var(--purple)}
+.ng-dialog .speaker.nar::before{content:'❀ ';color:var(--sub)}
+.ng-dialog .text{font-size:14px;line-height:1.7;color:var(--text)}
+.ng-dialog .text.npc{color:#E0D5FF}
+
+/* 收费点弹窗 */
+.ng-paid-mask{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}
+.ng-paid-mask.open{display:flex}
+.ng-paid-card{background:linear-gradient(160deg,#fff5dc,#fff);border-radius:14px;padding:22px 18px;width:86%;max-width:340px;text-align:center;color:#333;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.ng-paid-card h3{font-size:17px;margin-bottom:8px;color:var(--primary)}
+.ng-paid-card .desc{font-size:13px;color:#666;line-height:1.6;margin-bottom:14px}
+.ng-paid-card .price{font-size:30px;color:var(--primary);font-weight:600;margin:10px 0}
+.ng-paid-card .price small{font-size:14px;color:#999;font-weight:400}
+.ng-paid-card .actions{display:flex;gap:10px;margin-top:14px}
+.ng-paid-card .actions button{flex:1;padding:10px 0;border-radius:22px;font-size:14px;font-weight:500;border:none;cursor:pointer}
+.ng-paid-card .btn-cancel{background:#f3f3f3;color:#666}
+.ng-paid-card .btn-pay{background:linear-gradient(135deg,var(--primary),#D63A55);color:#fff}
+
+/* 选项按钮（下半） */
+.ng-choices{padding:14px 18px;background:linear-gradient(0deg,rgba(10,10,20,.96),rgba(10,10,20,.7));display:flex;flex-direction:column;gap:10px;max-height:36vh;overflow-y:auto}
+.ng-choice{padding:12px 16px;border-radius:22px;border:1px solid rgba(232,195,106,.4);background:rgba(232,195,106,.08);color:var(--gold);font-size:14px;text-align:left;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:space-between}
+.ng-choice:active{transform:scale(.97);background:rgba(232,195,106,.18)}
+.ng-choice::before{content:'◆';margin-right:10px;color:rgba(232,195,106,.6);font-size:10px}
+.ng-choice::after{content:'›';font-size:18px;color:rgba(232,195,106,.5)}
+.ng-choice.alt{border-color:rgba(108,92,231,.4);background:rgba(108,92,231,.08);color:#B5A6FF}
+.ng-choice.alt::before{color:rgba(108,92,231,.6)}
+.ng-choice.alt::after{color:rgba(108,92,231,.5)}
+
+/* 物品栏 / 主角状态（右上角浮动） */
+.ng-status{position:absolute;top:54px;right:14px;z-index:6;display:flex;flex-direction:column;gap:6px}
+.ng-status .coin{padding:4px 10px;border-radius:12px;background:rgba(0,0,0,.55);border:1px solid rgba(232,195,106,.4);font-size:11px;color:var(--gold);display:flex;align-items:center;gap:4px;backdrop-filter:blur(6px)}
+.ng-status .coin.jade{border-color:rgba(0,184,148,.4);color:var(--green)}
+
+/* 背包 / 交互面板（抽屉） */
+.ng-drawer-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:70;display:none;align-items:flex-end;justify-content:center}
+.ng-drawer-mask.open{display:flex}
+.ng-drawer{background:var(--panel);border-top-left-radius:18px;border-top-right-radius:18px;width:100%;max-width:480px;padding:18px;max-height:70vh;overflow-y:auto;border-top:1px solid var(--line)}
+.ng-drawer h3{font-size:14px;color:var(--gold);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.ng-drawer h3 .close{cursor:pointer;opacity:.6;font-size:18px}
+.ng-items{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.ng-item{padding:8px;border-radius:8px;background:rgba(255,255,255,.04);text-align:center;font-size:11px;color:var(--sub);border:1px solid var(--line)}
+.ng-item .ico{font-size:18px;margin-bottom:4px;display:block}
+.ng-empty{color:var(--muted);font-size:12px;text-align:center;padding:14px}
+.ng-npc-action{padding:12px;border-radius:10px;background:rgba(108,92,231,.1);border:1px solid rgba(108,92,231,.3);color:#B5A6FF;font-size:13px;margin-bottom:8px;cursor:pointer;text-align:center}
+
+/* 进度 */
+.ng-progress{position:absolute;top:44px;left:0;right:0;height:2px;background:rgba(255,255,255,.05);z-index:51}
+.ng-progress-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--primary));transition:width .4s ease}
+
+/* 浮动右下角按钮 */
+.ng-fab{position:absolute;bottom:80px;right:14px;z-index:60;display:flex;flex-direction:column;gap:8px}
+.ng-fab button{width:44px;height:44px;border-radius:50%;background:rgba(22,33,62,.95);border:1px solid var(--line);color:var(--gold);font-size:18px;box-shadow:0 6px 20px rgba(0,0,0,.5);backdrop-filter:blur(8px);cursor:pointer;transition:transform .15s}
+.ng-fab button:active{transform:scale(.92)}
+.ng-fab button[disabled]{opacity:.3;cursor:not-allowed}
+
+/* Toast */
+#ng-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:max-content;max-width:86vw}
+.ng-toast-item{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:10px;font-size:13px;background:rgba(28,37,66,.96);border:1px solid rgba(255,255,255,.15);color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:toastIn .35s cubic-bezier(.16,1,.3,1) both}
+@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.ng-toast-item .dot{width:8px;height:8px;border-radius:50%}
+.ng-toast-item.ok .dot{background:#4ECCA3}
+.ng-toast-item.warn .dot{background:#FFB347}
+</style>
+</head>
+<body>
+
+<div class="ng-top">
+  <div class="ng-top-title" id="ng-title">通用小说世界</div>
+  <div class="ng-top-acts">
+    <button id="ng-btn-home" title="返回小说目录">📖</button>
+    <button id="ng-btn-help" title="标注说明">ℹ️</button>
+  </div>
+</div>
+
+<!-- 模式 1：上传页 -->
+<div id="ng-upload-view" class="ng-upload">
+  <div class="icon">📜</div>
+  <h1>通用小说世界</h1>
+  <div class="slogan">上传任意 txt · 系统自动分章节 · 识别行内标注</div>
+  <label class="picker">
+    <input type="file" id="ng-file" accept=".txt" />
+    📁 选择 txt 文件
+  </label>
+  <button class="demo-btn" id="ng-demo">🎯 加载示例：桃花源记</button>
+  <div class="help">
+    <b>支持行内标注：</b><br>
+    <code>## 章名</code> · <code>### 场景：名</code><br>
+    <code>「角色」对话</code> · <code>{道具:古琴}</code> · <code>{人物:女子}</code><br>
+    <code>[选项A|选项B]</code> · <code>【收费章节：20灵晶】</code>
+  </div>
+</div>
+
+<!-- 模式 2：章节列表 -->
+<div id="ng-chapters-view" class="ng-chapters" style="display:none">
+  <div class="ng-book">
+    <h2 id="ng-book-title">书名</h2>
+    <div class="meta">
+      <span class="badge free" id="ng-book-stat">0 章 · 免费</span>
+    </div>
+    <div class="ng-ch-grid" id="ng-ch-grid"></div>
+  </div>
+</div>
+
+<!-- 模式 3：游戏主视图 -->
+<div id="ng-stage" class="ng-stage">
+  <!-- 进度 -->
+  <div class="ng-progress"><div class="ng-progress-bar" id="ng-prog-bar" style="width:0%"></div></div>
+
+  <!-- 浮动状态 -->
+  <div class="ng-status">
+    <div class="coin">💎 <span id="ng-crystal">100</span></div>
+    <div class="coin jade">🟢 <span id="ng-jade">10</span></div>
+  </div>
+
+  <!-- 场景图 -->
+  <div class="ng-scene" id="ng-scene">
+    <div class="ng-scene-img"><span id="ng-scene-name">默认场景</span></div>
+  </div>
+
+  <!-- 浮动右下角按钮 -->
+  <div class="ng-fab">
+    <button id="ng-fab-backpack" title="背包">🎒</button>
+    <button id="ng-fab-save" title="存档">💾</button>
+  </div>
+
+  <!-- 对话框 -->
+  <div class="ng-dialog" id="ng-dialog">
+    <div class="speaker">系统</div>
+    <div class="text">点击章节开始游戏</div>
+  </div>
+
+  <!-- 选项 -->
+  <div class="ng-choices" id="ng-choices"></div>
+</div>
+
+<!-- 收费弹窗 -->
+<div class="ng-paid-mask" id="ng-paid">
+  <div class="ng-paid-card">
+    <h3>📖 解锁章节</h3>
+    <div class="desc" id="ng-paid-chap">第一章 · 标题</div>
+    <div class="price" id="ng-paid-price">20 <small>灵晶</small></div>
+    <div class="actions">
+      <button class="btn-cancel" id="ng-paid-cancel">稍后</button>
+      <button class="btn-pay" id="ng-paid-pay">立即解锁</button>
+    </div>
+  </div>
+</div>
+
+<!-- 交互抽屉（背包 / 人物交互） -->
+<div class="ng-drawer-mask" id="ng-drawer">
+  <div class="ng-drawer">
+    <h3><span id="ng-drawer-title">背包</span><span class="close" id="ng-drawer-close">×</span></h3>
+    <div id="ng-drawer-body"></div>
+  </div>
+</div>
+
+<div id="ng-toast"></div>
+
+<script src="js/novel-game-parser.js"></script>
+<script src="js/novel-game.js"></script>
+</body>
+</html>

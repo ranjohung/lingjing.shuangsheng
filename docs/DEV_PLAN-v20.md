@@ -410,3 +410,66 @@ window.LJRealname.validateId(type, id) → boolean
 2. 正确写法：`if(!localStorage.getItem('k')){localStorage.removeItem('k')}`
 3. 心屿首次进入弹窗（.heart-dialog-mask）拦截测试按钮 → 测试前手动 `.heart-dialog-mask,.heart-dialog` 移除
 4. 验证通用组件是否加载：`typeof window.LJRealname !== 'undefined' && typeof window.LJRealname.gate === 'function'`
+
+---
+
+## V20-V · 通用小说世界引擎 MVP（2026-09-13 09:30 · commit pending）
+
+### 1. 用户指令（V20-T 沉淀）
+> 仔细阅读理解给你的现实世界玩法样式的参考，开始继续开发小说世界要系统可以根据上传的小说和收费章节关卡道具（如果收费点作者没有手动选择系统可以自动生成）自动生成小说世界
+> 所有小说世界场景道具都可以点击场景道具家具建筑图片交互操作像给你的参考人物对话那样除了主页操作按键外其他不点击是场景图片点击是交互操作界面的小说世界
+
+决策（V20-T 22:00 用户已确认）：
+- **视觉风格**：古风插画（田间记样板）= 默认；V20-Q 真人写实三国作为另一模板
+- **引擎路径**：新建 `output/preview/novel-game.html`（独立页 · 上传即玩）
+- **txt 标注格式**：行内标注（用户已确认）
+
+### 2. 实施步骤
+1. 设计 7 种行内标注：`## 章名` / `### 场景：名` / `「角色」对话` / `{道具:name}` / `{人物:name}` / `[选项A|选项B]` / `【收费章节：N灵晶】`
+2. 写示例 txt：`corpus/books/demo-taohuayuan.txt`（6 章 · 含全部标注）
+3. 写解析器 `js/novel-game-parser.js`（150 行）
+4. 写控制器 `js/novel-game.js`（320 行 · upload/chapters/stage 三模式）
+5. 写 `novel-game.html`（280 行 · letterboxed 古风视觉）
+6. 写测试 `test_v20v_novel_game.py`（26 项断言 · 0 FAIL）
+
+### 3. novel-game.js 接口（控制器）
+```js
+window.LJNovelGame = {
+  state(),         // 当前状态 {book, chapIdx, blockIdx, inventory, paidChaps}
+  loadTxt(txt, label),  // 解析并显示章节列表
+  parseNovel(txt)  // 仅解析（测试用）
+}
+```
+
+### 4. novel-game-parser.js 接口（解析器）
+```js
+window.LJNovelParser = {
+  parseNovel(txt),  // txt → {title, chapters[]}
+  flatBlocks(chapter)  // chapter → [block, ...]（合并场景）
+}
+```
+
+### 5. 关键决策
+- **场景图占位**：古风渐变（用户未上传图时显示）；后续可接入 SD 生成场景图
+- **hotzone 随机位置**：`{ left: 20 + Math.random()*60, top: 30 + Math.random()*40 }`
+- **选项按钮 fallback**：每个 block 末尾追加「继续」按钮（防止 block 推不出去）
+- **付费章节持久化**：`lingjing_v520_novel_game_state_<bookHash>` 存 `paid` + `_progress` 存进度
+- **钱包复用 V20-Q**：`lingjing_v520_wallet`（{jade, crystal}）
+- **货币铁律**：UI 中只准出现灵晶/灵玉，禁用丸子/铜钱
+
+### 6. 测试结果（test_v20v_novel_game.py）
+**26 PASS / 0 FAIL / 0 PageError**
+- A. 上传页 → 示例加载 → 章节列表（5 项）
+- B. 第一章进 stage + 选项 + 道具 + NPC（3 项）
+- C. hotzone 可点击 → 抽屉交互 → 关闭（3 项）
+- D. 选项按钮推进 blockIdx（1 项）
+- E. 付费弹窗 + 取消 + 付费扣灵晶 + paidChaps + 不重复扣（7 项）
+- G. 背包 FAB + 物品显示（2 项）
+- H. 存档 FAB + localStorage（1 项）
+- I. 帮助弹窗（1 项）
+- J. 解析器单元测试 5 类 block + cost（2 项）
+
+### 7. 沉淀坑（复用）
+1. **测试断言错位**：测试推 N 次后必须查实际 block.text 而不是凭推断
+2. **hotzone click 超时**：用 `page.mouse.click(x, y)` 坐标点击绕开 selector 解析遮挡
+3. **evaluate JS 字符串嵌套**：避免在 Python 字符串里嵌 `Math.abs(...)` 嵌套函数
