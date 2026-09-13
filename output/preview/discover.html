@@ -71,6 +71,7 @@
   .discover-list-item .metric { font-size:11px; color:rgba(255,255,255,.4); text-align:right; }
 </style>
 <link rel="stylesheet" href="css/mobile-lock.css" />
+<link rel="stylesheet" href="css/tabbar-embed.css" />
 </head>
 <body>
 
@@ -231,14 +232,6 @@
 </div>
 
 <!-- 5 Tab 底部 -->
-<nav class="ds-bottom-tabs">
-  <a class="ds-bottom-tab" href="../../product-preview.html"><span class="ico">🏠</span><span>总览</span></a>
-  <a class="ds-bottom-tab" href="library.html"><span class="ico">📚</span><span>小说世界</span></a>
-  <a class="ds-bottom-tab" href="heart-island.html"><span class="ico">🏝️</span><span>心屿</span></a>
-  <a class="ds-bottom-tab" href="creator-center.html"><span class="ico">✍️</span><span>创作</span></a>
-  <a class="ds-bottom-tab" href="me.html"><span class="ico">👤</span><span>我的</span></a>
-</nav>
-
 <script src="js/db.js"></script>
 <script>
 function switchTab(i) {
@@ -249,5 +242,6 @@ function switchTab(i) {
 }
 try { console.log('[v6.3 discover.html] 加载完成'); } catch(e) {}
 </script>
+<script src="js/tabbar.js"></script>
 </body>
 </html>

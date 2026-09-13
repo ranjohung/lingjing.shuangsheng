@@ -242,3 +242,18 @@ V17-V20 新增页面此前未入目录，现补记：
 创作链路：问卷简报 → 大纲锁定 → 章节规划 → 逐章创作（详 [PRD-v21-novel-sim.md](PRD-v21-novel-sim.md)）。
 
 页面全量清单以 [ALL_FUNCTIONS.md](ALL_FUNCTIONS.md) §2 与 [AUDIT_2026-09-12.md](AUDIT_2026-09-12.md) §四（35 入口审计表）为准。
+
+---
+
+### 补遗三（2026-09-13 · V22-1 真机就绪冲刺）
+
+> 全站 40 页 390×844 真机审计（`scripts/audit_mobile_ready.py`，端口 8793）：blocking=0。
+> 豁免 3：novel-game / sanguo-world（并行开发线）· redesign（v5.9 归档孤儿 0 引用）。
+
+| 卷 · 页面 | 变更 | 说明 |
+|---|---|---|
+| 8 子页（character-create/detail、chat、discover、memory、profile、settings、wallet） | 底栏统一 | 删旧 ds-bottom-tabs → tabbar.js 规范底栏 + `css/tabbar-embed.css` 零破坏嵌入 |
+| 第一卷 · catalog.html | 沉浸页豁免 + 返回 | 不挂 5 Tab（铁律 #4）；header 加移动端 [← 返回 library] |
+| 合规 · legal-view.html | 目录化 | 无 ?doc= 参数渲染 16 法律文档目录（原死胡同）；失败态加返回链接 |
+
+变更明细以 [ALL_FUNCTIONS.md](ALL_FUNCTIONS.md) §16（MR-01~06）为准。

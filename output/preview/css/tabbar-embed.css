@@ -1,0 +1,31 @@
+/* =================================================================
+   灵境 · 双生 v6.4 — 子页 5 Tab 底栏最小嵌入样式（tabbar-embed.css）
+   用途：功能子页（chat/memory/profile/wallet/settings/character-detail/
+   character-create 等）配合 js/tabbar.js 使用，获得与 5 主 Tab 一致的
+   底部导航；不引入整套 shell-v64.css，避免全局 reset 破坏子页样式。
+   铁律 #3 延伸（V22-1 登记）：子页 Tab 视觉与主 Tab 完全一致。
+   ================================================================= */
+.tabbar{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:480px;z-index:200;
+  display:flex;
+  padding:8px 0 calc(8px + env(safe-area-inset-bottom));
+  background:rgba(22,33,62,.94);backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-size:11px;color:#A0A0B0;
+  transition:color .2s;
+}
+.tab .ico{font-size:22px;line-height:1;transition:transform .2s cubic-bezier(.16,1,.3,1)}
+.tab:active .ico{transform:scale(.88)}
+.tab.active{color:#E94560}
+.tab.active .ico{transform:translateY(-1px)}
+.tab.t-world.active{color:#00B894}
+.tab.t-xinyu.active{color:#A29BFE}
+.tab.t-create.active{color:#FFB347}
+
+/* 底栏占位：防止页面内容被固定 tabbar 遮挡 */
+body{padding-bottom:calc(76px + env(safe-area-inset-bottom)) !important}

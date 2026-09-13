@@ -57,6 +57,7 @@
   }
 </style>
 <link rel="stylesheet" href="css/mobile-lock.css" />
+<link rel="stylesheet" href="css/tabbar-embed.css" />
 </head>
 <body>
 
@@ -92,14 +93,6 @@
 </div>
 
 <!-- 5 Tab 底部（V20-L：标签名对齐 v6.4 铁律） -->
-<nav class="ds-bottom-tabs">
-  <a class="ds-bottom-tab" href="../../product-preview.html"><span class="ico">🏠</span><span>首页</span></a>
-  <a class="ds-bottom-tab" href="library.html"><span class="ico">📖</span><span>世界</span></a>
-  <a class="ds-bottom-tab active" href="heart-island.html"><span class="ico">💬</span><span>心屿</span></a>
-  <a class="ds-bottom-tab" href="creator-center.html"><span class="ico">✨</span><span>创作</span></a>
-  <a class="ds-bottom-tab" href="me.html"><span class="ico">👤</span><span>我的</span></a>
-</nav>
-
 <div class="ds-toast-container" id="toast-container"></div>
 
 <script src="js/db.js"></script>
@@ -326,5 +319,6 @@ if (document.readyState === 'loading') {
   initChat();
 }
 </script>
+<script src="js/tabbar.js"></script>
 </body>
 </html>

@@ -38,6 +38,7 @@
   .cc-step-section[data-active="1"]{display:block;}
 </style>
 <link rel="stylesheet" href="css/mobile-lock.css" />
+<link rel="stylesheet" href="css/tabbar-embed.css" />
 </head>
 <body>
 <div class="cc-page">
@@ -284,14 +285,6 @@
 </div>
 
 <!-- 5 Tab 底部 -->
-<nav class="ds-bottom-tabs">
-  <a class="ds-bottom-tab" href="../../product-preview.html"><span class="ico">🏠</span><span>总览</span></a>
-  <a class="ds-bottom-tab" href="library.html"><span class="ico">📚</span><span>小说世界</span></a>
-  <a class="ds-bottom-tab active" href="heart-island.html"><span class="ico">🏝️</span><span>心屿</span></a>
-  <a class="ds-bottom-tab" href="creator-center.html"><span class="ico">✍️</span><span>创作</span></a>
-  <a class="ds-bottom-tab" href="me.html"><span class="ico">👤</span><span>我的</span></a>
-</nav>
-
 <div class="ds-toast-container" id="toast-container"></div>
 
 <script src="js/db.js"></script>
@@ -326,5 +319,6 @@ function showToast(type, title, msg) {
 }
 try { console.log('[v6.3 character-create] 加载完成'); } catch(e) {}
 </script>
+<script src="js/tabbar.js"></script>
 </body>
 </html>

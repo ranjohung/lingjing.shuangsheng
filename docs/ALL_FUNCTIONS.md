@@ -431,3 +431,23 @@ v5.1 各规范为准；v5.6-v6.1 是增量登记。冲突时本表最终裁决�
 
 创作 Tab 内 novel-ai-helper / novel-outline / novel-writer 入口一律
 `window.LJRealname.gate()`（V20-U 铁律：未实名不得直入创作类功能）。
+
+---
+
+## 16. V22-1 真机就绪冲刺：子页 Tab 统一 + 死胡同修复（2026-09-13 登记）
+
+> 背景：全站 40 页 390×844 真机审计（`scripts/audit_mobile_ready.py`，独立端口 8793）。
+> 审计结论：40 页 blocking=0；豁免 3 页（novel-game / sanguo-world 为并行开发线，redesign 为 v5.9 归档孤儿 0 引用）。
+> chat 页 tabbar label 在 Playwright is_mobile 截图中偏移为截图 artifact（DOM 几何 bottom=844 贴底、
+> lblRect 818-836 视口内、桌面模式对照图 label 完整），真机无碍。
+
+| ID | 变更 | 涉及文件 | 说明 |
+|---|---|---|---|
+| MR-01 | 8 子页底栏统一为 tabbar.js 规范 | character-create / character-detail / chat / discover / memory / profile / settings / wallet .html | 删旧 `<nav class="ds-bottom-tabs">`，接 tabbar.js 自动挂载 + active 推断 |
+| MR-02 | tabbar 零破坏嵌入样式 | css/tabbar-embed.css（新） | 自包含 .tabbar 样式 + body padding-bottom 占位；不引整套 shell-v64.css 避免全局 reset 破坏子页 |
+| MR-03 | catalog 归沉浸页豁免 | catalog.html | 只删旧 nav（铁律 #4：沉浸页不挂 5 Tab）；header 加移动端 [← 返回 library] 按钮 |
+| MR-04 | legal-view 无参访问目录化 | legal-view.html | 无 ?doc= 参数时渲染 16 法律文档目录（原为死胡同）；fetch 失败态加 [← 返回目录] |
+| MR-05 | 真机审计脚本 | scripts/audit_mobile_ready.py（新） | 40 页 × (pageerror/console.error/≥400/mobile-lock/空白页/tabbar 存在/返回元素)；自起 8793 隔离并行线 |
+| MR-06 | 测试端口可覆盖 | scripts/test_v21_novel_sim.py | LJ_TEST_PORT 环境变量（默认 8767 不变）；并行会话改根时用 8794 隔离 |
+
+配套开发工具：`scripts/apply_tabbar_embed.py`（幂等批处理：删旧 nav + 插 link/script，已执行完毕留档）。

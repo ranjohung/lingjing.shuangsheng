@@ -4,8 +4,9 @@ V21.0 · 小说辅助模拟器 · 端到端回归测试
   1 大纲锁定  2 章节规划生成/增删改排序  3 AI候选上下文引用  4 候选3-5/换一批/我来说
   5 质检报告5维+颜色  6 PC三栏20/55/25+移动堆叠  7 全流程0破链  8 0第三方平台名+mock
 链路：问卷引导 → 创作简报 → 大纲编辑+锁定 → 章节规划+锁定 → 三栏创作台 → 质检
-自起 8767（仓库根，遵守测试端口铁则）。
+自起 8767（仓库根，遵守测试端口铁则；LJ_TEST_PORT 可覆盖）。
 """
+import os
 import socket
 import subprocess
 import sys
@@ -15,7 +16,9 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 REPO = Path(__file__).resolve().parents[1]
-BASE = "http://localhost:8767"
+# 端口可用 LJ_TEST_PORT 覆盖（并行会话占用 8767 时隔离用），默认 8767
+PORT = int(os.environ.get("LJ_TEST_PORT", "8767"))
+BASE = f"http://localhost:{PORT}"
 PV = REPO / "output" / "preview"
 SHOT = PV / "screenshots" / "v21"
 SHOT.mkdir(parents=True, exist_ok=True)
@@ -36,25 +39,25 @@ def fail(item, ev=""):
 
 def start_server():
     try:
-        s = socket.create_connection(("localhost", 8767), timeout=1)
+        s = socket.create_connection(("localhost", PORT), timeout=1)
         s.close()
-        print("server already on 8767")
+        print(f"server already on {PORT}")
         return None
     except OSError:
         pass
     proc = subprocess.Popen(
-        [sys.executable, "-m", "http.server", "8767"],
+        [sys.executable, "-m", "http.server", str(PORT)],
         cwd=str(REPO), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
     )
     for _ in range(40):
         try:
-            s = socket.create_connection(("localhost", 8767), timeout=1)
+            s = socket.create_connection(("localhost", PORT), timeout=1)
             s.close()
-            print("server started on 8767")
+            print(f"server started on {PORT}")
             return proc
         except OSError:
             time.sleep(0.25)
-    raise RuntimeError("cannot start http.server on 8767")
+    raise RuntimeError(f"cannot start http.server on {PORT}")
 
 
 def within(n, lo, hi):

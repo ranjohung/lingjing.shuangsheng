@@ -37,6 +37,15 @@
   .lv-loading{text-align:center;padding:60px 0;color:rgba(255,255,255,.4);font-size:13px}
   .lv-error{text-align:center;padding:60px 20px;color:rgba(255,255,255,.5)}
   .lv-error .e-ico{font-size:40px;margin-bottom:12px}
+  .lv-doc-list{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+  .lv-doc-item{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:13px 15px;border-radius:12px;text-decoration:none;
+    background:rgba(255,255,255,.05);border:1px solid var(--line);
+    color:rgba(255,255,255,.85);font-size:13.5px;
+  }
+  .lv-doc-item:active{background:rgba(255,255,255,.1)}
+  .lv-doc-arrow{color:rgba(255,255,255,.35);font-size:15px}
 </style>
 </head>
 <body data-page="immersive">
@@ -121,7 +130,11 @@ document.getElementById('lv-back').addEventListener('click', function () {
   var titleEl = document.getElementById('lv-title');
   var bodyEl = document.getElementById('lv-body');
   if (!doc) {
-    bodyEl.innerHTML = '<div class="lv-error"><div class="e-ico">📄</div><div>未指定文档</div></div>';
+    var items = Object.keys(DOC_TITLES).map(function (k) {
+      return '<a class="lv-doc-item" href="?doc=' + k + '">' + esc(DOC_TITLES[k]) + '<span class="lv-doc-arrow">›</span></a>';
+    }).join('');
+    titleEl.textContent = '法律文档 · 目录';
+    bodyEl.innerHTML = '<h1>法律文档</h1><div class="lv-doc-list">' + items + '</div>';
     return;
   }
   titleEl.textContent = DOC_TITLES[doc] || doc;
@@ -133,7 +146,7 @@ document.getElementById('lv-back').addEventListener('click', function () {
     })
     .then(function (md) { bodyEl.innerHTML = md2html(md); })
     .catch(function () {
-      bodyEl.innerHTML = '<div class="lv-error"><div class="e-ico">⚠️</div><div>文档加载失败</div><div style="font-size:12px;margin-top:6px;opacity:.6">' + esc(doc) + '</div></div>';
+      bodyEl.innerHTML = '<div class="lv-error"><div class="e-ico">⚠️</div><div>文档加载失败</div><div style="font-size:12px;margin-top:6px;opacity:.6">' + esc(doc) + '</div><a href="?" style="display:inline-block;margin-top:14px;color:#8b7cf6;font-size:12.5px;">← 返回法律文档目录</a></div>';
     });
 })();
 </script>
