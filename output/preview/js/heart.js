@@ -353,8 +353,12 @@
     });
     var createBtn = $('#heart-create');
     if (createBtn) createBtn.addEventListener('click', function () {
-      // V20-L 设计文档 §4.2：创建新角色 → 角色创建向导（character-create.html 7 层向导）
-      window.location.href = 'character-create.html';
+      // V20-U · 通用实名门控：未实名前必须先填实名信息（合规要求）
+      if (window.LJRealname) {
+        window.LJRealname.gate('character-create.html');
+      } else {
+        window.location.href = 'character-create.html';
+      }
     });
     // 处理 #accompany hash 直接跳到陪伴
     if (window.location.hash === '#accompany') setSub('accompany');

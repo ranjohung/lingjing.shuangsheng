@@ -426,3 +426,38 @@ EOF\necho PRD-appended
 - 非关键回无章顶主图（正确）
 
 **回归**：v20q 38/38 + v20i 13 + v20l 29 + v20m 43 + v20n 39 = **162 PASS / 0 FAIL**
+
+## 十六、V20-U · 通用实名门控（2026-09-13 08:50）
+
+**背景**：用户原话：「客户点击世界功能区的小说介绍图片先看到这个介绍页。使命认证这个之前实名过不体现。心屿功能区创建角色和创作功能区创建智能体功能区点击后没有实名的用户也弹出实名操作对话框」
+
+**铁律**：未实名前严禁直接进入创作类功能（合规要求）；已实名用户在 UI 中**不显示**实名元素。
+
+**交付**：
+1. **`output/preview/js/realname-gate.js`**（240 行 · 通用组件）— 提供 `window.LJRealname.gate(target, opts)` 接口
+   - 已实名 → 直接跳转（不弹窗）
+   - 未实名 → 弹通用 modal（实名认证通知 + 真实姓名 + 证件类型三选 + 证件号码 + 3 条注意事项 + 取消/提交）
+   - 校验：姓名 2-20 字 / 身份证 18 位（含 X）/ 港澳台居住证 8-18 位字母数字 / 护照 5-20 位字母数字
+   - 提交后写入 `lingjing_v519_realname_done=true` + `lingjing_v519_realname_info`（含 name/type/idLast4/ts）+ tries++
+   - 每日上限 3 次（与 plot-runner 现有规则一致）
+   - 暗色模式自适应（prefers-color-scheme）
+
+2. **`heart-island.html`** — 引入 realname-gate.js；`#heart-create` 按钮 onclick 走 gate
+
+3. **`creator-center.html`** — 引入 realname-gate.js；`a.big-btn.agent` 加 `onclick="event.preventDefault(); LJRealname.gate(this.href)"`
+
+4. **`heart.js`** — bindEvents 内 createBtn.onclick 改走 `LJRealname.gate('character-create.html')`，未加载时降级直跳
+
+**测试**（`scripts/test_v20u_realname_gate.py` · 20/20 PASS · 0 FAIL · 0 PageError）：
+- A. 世界 Tab 30 张卡片 href 全指向 plot-detail.html · 点击成功跳转
+- B. 心屿未实名 → 创建新角色 → modal 弹起 + 姓名长度校验拒绝 + 身份证格式校验拒绝 + 取消按钮关闭 + 提交写入 done + 跳 character-create.html
+- C. 创作未实名 → 创建智能体 → modal 弹起 + 提交写入 done + 跳 character-create.html
+- D. 心屿已实名 → 创建新角色 → modal 不弹 + 直跳 character-create.html
+- E. 创作已实名 → 创建智能体 → modal 不弹 + 直跳 character-create.html
+
+**沉淀坑**：
+1. **测试 init 脚本不能用 `removeItem` 重置已设值**：add_init_script 在每次页面加载时跑（含目标页跳转后），会把刚刚写入的 done 重置掉。**正确写法**：`if(!localStorage.getItem('k')){localStorage.removeItem('k')}`
+2. **首次进入弹窗遮挡测试按钮**：心屿页的 `.heart-dialog-mask` 拦截 #heart-create → 测试前手动 `querySelectorAll('.heart-dialog-mask,.heart-dialog').forEach(n=>n.remove())`
+3. **门控 onclick 写法**：用 `event.preventDefault()` + `LJRealname.gate(this.href)`（保留 href 让右键/中键打开新窗口时仍可工作）
+
+**回归**：v20u 20 + v20i 13 + v20m 43 + v20n 39 + v20q 38 = **153 PASS / 0 FAIL**

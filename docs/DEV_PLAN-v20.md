@@ -358,3 +358,55 @@ v20i 13 + v20l 29 + v20m 43 + v20n 39 + **v20q 38** = **162 PASS / 0 FAIL**
 1. **批量生图脚本必须 stdout 每张状态**，否则超时判断困难（log 实时可见 6-7s/张）
 2. **Playwright `add_init_script` 预置钱包状态**：直接写 localStorage 简化付费测试
 3. **付费回访问**：必须先 buyVol/buyPass，否则 readChapter() 触发未解锁弹窗而非主图（v20q 第 1 跑踩坑 → 加 buyPass 后修复）
+
+---
+
+## V20-U · 通用实名门控（2026-09-13 08:50 · commit pending）
+
+### 1. 用户反馈与方向
+> 客户点击世界功能区的小说介绍图片先看到这个介绍页。使命认证这个之前实名过不体现。心屿功能区创建角色和创作功能区创建智能体功能区点击后没有实名的用户也弹出实名操作对话框
+
+决策：
+- 世界 Tab 小说卡片 → plot-detail.html 介绍页（V20-A 已实现，验证通过）
+- 实名门控：未实名前必须填表 → 复用 plot-runner 现有 modal 样式但抽成独立组件
+- 已实名用户在 UI 中不显示实名元素（铁律）
+
+### 2. 实施步骤
+1. 调查：world 卡片跳转 / heart-create 按钮 / character-create 链接 / 现有实名 modal 4 个落点
+2. 抽取 `js/realname-gate.js` 通用组件（240 行）
+3. 改造 heart.js（创建按钮走 gate）+ creator-center.html（创建智能体走 gate）
+4. 引入 realname-gate.js 到两个 Tab 页面
+5. Playwright 真点击测试 5 场景 / 20 断言
+
+### 3. realname-gate.js 接口
+```js
+window.LJRealname.gate(targetUrl, opts?) → boolean
+  // 已实名 → window.location.href = targetUrl; return true
+  // 未实名 → 弹 modal → 提交后 setItem(STORAGE_DONE, 'true') + 跳 targetUrl
+  // opts.skipTries: 跳过每日 3 次限制（测试用）
+
+window.LJRealname.isDone() → boolean
+window.LJRealname.validateName(s) → boolean
+window.LJRealname.validateId(type, id) → boolean
+```
+
+### 4. 关键决策
+- **不改动 plot-runner.html 现有 modal**：抽成独立组件，让其他页面也能复用
+- **门控 onclick 写法**：`event.preventDefault(); LJRealname.gate(this.href)` — 保留 href 让右键/中键仍可工作
+- **提交后 400ms 延迟跳转**：让 toast 显示给用户看
+- **暗色模式适配**：prefers-color-scheme: dark 用 dark 系列配色
+- **失败兜底**：LJRealname 未加载（脚本顺序问题）时降级直跳目标页
+
+### 5. 测试结果（test_v20u_realname_gate.py）
+**20 PASS / 0 FAIL / 0 PageError**
+- A. 世界卡片 → plot-detail.html（30 张卡片全检 + 1 次点击）
+- B. 心屿未实名 → 创建新角色（8 项断言：LJRealname 加载 + 按钮存在 + modal 弹起 + 姓名长度 + 身份证格式 + 取消关闭 + 提交写入 + 跳转）
+- C. 创作未实名 → 创建智能体（5 项）
+- D. 心屿已实名 → 创建新角色（2 项：不弹 + 直跳）
+- E. 创作已实名 → 创建智能体（2 项）
+
+### 6. 沉淀坑（复用）
+1. 测试 add_init_script 中 `localStorage.removeItem('k')` 会在**每次页面加载**时跑，包括目标页跳转后 → 会把刚写入的值清掉
+2. 正确写法：`if(!localStorage.getItem('k')){localStorage.removeItem('k')}`
+3. 心屿首次进入弹窗（.heart-dialog-mask）拦截测试按钮 → 测试前手动 `.heart-dialog-mask,.heart-dialog` 移除
+4. 验证通用组件是否加载：`typeof window.LJRealname !== 'undefined' && typeof window.LJRealname.gate === 'function'`

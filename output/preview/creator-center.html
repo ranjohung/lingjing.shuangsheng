@@ -190,7 +190,7 @@
     <!-- V20-L 设计文档 §5.2-5.4：开始创作（两个大按钮 + 三个功能按钮 + 更多创建） -->
     <section class="create-hub">
       <div class="big-duo">
-        <a class="big-btn agent" href="character-create.html">
+        <a class="big-btn agent" href="character-create.html" onclick="event.preventDefault(); window.LJRealname && window.LJRealname.gate(this.href);">
           <div class="bi">🪄</div>
           <div class="bt">创建智能体</div>
           <div class="bs">创建新的 AI 角色</div>
@@ -318,5 +318,6 @@ function showToast(kind, title, msg){
 }
 </script>
 <script src="js/tabbar.js" data-page-node-id="v20e-tabbar-mount"></script>
+<script src="js/realname-gate.js"></script>
 </body>
 </html>

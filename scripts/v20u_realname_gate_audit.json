@@ -1,0 +1,110 @@
+{
+  "results": [
+    {
+      "item": "世界 Tab 发现 30 张作品卡片含 plot-detail 链接",
+      "result": "PASS",
+      "evidence": "ds-wf-card count=30"
+    },
+    {
+      "item": "第一张卡片 href 指向 plot-detail.html",
+      "result": "PASS",
+      "evidence": "plot-detail.html?novel=w1"
+    },
+    {
+      "item": "点击世界卡片成功跳转到 plot-detail.html",
+      "result": "PASS",
+      "evidence": "http://localhost:8767/output/preview/plot-detail.html?novel=w1"
+    },
+    {
+      "item": "heart-island.html 已加载 LJRealname 实名门控",
+      "result": "PASS",
+      "evidence": "LJRealname.gate defined"
+    },
+    {
+      "item": "心屿页存在 #heart-create 按钮",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "item": "未实名前点击创建新角色 → modal 弹起",
+      "result": "PASS",
+      "evidence": "rnm-mask.open=true"
+    },
+    {
+      "item": "姓名 1 位被拒绝（modal 仍 open）",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "item": "身份证号 5 位被拒绝（modal 仍 open）",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "item": "点击取消按钮关闭 modal",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "item": "提交成功后写入 lingjing_v519_realname_done=true",
+      "result": "PASS",
+      "evidence": "value=true"
+    },
+    {
+      "item": "提交后跳转到 character-create.html",
+      "result": "PASS",
+      "evidence": "http://localhost:8767/output/preview/character-create.html"
+    },
+    {
+      "item": "creator-center.html 已加载 LJRealname",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "item": "创作页存在 .big-btn.agent 按钮",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "item": "未实名前点击创建智能体 → modal 弹起",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "item": "创作创建智能体 · 提交成功写入 localStorage",
+      "result": "PASS",
+      "evidence": "value=true"
+    },
+    {
+      "item": "创作创建智能体 · 跳转 character-create.html",
+      "result": "PASS",
+      "evidence": "http://localhost:8767/output/preview/character-create.html"
+    },
+    {
+      "item": "已实名前点击 → modal 未弹起",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "item": "已实名前点击 → 直接跳转到 character-create.html",
+      "result": "PASS",
+      "evidence": "http://localhost:8767/output/preview/character-create.html"
+    },
+    {
+      "item": "创作已实名前点击创建智能体 → modal 未弹起",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "item": "创作已实名 → 直接跳转到 character-create.html",
+      "result": "PASS",
+      "evidence": "http://localhost:8767/output/preview/character-create.html"
+    }
+  ],
+  "errs": [],
+  "summary": {
+    "total": 20,
+    "pass": 20,
+    "fail": 0
+  }
+}
