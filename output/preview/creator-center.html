@@ -219,7 +219,9 @@
     <div class="create-hub">
       <div class="workbench">
         <a class="wb-item" href="novel-edit.html"><span class="wi">📝</span><span class="wl">小说编辑器</span></a>
-        <a class="wb-item" href="novel-ai-helper.html"><span class="wi">🤖</span><span class="wl">AI 辅助</span></a>
+        <a class="wb-item" href="novel-ai-helper.html" onclick="event.preventDefault(); window.LJRealname && window.LJRealname.gate(this.href);"><span class="wi">🤖</span><span class="wl">AI 辅助</span></a>
+        <a class="wb-item" href="novel-outline.html" onclick="event.preventDefault(); window.LJRealname && window.LJRealname.gate(this.href);"><span class="wi">🗺️</span><span class="wl">大纲规划</span></a>
+        <a class="wb-item" href="novel-writer.html" onclick="event.preventDefault(); window.LJRealname && window.LJRealname.gate(this.href);"><span class="wi">✍️</span><span class="wl">逐章创作台</span></a>
         <a class="wb-item" href="commerce.html"><span class="wi">💰</span><span class="wl">收费点设置</span></a>
         <a class="wb-item" href="novel-edit.html" onclick="showToast('info','封面设置','在编辑器内上传或 AI 生成封面')"><span class="wi">🖼️</span><span class="wl">封面设置</span></a>
         <a class="wb-item" href="commerce.html"><span class="wi">📤</span><span class="wl">发布管理</span></a>
@@ -258,11 +260,11 @@
     <!-- 3 大功能区 -->
     <h2 class="sec" data-page-node-id="Cp221FhPpoZmJL6vRkvdft">3 大功能区 <a class="more" href="creator-center.html#all" data-page-node-id="Y1A0eqLuFxXJCUAYwhAIBE">查看全部</a></h2>
     <div class="func-grid" data-page-node-id="a88SrcbVBZxkUCQZq0TYy0">
-      <a class="func" href="novel-ai-helper.html" data-page-node-id="uwrFOx1LRTD55aUIJlVZQc">
-        <div class="ico" style="background:linear-gradient(135deg,rgba(255,179,71,.3),rgba(233,69,96,.2))" data-page-node-id="yeNfBk6NQ1MONbfNC7bcyn">📝</div>
-        <div class="t" data-page-node-id="nTJHWQgYAKuYrMlP4lUcA2">小说辅助模拟器</div>
-        <div class="s" data-page-node-id="vlFUrhI3jXRC9CEy3MloAu">28 字段模板 + 12 类提问 + 6 维自动检测</div>
-        <div class="tags" data-page-node-id="w1IWbuDGa7ai24I88NFvgG"><span class="tag" data-page-node-id="T4LFu2F3h8Gs6aXfYLLNp1">28 字段</span><span class="tag" data-page-node-id="MaxLGbBS5HWDnFRARLCL6p">12 提问</span></div>
+      <a class="func" href="novel-ai-helper.html" onclick="event.preventDefault(); window.LJRealname && window.LJRealname.gate(this.href);">
+        <div class="ico" style="background:linear-gradient(135deg,rgba(255,179,71,.3),rgba(233,69,96,.2))">📝</div>
+        <div class="t">小说辅助模拟器</div>
+        <div class="s">对话式引导问卷 → 创作简报 → 大纲锁定 → 章节规划 → 三栏创作台</div>
+        <div class="tags"><span class="tag">V21 引导</span><span class="tag">28 字段专家</span></div>
       </a>
       <a class="func" href="novel-upload.html" data-page-node-id="boMgtRC8FRhlYqLLklxWo4">
         <div class="ico" style="background:linear-gradient(135deg,rgba(78,204,163,.3),rgba(0,184,148,.2))" data-page-node-id="LBFaZwqHGsVHlSRi0GUfKP">📤</div>

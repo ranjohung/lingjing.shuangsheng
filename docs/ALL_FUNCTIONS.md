@@ -391,3 +391,43 @@ S/A/B/C/D 等级
 **任何代码/UI 改动必须先回到本表登记，再动手实现。**
 
 v5.1 各规范为准；v5.6-v6.1 是增量登记。冲突时本表最终裁决。
+
+---
+
+## 15. V21.0 小说辅助模拟器（2026-09-13 登记）
+
+> PRD：[PRD-v21-novel-sim.md](PRD-v21-novel-sim.md) · 开发计划：[DEV_PLAN-v21-novel-sim.md](DEV_PLAN-v21-novel-sim.md)
+> 需求原文：sources/2026-09-13/S01（问卷式引导改造）+ S02（实现方案与界面设计，永不修改）
+> 工作包：V21-A 数据中枢 / V21-B 引导问卷 / V21-C 大纲+章节规划 / V21-D 三栏创作台 / V21-E 入口+回归
+
+### 15.1 新增功能清单
+
+| ID | 功能 | 页面 | 说明 |
+|---|---|---|---|
+| NS-01 | 引导式创作问卷（3 必答 + 5 选答） | novel-ai-helper.html 引导模式 | 对话式分步；每问 chips + 🤖AI随机生成 + ✏️自由描述 + 跳过 |
+| NS-02 | 创作简报摘要确认 | novel-ai-helper.html | "这就是我的故事" → 写入 lingjing_v521_novsim_v1.brief |
+| NS-03 | 大纲编辑 + AI 候选 + 锁定 | novel-outline.html | 5 字段；每字段 AI 给 3-5 候选；确认后 🔒 锁定/解锁 |
+| NS-04 | 章节规划（依大纲自动生成） | novel-outline.html | 章节目标/冲突/出场人物/关键事件/承接；增删改排序后锁定 |
+| NS-05 | 三栏逐章创作台 | novel-writer.html | PC 20/55/25：章节列表+大纲+人物库+伏笔追踪 / 正文 / AI 辅助面板 |
+| NS-06 | AI 辅助面板 | novel-writer.html 右栏 | 场景/对话/过渡/心理 4 类型；3-5 候选 + 使用/换一批/我来说 + 上下文引用 |
+| NS-07 | 章节质量检查 | novel-writer.html | 5 维（大纲一致/人物一致/时间线/伏笔/衔接）+ 颜色标记 + 质量分 + 一键修复 |
+| NS-08 | 数据中枢（镜像 S02 五表） | js/novel-sim-store.js | lingjing_v521_novsim_v1：brief/outline/chapter_plans/chapters/characters/foreshadows/ai_logs |
+| NS-09 | AI mock + 真钩子 | js/novel-sim-ai.js | 本地 mock 生成器；window.AIHelper.generate 存在则优先（不接真 LLM） |
+
+### 15.2 保留功能（不砍）
+
+- novel-ai-helper.html **专家模式**：6 表 28 字段 + 12 类提问模板 + 6 维自动检测，
+  以页签「引导模式（推荐）/专家模式」切换；专家模式 localStorage（lingjing_v514_*）不变，
+  大纲页提供「从专家模式导入简报」兼容入口
+- novel-edit.html（互动剧编辑器）用途不同，本轮不动
+
+### 15.3 布局豁免登记
+
+`novel-writer.html` 为工作台类页面：PC 视口（≥1024px）解除 mobile-lock 480px
+锁定以实现用户指定的三栏 20/55/25；≤900px 回归堆叠（左栏横滚 + 右栏底部弹出面板）。
+问卷页与大纲页保持全手机锁定。豁免依据：V21 需求 S02 "PC端主编辑器（三栏布局）"。
+
+### 15.4 实名门控
+
+创作 Tab 内 novel-ai-helper / novel-outline / novel-writer 入口一律
+`window.LJRealname.gate()`（V20-U 铁律：未实名不得直入创作类功能）。
