@@ -451,3 +451,147 @@ v5.1 各规范为准；v5.6-v6.1 是增量登记。冲突时本表最终裁决�
 | MR-06 | 测试端口可覆盖 | scripts/test_v21_novel_sim.py | LJ_TEST_PORT 环境变量（默认 8767 不变）；并行会话改根时用 8794 隔离 |
 
 配套开发工具：`scripts/apply_tabbar_embed.py`（幂等批处理：删旧 nav + 插 link/script，已执行完毕留档）。
+
+---
+
+## 17. V20-X 沉浸式长滚动阅读 + V20-Y 段落画面 + V20-Z 右侧主菜单（2026-09-12~13 交付登记）
+
+> 背景：V20-V 通用小说世界引擎 MVP 已交付（#12j），用户进一步要求"沉浸式影视小说阅读"——章节封面 + 长滚动 + 段落画面 + 右侧菜单，章节内容一字不删。
+
+| ID | 变更 | 涉及文件 | 说明 |
+|---|---|---|---|
+| **V20-X-01** | 章节封面 + 长滚动正文 + 末选项 | novel-game.html（加 #ng-reader / #ng-r-stage / #ng-r-body / #ng-r-foot）+ novel-game.js（renderChapterReader 渲染函数） | 章节封面渐变 + 📖 装饰 + 「▶ 开始本段阅读」CTA + 进度 N/总；body 长滚动段落卡片（entity 高亮 NPC/物品）；foot 末选项「再读一遍/查看人物关系/查看道具/写下感想」+ 延伸阅读面板（mock 抽取） |
+| **V20-X-02** | 3 步入口流程 | novel-game.html + novel-game.js（splash / entry mask / progress mask / char mask） | splash → 「▶ 进入灵境」 → entry mask 二选一（继续阅读/重新开始）→ 进度列表 / 角色选择 → 进游戏；首次「继续阅读」disabled |
+| **V20-X-03** | 角色 mask 升级（5 traits） | novel-game.html（#ng-char-mask traits 区） | 5 个 traits：仁义/勇武/智慧/文雅/机敏，最多选 3 个；进入游戏时载入 state.traits |
+| **V20-X-04** | 4 大名著接通 + EMBEDDED_BOOKS fallback | novel-game.js（loadBook + EMBEDDED_BOOKS 5 本公版 2-3 章） | hongloumeng/sanguoyanyi/xiyouji/shuihuzhuan/liaozhai + taohuayuan demo；corpus 文件缺失时自动用 EMBEDDED_BOOKS |
+| **V20-X-05** | parser 严格不删减修复 | novel-game-parser.js（parseOriginalNovel 用 ch.title + isChapterTitle m[1]） | 章节标题去 `##` 前缀，原文段落 byte-equal 保留 |
+| **V20-X-06** | plot-detail 4 大名著 routing | plot-detail.js（WORLD_ROUTES + BOOK_META + buildExtra 重构） | 5 个公版 → novel-game.html?book=xxx；元数据含标签/摘要/统计 |
+| **V20-X-07** | Playwright 测试 + 截图 | scripts/test_v20x_novel_reader.py（26/26 PASS）+ scripts/test_v20w_novel_game_layout.py（17/17）+ scripts/test_v20w2_novel_game_direct_stage.py（13/13）+ scripts/shot_v20x_novel_reader.py（12 张） | A-Z 全场景覆盖：splash/entry/progress/char/reader/foot/extension/切章/收费门/顶栏返回 |
+| **V20-Y-01** | 段落配图（画面+字幕） | novel-game.html（CSS .ng-r-para 结构重写）+ novel-game.js（renderChapterReader body 段落重写） | 每段落卡片 = 上半场景图（渐变 + emoji 占位 + 右侧浮动按钮）+ 下半文字字幕（30px 衬体 + 原文逐字） |
+| **V20-Y-02** | 段落配图测试 | scripts/test_v20y_novel_parascene.py（12/12 PASS） | 段落卡片结构 + 场景图渐变 + 浮动按钮 + entity 高亮 + 切章 |
+| **V20-Z-01** | 右侧主菜单迁移（移除底部按钮） | novel-game.html（删 ng-r-foot + ng-back-top，新增 #ng-menu-mask 主菜单弹窗）+ novel-game.js（菜单控制器） | 右侧 ✦ 按钮唤起主菜单：再读一遍/查看人物/查看道具/写下感想/上一章/章节列表/下一章/返回世界/退出游戏；选完自动关闭 |
+| **V20-Z-02** | 主菜单测试 | scripts/test_v20z_novel_menu.py（21/21 PASS）+ scripts/shot_v20z_novel_menu.py（10 张） | 菜单可打开/关闭/切章/不挡 5 Tab |
+
+**V20-X/Y/Z 交付总览**：
+- novel-game.html 280 行 → 900+ 行（页面结构）
+- novel-game.js 320 行 → 1260+ 行（控制器 + store 集成）
+- novel-game-parser.js 150 行 → 250+ 行（5 步流水线字段扩展）
+- 全部功能以"提取而非生成"为基础原则
+
+---
+
+## 18. V22 小说世界自动生成引擎（2026-09-13 新增·待启动）
+
+> 背景：用户与 DeepSeek 深度讨论后要求"全题材小说自动转游戏引擎"，对 V20-X 长滚动阅读的升级方向。
+> 核心区别：**V20-X 是阅读**（长滚动展示原文），**V22 是游戏**（从原文自动提取生成可玩视觉小说）。
+> 需求原文：[sources/2026-09-13/S03](sources/2026-09-13/S03-novel-world-engine-deepseek-doc.txt)（永不修改）
+
+### V22 核心铁律（AI 必须遵守）
+
+1. **零删减**：主线剧情 100% 使用作者原文（byte-equal），严禁改写/压缩/跳过
+2. **零创造**：所有场景/道具/NPC/行动选项从原文"提取"，原文没写的禁止凭空捏造
+3. **提取而非生成**：AI 是"提取器+排版器"，不是"作者"
+4. **视觉小说范式**：全屏场景 + 悬浮标签 + 底部文字框 + 顶部状态栏；**禁用聊天气泡**
+5. **主线锚点 + 支线收敛**：偏离选项 2-3 次互动后强制回 anchor
+
+### V22 五步自动化流水线
+
+| 步骤 | AI 任务 | 提取字段 | 映射到游戏 |
+|---|---|---|---|
+| Step 1 场景与时间 | 地点 + 时间 | `scene_id`, `scene_name`, `time_period` | 全屏背景图 + 顶部状态栏时间框 |
+| Step 2 NPC 与角色 | 出场人物 | `npc_id`, `name`, `relation` | 人物立绘 + 互动菜单 |
+| Step 3 物品与资源 | 物品 + 资源 | `item_id`, `name`, `category`, `quantity` | 背包物品 + 拾取奖励 |
+| Step 4 动作与经营 | 动作 + 配方 | `action_id`, `name`, `cost`, `gain`, `recipe` | 悬浮标签 + 工坊制作 |
+| Step 5 背景与文案 | 环境描写 + 段落 | `bg_text`, `paragraphs[]`, `emotion` | 全屏背景图 + 底部文字框打字机 |
+
+### V22 五大题材自动适配
+
+| 题材 | 属性面板 | 基础操作 |
+|---|---|---|
+| 模拟经营/种田 | 体力、铜钱、声望、土地 | 种田、采集、烹饪、建造、买卖 |
+| 修仙/玄幻 | 修为、灵根、神识、寿元 | 打坐、炼丹、闭关、御剑、宗门任务 |
+| 末日/废土 | 生命、精神、饥饿、辐射 | 搜索、建设、抵御尸潮 |
+| 武侠/江湖 | 气血、内力、武功、声望 | 比武、行侠仗义、修炼内功、结交豪杰 |
+| 宫斗/宅斗 | 位分、宠爱、心计、礼仪 | 请安、送礼、拉拢、陷害 |
+
+题材识别算法：前 10% 章节关键词频次统计 → primary + combo（叠加）
+
+### V22 命名空间（避免混淆）
+
+| 命名空间 | 状态 | 范围 |
+|---|---|---|
+| **V20-X/Y/Z** | 已交付 | 沉浸式长滚动阅读 + 段落画面 + 右侧菜单 |
+| **V21-novel-sim** | 已交付 | 问卷引导作者写小说（lingjing_v521_novsim_v1） |
+| **V22-novel-world-engine** | **待启动** | 通用小说世界自动生成引擎（lingjing_v522_novel_world_v1） |
+
+### V22 工作包序列（V22-A → V22-E · V22-A/B/C 已交付）
+
+| 工作包 | 交付物 | 关联铁律 | 验收脚本 | 状态 |
+|---|---|---|---|---|
+| **V22-A** 数据中枢 + parser 强化 | `js/novel-world-store.js`（180 行）+ `js/novel-world-parser.js`（250 行）+ novel-game.html 引入 | P-1 零删减 + P-2 零创造 | `test_v22_a_store.py` **36/36 PASS** | ✅ 已交付 |
+| **V22-B** 题材识别器 | `js/novel-world-genre.js`（150 行：detect/applyToPlayerState/getDefaultActions/getAttrNames/selfTest）+ 5 大题材字典 | P-3 提取而非生成 | `test_v22_b_genre.py` **24/24 PASS** | ✅ 已交付 |
+| **V22-C** 视觉小说范式 UI（顶栏 + 底部文字框 + 悬浮标签 + 确认弹窗 + 模式切换） | `js/novel-world-vn.js`（230 行）+ novel-game.html CSS + DOM 嵌入（`.ng-v22-container/.ng-v22-topbar/.ng-v22-tags/.ng-v22-textbox/.ng-v22-confirm`） | P-4 视觉小说范式（禁用聊天气泡） | `test_v22_c_vn.py` **27/27 PASS** | ✅ 已交付 |
+| **V22-D** 主线锚点 + 支线收敛逻辑 | `js/novel-world-flow.js` | P-5 主线锚点 + 支线收敛 | `test_v22_d_flow.py` | 🔜 待启动 |
+| **V22-E** 系统菜单扩充 + 4 大名著接通 + 全面回归 | 9 项菜单功能 + 5 大名著 entry + 5 条强制验收 | 全面 | `test_v22_e_*.py` | 🔜 待启动 |
+
+### V22-C 视觉小说范式 UI 详解
+
+**三层 UI 结构（与 V20-X/Y/Z 长滚动并存，通过右上角「🎬 视觉小说模式 / 📜 长滚动模式」按钮切换）：**
+
+1. **顶部状态栏**（`.ng-v22-topbar`，fixed top:0，46px 高）
+   - 左：emoji 头像 + 时段 + 行动值
+   - 右：⚡ 行动值 / 🪙 铜钱 / 💰 银两 / 💎 灵玉
+2. **场景标签层**（`.ng-v22-tags`，absolute inset:0）
+   - NPC 标签：紫色边，可点击展示人物介绍
+   - 物品 标签：绿色边，点击弹确认（消耗资源）
+   - 动作 标签：黄色边，点击弹确认（消耗资源）
+   - 全部从原文 `extractEntities()` 提取，零创造
+3. **底部文字框**（`.ng-v22-textbox`，fixed bottom:0，96-38vh）
+   - 半透明 + 顶部金线
+   - 打字机逐字显示（30ms/字），点击跳过
+   - 原文 byte-equal 保留（零删减铁律）
+
+**确认弹窗**（`.ng-v22-confirm`，fixed inset:0）
+- 消耗资源时弹「是否...」+ 资源需求清单
+- 资源不够时该项标红（insufficient 类）
+- 取消/确认按钮
+
+**关键 API（`window.NovelWorldVN`）：**
+```js
+NovelWorldVN.enterScene({
+  paragraph: "原文段",         // byte-equal 保留
+  speaker: "旁白",              // 可选，显示在文字框顶部
+  genre: "xiuxian",            // 题材
+  npcs: [{name, desc}],        // 从原文抽取
+  items: [{name}],             // 从原文抽取
+  actions: [{label, cost, result}],  // 从原文抽取
+  ps: {ap, copper, silver, jade, time, avatarEmoji}
+});
+NovelWorldVN.toggleMode();     // vn ⇄ scroll
+NovelWorldVN.updateTopbar(ps); // 单独刷新顶栏
+NovelWorldVN.typewrite(text);  // 单独打字机
+```
+
+### V22 强制验收 5 条
+
+1. **原著保护**：主线路径下原文 byte-equal
+2. **题材自动识别**：上传"炼气/筑基"段 → 弹出修为/打坐/炼丹 UI
+3. **交互点从原文触发**：点"拾取" → 文字框显示原文 + 背包 +3 木材 + 行动值 -1
+4. **支线收敛**：3 次偏离选项后强制回 anchor
+5. **无聊天界面**：DOM 不含 `.chat-bubble` / 头像+气泡组合
+
+### V22 与 V21 边界（重要！）
+
+- **V21-novel-sim**：问卷引导作者**写**小说（lingjing_v521_novsim_v1）
+- **V22-novel-world-engine**：从原文**生成游戏**（lingjing_v522_novel_world_v1）
+- 两工作线**完全独立**，可并行推进，互不依赖
+
+### V22 范围外（登记不做）
+
+- 真实 LLM 接入（window.AIHelper 钩子预留）
+- 美术资源 AI 自动匹配（V22-C 用渐变 + emoji 占位）
+- 工坊制作 + 配方数据库真实实现（V22 后续轮次）
+- 云端存档 + 多端同步（V22 后续轮次）
+- 与 V21-novel-sim 联动（两工作线独立）
+
+**V22 详细规范**：[PRD-v22-novel-world-engine.md](PRD-v22-novel-world-engine.md) + [DEV_PLAN-v22-novel-world-engine.md](DEV_PLAN-v22-novel-world-engine.md)

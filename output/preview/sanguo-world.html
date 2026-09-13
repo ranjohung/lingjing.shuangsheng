@@ -322,14 +322,50 @@ function chUnlocked(ch) {
 }
 
 /* ---------- 文本加载与切章 ---------- */
+// V20-S：多路径 fallback（兼容用户从 output/preview 或仓库根启动 server）
+var SG_TEXT_CANDIDATES = [
+  '../../corpus/books/sanguoyanyi.txt',                          // 仓库根启动（推荐）
+  '../../../corpus/books/sanguoyanyi.txt',                      // 兼容多嵌 output/
+  'http://localhost:8767/corpus/books/sanguoyanyi.txt',         // 直连 8767
+  'http://127.0.0.1:8767/corpus/books/sanguoyanyi.txt'
+];
+var SG_TEXT_OK = false;  // 标记：true=已成功加载至少一次
+function setLoadHint(state, msg) {
+  // state: 'loading' | 'fail-retry' | 'fail-permanent'
+  var cat = document.getElementById('sg-catalog');
+  if (!cat) return;
+  if (state === 'loading') {
+    cat.innerHTML = '<div class="sg-loading"><div class="ring"></div>' + (msg || '正在展开一百二十回全卷……') + '</div>';
+  } else if (state === 'fail-retry') {
+    cat.innerHTML = '<div class="sg-loading">' + (msg || '全文加载失败，正在重试…') + '<br><small style="opacity:.6">请确认本地服务器从仓库根启动 (端口 8767)</small></div>';
+  }
+}
+function tryLoadText(idx) {
+  if (idx >= SG_TEXT_CANDIDATES.length) {
+    SG_TEXT_OK = false;
+    setLoadHint('fail-permanent');
+    return;
+  }
+  var p = SG_TEXT_CANDIDATES[idx];
+  fetch(p).then(function (r) {
+    if (!r.ok) throw new Error(r.status);
+    return r.text();
+  }).then(function (raw) {
+    if (raw && raw.indexOf('第') >= 0 && raw.length > 10000) {
+      parseChapters(raw);
+      SG_TEXT_OK = true;
+    } else throw new Error('content short');
+  }).catch(function () {
+    tryLoadText(idx + 1);
+  });
+}
 function loadText() {
-  fetch('../../corpus/books/sanguoyanyi.txt')
-    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
-    .then(parseChapters)
-    .catch(function () {
-      document.getElementById('sg-catalog').innerHTML =
-        '<div class="sg-loading">全文加载失败，请从本地服务器打开本页</div>';
-    });
+  setLoadHint('loading');
+  tryLoadText(0);
+}
+function reloadText() {
+  SG.chapters = [];
+  loadText();
 }
 
 var CH_RE = /^(第[一二三四五六七八九十百零两0-9]{1,8}回[^\n]{0,40})$/gm;

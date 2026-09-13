@@ -326,17 +326,14 @@
 
   // ---------- 同人区 10 张（公版作品 · 灵境专属术语） ----------
   var PUBLIC_DOMAIN = [
-    { id: 'taohuayuan', title: '桃花源记 · 通用小说世界', author: '陶渊明（公版）', catName: '公版同人', cat: 'mingxing', sub: 'yingxi', score: 9.5, wordCount: '6 章 · 示例', cov: 'linear-gradient(160deg,#3A2818,#5E2E3A)', emoji: '🌸', desc: 'V20-V 通用引擎示例 · 上传 txt 自动成世界 · 场景可点击', publicDomain: true },
-    { id: 'pd1', title: '灵境版红楼梦', author: '灵境官方', catName: '公版同人', cat: 'mingxing', sub: 'yingxi', score: 9.4, wordCount: '全文', cov: 'linear-gradient(160deg,#B8863B,#8C5A2B)', emoji: '📜', desc: '灵境解读 · 黛玉知己结局', publicDomain: true },
-    { id: 'pd2', title: '灵境解读三国', author: '灵境官方', catName: '公版同人', cat: 'mingxing', sub: 'yingxi', score: 9.2, wordCount: '全文', cov: 'linear-gradient(160deg,#5E2E3A,#B8863B)', emoji: '⚔️', desc: '穿越成吕布，改写三国命运', publicDomain: true },
-    { id: 'pd3', title: '灵境西游漫记', author: '灵境官方', catName: '公版同人', cat: 'mingxing', sub: 'yingxi', score: 9.0, wordCount: '全文', cov: 'linear-gradient(160deg,#2E5E56,#00B894)', emoji: '🐒', desc: '唐僧师徒 · 重走取经路', publicDomain: true },
-    { id: 'pd4', title: '水浒群英', author: '灵境官方', catName: '公版同人', cat: 'mingxing', sub: 'yingxi', score: 8.8, wordCount: '全文', cov: 'linear-gradient(160deg,#1C2542,#E94560)', emoji: '🍶', desc: '梁山好汉 · 替天行道', publicDomain: true },
-    { id: 'pd5', title: '聊斋夜话', author: '灵境官方', catName: '公版同人', cat: 'mingxing', sub: 'yingxi', score: 9.1, wordCount: '全文', cov: 'linear-gradient(160deg,#3A2E5E,#6C5CE7)', emoji: '🦊', desc: '鬼狐花妖 · 人间百态', publicDomain: true },
-    { id: 'pd6', title: '韩流同人志', author: '梦工厂', catName: '公版同人', cat: 'mingxing', sub: 'hnt', score: 8.4, wordCount: '6.2万字', cov: 'linear-gradient(160deg,#8E5BD8,#C95B9C)', emoji: '🎤', desc: '韩流偶像 · 同人短篇集', publicDomain: false },
-    { id: 'pd7', title: '欧美同人志', author: '梧桐', catName: '公版同人', cat: 'mingxing', sub: 'omt', score: 8.3, wordCount: '5.8万字', cov: 'linear-gradient(160deg,#5A6B8E,#C95B9C)', emoji: '🎬', desc: '欧美剧集 · 同人衍生', publicDomain: false },
-    { id: 'pd8', title: '日系校园志', author: '千鸟', catName: '公版同人', cat: 'mingxing', sub: 'ri', score: 8.1, wordCount: '4.3万字', cov: 'linear-gradient(160deg,#B8863B,#4ECCA3)', emoji: '🌸', desc: '日系校园 · 社团日常', publicDomain: false },
-    { id: 'pd9', title: '影视改编：长歌行', author: '灵境官方', catName: '公版同人', cat: 'mingxing', sub: 'yingxi', score: 8.7, wordCount: '12.5万字', cov: 'linear-gradient(160deg,#2E3A6E,#E94560)', emoji: '🎞', desc: '经典古装剧 · 同人续写', publicDomain: false },
-    { id: 'pd10', title: '影视改编：琅琊', author: '灵境官方', catName: '公版同人', cat: 'mingxing', sub: 'yingxi', score: 8.9, wordCount: '15.2万字', cov: 'linear-gradient(160deg,#5E2E3A,#6C5CE7)', emoji: '🎭', desc: '权谋古装剧 · 同人续写', publicDomain: false }
+    // V20-W：只保留有公版 txt 的作品，无 txt 的同人/影视卡已被作者移除，待作者上传小说后再生成对应介绍
+    { id: 'taohuayuan', title: '桃花源记 · 小说世界', author: '陶渊明（公版）', catName: '公版名著', cat: 'mingxing', sub: 'yingxi', score: 9.5, wordCount: '6 章 · 全文', cov: 'linear-gradient(160deg,#3A2818,#5E2E3A)', emoji: '🌸', desc: 'V20-V 通用引擎示例 · 上传 txt 自动成世界 · 场景可点击', publicDomain: true },
+    { id: 'hongloumeng', title: '红楼梦 · 小说世界', author: '曹雪芹（公版）', catName: '公版名著', cat: 'mingxing', sub: 'yingxi', score: 9.4, wordCount: '120 回 · 全文', cov: 'linear-gradient(160deg,#B8863B,#8C5A2B)', emoji: '📜', desc: '大观园儿女情长 · 黛玉知己结局', publicDomain: true },
+    { id: 'sanguoyanyi', title: '三国演义 · 小说世界', author: '罗贯中（公版）', catName: '公版名著', cat: 'mingxing', sub: 'yingxi', score: 9.6, wordCount: '120 回 · 全文', cov: 'linear-gradient(160deg,#6B2737,#B8863B)', emoji: '⚔️', desc: '120 回全本卷制阅读 · 桃园结义 / 群雄逐鹿 / 三分天下', publicDomain: true },
+    { id: 'xiyouji', title: '西游记 · 小说世界', author: '吴承恩（公版）', catName: '公版名著', cat: 'mingxing', sub: 'yingxi', score: 9.0, wordCount: '100 回 · 全文', cov: 'linear-gradient(160deg,#2E5E56,#00B894)', emoji: '🐒', desc: '唐僧师徒 · 重走西天取经路', publicDomain: true },
+    { id: 'shuihuzhuan', title: '水浒传 · 小说世界', author: '施耐庵（公版）', catName: '公版名著', cat: 'mingxing', sub: 'yingxi', score: 8.8, wordCount: '120 回 · 全文', cov: 'linear-gradient(160deg,#1C2542,#E94560)', emoji: '🍶', desc: '梁山好汉 · 替天行道', publicDomain: true },
+    { id: 'liaozhai', title: '聊斋志异 · 小说世界', author: '蒲松龄（公版）', catName: '公版名著', cat: 'mingxing', sub: 'yingxi', score: 9.1, wordCount: '500+ 则故事', cov: 'linear-gradient(160deg,#3A2E5E,#6C5CE7)', emoji: '🦊', desc: '鬼狐花妖 · 人间百态', publicDomain: true }
+    // 待作者上传小说后再生成对应公版介绍（pd2 灵境解读三国 / pd6-pd10 同人/影视改编 已合并到原作）
   ];
 
   // ---------- 顶部排序（V20-K：8 种，参考主流小说 App） ----------

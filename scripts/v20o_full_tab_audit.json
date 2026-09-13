@@ -1,0 +1,488 @@
+{
+  "results": [
+    {
+      "page": "product-preview.html",
+      "item": "A.1.1 状态栏渲染",
+      "result": "PASS",
+      "sel": "#home-status"
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.1.2 签到卡渲染",
+      "result": "PASS",
+      "sel": "#home-signin"
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.1.3 快捷入口容器渲染",
+      "result": "PASS",
+      "sel": "#home-quick"
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.1.4 推荐区容器渲染",
+      "result": "PASS",
+      "sel": "#home-recommend"
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.2.1 顶栏铃铛（带红点）",
+      "result": "PASS",
+      "sel": ".hs-bell"
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.2.2 顶栏钱包（灵晶/灵玉）",
+      "result": "PASS",
+      "sel": ".hs-wallet"
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.2.3 顶栏头像",
+      "result": "PASS",
+      "sel": ".hs-avatar"
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.2.4 顶栏问候语（按时段）",
+      "result": "PASS",
+      "sel": ".hs-greet"
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.3.1 签到卡可视",
+      "result": "PASS",
+      "sel": ".signin-card"
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.3.2 立即签到按钮",
+      "result": "PASS",
+      "sel": "#signin-btn"
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.4.1 快捷入口 4 项",
+      "result": "PASS",
+      "n": 4,
+      "min": 4
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.4.2 快捷入口 1 → library.html",
+      "result": "PASS",
+      "after": "http://localhost:8767/output/preview/library.html",
+      "newErrors": []
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.4.3 快捷入口 3（创作）→ creator-center.html",
+      "result": "PASS",
+      "after": "http://localhost:8767/output/preview/creator-center.html",
+      "newErrors": []
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.5.1 推荐板块 4 个（今日/陪伴/世界/活动）",
+      "result": "PASS",
+      "n": 4,
+      "min": 4
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.6.1 今日推荐卡 ≥ 1",
+      "result": "PASS",
+      "n": 7,
+      "min": 1
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.7.1 陪伴动态 N 项（点进 chat）",
+      "result": "PASS",
+      "n": 3
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.8.1 世界更新 N 项（点进 plot-detail）",
+      "result": "PASS",
+      "n": 7
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.9.1 5 Tab 数量",
+      "result": "PASS",
+      "n": 5,
+      "min": 5
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.9.2 home Tab active",
+      "result": "PASS"
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.10.1 签到中心抽屉打开",
+      "result": "FAIL"
+    },
+    {
+      "page": "product-preview.html",
+      "item": "A.11.1 微型页脚",
+      "result": "PASS",
+      "sel": ".final-foot"
+    },
+    {
+      "page": "library.html",
+      "item": "B.1.1 顶栏标题（世界）",
+      "result": "PASS",
+      "sel": ".topbar-title"
+    },
+    {
+      "page": "library.html",
+      "item": "B.1.2 顶栏右侧操作区",
+      "result": "PASS",
+      "sel": ".topbar-acts"
+    },
+    {
+      "page": "library.html",
+      "item": "B.2.1 子导航 7 项",
+      "result": "PASS",
+      "n": 7,
+      "min": 7
+    },
+    {
+      "page": "library.html",
+      "item": "B.3.1 4 大金刚（全部分类/更新日历/经典必看/创作）",
+      "result": "PASS",
+      "n": 4,
+      "min": 4
+    },
+    {
+      "page": "library.html",
+      "item": "B.3.2 全部分类金刚 → 抽屉打开",
+      "result": "FAIL",
+      "after": "http://localhost:8767/output/preview/library.html",
+      "newErrors": []
+    },
+    {
+      "page": "library.html",
+      "item": "B.4.1 全部分类悬浮按钮",
+      "result": "PASS",
+      "sel": "#ds-cat-trigger"
+    },
+    {
+      "page": "library.html",
+      "item": "B.5.1 抽屉容器",
+      "result": "PASS",
+      "sel": "#ds-drawer"
+    },
+    {
+      "page": "library.html",
+      "item": "B.5.2 抽屉 mask",
+      "result": "PASS",
+      "sel": "#ds-drawer-mask"
+    },
+    {
+      "page": "library.html",
+      "item": "B.5.3 抽屉分类列表",
+      "result": "PASS",
+      "sel": "#ds-drawer-cat-list"
+    },
+    {
+      "page": "library.html",
+      "item": "B.5.4 抽屉关闭按钮",
+      "result": "PASS",
+      "sel": "#ds-drawer-close"
+    },
+    {
+      "page": "library.html",
+      "item": "B.6.1 Banner 容器",
+      "result": "PASS",
+      "sel": "#ds-banner"
+    },
+    {
+      "page": "library.html",
+      "item": "B.6.2 Banner 轨道",
+      "result": "PASS",
+      "sel": "#ds-banner-track"
+    },
+    {
+      "page": "library.html",
+      "item": "B.7.1 主内容容器",
+      "result": "PASS",
+      "sel": "#ds-main"
+    },
+    {
+      "page": "library.html",
+      "item": "B.8.1 5 Tab 数量",
+      "result": "PASS",
+      "n": 5,
+      "min": 5
+    },
+    {
+      "page": "library.html",
+      "item": "B.8.2 world Tab active",
+      "result": "PASS"
+    },
+    {
+      "page": "library.html",
+      "item": "B.9.1 切换到排行榜子导航",
+      "result": "TIMEOUT",
+      "err": "Page.click: Timeout 3000ms exceeded.\nCall log:\n  - waiting for locator(\".ds-sn[d"
+    },
+    {
+      "page": "library.html",
+      "item": "B.9.2 排行榜 Tab ≥ 5",
+      "result": "FAIL",
+      "n": 0
+    },
+    {
+      "page": "library.html",
+      "item": "B.10.1 切回首页子导航",
+      "result": "TIMEOUT",
+      "err": "Page.click: Timeout 3000ms exceeded.\nCall log:\n  - waiting for locator(\".ds-sn[d"
+    },
+    {
+      "page": "library.html",
+      "item": "B.11.1 瀑布流卡片 ≥ 1",
+      "result": "PASS",
+      "n": 32
+    },
+    {
+      "page": "library.html",
+      "item": "B.12.1 切到搜索子导航",
+      "result": "TIMEOUT",
+      "err": "Page.click: Timeout 3000ms exceeded.\nCall log:\n  - waiting for locator(\".ds-sn[d"
+    },
+    {
+      "page": "library.html",
+      "item": "B.12.2 搜索输入框可见",
+      "result": "FAIL",
+      "sel": "#ds-search-input"
+    },
+    {
+      "page": "heart-island.html",
+      "item": "C.1.1 顶栏标题（心屿）",
+      "result": "PASS",
+      "sel": ".topbar-title"
+    },
+    {
+      "page": "heart-island.html",
+      "item": "C.2.1 心屿 5 子标签",
+      "result": "PASS",
+      "n": 5,
+      "min": 5
+    },
+    {
+      "page": "heart-island.html",
+      "item": "C.3.1 心屿 3 子筛选 chip",
+      "result": "PASS",
+      "n": 3,
+      "min": 3
+    },
+    {
+      "page": "heart-island.html",
+      "item": "C.4.1 创建新角色按钮",
+      "result": "PASS",
+      "sel": "#heart-create"
+    },
+    {
+      "page": "heart-island.html",
+      "item": "C.5.1 陪伴区角色卡 ≥ 1",
+      "result": "PASS",
+      "n": 24
+    },
+    {
+      "page": "heart-island.html",
+      "item": "C.6.1 切换到精选子标签",
+      "result": "TIMEOUT",
+      "err": "Page.click: Timeout 3000ms exceeded.\nCall log:\n  - waiting for locator(\".heart-s"
+    },
+    {
+      "page": "heart-island.html",
+      "item": "C.6.2 精选区卡片 ≥ 1",
+      "result": "PASS",
+      "n": 20
+    },
+    {
+      "page": "heart-island.html",
+      "item": "C.7.1 切换到记忆子标签",
+      "result": "TIMEOUT",
+      "err": "Page.click: Timeout 3000ms exceeded.\nCall log:\n  - waiting for locator(\".heart-s"
+    },
+    {
+      "page": "heart-island.html",
+      "item": "C.7.2 记忆区条目 ≥ 1",
+      "result": "FAIL",
+      "n": 0
+    },
+    {
+      "page": "heart-island.html",
+      "item": "C.8.1 切换到故事子标签",
+      "result": "TIMEOUT",
+      "err": "Page.click: Timeout 3000ms exceeded.\nCall log:\n  - waiting for locator(\".heart-s"
+    },
+    {
+      "page": "heart-island.html",
+      "item": "C.9.1 5 Tab 数量",
+      "result": "PASS",
+      "n": 5,
+      "min": 5
+    },
+    {
+      "page": "heart-island.html",
+      "item": "C.9.2 xinyu Tab active",
+      "result": "PASS"
+    },
+    {
+      "page": "heart-island.html",
+      "item": "C.10.1 LJHeart.openDialog 暴露",
+      "result": "PASS"
+    },
+    {
+      "page": "heart-island.html",
+      "item": "C.10.2 LJHeart.showIntro 暴露",
+      "result": "PASS"
+    },
+    {
+      "page": "heart-island.html",
+      "item": "C.11.1 创建新角色 → character-create.html",
+      "result": "TIMEOUT",
+      "err": "Page.click: Timeout 3000ms exceeded.\nCall log:\n  - waiting for locator(\"#heart-c"
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.1.1 创作顶栏",
+      "result": "PASS",
+      "sel": ".topbar"
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.1.2 顶栏标题（创作）",
+      "result": "PASS",
+      "sel": ".topbar-title"
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.1.3 顶栏右侧 5 入口",
+      "result": "PASS",
+      "n": 5,
+      "min": 5
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.2.1 创作者等级卡",
+      "result": "PASS",
+      "sel": ".level-card"
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.2.2 等级卡 4 按钮（提现/收益/5档/协议）",
+      "result": "PASS",
+      "n": 4,
+      "min": 4
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.3.1 2 大按钮（创建智能体 / 灵境工坊）",
+      "result": "PASS",
+      "n": 2,
+      "min": 2
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.4.1 3 功能按钮（视频/图片/声音）",
+      "result": "PASS",
+      "n": 3,
+      "min": 3
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.5.1 4 更多创建按钮（动态/音色/灵念/Agent）",
+      "result": "PASS",
+      "n": 4,
+      "min": 4
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.6.1 工作台 5 入口",
+      "result": "PASS",
+      "n": 5,
+      "min": 5
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.7.1 我的作品 ≥ 1 项",
+      "result": "PASS",
+      "n": 2,
+      "min": 1
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.7.2 我的作品每项有 2 操作按钮",
+      "result": "PASS",
+      "n": 4,
+      "min": 2
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.8.1 3 大功能区 4 卡（小说辅助/上传/上架/创建）",
+      "result": "PASS",
+      "n": 4,
+      "min": 4
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.9.1 创作者法律卡",
+      "result": "PASS",
+      "sel": ".legal-card"
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.10.1 5 Tab 数量",
+      "result": "PASS",
+      "n": 5,
+      "min": 5
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.10.2 create Tab active",
+      "result": "PASS"
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.11.1 点击创建智能体 → character-create.html",
+      "result": "PASS",
+      "after": "http://localhost:8767/output/preview/character-create.html",
+      "newErrors": []
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.12.1 点击灵境工坊 → novel-edit.html",
+      "result": "PASS",
+      "after": "http://localhost:8767/output/preview/novel-edit.html",
+      "newErrors": []
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.13.1 工作台 AI 辅助 → novel-ai-helper.html",
+      "result": "PASS",
+      "after": "http://localhost:8767/output/preview/novel-ai-helper.html",
+      "newErrors": []
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.14.1 顶栏草稿箱 → novel-edit.html",
+      "result": "PASS",
+      "after": "http://localhost:8767/output/preview/novel-edit.html",
+      "newErrors": []
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.15.1 顶栏我的 → me.html",
+      "result": "PASS",
+      "after": "http://localhost:8767/output/preview/me.html",
+      "newErrors": []
+    }
+  ],
+  "pageerrors": []
+}

@@ -37,25 +37,38 @@
     return currentNovelId;
   }
 
-  // ---------- V20-J / V20-V 游玩路由：专属小说世界 ----------
+  // ---------- V20-J / V20-X 游玩路由：4 大名著 + 桃花源记 ----------
   var WORLD_ROUTES = {
-    sanguoyanyi: 'sanguo-world.html', // 三国演义 · 120 回卷制世界（V20-H）
-    pd2: 'sanguo-world.html',          // 灵境解读三国 → 三国演义小说世界
-    taohuayuan: 'novel-game.html?demo=1' // V20-V 通用小说世界引擎 demo（公版 · 桃花源记）
+    sanguoyanyi: 'novel-game.html?book=sanguoyanyi', // V20-X 沉浸式小说世界
+    hongloumeng: 'novel-game.html?book=hongloumeng',
+    xiyouji: 'novel-game.html?book=xiyouji',
+    shuihuzhuan: 'novel-game.html?book=shuihuzhuan',
+    liaozhai: 'novel-game.html?book=liaozhai',
+    taohuayuan: 'novel-game.html?demo=1' // 桃花源记 · 内嵌示例
   };
 
-  // ---------- V20-J 内置详情（专属小说世界作品） ----------
+  // ---------- V20-J / V20-X 内置详情（4 大名著 + 聊斋 + 桃花源记） ----------
+  var BOOK_META = {
+    sanguoyanyi: { title: '三国演义 · 小说世界', author: '罗贯中（公版）', emoji: '⚔️', cover: 'linear-gradient(160deg,#6B2737,#B8863B)', tags: ['公版名著', '古风', '战争权谋'] },
+    hongloumeng: { title: '红楼梦 · 小说世界', author: '曹雪芹（公版）', emoji: '🪷', cover: 'linear-gradient(160deg,#4A1A4A,#9B5B8B)', tags: ['公版名著', '古典', '世情'] },
+    xiyouji: { title: '西游记 · 小说世界', author: '吴承恩（公版）', emoji: '🐒', cover: 'linear-gradient(160deg,#1A4A6B,#6B9BB5)', tags: ['公版名著', '神魔', '取经'] },
+    shuihuzhuan: { title: '水浒传 · 小说世界', author: '施耐庵（公版）', emoji: '🐯', cover: 'linear-gradient(160deg,#3B3B0A,#8B8B3B)', tags: ['公版名著', '江湖', '侠义'] },
+    liaozhai: { title: '聊斋志异 · 小说世界', author: '蒲松龄（公版）', emoji: '🏮', cover: 'linear-gradient(160deg,#1A2A3A,#5B7B8B)', tags: ['公版名著', '志怪', '文言'] },
+    taohuayuan: { title: '桃花源记 · 小说世界', author: '陶渊明（公版）', emoji: '🌸', cover: 'linear-gradient(160deg,#5B3B6B,#B59BB5)', tags: ['公版名著', '古文', '世外'] }
+  };
+
   function buildExtra(id) {
-    if (id === 'sanguoyanyi') {
+    var meta = BOOK_META[id];
+    if (meta) {
       return {
-        id: 'sanguoyanyi',
-        title: '三国演义 · 小说世界',
-        author: '罗贯中（公版）',
-        tags: ['公版名著', '古风', '战争权谋'],
-        summary: '120 回全本卷制阅读 · 桃园结义、群雄逐鹿、三分天下。卷一免费开放，全书券 128 灵晶（省 42%），阅读券可享 10 灵玉单卷。灵玉每日签到 +10。',
-        cover: 'linear-gradient(160deg,#6B2737,#B8863B)',
-        emoji: '📖',
-        stats: { likes: 1286, favs: 592, comments: 143, reads: 25830 },
+        id: id,
+        title: meta.title,
+        author: meta.author,
+        tags: meta.tags,
+        summary: '沉浸式影视小说阅读 · 严格保留原文，章节内可触发延伸阅读、查看人物关系 / 道具、记录感想。选择你的角色（仁义 / 勇武 / 智慧 / 文雅 / 机敏）开启阅读之旅。',
+        cover: meta.cover,
+        emoji: meta.emoji,
+        stats: { likes: 1200, favs: 580, comments: 120, reads: 25000 },
         cast: [], ads: [], groups: [], roles: [], ranks: [],
         interact: { selected: [], latest: [] }
       };
