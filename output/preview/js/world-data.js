@@ -326,6 +326,7 @@
 
   // ---------- 同人区 10 张（公版作品 · 灵境专属术语） ----------
   var PUBLIC_DOMAIN = [
+    { id: 'taohuayuan', title: '桃花源记 · 通用小说世界', author: '陶渊明（公版）', catName: '公版同人', cat: 'mingxing', sub: 'yingxi', score: 9.5, wordCount: '6 章 · 示例', cov: 'linear-gradient(160deg,#3A2818,#5E2E3A)', emoji: '🌸', desc: 'V20-V 通用引擎示例 · 上传 txt 自动成世界 · 场景可点击', publicDomain: true },
     { id: 'pd1', title: '灵境版红楼梦', author: '灵境官方', catName: '公版同人', cat: 'mingxing', sub: 'yingxi', score: 9.4, wordCount: '全文', cov: 'linear-gradient(160deg,#B8863B,#8C5A2B)', emoji: '📜', desc: '灵境解读 · 黛玉知己结局', publicDomain: true },
     { id: 'pd2', title: '灵境解读三国', author: '灵境官方', catName: '公版同人', cat: 'mingxing', sub: 'yingxi', score: 9.2, wordCount: '全文', cov: 'linear-gradient(160deg,#5E2E3A,#B8863B)', emoji: '⚔️', desc: '穿越成吕布，改写三国命运', publicDomain: true },
     { id: 'pd3', title: '灵境西游漫记', author: '灵境官方', catName: '公版同人', cat: 'mingxing', sub: 'yingxi', score: 9.0, wordCount: '全文', cov: 'linear-gradient(160deg,#2E5E56,#00B894)', emoji: '🐒', desc: '唐僧师徒 · 重走取经路', publicDomain: true },

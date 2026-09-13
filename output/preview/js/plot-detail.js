@@ -37,10 +37,11 @@
     return currentNovelId;
   }
 
-  // ---------- V20-J 游玩路由：专属小说世界 ----------
+  // ---------- V20-J / V20-V 游玩路由：专属小说世界 ----------
   var WORLD_ROUTES = {
     sanguoyanyi: 'sanguo-world.html', // 三国演义 · 120 回卷制世界（V20-H）
-    pd2: 'sanguo-world.html'          // 灵境解读三国 → 三国演义小说世界
+    pd2: 'sanguo-world.html',          // 灵境解读三国 → 三国演义小说世界
+    taohuayuan: 'novel-game.html?demo=1' // V20-V 通用小说世界引擎 demo（公版 · 桃花源记）
   };
 
   // ---------- V20-J 内置详情（专属小说世界作品） ----------
