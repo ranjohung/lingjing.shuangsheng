@@ -49,7 +49,7 @@
     <p>7 层向导 · 完成后即可在心屿与 TA 相伴<br/>预计 8 分钟</p>
   </div>
 
-  <!-- 7 步 Stepper -->
+  <!-- 8 步 Stepper（V23-D：V3.0 §3 八步向导） -->
   <div class="cc-stepper">
     <div class="ds-step-indicator" style="overflow-x:auto;padding-bottom:4px;">
       <div class="ds-step" data-state="active"><div class="ds-step-num">1</div><span>基础</span></div>
@@ -65,6 +65,8 @@
       <div class="ds-step"><div class="ds-step-num">6</div><span>关系</span></div>
       <div class="ds-step-divider"></div>
       <div class="ds-step"><div class="ds-step-num">7</div><span>能力</span></div>
+      <div class="ds-step-divider"></div>
+      <div class="ds-step"><div class="ds-step-num">8</div><span>预览</span></div>
     </div>
   </div>
 
@@ -271,9 +273,60 @@
       <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">弱点</label>
       <textarea class="cc-textarea-v2" placeholder="TA 不擅长什么？"></textarea>
     </div>
-    <div class="ds-callout" data-type="success" style="margin-top:16px;">
+  </section>
+
+  <!-- Step 8: 语言指纹 + 行为约束 + 预览（V23-D · V3.0 §3.3/3.4/Step8） -->
+  <section class="cc-section cc-step-section">
+    <h2 style="font-size:16px;font-weight:600;color:#fff;margin:16px 0 12px;">🗣️ 语言指纹</h2>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">说话风格</label>
+      <div class="cc-grid-3" id="ljFpStyle">
+        <div class="cc-chip"><div class="ico">❄️</div>冷淡</div>
+        <div class="cc-chip"><div class="ico">🌿</div>温和</div>
+        <div class="cc-chip"><div class="ico">🔥</div>毒舌</div>
+        <div class="cc-chip"><div class="ico">⚡</div>热情</div>
+        <div class="cc-chip"><div class="ico">📖</div>文绉绉</div>
+        <div class="cc-chip"><div class="ico">🎲</div>AI 帮我写</div>
+      </div>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">口癖（独特口头禅）</label>
+      <input class="cc-input-v2" id="ljFpCatch" placeholder="如：真是有趣得很">
+      <div style="margin-top:6px"><span style="font-size:12px;color:var(--xinyu,#6C5CE7);cursor:pointer" onclick="ljAiField('catch','ljFpCatch')">✨ AI 帮我写</span></div>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">句长偏好</label>
+      <div style="display:flex;gap:8px">
+        <div class="cc-chip" style="flex:1"><div class="ico">➖</div>短句为主</div>
+        <div class="cc-chip" style="flex:1"><div class="ico">📜</div>长句为主</div>
+      </div>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">绝不会说的词</label>
+      <input class="cc-input-v2" id="ljFpNever" placeholder="不会出现的表达，逗号分隔">
+    </div>
+    <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 12px;">🚧 行为约束</h2>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">绝不会做的事</label>
+      <textarea class="cc-textarea-v2" id="ljNeverDo" placeholder="角色永远不会做的行为"></textarea>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">一定会做的事</label>
+      <textarea class="cc-textarea-v2" id="ljAlwaysDo" placeholder="角色一定会做的行为"></textarea>
+    </div>
+    <div class="cc-field">
+      <label style="font-size:12px;color:rgba(255,255,255,.7);display:block;margin-bottom:6px;">底线（触发强烈反应的行为）</label>
+      <textarea class="cc-textarea-v2" id="ljBottomLine" placeholder="触碰后角色会强烈反应的行为"></textarea>
+      <div style="margin-top:6px"><span style="font-size:12px;color:var(--xinyu,#6C5CE7);cursor:pointer" onclick="ljAiField('constraint','ljNeverDo')">✨ AI 帮我写</span></div>
+    </div>
+    <h2 style="font-size:16px;font-weight:600;color:#fff;margin:20px 0 12px;">📋 预览确认</h2>
+    <div class="ds-callout" data-type="info" style="margin-bottom:12px;">
+      <span class="ico">🧾</span>
+      <div class="body" id="ljPreview">填写完成后在此预览角色摘要。</div>
+    </div>
+    <div class="ds-callout" data-type="success" style="margin-top:4px;">
       <span class="ico">🎉</span>
-      <div class="body"><strong>即将完成！</strong> 全部 7 层填写完毕，点击下方"完成"按钮即可创建。</div>
+      <div class="body"><strong>即将完成！</strong> 全部 8 步填写完毕，点击下方"完成创建"即可（消耗本周智能体额度）。</div>
     </div>
   </section>
 
@@ -288,21 +341,61 @@
 <div class="ds-toast-container" id="toast-container"></div>
 
 <script src="js/db.js"></script>
+<script src="js/creator-store.js"></script>
+<script src="js/creator-ai.js"></script>
 <script>
 let step = 1;
-const total = 7;
+const total = 8;
 function showStep() {
   document.querySelectorAll('.cc-step-section').forEach((s, i) => s.dataset.active = (i === step - 1 ? '1' : ''));
   document.querySelectorAll('.ds-step').forEach((s, i) => s.dataset.state = (i < step - 1 ? 'done' : (i === step - 1 ? 'active' : '')));
   document.querySelectorAll('.ds-step-divider').forEach((s, i) => { if(i < step - 1) s.classList.add('done'); else s.classList.remove('done'); });
   document.getElementById('prev-btn').disabled = step === 1;
   document.getElementById('next-btn').textContent = step === total ? '✓ 完成创建' : '下一步 ›';
+  if (step === total) ljFillPreview();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function prev() { if(step > 1) { step--; showStep(); } }
 function next() {
   if(step < total) { step++; showStep(); }
-  else { showToast('success', '创建成功', '阿岁已入驻心屿'); setTimeout(() => location.href='heart-island.html', 1200); }
+  else {
+    // V23-D：完成创建 = 扣智能体周额度（10/周）→ 入库作品
+    var st = window.CreatorStore, r = st ? st.consume('agent') : { ok: true, free: true, left: '?' };
+    if (!r.ok) { showToast('warning', '本周额度已用完', '智能体每周 10 次免费，超出需下周一再来或联系升级'); return; }
+    var nameEl = document.querySelector('.cc-step-section input');
+    var name = (nameEl && nameEl.value.trim()) || '未命名智能体';
+    if (st) st.addWork({ type: 'character', title: '角色：' + name, status: '草稿', desc: '8 步向导创建', income: 0 });
+    showToast('success', '创建成功', '「' + name + '」已入驻心屿' + (r.free ? '（本周剩余 ' + r.left + ' 次）' : ''));
+    setTimeout(() => location.href = 'creator-center.html', 1400);
+  }
+}
+/* V23-D：语言指纹 / 行为约束 AI 候选（3-5 条 + 换一批） */
+function ljAiField(kind, targetId) {
+  var A = window.CreatorAI, S = window.CreatorStore;
+  if (!A) { showToast('info', 'AI 候选', '候选库加载中，请稍后再试'); return; }
+  var pool = kind === 'catch' ? 'fingerprintStyle' : kind === 'constraint' ? 'charSecret' : 'charName';
+  var list = A.candidates(pool, null, 4);
+  var msg = list.map(function (x) { return x.icon + ' ' + x.name + '：' + x.detail; }).join('\n');
+  var pick = prompt('AI 候选（复制或修改后确认）：\n\n' + list.map(function (x, i) { return (i + 1) + '. ' + x.name + ' — ' + x.detail; }).join('\n') + '\n\n输入编号选用，或直接输入你的方案：', '1');
+  if (!pick) return;
+  var n = parseInt(pick, 10);
+  var val = (n >= 1 && n <= list.length) ? list[n - 1].detail : pick;
+  var el = document.getElementById(targetId);
+  if (el) el.value = val;
+  A.rotate();
+}
+function ljFillPreview() {
+  var pv = document.getElementById('ljPreview');
+  if (!pv) return;
+  var secs = document.querySelectorAll('.cc-step-section');
+  var grab = function (secIdx, sel) {
+    var el = secs[secIdx] && secs[secIdx].querySelector(sel);
+    return el ? (el.value || el.textContent).trim() : '';
+  };
+  var name = grab(0, 'input') || '未命名';
+  var fp = document.getElementById('ljFpCatch');
+  var parts = ['姓名：' + name, '口癖：' + ((fp && fp.value) || '未设置'), '底稿仅本地预览，创建后可在工坊编辑'];
+  pv.innerHTML = parts.map(function (x) { return '<div>· ' + x + '</div>'; }).join('');
 }
 document.querySelectorAll('.cc-chip').forEach(c => c.addEventListener('click', () => {
   c.parentElement.querySelectorAll('.cc-chip').forEach(s => s.dataset.selected = '');

@@ -624,3 +624,27 @@ NovelWorldVN.typewrite(text);  // 单独打字机
 - 主线渲染零 LLM 路径（只读 canon.source_text）；世界功能区 0 聊天气泡
 - L5/L6/L7 结构占位 + 界面"即将开放"（不砍功能不隐藏）
 - 货币双轨：UI 收费点只用灵玉；铜钱/银两不进 UI
+
+## 20. V23 创作功能区 V3.0 + V25 功能区细节（2026-09-15 交付登记）
+
+### 20.1 V23 创作功能区（V3.0 文档执行，CR-01~08）
+| # | 功能 | 实现 |
+|---|---|---|
+| CR-01 | 共享数据层 | `js/creator-store.js` 键 `lingjing_v523_creator_v1`：额度系统（智能体周10/图日3→20晶/视频月1→200/声音日5→10/音色首次→50/灵念日1→30/Agent月3→100/动态∞）+ 灵晶联动 `lingjing_v520_wallet` + 作品库 + 互动四模块 + 动态/灵念/Agent行为/媒体记录 + 等级 L1-L5 |
+| CR-02 | AI 候选库 | `js/creator-ai.js`：11 类候选池恒 3-5 条 + 换一批 + 我来说（AIHelper 钩子预留） |
+| CR-03 | 集中接线 | `js/creator-pages.js`：13 页按路径覆盖假交互→真流程；Toast 替代 alert；固定底条避让 tabbar |
+| CR-04 | 8 步向导 | character-create 7→8 步：+语言指纹（风格/口癖/句长/绝不会说）+ 行为约束（绝不做/一定做/底线）+ 预览；完成扣周额度并入库 |
+| CR-05 | 灵境工坊 | workshop.html：等级收益卡（store 渲染）+ 我的作品 4 类筛选 + 角色卡[互动管理] + 模板库 4 类 + 数据看板入口 |
+| CR-06 | 互动管理 | interaction-manage.html：四模块计数/列表/新建入库真数据 + 表单 AI 候选注入 |
+| CR-07 | 媒体/音色 | create-image/video/sound/post/card + agent-create + voice-clone（授权门禁+首次免费）额度真扣减 |
+| CR-08 | 看板 | dashboard.html AI 优化建议（5 条真数据渲染） |
+| 回归 | `scripts/test_v23_creator_v3.py` | **45 PASS / 0 FAIL / 0 PageError**（8796 独立端口） |
+
+### 20.2 V25 功能区细节（AR-01~02）
+| # | 功能 | 实现 |
+|---|---|---|
+| AR-01 | 启动逻辑 | `js/boot-greeting.js` 键 `lingjing_v525_boot_v1`：首次登录直进首页；≥2 次登录出陪伴AI（阿岁）全屏打招呼（分时段问候+打字机+[进入灵境]）；sessionStorage 每会话一次；接入根 product-preview/index 双镜像 |
+| AR-02 | 文案变更 | creator-center「我的作品」→「编辑我的作品」 |
+| 回归 | `scripts/test_v25_boot.py` | **10 PASS / 0 FAIL**（8798 独立端口） |
+
+> S06 缺口检查：签到 4/4/6/8/10/12/25、首页四入口、世界书架、心屿、我的页均已有实现且符合（详见 DEV_PLAN-v25 §一）。

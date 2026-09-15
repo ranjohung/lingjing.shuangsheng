@@ -272,3 +272,17 @@ V17-V20 新增页面此前未入目录，现补记：
 | 数据 · js/novel-os-store.js | L0-L7 七层 + 哈希锁 + Gate + Compiler；键 `lingjing_v524_novel_os_v1` |
 
 变更明细以 [ALL_FUNCTIONS.md](ALL_FUNCTIONS.md) §19（NR-01~08）为准。
+
+---
+
+### 补遗五（2026-09-15 · V23 创作功能区 V3.0 + V25 启动逻辑）
+
+| 区 · 页面 | 说明 |
+|---|---|
+| 创作区 · 13 子页 | create-image/video/sound/post/card、agent-create、voice-clone、workshop、interaction-manage、work-editor、dashboard、revenue-detail、creator-center 接入 store+tabbar（tabbar-embed 统一底栏，创作 Tab 高亮） |
+| 数据 · js/creator-store.js / creator-ai.js / creator-pages.js | V23 共享数据层 + AI 候选库 + 集中接线；键 `lingjing_v523_creator_v1` |
+| 角色 · character-create.html | 升级 8 步向导（+语言指纹/行为约束/预览） |
+| 首页 · js/boot-greeting.js | V25 启动逻辑：第 2 次登录起陪伴AI全屏打招呼，每会话一次 |
+| 截图 · screenshots/v23 /v25 | 回归证据 |
+
+明细以 [ALL_FUNCTIONS.md](ALL_FUNCTIONS.md) §20 为准。

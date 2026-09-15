@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Agent创建 · 灵境</title>
+<link rel="stylesheet" href="css/shell-v64.css">
+<link rel="stylesheet" href="css/mobile-lock.css">
+<style>
+:root{--bg:#1A1A2E;--card:#16213E;--accent:#E94560;--xinyu:#6C5CE7;--ok:#4ECCA3;--warn:#FFB347;--text:#EAEAEA;--sub:#8A8A9A;--border:#2A2A4A}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:100px}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10}
+.topbar .back{font-size:18px;cursor:pointer;color:var(--accent)}
+.topbar h1{font-size:17px;font-weight:600}
+.topbar .quota{font-size:12px;color:var(--ok);background:rgba(78,202,163,.1);padding:4px 10px;border-radius:12px}
+.container{padding:16px}
+.section{margin-bottom:24px}
+.section-title{font-size:14px;font-weight:600;color:var(--sub);margin-bottom:12px;letter-spacing:1px}
+.form-group{margin-bottom:16px}
+.form-label{font-size:13px;font-weight:500;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.form-label .ai-btn{font-size:11px;color:var(--xinyu);cursor:pointer}
+.form-input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:14px;outline:none}
+.form-input:focus{border-color:var(--accent)}
+.form-textarea{width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:14px;outline:none;min-height:100px;resize:vertical;font-family:inherit}
+.form-textarea:focus{border-color:var(--accent)}
+.trigger-section{background:var(--card);border-radius:16px;padding:16px;margin-bottom:16px}
+.trigger-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.trigger-header .icon{font-size:20px}
+.trigger-header .title{font-size:14px;font-weight:500}
+.trigger-type{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.trigger-btn{padding:8px 14px;background:var(--bg);border-radius:10px;font-size:12px;cursor:pointer;border:1px solid var(--border);transition:all .2s}
+.trigger-btn.selected{border-color:var(--accent);color:var(--accent);background:rgba(233,69,96,.05)}
+.action-block{background:var(--bg);border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid var(--border)}
+.action-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.action-header .num{font-size:12px;color:var(--xinyu);font-weight:600}
+.action-header .remove{font-size:14px;color:var(--sub);cursor:pointer}
+.action-type{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.action-type-btn{padding:6px 10px;background:var(--card);border-radius:8px;font-size:11px;cursor:pointer;border:1px solid var(--border)}
+.action-type-btn.selected{border-color:var(--ok);color:var(--ok)}
+.condition-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.condition-row select{flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-size:12px;outline:none}
+.condition-row input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-size:12px;outline:none}
+.template-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.template-card{background:var(--card);border-radius:12px;padding:14px;cursor:pointer;border:2px solid transparent;transition:all .2s}
+.template-card:active,.template-card.selected{border-color:var(--accent)}
+.template-card .t-icon{font-size:24px;margin-bottom:6px}
+.template-card .t-name{font-size:13px;font-weight:500;margin-bottom:2px}
+.template-card .t-desc{font-size:11px;color:var(--sub)}
+.preview-box{background:var(--card);border-radius:16px;padding:16px;border:1px solid var(--border)}
+.preview-box .label{font-size:12px;color:var(--sub);margin-bottom:8px}
+.preview-box .code{font-size:12px;font-family:monospace;color:var(--ok);background:var(--bg);border-radius:8px;padding:12px;line-height:1.6;white-space:pre-wrap}
+.generate-bar{position:fixed;bottom:0;left:0;right:0;padding:16px;background:var(--bg);border-top:1px solid var(--border);display:flex;gap:12px;align-items:center}
+.cost-info{font-size:12px;color:var(--warn)}
+.cost-info .free{color:var(--ok)}
+.btn-gen{flex:1;padding:14px;background:linear-gradient(135deg,var(--accent),var(--xinyu));border:none;border-radius:12px;color:#fff;font-size:15px;font-weight:600;cursor:pointer}
+.add-btn{padding:10px;background:transparent;border:1px dashed var(--border);border-radius:10px;color:var(--xinyu);font-size:13px;cursor:pointer;width:100%;text-align:center;margin-top:8px}
+</style>
+<link rel="stylesheet" href="css/tabbar-embed.css">
+</head>
+<body>
+<div class="topbar">
+  <span class="back" onclick="history.back()">‹ 返回</span>
+  <h1>🤖 Agent创建</h1>
+  <span class="quota">本月 3/3 免费</span>
+</div>
+<div class="container">
+  <div class="section">
+    <div class="section-title">基础信息</div>
+    <div class="form-group">
+      <div class="form-label">Agent名称</div>
+      <input class="form-input" placeholder="给你的Agent起个名字" value="剧情守护者">
+    </div>
+    <div class="form-group">
+      <div class="form-label"><span>功能描述</span><span class="ai-btn" onclick="aiDesc()">✨ AI帮我写</span></div>
+      <textarea class="form-textarea" placeholder="描述这个Agent的功能和用途..." rows="3">当用户阅读小说时，自动检测伏笔未回收的章节，并给出提醒和回收建议。</textarea>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">快捷模板</div>
+    <div class="template-grid">
+      <div class="template-card" onclick="selT(this)"><div class="t-icon">📖</div><div class="t-name">伏笔守护者</div><div class="t-desc">自动追踪伏笔埋设与回收</div></div>
+      <div class="template-card selected" onclick="selT(this)"><div class="t-icon">🎭</div><div class="t-name">剧情引导师</div><div class="t-desc">根据读者行为推荐剧情线</div></div>
+      <div class="template-card" onclick="selT(this)"><div class="t-icon">⚡</div><div class="t-name">战斗解说</div><div class="t-desc">为战斗场景添加动态描述</div></div>
+      <div class="template-card" onclick="selT(this)"><div class="t-icon">💬</div><div class="t-name">对话润色</div><div class="t-desc">优化角色对话的口语自然度</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">触发条件</div>
+    <div class="trigger-section">
+      <div class="trigger-header"><span class="icon">⚡</span><span class="title">何时触发这个Agent</span></div>
+      <div class="trigger-type">
+        <div class="trigger-btn selected" onclick="selTrig(this)">章节加载时</div>
+        <div class="trigger-btn" onclick="selTrig(this)">用户选择分支时</div>
+        <div class="trigger-btn" onclick="selTrig(this)">角色好感度变化时</div>
+        <div class="trigger-btn" onclick="selTrig(this)">伏笔状态变化时</div>
+        <div class="trigger-btn" onclick="selTrig(this)">自定义事件</div>
+      </div>
+      <div class="condition-row">
+        <select><option>所属小说</option><option>所有章节</option></select>
+        <select><option>《长夜城》</option></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">执行动作</div>
+    <div class="action-block">
+      <div class="action-header"><span class="num">动作 1</span><span class="remove" onclick="this.parentElement.parentElement.remove()">✕</span></div>
+      <div class="action-type">
+        <div class="action-type-btn selected" onclick="selAct(this)">生成提示</div>
+        <div class="action-type-btn" onclick="selAct(this)">发送消息</div>
+        <div class="action-type-btn" onclick="selAct(this)">修改数据</div>
+        <div class="action-type-btn" onclick="selAct(this)">触发事件</div>
+      </div>
+      <div class="form-label" style="margin-top:8px"><span>提示内容</span><span class="ai-btn" onclick="aiAction()">✨ AI生成</span></div>
+      <textarea class="form-textarea" rows="3" placeholder="Agent执行时要显示/发送的内容...">检测到此章节存在未回收的伏笔：#F03"神秘的银项链"（埋设于第1章）。建议在后续章节中安排回收情节。</textarea>
+    </div>
+    <div class="action-block">
+      <div class="action-header"><span class="num">动作 2</span><span class="remove" onclick="this.parentElement.parentElement.remove()">✕</span></div>
+      <div class="action-type">
+        <div class="action-type-btn" onclick="selAct(this)">生成提示</div>
+        <div class="action-type-btn selected" onclick="selAct(this)">发送消息</div>
+        <div class="action-type-btn" onclick="selAct(this)">修改数据</div>
+        <div class="action-type-btn" onclick="selAct(this)">触发事件</div>
+      </div>
+      <textarea class="form-textarea" rows="2" style="margin-top:8px" placeholder="消息内容...">在章节末尾添加一个浮层提醒，展示未回收伏笔列表。</textarea>
+    </div>
+    <div class="add-btn" onclick="addAction()">＋ 添加动作</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">回复模板</div>
+    <div class="form-label"><span>Agent回复风格</span><span class="ai-btn" onclick="aiTemplate()">✨ AI生成模板</span></div>
+    <textarea class="form-textarea" rows="4" placeholder="Agent与用户交互时的回复模板...">
+【伏笔提醒】
+📌 发现伏笔：{伏笔名称}
+📍 埋设于：第{X}章
+⏳ 已等待：{N}章未回收
+💡 建议：{AI生成的回收建议}
+
+是否现在查看回收方案？
+    </textarea>
+  </div>
+
+  <div class="section">
+    <div class="section-title">配置预览</div>
+    <div class="preview-box">
+      <div class="label">Agent 行为逻辑</div>
+      <div class="code">触发条件：章节加载时
+所属作品：《长夜城》
+↓
+动作1：生成提示（伏笔检测报告）
+动作2：发送消息（浮层提醒）
+↓
+等待用户选择
+↓
+按模板回复回收方案</div>
+    </div>
+  </div>
+</div>
+<div class="generate-bar">
+  <div class="cost-info"><span class="free">免费额度内</span> · 本月剩余 3 次</div>
+  <button class="btn-gen" onclick="saveAgent()">✨ 保存Agent</button>
+</div>
+<script>
+function selT(e){document.querySelectorAll('.template-card').forEach(c=>c.classList.remove('selected'));e.classList.add('selected')}
+function selTrig(e){[...e.parentElement.children].forEach(c=>c.classList.remove('selected'));e.classList.add('selected')}
+function selAct(e){[...e.parentElement.children].forEach(c=>c.classList.remove('selected'));e.classList.add('selected')}
+function addAction(){
+  const n=document.querySelectorAll('.action-block').length+1;
+  const block=document.createElement('div');
+  block.className='action-block';
+  block.innerHTML='<div class="action-header"><span class="num">动作 '+n+'</span><span class="remove" onclick="this.parentElement.parentElement.remove()">✕</span></div><div class="action-type"><div class="action-type-btn selected" onclick="selAct(this)">生成提示</div><div class="action-type-btn" onclick="selAct(this)">发送消息</div><div class="action-type-btn" onclick="selAct(this)">修改数据</div><div class="action-type-btn" onclick="selAct(this)">触发事件</div></div><textarea class="form-textarea" rows="2" style="margin-top:8px" placeholder="描述这个动作的执行内容..."></textarea>';
+  document.querySelector('.add-btn').before(block);
+}
+function aiDesc(){alert('AI正在生成描述...')}
+function aiAction(){alert('AI正在生成动作内容...')}
+function aiTemplate(){alert('AI正在生成回复模板...')}
+function saveAgent(){alert('Agent 创建成功！已保存到你的Agent列表')}
+</script>
+<script src="js/creator-store.js"></script>
+<script src="js/creator-ai.js"></script>
+<script src="js/creator-pages.js"></script>
+<script src="js/tabbar.js"></script>
+</body>
+</html>

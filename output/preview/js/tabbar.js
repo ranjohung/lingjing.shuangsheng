@@ -24,7 +24,7 @@
     { id: 'home',   label: '首页', ico: '🏠', href: 'product-preview.html',  match: ['product-preview', 'home', 'index'],  klass: 't-home' },
     { id: 'world',  label: '世界', ico: '📖', href: 'library.html',          match: ['library', 'world', 'discover'],      klass: 't-world' },
     { id: 'xinyu',  label: '心屿', ico: '💬', href: 'heart-island.html',     match: ['heart-island', 'xinyu', 'chat'],     klass: 't-xinyu' },
-    { id: 'create', label: '创作', ico: '✨', href: 'creator-center.html',   match: ['creator-center', 'creator', 'novel'], klass: 't-create' },
+    { id: 'create', label: '创作', ico: '✨', href: 'creator-center.html',   match: ['creator-center', 'creator', 'novel', 'create-', 'workshop', 'agent-create', 'work-editor', 'interaction-manage', 'dashboard', 'revenue-detail', 'voice-clone'], klass: 't-create' },
     { id: 'me',     label: '我的', ico: '👤', href: 'me.html',                match: ['me', 'profile', 'wallet'],           klass: 't-me' }
   ];
 

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>灵境工坊</title>
+<link rel="stylesheet" href="css/shell-v64.css">
+<link rel="stylesheet" href="css/mobile-lock.css">
+<style>
+:root{--bg:#1A1A2E;--card:#16213E;--accent:#E94560;--xinyu:#6C5CE7;--ok:#4ECCA3;--warn:#FFB347;--world:#00B894;--text:#EAEAEA;--sub:#8A8A9A;--border:#2A2A4A}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;min-height:100vh;max-width:480px;margin:0 auto;overflow-x:hidden}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;position:sticky;top:0;background:var(--bg);z-index:10}
+.top-bar h1{font-size:20px;font-weight:700}
+.top-bar .back{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--card);cursor:pointer;font-size:18px}
+.top-bar .save-btn{padding:6px 16px;border-radius:20px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;border:none;cursor:pointer}
+.workspace{padding:0 20px 100px}
+.section-title{font-size:15px;font-weight:600;margin:20px 0 12px;display:flex;align-items:center;gap:8px}
+.section-title .icon{font-size:18px}
+.project-card{background:var(--card);border-radius:16px;padding:20px;border:1px solid var(--border);position:relative;overflow:hidden}
+.project-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--xinyu))}
+.project-card .proj-name{font-size:18px;font-weight:700;margin-bottom:4px}
+.project-card .proj-desc{font-size:13px;color:var(--sub);margin-bottom:16px;line-height:1.5}
+.project-card .proj-stats{display:flex;gap:16px}
+.project-card .stat{text-align:center}
+.project-card .stat .val{font-size:20px;font-weight:700;color:var(--accent)}
+.project-card .stat .lbl{font-size:11px;color:var(--sub);margin-top:2px}
+.tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tool-item{background:var(--card);border-radius:14px;padding:16px 8px;text-align:center;border:1px solid var(--border);cursor:pointer;transition:all .2s}
+.tool-item:active{transform:scale(.96);border-color:var(--accent)}
+.tool-item .tool-icon{font-size:28px;margin-bottom:8px}
+.tool-item .tool-name{font-size:12px;font-weight:500}
+.tool-item .tool-desc{font-size:10px;color:var(--sub);margin-top:4px}
+.asset-section{margin-top:8px}
+.asset-tabs{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px}
+.asset-tab{padding:6px 14px;border-radius:20px;background:var(--card);border:1px solid var(--border);font-size:12px;white-space:nowrap;cursor:pointer;color:var(--sub)}
+.asset-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.asset-list{display:flex;flex-direction:column;gap:10px}
+.asset-item{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:12px;padding:12px 14px;border:1px solid var(--border)}
+.asset-item .asset-thumb{width:44px;height:44px;border-radius:10px;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.asset-item .asset-info{flex:1;min-width:0}
+.asset-item .asset-name{font-size:13px;font-weight:600;margin-bottom:2px}
+.asset-item .asset-meta{font-size:11px;color:var(--sub)}
+.asset-item .asset-action{padding:4px 10px;border-radius:8px;background:rgba(233,69,96,.15);color:var(--accent);font-size:11px;border:none;cursor:pointer}
+.ai-float{position:fixed;bottom:80px;right:20px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--xinyu));display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 20px rgba(233,69,96,.4);cursor:pointer;z-index:20}
+.ai-panel{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;background:var(--card);border-radius:20px 20px 0 0;padding:20px;transform:translateY(100%);transition:transform .3s;z-index:30;border-top:1px solid var(--border)}
+.ai-panel.show{transform:translateY(0)}
+.ai-panel .panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.ai-panel .panel-header h3{font-size:16px;font-weight:700}
+.ai-panel .close-panel{width:32px;height:32px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px}
+.ai-suggestions{display:flex;flex-direction:column;gap:10px}
+.ai-sug-item{background:rgba(108,92,231,.1);border:1px solid rgba(108,92,231,.3);border-radius:12px;padding:12px 14px;cursor:pointer}
+.ai-sug-item:active{background:rgba(108,92,231,.2)}
+.ai-sug-item .sug-title{font-size:13px;font-weight:600;margin-bottom:4px;color:var(--xinyu)}
+.ai-sug-item .sug-desc{font-size:11px;color:var(--sub);line-height:1.4}
+.timeline{margin-top:8px}
+.timeline-item{display:flex;gap:12px;padding-bottom:16px;position:relative}
+.timeline-item:not(:last-child)::after{content:'';position:absolute;left:15px;top:32px;bottom:0;width:1px;background:var(--border)}
+.timeline-dot{width:32px;height:32px;border-radius:50%;background:var(--card);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;z-index:1}
+.timeline-dot.done{border-color:var(--ok);background:rgba(78,204,163,.1)}
+.timeline-dot.current{border-color:var(--accent);background:rgba(233,69,96,.1)}
+.timeline-content{flex:1}
+.timeline-content .tl-title{font-size:13px;font-weight:600;margin-bottom:2px}
+.timeline-content .tl-desc{font-size:11px;color:var(--sub)}
+.timeline-content .tl-time{font-size:10px;color:var(--sub);margin-top:4px}
+</style>
+<link rel="stylesheet" href="css/tabbar-embed.css">
+</head>
+<body>
+<div class="top-bar">
+  <div class="back" onclick="history.back()">←</div>
+  <h1>灵境工坊</h1>
+  <button class="save-btn" onclick="saveProject()">保存</button>
+</div>
+<div class="workspace">
+  <div class="section-title"><span class="icon">👑</span> 创作者等级</div>
+  <div class="project-card" id="ljLevelCard">
+    <div class="proj-name" id="ljLevelName">L3 · 黄金</div>
+    <div class="proj-desc" id="ljLevelDesc">分成比例 70% · 独家发布 · 评分≥8.0</div>
+    <div class="proj-stats">
+      <div class="stat"><div class="val" id="ljIncomeTotal">12,800</div><div class="lbl">总收益(灵晶)</div></div>
+      <div class="stat"><div class="val" id="ljIncomePending">3,200</div><div class="lbl">待结算</div></div>
+      <div class="stat"><div class="val" id="ljWorkCount">3</div><div class="lbl">作品数</div></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:14px">
+      <button class="save-btn" style="flex:1" onclick="location.href='revenue-detail.html'">收益明细</button>
+      <button class="save-btn" style="flex:1;background:var(--ok)" onclick="ljWithdraw()">提现</button>
+    </div>
+  </div>
+
+  <div class="section-title"><span class="icon">📚</span> 我的作品</div>
+  <div class="asset-section">
+    <div class="asset-tabs" id="ljWorkTabs">
+      <div class="asset-tab active" data-w="all">全部</div>
+      <div class="asset-tab" data-w="novel">小说</div>
+      <div class="asset-tab" data-w="character">角色</div>
+      <div class="asset-tab" data-w="prop">道具</div>
+      <div class="asset-tab" data-w="scene">场景</div>
+    </div>
+    <div class="asset-list" id="ljWorkList"></div>
+    <div class="tool-item" style="margin-top:12px;text-align:center;padding:14px" onclick="location.href='work-editor.html'"><div class="tool-name" style="color:var(--accent);font-weight:600">＋ 创建新作品</div></div>
+  </div>
+
+  <div class="section-title"><span class="icon">🧩</span> 模板库</div>
+  <div class="tools-grid">
+    <div class="tool-item" onclick="ljTpl('世界模板')"><div class="tool-icon">🌍</div><div class="tool-name">世界模板</div><div class="tool-desc">都市/修仙/末日等</div></div>
+    <div class="tool-item" onclick="ljTpl('角色模板')"><div class="tool-icon">🎭</div><div class="tool-name">角色模板</div><div class="tool-desc">预设性格原型</div></div>
+    <div class="tool-item" onclick="ljTpl('剧情模板')"><div class="tool-icon">📖</div><div class="tool-name">剧情模板</div><div class="tool-desc">成长/悬疑/爱情</div></div>
+    <div class="tool-item" onclick="ljTpl('道具模板')"><div class="tool-icon">⚔️</div><div class="tool-name">道具模板</div><div class="tool-desc">武器/丹药/书籍</div></div>
+    <div class="tool-item" onclick="location.href='dashboard.html'"><div class="tool-icon">📊</div><div class="tool-name">数据看板</div><div class="tool-desc">AI 优化建议</div></div>
+    <div class="tool-item" onclick="location.href='interaction-manage.html'"><div class="tool-icon">💞</div><div class="tool-name">互动管理</div><div class="tool-desc">角色互动情节</div></div>
+  </div>
+
+  <div class="section-title"><span class="icon">📁</span> 当前项目</div>
+  <div class="project-card">
+    <div class="proj-name">《星落长安》</div>
+    <div class="proj-desc">大唐末年，一颗陨星划破夜空，少年李玄在废墟中发现了一面能照见前世的古镜……</div>
+    <div class="proj-stats">
+      <div class="stat"><div class="val">12</div><div class="lbl">角色</div></div>
+      <div class="stat"><div class="val">8</div><div class="lbl">章节</div></div>
+      <div class="stat"><div class="val">3</div><div class="lbl">智能体</div></div>
+      <div class="stat"><div class="val">2.4w</div><div class="lbl">字数</div></div>
+    </div>
+  </div>
+  <div class="section-title"><span class="icon">🛠️</span> 快捷工具</div>
+  <div class="tools-grid">
+    <div class="tool-item" onclick="location.href='character-create.html'"><div class="tool-icon">👤</div><div class="tool-name">新建角色</div><div class="tool-desc">8步向导</div></div>
+    <div class="tool-item"><div class="tool-icon">🏔️</div><div class="tool-name">场景编辑</div><div class="tool-desc">构建世界观</div></div>
+    <div class="tool-item"><div class="tool-icon">⚔️</div><div class="tool-name">道具设计</div><div class="tool-desc">武器/法宝</div></div>
+    <div class="tool-item" onclick="location.href='create-image.html'"><div class="tool-icon">🎨</div><div class="tool-name">AI生图</div><div class="tool-desc">角色/场景</div></div>
+    <div class="tool-item" onclick="location.href='create-sound.html'"><div class="tool-icon">🎙️</div><div class="tool-name">AI配音</div><div class="tool-desc">旁白/对话</div></div>
+    <div class="tool-item" onclick="location.href='create-video.html'"><div class="tool-icon">🎬</div><div class="tool-name">AI视频</div><div class="tool-desc">动态分镜</div></div>
+  </div>
+  <div class="section-title"><span class="icon">📦</span> 素材库</div>
+  <div class="asset-section">
+    <div class="asset-tabs">
+      <div class="asset-tab active">全部</div>
+      <div class="asset-tab">角色</div>
+      <div class="asset-tab">场景</div>
+      <div class="asset-tab">道具</div>
+      <div class="asset-tab">声音</div>
+      <div class="asset-tab">图片</div>
+    </div>
+    <div class="asset-list">
+      <div class="asset-item"><div class="asset-thumb">👤</div><div class="asset-info"><div class="asset-name">李玄（主角）</div><div class="asset-meta">角色 · 已关联智能体 · 3张立绘</div></div><button class="asset-action">编辑</button></div>
+      <div class="asset-item"><div class="asset-thumb">👤</div><div class="asset-info"><div class="asset-name">苏晚晴</div><div class="asset-meta">角色 · 已关联智能体 · 1张立绘</div></div><button class="asset-action">编辑</button></div>
+      <div class="asset-item"><div class="asset-thumb">🏔️</div><div class="asset-info"><div class="asset-name">长安皇城</div><div class="asset-meta">场景 · 主舞台 · 2张背景图</div></div><button class="asset-action">编辑</button></div>
+      <div class="asset-item"><div class="asset-thumb">⚔️</div><div class="asset-info"><div class="asset-name">照妖古镜</div><div class="asset-meta">道具 · 关键剧情物品</div></div><button class="asset-action">编辑</button></div>
+      <div class="asset-item"><div class="asset-thumb">🎙️</div><div class="asset-info"><div class="asset-name">李玄音色</div><div class="asset-meta">复刻音色 · 已授权 · 3条配音</div></div><button class="asset-action">编辑</button></div>
+      <div class="asset-item"><div class="asset-thumb">🎨</div><div class="asset-info"><div class="asset-name">星落之夜</div><div class="asset-meta">AI生成图片 · 国风写实 · 1024×1024</div></div><button class="asset-action">查看</button></div>
+    </div>
+  </div>
+  <div class="section-title"><span class="icon">📋</span> 创作进度</div>
+  <div class="timeline">
+    <div class="timeline-item"><div class="timeline-dot done">✓</div><div class="timeline-content"><div class="tl-title">世界观设定完成</div><div class="tl-desc">大唐末年 + 玄幻元素融合</div><div class="tl-time">9月10日</div></div></div>
+    <div class="timeline-item"><div class="timeline-dot done">✓</div><div class="timeline-content"><div class="tl-title">主角「李玄」创建</div><div class="tl-desc">8步向导 · 已关联智能体</div><div class="tl-time">9月11日</div></div></div>
+    <div class="timeline-item"><div class="timeline-dot done">✓</div><div class="timeline-content"><div class="tl-title">前3章初稿完成</div><div class="tl-desc">约8000字 · 小说模拟器</div><div class="tl-time">9月12日</div></div></div>
+    <div class="timeline-item"><div class="timeline-dot current">●</div><div class="timeline-content"><div class="tl-title">角色立绘生成中</div><div class="tl-desc">李玄、苏晚晴 AI生图</div><div class="tl-time">今天</div></div></div>
+    <div class="timeline-item"><div class="timeline-dot">○</div><div class="timeline-content"><div class="tl-title">第4-6章待创作</div><div class="tl-desc">计划本周完成</div><div class="tl-time">待开始</div></div></div>
+  </div>
+</div>
+<div class="ai-float" onclick="toggleAI()">🤖</div>
+<div class="ai-panel" id="aiPanel">
+  <div class="panel-header"><h3>🤖 工坊AI助手</h3><div class="close-panel" onclick="toggleAI()">✕</div></div>
+  <div class="ai-suggestions">
+    <div class="ai-sug-item"><div class="sug-title">📝 生成本章大纲</div><div class="sug-desc">基于已完成的3章内容，为第4章生成结构化大纲建议</div></div>
+    <div class="ai-sug-item"><div class="sug-title">⚡ 剧情冲突建议</div><div class="sug-desc">分析当前剧情节奏，建议下一个高潮冲突点</div></div>
+    <div class="ai-sug-item"><div class="sug-title">👤 角色关系优化</div><div class="sug-desc">李玄与苏晚晴的关系线可以加入「前世记忆」触发事件</div></div>
+    <div class="ai-sug-item"><div class="sug-title">🌍 世界观补充</div><div class="sug-desc">建议增加「星陨后」的社会变化设定，丰富背景深度</div></div>
+  </div>
+</div>
+<script>
+function saveProject(){const b=document.querySelector('.save-btn');b.textContent='已保存 ✓';b.style.background='var(--ok)';setTimeout(()=>{b.textContent='保存';b.style.background='var(--accent)'},2000)}
+function toggleAI(){document.getElementById('aiPanel').classList.toggle('show')}
+document.querySelectorAll('.asset-tab').forEach(t=>t.addEventListener('click',function(){document.querySelectorAll('.asset-tab').forEach(x=>x.classList.remove('active'));this.classList.add('active')}));
+</script>
+<script src="js/creator-store.js"></script>
+<script src="js/tabbar.js"></script>
+<script src="js/creator-ai.js"></script>
+<script src="js/creator-pages.js"></script>
+</body>
+</html>
