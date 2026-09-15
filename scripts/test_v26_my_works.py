@@ -103,6 +103,25 @@ with sync_playwright() as p:
     for bad in ["橙光", "星野", "丸子", "哔哩", "bilibili"]:
         check(f"5.2 无第三方名 {bad}", bad not in html)
     check("5.3 手机锁宽 css", "mobile-lock.css" in html)
+    # ---------- 6. 单文件入口冒烟（index.html → 创作 → 编辑我的作品 → 续写） ----------
+    print("== 6 单文件应用冒烟 ==")
+    pg2 = browser.new_page(viewport={"width": 390, "height": 844})
+    errs2 = []
+    pg2.on("pageerror", lambda e: errs2.append(str(e)))
+    pg2.add_init_script("try{localStorage.setItem('lingjing_onboarding_done','true')}catch(e){}")
+    goto(pg2, f"{BASE}/index.html"); pg2.wait_for_timeout(1500)
+    fl = pg2.frame_locator("#stage")
+    pg2.evaluate("LJ.go('creator-center')"); pg2.wait_for_timeout(800)
+    check("6.1 单文件路由到创作中心", fl.locator("a.func[href='my-works.html']").count() == 1)
+    fl.locator("a.func[href='my-works.html']").click(); pg2.wait_for_timeout(900)
+    check("6.2 功能按键跳转历史全集", "#/my-works" in (pg2.url or "") and fl.locator("#mw-list .mw-item").count() >= 7, pg2.url)
+    fl.locator("#mw-list .mw-item").filter(has_text="红楼梦").first.locator("a.primary").click()
+    pg2.wait_for_timeout(900)
+    check("6.3 继续续写直达编辑器", "《红楼梦》" in (fl.locator("#workTitle").inner_text() or ""))
+    check("6.4 单文件 0 JS 错误", len(errs2) == 0, "; ".join(errs2[:2]))
+    pg2.screenshot(path=OUT + r"\v26-04-single-file.png")
+    pg2.close()
+
     browser.close()
 
 fails = [r for r in results if not r[1]]

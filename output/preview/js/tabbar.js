@@ -21,7 +21,7 @@
   // ---------- 配置 ----------
   var STORAGE_KEY = 'lingjing_v5170_current_tab';
   var TABS = [
-    { id: 'home',   label: '首页', ico: '🏠', href: 'product-preview.html',  match: ['product-preview', 'home', 'index'],  klass: 't-home' },
+    { id: 'home',   label: '首页', ico: '🏠', href: 'index.html',            match: ['product-preview', 'home', 'index'],  klass: 't-home' },
     { id: 'world',  label: '世界', ico: '📖', href: 'library.html',          match: ['library', 'world', 'discover'],      klass: 't-world' },
     { id: 'xinyu',  label: '心屿', ico: '💬', href: 'heart-island.html',     match: ['heart-island', 'xinyu', 'chat'],     klass: 't-xinyu' },
     { id: 'create', label: '创作', ico: '✨', href: 'creator-center.html',   match: ['creator-center', 'creator', 'novel', 'create-', 'workshop', 'agent-create', 'work-editor', 'interaction-manage', 'dashboard', 'revenue-detail', 'voice-clone', 'my-works'], klass: 't-create' },
@@ -31,8 +31,8 @@
   function resolveTabHref(n) {
     var p = (window.location.pathname || '').toLowerCase();
     var inSub = p.indexOf('/output/preview/') >= 0;
-    // home 永远回到根目录的 product-preview.html
-    if (n === 'product-preview.html') return inSub ? '../../product-preview.html' : n;
+    // home（index.html）永远回到根目录唯一主页
+    if (n === 'index.html') return inSub ? '../../index.html' : n;
     // 其他 tab：根 + 前缀，子目录直链
     return inSub ? n : 'output/preview/' + n;
   }

@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-"""V25 启动逻辑验收：第二次登录陪伴AI打招呼界面（PRD-v25 §3）。"""
+"""V25 启动逻辑验收：第二次登录陪伴AI打招呼界面（PRD-v25 §3）。
+单文件应用架构（build_single_html.py）：boot-greeting 在 home iframe 内执行，
+localStorage 与父页同源共享；测试经 frame_locator('#stage') 探测 iframe 内 UI。
+"""
 import os
 import socket
 import subprocess
@@ -49,31 +52,33 @@ def main():
             pg = ctx.new_page()
             pg.on("pageerror", lambda e: PAGE_ERRORS.append(str(e)))
             U = f"{BASE}/index.html"
+            # 预置已完成新手引导 → 外壳直接 LJEnter 进入 home iframe（boot-greeting 所在层）
+            pg.add_init_script("try{localStorage.setItem('lingjing_onboarding_done','true')}catch(e){}")
+            fl = pg.frame_locator("#stage")
 
             # 第一次登录：无打招呼
-            pg.goto(U, wait_until="domcontentloaded"); pg.wait_for_timeout(800)
-            check("1 首次登录无打招呼界面", pg.locator("#lj-boot-greet").count() == 0)
+            pg.goto(U, wait_until="domcontentloaded"); pg.wait_for_timeout(1500)
+            check("1 首次登录无打招呼界面", fl.locator("#lj-boot-greet").count() == 0)
             check("2 logins=1", pg.evaluate("JSON.parse(localStorage.getItem('lingjing_v525_boot_v1')).logins") == 1)
 
             # 第二次登录（清 sessionStorage 模拟新会话）
             pg.evaluate("sessionStorage.clear()")
-            pg.reload(wait_until="domcontentloaded"); pg.wait_for_timeout(900)
-            check("3 第二次登录出现全屏打招呼", pg.locator("#lj-boot-greet").count() == 1)
-            check("4 陪伴AI身份标注", "阿岁" in pg.locator("#lj-boot-greet").inner_text())
-            check("5 问候语非空（分时段）", len(pg.locator("#ljBootText").inner_text()) >= 4)
-            check("6 进入灵境按钮", pg.locator("#ljBootEnter").count() == 1)
+            pg.reload(wait_until="domcontentloaded"); pg.wait_for_timeout(1600)
+            check("3 第二次登录出现全屏打招呼", fl.locator("#lj-boot-greet").count() == 1)
+            check("4 陪伴AI身份标注", "阿岁" in fl.locator("#lj-boot-greet").inner_text())
+            check("5 问候语非空（分时段）", len(fl.locator("#ljBootText").inner_text()) >= 4)
+            check("6 进入灵境按钮", fl.locator("#ljBootEnter").count() == 1)
             pg.screenshot(path=str(OUT / "v25-01-boot-greeting.png"))
 
             # 点击进入 → 消失；会话内刷新不重复
-            pg.locator("#ljBootEnter").click(); pg.wait_for_timeout(600)
-            check("7 点击后界面消失", pg.locator("#lj-boot-greet").count() == 0)
-            pg.reload(wait_until="domcontentloaded"); pg.wait_for_timeout(700)
-            check("8 同会话刷新不重复", pg.locator("#lj-boot-greet").count() == 0)
+            fl.locator("#ljBootEnter").click(); pg.wait_for_timeout(600)
+            check("7 点击后界面消失", fl.locator("#lj-boot-greet").count() == 0)
+            pg.reload(wait_until="domcontentloaded"); pg.wait_for_timeout(1500)
+            check("8 同会话刷新不重复", fl.locator("#lj-boot-greet").count() == 0)
 
-            # 文案变更
-            pg.goto(f"{BASE}/output/preview/creator-center.html", wait_until="domcontentloaded")
-            pg.wait_for_timeout(600)
-            check("9 创作 Tab 显示编辑我的作品", pg.locator("text=编辑我的作品").count() >= 1)
+            # 单文件路由内切换到创作中心
+            pg.evaluate("LJ.go('creator-center')"); pg.wait_for_timeout(800)
+            check("9 创作中心显示编辑我的作品", fl.locator("text=编辑我的作品").count() >= 1)
 
             check("10 0 PageError", not PAGE_ERRORS, str(PAGE_ERRORS[:2]))
             br.close()
