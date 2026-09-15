@@ -94,7 +94,7 @@
       </div>
       <div class="pe-row">
         <span class="k">所在地</span>
-        <span class="v"><input type="text" id="pe-location" placeholder="如：上海" value="灵境 · 长夜城" /></span>
+        <span class="v"><input type="text" id="pe-location" placeholder="如：上海" value="灵境 · 西游记" /></span>
       </div>
     </div>
 
@@ -113,7 +113,7 @@
       <div class="pe-row">
         <span class="k">实名认证</span>
         <span class="v" id="pe-realname">已认证</span>
-        <a href="plot-runner.html?novel=changyecheng" id="pe-realname-link" style="font-size:12px;color:var(--xinyu);text-decoration:none">查看</a>
+        <a href="plot-runner.html?novel=xiyouji" id="pe-realname-link" style="font-size:12px;color:var(--xinyu);text-decoration:none">查看</a>
       </div>
     </div>
 
@@ -157,7 +157,7 @@ function showToast(kind, title, msg){
   setTimeout(function(){ t.remove(); }, 3000);
 }
 var EMOJIS = ['旅','🌙','🌸','🏮','🦊','🎵','📖','🔮','🌌','🦌','🗡️','🍵','🎻','🪐','🐾','🕯️','🎭','🪞','🧭','🕊️','🍒','🌊','⚡','🌺'];
-var state = { name:'', sign:'', gender:'secret', birthday:'2001-08-17', location:'灵境 · 长夜城', avatar:'旅', phone:'', email:'user@lingjing.example', realname:true };
+var state = { name:'', sign:'', gender:'secret', birthday:'2001-08-17', location:'灵境 · 西游记', avatar:'旅', phone:'', email:'user@lingjing.example', realname:true };
 
 function loadState(){
   try {
@@ -166,7 +166,7 @@ function loadState(){
     state.sign = p.sign || '在灵境，与每个角色共赴一场双生之约';
     state.gender = p.gender || 'secret';
     state.birthday = p.birthday || '2001-08-17';
-    state.location = p.location || '灵境 · 长夜城';
+    state.location = p.location || '灵境 · 西游记';
     state.avatar = p.avatar || (p.name ? p.name.charAt(0) : '旅');
     state.phone = p.phone || '';
     state.email = p.email || 'user@lingjing.example';

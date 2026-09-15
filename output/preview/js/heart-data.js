@@ -31,29 +31,29 @@
       preview: '下次有事，先来问问我。',
       occupation_qa_enabled: true },
 
-    // [双] 双生角色（4 张 · 来自小说世界）
-    { id: 'c06', source_type: 'novel_brought_out', name: '林清雪', avatar: '🌸', occupation: '记者',
+    // [双] 双生角色（4 张 · 仅来自公版名著世界）
+    { id: 'c06', source_type: 'novel_brought_out', name: '孙悟空', avatar: '🐵', occupation: '行者',
       stage: '知己', intimacy: 72,
-      preview: '今天路过一家花店，想起你说喜欢向日葵。',
-      novel_id: 'shenhuihuisheng', novel_name: '深海回声',
+      preview: '俺老孙刚从花果山回来，这水帘洞你可还看得惯？',
+      novel_id: 'xiyouji', novel_name: '西游记 · 灵境版',
       novel_turns: 8,
       occupation_qa_enabled: true },
-    { id: 'c07', source_type: 'novel_brought_out', name: '苏念', avatar: '🌷', occupation: '心理咨询师',
+    { id: 'c07', source_type: 'novel_brought_out', name: '林黛玉', avatar: '🌸', occupation: '诗人',
       stage: '亲密', intimacy: 64,
-      preview: '你最近好像有心事，要不要说说？',
-      novel_id: 'changyecheng', novel_name: '长夜城',
+      preview: '今日风凉，可曾读过《葬花吟》？',
+      novel_id: 'hongloumeng', novel_name: '红楼梦 · 灵境版',
       novel_turns: 5,
       occupation_qa_enabled: true },
-    { id: 'c08', source_type: 'novel_brought_out', name: '阿宁', avatar: '🏯', occupation: '历史学者',
+    { id: 'c08', source_type: 'novel_brought_out', name: '武松', avatar: '🐯', occupation: '都头',
       stage: '熟悉', intimacy: 38,
-      preview: '《三国》的故事还有很多版本，想听吗？',
-      novel_id: 'sanguo', novel_name: '三国·吕布篇',
+      preview: '景阳冈的酒烈，这故事听得人血热。',
+      novel_id: 'shuihuzhuan', novel_name: '水浒传 · 灵境版',
       novel_turns: 12,
       occupation_qa_enabled: true },
-    { id: 'c09', source_type: 'novel_brought_out', name: '云雀', avatar: '🤖', occupation: '工程师',
+    { id: 'c09', source_type: 'novel_brought_out', name: '诸葛亮', avatar: '🪭', occupation: '军师',
       stage: '相识', intimacy: 22,
-      preview: '系统刚刚完成一次自我迭代。',
-      novel_id: 'saibochangye', novel_name: '赛博长夜',
+      preview: '隆中一对，三分天下，你可愿听？',
+      novel_id: 'sanguoyanyi', novel_name: '三国演义 · 灵境版',
       novel_turns: 3,
       occupation_qa_enabled: true },
 
@@ -82,9 +82,9 @@
 
   // ---------- 记忆时间线（5 条） ----------
   var MEMORIES = [
-    { id: 'm01', character: '林清雪', avatar: '🌸', time: '今天 14:32', type: '对话', content: '一起讨论了《红楼梦》黛玉知己结局' },
+    { id: 'm01', character: '孙悟空', avatar: '🐵', time: '今天 14:32', type: '对话', content: '一起讨论了花果山水帘洞的由来' },
     { id: 'm02', character: '阿岁', avatar: '🏮', time: '昨天 21:10', type: '里程碑', content: '关系升级：相识 → 知己 🎉' },
-    { id: 'm03', character: '苏念', avatar: '🌷', time: '3天前', type: '对话', content: '第一次聊天：你最近好像有心事' },
+    { id: 'm03', character: '林黛玉', avatar: '🌸', time: '3天前', type: '对话', content: '第一次聊天：今日葬花，明日葬心' },
     { id: 'm04', character: '云歌', avatar: '🎵', time: '一周前', type: '里程碑', content: '百次对话达成 ✨' },
     { id: 'm05', character: '苏晚', avatar: '🌙', time: '两周前', type: '初次相遇', content: '你好，我是苏晚' }
   ];

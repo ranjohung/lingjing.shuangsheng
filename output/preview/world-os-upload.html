@@ -110,14 +110,14 @@
 <div class="wrap">
 
   <div class="sec-t">① 选择书源</div>
-  <div class="card book sel" id="bk-demo" role="button" tabindex="0">
-    <div class="ico">🏮</div>
-    <div><div class="n">《临安十二巷》演示文本</div><div class="d">内置 · 6 章 · 完整流程秒跑</div></div>
+  <div class="card book" id="bk-xiyouji" role="button" tabindex="0">
+    <div class="ico">🏔</div>
+    <div><div class="n">《西游记》公版 · 世界已生成</div><div class="d">吴承恩 · 100 回 · SD + Blender 资产就绪</div></div>
     <span class="pick">已选 ✓</span>
   </div>
-  <div class="card book" id="bk-dongzhou" role="button" tabindex="0">
+  <div class="card book" id="bk-sanguoyanyi" role="button" tabindex="0">
     <div class="ico">📜</div>
-    <div><div class="n">《东周列国志》公版节选</div><div class="d">前 6 万字 · 节选演示</div></div>
+    <div><div class="n">《三国演义》公版</div><div class="d">罗贯中 · 120 回 · 自动生成世界</div></div>
     <span class="pick">已选 ✓</span>
   </div>
   <div class="card book" id="bk-upload" role="button" tabindex="0">
@@ -125,6 +125,11 @@
     <div><div class="n">上传我的 txt</div><div class="d">仅本地解析 · 不上传服务器</div></div>
     <span class="pick">已选 ✓</span>
   </div>
+  <a class="card book" id="bk-forge" href="world-forge.html" role="button" tabindex="0">
+    <div class="ico">⚙️</div>
+    <div><div class="n">小说世界自动生成工作台</div><div class="d">选择 40 部公版书 · 自定义窗口 · 生成资产</div></div>
+    <span class="pick">进入 ›</span>
+  </a>
   <input type="file" id="file-in" accept=".txt" class="hidden" />
   <button class="btn" id="btn-gate">开始质检（Novel Quality Gate）</button>
 
@@ -171,16 +176,33 @@
 <script src="js/novel-os-store.js"></script>
 <script src="js/tabbar.js"></script>
 <script>
-var SEL = { kind: 'demo', title: NovelOSStore.DEMO_TITLE };
+var SEL = { kind: 'public', title: '西游记（公版）', id: 'xiyouji' };
 
 function pick(id, kind, title) {
-  ['bk-demo', 'bk-dongzhou', 'bk-upload'].forEach(function (x) {
-    document.getElementById(x).classList.toggle('sel', x === id);
+  ['bk-xiyouji', 'bk-sanguoyanyi', 'bk-upload', 'bk-forge'].forEach(function (x) {
+    var el = document.getElementById(x);
+    if (el) el.classList.toggle('sel', x === id);
   });
-  SEL = { kind: kind, title: title };
+  SEL = { kind: kind, title: title, id: id.replace('bk-', ''), text: '' };
 }
-document.getElementById('bk-demo').addEventListener('click', function () { pick('bk-demo', 'demo', NovelOSStore.DEMO_TITLE); });
-document.getElementById('bk-dongzhou').addEventListener('click', function () { pick('bk-dongzhou', 'dongzhou', '东周列国志（公版节选）'); });
+
+function loadPublicBook(id, title) {
+  pick('bk-' + id, 'public', title);
+  var btn = document.getElementById('btn-gate');
+  setBusy(btn, '正在载入公版书…');
+  fetch('../../corpus/books/' + id + '.txt').then(function (r) { return r.text(); }).then(function (t) {
+    SEL.text = t.replace(/\r/g, '').slice(0, 60000);
+    SEL.title = title;
+    document.getElementById('btn-gate').textContent = '开始质检（Novel Quality Gate）';
+    document.getElementById('btn-gate').disabled = false;
+  }).catch(function () {
+    SEL.text = NovelOSStore.DEMO_TEXT;
+    SEL.title = NovelOSStore.DEMO_TITLE;
+  });
+}
+
+document.getElementById('bk-xiyouji').addEventListener('click', function () { loadPublicBook('xiyouji', '西游记（公版）'); });
+document.getElementById('bk-sanguoyanyi').addEventListener('click', function () { loadPublicBook('sanguoyanyi', '三国演义（公版）'); });
 document.getElementById('bk-upload').addEventListener('click', function () { document.getElementById('file-in').click(); });
 document.getElementById('file-in').addEventListener('change', function (e) {
   var f = e.target.files && e.target.files[0];
@@ -198,13 +220,8 @@ function setBusy(btn, txt) { btn.disabled = true; btn.textContent = txt; }
 
 document.getElementById('btn-gate').addEventListener('click', function () {
   var btn = this;
-  if (SEL.kind === 'demo') { SEL.text = NovelOSStore.DEMO_TEXT; }
-  if (SEL.kind === 'dongzhou') {
-    setBusy(btn, '正在载入公版书…');
-    fetch('../../corpus/books/dongzhou.txt').then(function (r) { return r.text(); }).then(function (t) {
-      SEL.text = t.replace(/\r/g, '').slice(0, 60000);
-      runGate();
-    }).catch(function () { SEL.text = NovelOSStore.DEMO_TEXT; SEL.title = NovelOSStore.DEMO_TITLE; runGate(); });
+  if (SEL.kind === 'public' && !SEL.text) {
+    loadPublicBook(SEL.id || 'xiyouji', SEL.title || '西游记（公版）');
     return;
   }
   if (SEL.kind === 'upload' && !SEL.text) return;

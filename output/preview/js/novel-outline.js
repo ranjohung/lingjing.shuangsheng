@@ -246,7 +246,7 @@
       return chars.length ? [`（含已有角色：${chars.slice(0, 2).join('、')}）`, ...subset] : subset;
     },
     location: () => shuffleAndPick([
-      '长夜城·大明宫·夜宴厅',
+      '西游记·大明宫·夜宴厅',
       '雾锁民国·上海·霞飞路 47 号',
       '月森林·千年古树下',
       '银河纪元·星舰·舰桥',

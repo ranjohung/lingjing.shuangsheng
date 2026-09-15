@@ -14,7 +14,7 @@
   // ---------- Banner 5 张 ----------
   var BANNERS = [
     { id: 'b1', title: '双生 · 入世', subtitle: '一个角色，两种人生', gradient: 'linear-gradient(135deg,#E94560,#6C5CE7)', href: 'discover.html?id=banner1', emoji: '🌌' },
-    { id: 'b2', title: '长夜城 · 第三章', subtitle: '新章节上线 · 共写命运', gradient: 'linear-gradient(135deg,#16213E,#1C2542)', href: 'plot-detail.html?novel=changyecheng', emoji: '🏯' },
+    { id: 'b2', title: '西游记 · 第三章', subtitle: '新章节上线 · 共写命运', gradient: 'linear-gradient(135deg,#16213E,#1C2542)', href: 'plot-detail.html?novel=xiyouji', emoji: '🏯' },
     { id: 'b3', title: '创作者激励计划', subtitle: '灵晶奖池 10000+ · 青铜起分润', gradient: 'linear-gradient(135deg,#FFB347,#E94560)', href: 'creator-center.html', emoji: '✨' },
     { id: 'b4', title: '心屿 · 新角色', subtitle: '苏念 入驻 · 等你相识', gradient: 'linear-gradient(135deg,#6C5CE7,#A29BFE)', href: 'heart-island.html', emoji: '💬' },
     { id: 'b5', title: '红楼梦 · 灵境版', subtitle: '公版新解读 · 黛玉知己结局', gradient: 'linear-gradient(135deg,#B8863B,#8C5A2B)', href: 'plot-detail.html?novel=pd1', emoji: '📜' }
@@ -169,9 +169,9 @@
   // FEATURED = 编辑推荐 8 张；HOT = 热门佳作 12 张；NEW_DONE = 最新完结 10 张
   var RAW = [
     // FEATURED (8)
-    ['凤求凰', '云间月', '古风', 'gufeng', 'gonggu', 9.2, '12.3万字', 'ed'],
-    ['长夜城', '夜归人', '古风', 'gufeng', 'wangquan', 9.0, '24.6万字', 'ed'],
-    ['深海回声', '林清雪', '幻想冒险', 'huanxiang', 'xuanyituili', 8.8, '18.2万字', 'ed'],
+    ['水浒传', '云间月', '古风', 'gufeng', 'gonggu', 9.2, '12.3万字', 'ed'],
+    ['西游记', '灵境官方', '古风', 'gufeng', 'wangquan', 9.0, '24.6万字', 'ed'],
+    ['红楼梦', '孙悟空', '幻想冒险', 'huanxiang', 'xuanyituili', 8.8, '18.2万字', 'ed'],
     ['快穿之攻略反派', '苏沐橙', '快穿穿书', 'kuachuan', 'kuachuan', 8.6, '16.5万字', 'ed'],
     ['锦衣卫日记', '墨倾池', '古风', 'gufeng', 'wuxia', 8.5, '21.0万字', 'ed'],
     ['回到 1998', '陆星河', '时光档案', 'shiguang', 'time1', 8.4, '15.8万字', 'ed'],
@@ -179,7 +179,7 @@
     ['偶像练习手记', '栀子夏', '现代', 'xiandai', 'yulequan', 8.2, '10.2万字', 'ed'],
 
     // HOT (12)
-    ['赛博长夜', '云雀', '现代', 'xiandai', 'yuanyuzhou', 8.6, '12.8万字', 'hot'],
+    ['三国演义', '公版', '现代', 'xiandai', 'yuanyuzhou', 8.6, '12.8万字', 'hot'],
     ['末日余晖', '七月的风', '幻想冒险', 'huanxiang', 'mori', 8.4, '22.6万字', 'hot'],
     ['民国旧梦', '沈书君', '现代', 'xiandai', 'minguo', 8.3, '19.5万字', 'hot'],
     ['豪门千金', '苏念', '现代', 'xiandai', 'haomen', 8.1, '13.7万字', 'hot'],
@@ -209,16 +209,16 @@
   // wordCountNum 用于字数筛选；publishYear 用于年份筛选；attrs 用于热门属性筛选（V20-K）
   var META = {
     // FEATURED 8 张
-    '凤求凰':       { status: 'ing',  level: 'pd',  wc: 12.3, price: 60,  year: 2026, attrs: ['shuangwen'] },
-    '长夜城':       { status: 'ing',  level: 'pd',  wc: 24.6, price: 128, year: 2026, attrs: ['rexue', 'qunxiang'] },
-    '深海回声':     { status: 'ing',  level: 'pd',  wc: 18.2, price: 88,  year: 2025, attrs: ['zhiyu', 'qunxiang'] },
+    '水浒传':       { status: 'ing',  level: 'pd',  wc: 12.3, price: 60,  year: 2026, attrs: ['shuangwen'] },
+    '西游记':       { status: 'ing',  level: 'pd',  wc: 24.6, price: 128, year: 2026, attrs: ['rexue', 'qunxiang'] },
+    '红楼梦':     { status: 'ing',  level: 'pd',  wc: 18.2, price: 88,  year: 2025, attrs: ['zhiyu', 'qunxiang'] },
     '快穿之攻略反派': { status: 'ing', level: 'lz', wc: 16.5, price: 50,  year: 2025, attrs: ['chongsheng', 'shuangwen'] },
     '锦衣卫日记':   { status: 'ing',  level: 'lz',  wc: 21.0, price: 98,  year: 2025, attrs: ['rexue'] },
     '回到 1998':    { status: 'new',  level: 'L3',  wc: 15.8, price: 30,  year: 2026, attrs: ['chongsheng', 'zhiyu'] },
     '仙侠奇缘录':   { status: 'ing',  level: 'L3',  wc: 28.4, price: 188, year: 2024, attrs: ['rexue', 'xitong'] },
     '偶像练习手记': { status: 'done', level: 'L2',  wc: 10.2, price: 50,  year: 2024, attrs: ['zhiyu'] },
     // HOT 12 张
-    '赛博长夜':     { status: 'ing',  level: 'pd',  wc: 12.8, price: 50,  year: 2026, attrs: ['xitong', 'rexue'] },
+    '三国演义':     { status: 'ing',  level: 'pd',  wc: 12.8, price: 50,  year: 2026, attrs: ['xitong', 'rexue'] },
     '末日余晖':     { status: 'ing',  level: 'pd',  wc: 22.6, price: 128, year: 2026, attrs: ['rexue', 'qunxiang'] },
     '民国旧梦':     { status: 'done', level: 'lz',  wc: 19.5, price: 88,  year: 2025, attrs: ['zhiyu'] },
     '豪门千金':     { status: 'ing',  level: 'lz',  wc: 13.7, price: 60,  year: 2025, attrs: ['shuangwen', 'banzhu'] },
@@ -245,15 +245,15 @@
 
   // ---------- 一句话简介（V20-L 设计文档 §3.4 卡片内容：封面/书名/作者/题材标签/一句话简介/评分/字数） ----------
   var DESCS = {
-    '凤求凰': '凤栖梧桐，她以一曲琴音换半世情缘。',
-    '长夜城': '权谋古风 · 长夜未尽，谁执灯火。',
-    '深海回声': '海的那边，有人在叫你的名字。',
+    '水浒传': '凤栖梧桐，她以一曲琴音换半世情缘。',
+    '西游记': '权谋古风 · 长夜未尽，谁执灯火。',
+    '红楼梦': '海的那边，有人在叫你的名字。',
     '快穿之攻略反派': '穿遍三千小世界，专治反派不服。',
     '锦衣卫日记': '一柄绣春刀，斩尽京华阴谋。',
     '回到 1998': '重回少年时，改写所有遗憾。',
     '仙侠奇缘录': '御剑江湖，情劫难逃。',
     '偶像练习手记': '从练习生到顶流，每一步都有你。',
-    '赛博长夜': '霓虹之下，AI 觉醒的第一夜。',
+    '三国演义': '霓虹之下，AI 觉醒的第一夜。',
     '末日余晖': '文明崩塌后，废土上开出的花。',
     '民国旧梦': '十里洋场，一场旧梦不醒。',
     '豪门千金': '真假千金对峙，身份成谜。',
@@ -425,10 +425,10 @@
   // ---------- 更新日历（V17.0 §2.3 四大金刚-更新日历）----------
   // 7 天内的更新作品
   var CALENDAR = [
-    { date: '09-11', label: '今天', works: ['凤求凰 · 第 24 章 · 后宫风云', '长夜城 · 第 31 章 · 御书房对弈'] },
-    { date: '09-10', label: '昨天', works: ['深海回声 · 第 18 章 · 实验室', '回到 1998 · 第 12 章 · 重逢'] },
+    { date: '09-11', label: '今天', works: ['水浒传 · 第 24 章 · 后宫风云', '西游记 · 第 31 章 · 御书房对弈'] },
+    { date: '09-10', label: '昨天', works: ['红楼梦 · 第 18 章 · 实验室', '回到 1998 · 第 12 章 · 重逢'] },
     { date: '09-09', label: '前天', works: ['锦衣卫日记 · 第 22 章 · 围剿'] },
-    { date: '09-08', label: '本周', works: ['赛博长夜 · 第 14 章 · AI 觉醒', '末日余晖 · 第 27 章 · 曙光'] },
+    { date: '09-08', label: '本周', works: ['三国演义 · 第 14 章 · AI 觉醒', '末日余晖 · 第 27 章 · 曙光'] },
     { date: '09-07', label: '本周', works: ['灵境红楼梦 · 新解读上线', '灵境解读三国 · 第二季开启'] },
     { date: '09-06', label: '更早', works: ['快穿之攻略反派 · 第 9 章 · 反派逆袭'] }
   ];

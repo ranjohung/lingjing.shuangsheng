@@ -39,39 +39,39 @@
     { amount: 328, name: '至尊档', lingJing: 32800, lingYu: 12000, extra: '+ 同频共振群 + 限定世界' }
   ];
 
-  // ---------- 限免广场（mock）----------
+  // ---------- 限免广场（mock · 仅使用已上架公版名著，无第三方作品名）----------
   var FREE_WORKS = [
-    { id: 'fw1', title: '凤求凰', author: '云间月', cat: '古风', tag: '灵玉领', cov: 'linear-gradient(160deg,#8E5BD8,#C95B9C)' },
-    { id: 'fw2', title: '深海回声', author: '林清雪', cat: '悬疑', tag: '灵玉领', cov: 'linear-gradient(160deg,#2E5E56,#00B894)' },
-    { id: 'fw3', title: '校园风云', author: '夏目', cat: '现代', tag: '灵玉领', cov: 'linear-gradient(160deg,#B8863B,#4ECCA3)' }
+    { id: 'fw1', title: '西游记', author: '公版', cat: '神魔', tag: '灵玉领', cov: 'linear-gradient(160deg,#8E5BD8,#C95B9C)' },
+    { id: 'fw2', title: '三国演义', author: '公版', cat: '历史', tag: '灵玉领', cov: 'linear-gradient(160deg,#B8863B,#4ECCA3)' },
+    { id: 'fw3', title: '红楼梦', author: '公版', cat: '世情', tag: '灵玉领', cov: 'linear-gradient(160deg,#E94560,#C95B9C)' }
   ];
 
-  // ---------- 心屿推（V12.0 3.2）----------
+  // ---------- 心屿推（V12.0 3.2 · 仅公版名著/占位用户）----------
   var XINYU_TUI = {
     weeklyEcho: [
-      { user: '顾长夜', avatar: '🌙', workTitle: '《长夜未央》', review: '每一章都有惊喜，林清雪的故事让人欲罢不能。' },
-      { user: '云雀', avatar: '🌸', workTitle: '《深海回声》', review: '悬疑线铺得极好，结局的反转我反复看了三遍。' }
+      { user: '灵境书友', avatar: '📖', workTitle: '《西游记》', review: '花果山、水帘洞读来如临其境，公版重制太适合二刷了。' },
+      { user: '公版引路人', avatar: '🏮', workTitle: '《三国演义》', review: '群雄逐鹿的转折写得紧凑，人物关系图很方便。' }
     ],
     yinluRank: [
-      { rank: 1, user: '顾长夜', avatar: '🌙', title: '引路人·连续 4 周', score: 2840 },
-      { rank: 2, user: '云雀', avatar: '🌸', title: '引路人·连续 2 周', score: 2120 },
-      { rank: 3, user: '千鸟', avatar: '🌺', title: '新晋引路人', score: 1680 }
+      { rank: 1, user: '灵境书友', avatar: '📖', title: '引路人·连续 4 周', score: 2840 },
+      { rank: 2, user: '公版引路人', avatar: '🏮', title: '引路人·连续 2 周', score: 2120 },
+      { rank: 3, user: '新晋引路人', avatar: '🌺', title: '新晋引路人', score: 1680 }
     ],
     moreRecommend: [
-      { id: 'mr1', workTitle: '《凤求凰》', review: '古风爱好者必入，文笔极佳。', likes: 248 },
-      { id: 'mr2', workTitle: '《三国·吕布篇》', review: '穿越剧情设计合理，不套路。', likes: 192 }
+      { id: 'mr1', workTitle: '《红楼梦》', review: '世情细节丰富，公版角色线梳理得很清楚。', likes: 248 },
+      { id: 'mr2', workTitle: '《水浒传》', review: '一百零八将关系图谱一目了然，适合入坑。', likes: 192 }
     ]
   };
 
-  // ---------- 创世杯（V12.0 3.4）----------
+  // ---------- 创世杯（V12.0 3.4 · 活动真实存在，榜单示例仅列公版名著）----------
   var CHUANGSHIBEI = {
     banner: '2026 灵境·双生 创世杯',
     period: '9.10 - 10.09',
     rank: [
-      { rank: 1, workTitle: '《凤求凰》', author: '云间月', score: 4520, cov: 'linear-gradient(160deg,#8E5BD8,#C95B9C)' },
-      { rank: 2, workTitle: '《长夜城》', author: '夜归人', score: 4180, cov: 'linear-gradient(160deg,#2E3A6E,#4A3A8C)' },
-      { rank: 3, workTitle: '《深海回声》', author: '林清雪', score: 3960, cov: 'linear-gradient(160deg,#2E5E56,#00B894)' },
-      { rank: 4, workTitle: '《三国·吕布篇》', author: '灵境官方', score: 3580, cov: 'linear-gradient(160deg,#B8863B,#8C5A2B)' }
+      { rank: 1, workTitle: '《西游记》', author: '公版', score: 4520, cov: 'linear-gradient(160deg,#8E5BD8,#C95B9C)' },
+      { rank: 2, workTitle: '《三国演义》', author: '公版', score: 4180, cov: 'linear-gradient(160deg,#2E3A6E,#4A3A8C)' },
+      { rank: 3, workTitle: '《红楼梦》', author: '公版', score: 3960, cov: 'linear-gradient(160deg,#2E5E56,#00B894)' },
+      { rank: 4, workTitle: '《水浒传》', author: '公版', score: 3580, cov: 'linear-gradient(160deg,#B8863B,#8C5A2B)' }
     ]
   };
 

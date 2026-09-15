@@ -70,7 +70,13 @@
       out.chapters.push(curChap);
     }
     function paraAppend(text) {
-      if (!curChap) ensureChap(isChapterTitle(lines.slice(0, i).reverse().find(isChapterTitle) || '序章').title || '序章');
+      if (!curChap) {
+        // V22-D 修复：无任何章节标记的纯段落文本（如拼接后的原文）不能再对
+        // '序章' 字符串跑 isChapterTitle（返回 null → null.title 崩溃），
+        // 直接回退为「序章」章。
+        var prev = lines.slice(0, i).reverse().find(isChapterTitle);
+        ensureChap((prev && prev.title) || '序章');
+      }
       var s = (text || '').trim();
       if (s) curChap.paragraphs.push(s);
     }

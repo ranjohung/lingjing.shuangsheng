@@ -24,7 +24,7 @@
   var $ = function (s) { return document.querySelector(s); };
   var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
 
-  var currentNovelId = 'changyecheng';
+  var currentNovelId = 'xiyouji';
   var currentTab = 'detail';
   var currentInteractTab = 'selected';
 
@@ -80,7 +80,7 @@
     if (PLOT[id]) return PLOT[id];
     var extra = buildExtra(id);
     if (extra) return extra;
-    // 世界页卡片（world-data.js）通用详情回退 —— 不再错误回退到长夜城
+    // 世界页卡片（world-data.js）通用详情回退 —— 不再错误回退到西游记
     if (window.WORLD_DATA) {
       var lists = [window.WORLD_DATA.FEATURED, window.WORLD_DATA.HOT, window.WORLD_DATA.NEW_DONE, window.WORLD_DATA.PUBLIC_DOMAIN];
       for (var i = 0; i < lists.length; i++) {
@@ -395,7 +395,7 @@
 
     // 5 Tab 注入（如果存在）
     if (window.LJTabbar && typeof window.LJTabbar.mount === 'function') {
-      window.LJTabbar.mount(currentNovelId === 'shenhuihuisheng' ? 'world' : 'world');
+      window.LJTabbar.mount(currentNovelId === 'hongloumeng' ? 'world' : 'world');
     }
   }
 

@@ -449,7 +449,7 @@
       el('a', { class: 'ds-board-more', href: 'discover.html' }, ['全部 ›'])
     ]));
     var grid = el('div', { class: 'ds-waterfall' });
-    renderWaterfall([{ id: 'mr1', title: '《凤求凰》', author: '云间月', catName: '古风', cat: 'gufeng', sub: 'gonggu', score: 9.2, wordCount: '12.3万字', cov: 'linear-gradient(160deg,#8E5BD8,#C95B9C)', emoji: '🌸' }, { id: 'mr2', title: '《三国·吕布篇》', author: '灵境官方', catName: '古风', cat: 'gufeng', sub: 'wangquan', score: 9.0, wordCount: '24.6万字', cov: 'linear-gradient(160deg,#B8863B,#8C5A2B)', emoji: '⚔️' }], grid, {});
+    renderWaterfall([{ id: 'mr1', title: '《水浒传》', author: '云间月', catName: '古风', cat: 'gufeng', sub: 'gonggu', score: 9.2, wordCount: '12.3万字', cov: 'linear-gradient(160deg,#8E5BD8,#C95B9C)', emoji: '🌸' }, { id: 'mr2', title: '《三国演义》', author: '灵境官方', catName: '古风', cat: 'gufeng', sub: 'wangquan', score: 9.0, wordCount: '24.6万字', cov: 'linear-gradient(160deg,#B8863B,#8C5A2B)', emoji: '⚔️' }], grid, {});
     main.appendChild(grid);
   }
 

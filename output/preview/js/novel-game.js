@@ -35,6 +35,8 @@
     player: null,      // V20-W：玩家角色 {id, name, desc, emoji, custom}
     awaitingRole: -1   // V20-W：正在等待角色选择的章节 idx，-1 表示没有
   };
+  // V22-D：暴露 state 到 window（Playwright 验收测试钩子 + 外部入口调试）
+  window.state = state;
 
   // V20-W：每部公版小说的可选主角模板（同一小说共用一个世界，进去前选主角）
   var BOOK_CHARACTERS = {
@@ -874,13 +876,162 @@ var DEMO_TEXT = [
       $('#ng-title').textContent = book.title;
       $('#ng-splash-title').textContent = book.title;
       $('#ng-splash-author').textContent = book.author + ' · ' + book.chapters.length + ' 章';
-      $('#ng-splash-start').textContent = '▶ 开始阅读';
+      $('#ng-splash-start').textContent = '▶ 进入视觉小说';
       updateChaptersBtn();
       showSplash();
-      toast('ok', '示例已加载', book.chapters.length + ' 章 · 沉浸式阅读');
+      toast('ok', '示例已加载', book.chapters.length + ' 章 · 视觉小说范式');
     } catch (e) {
       toast('warn', '示例异常', String(e).slice(0, 60));
     }
+  }
+
+  /* =====================================================================
+   * V22-D · 视觉小说范式启动（顶栏 + 标签 + 文字框）
+   *
+   * 数据流：
+   *   原文 → NovelWorldParser.runPipeline() → 5 步提取
+   *       → NovelWorldStore.initFromText()   → 数据中枢（含原文 byte-equal）
+   *       → NovelWorldGenre.applyToPlayerState() → 题材属性装载
+   *       → NovelWorldFlow                    → 主线锚点 + 支线收敛逻辑
+   *       → NovelWorldVN.enterScene()         → 顶部状态栏 + 悬浮标签 + 底部文字框
+   *
+   * 这是 PRD §6 + S03 视觉小说范式的入口，
+   * 让玩家"看到顶部时间/行动值/铜钱 + 悬浮标签 + 底部原文打字机"
+   * ===================================================================== */
+  function startV22Scene(bookId) {
+    if (!state.book || !state.book.chapters || !state.book.chapters.length) {
+      toast('warn', '请先加载小说', '再点击「▶ 进入视觉小说」');
+      return false;
+    }
+    if (!window.NovelWorldParser || !window.NovelWorldStore || !window.NovelWorldGenre || !window.NovelWorldFlow || !window.NovelWorldVN) {
+      toast('warn', 'V22 模块未就绪', '请检查 novel-world-*.js 加载');
+      return false;
+    }
+
+    // 1) 收集原文（按章拼接，与 demo/original 解析器兼容）
+    var paras = [];
+    state.book.chapters.forEach(function (c) {
+      if (c.paragraphs && c.paragraphs.length) {
+        c.paragraphs.forEach(function (p) { paras.push(p); });
+      }
+    });
+    var text = paras.join('\n');
+    if (!paras.length) {
+      toast('warn', '原文为空', '请检查小说 txt');
+      return false;
+    }
+
+    // 2) 跑 5 步流水线 → 装载数据中枢
+    var pipeline = window.NovelWorldParser.runPipeline(text);
+    var store = window.NovelWorldStore.initFromText(text, {
+      book_id: bookId || state.bookHash || 'demo',
+      book_title: state.book.title || '未知书名',
+      book_author: state.book.author || '公版'
+    });
+    // 3) 题材属性装载 + 玩家守门 + flow 锚点
+    window.NovelWorldGenre.applyToPlayerState(store.player_state, store.world_bible.genre);
+    store.player_state.avatarEmoji = (state.player && state.player.emoji) || '🧑';
+    store.player_state.timeBucket = 0;  // 初始 0 年 12 月上旬
+
+    // 4) 准备 enterScene 入参（首段原文 + 提取的 NPC/物品/动作）
+    var firstScene = (store.assets.scenes && store.assets.scenes[0]) || { paragraphs: [paras[0]] };
+    var firstPara = (firstScene.paragraphs && firstScene.paragraphs[0]) || paras[0];
+    var sceneItems = (store.assets.items || []).slice(0, 4);
+    var sceneActions = (store.assets.actions || []).slice(0, 4);
+    var sceneNpcs = (store.assets.npcs || []).slice(0, 4);
+
+    // 5) 隐藏 splash/entry/progress 遮罩（让 VN 视觉小说范式满屏显示）
+    ['#ng-splash', '#ng-entry-mask', '#ng-progress-mask', '#ng-char-mask'].forEach(function (sel) {
+      var el = document.querySelector(sel);
+      if (el) {
+        el.classList.remove('open');
+        el.style.display = 'none';
+      }
+    });
+    // reader/stage container 隐藏
+    var reader = document.querySelector('#ng-reader'); if (reader) reader.style.display = 'none';
+    var rStage = document.querySelector('#ng-r-stage'); if (rStage) rStage.style.display = 'none';
+    var rBody = document.querySelector('#ng-r-body'); if (rBody) rBody.style.display = 'none';
+
+    // 6) 进入视觉小说范式
+    window.NovelWorldVN.enterScene({
+      paragraph: firstPara,
+      genre: store.world_bible.genre,
+      npcs: sceneNpcs,
+      items: sceneItems,
+      actions: sceneActions,
+      speaker: '',
+      ps: store.player_state,
+      scene_id: firstScene.scene_id,
+      store: store  // V22-D：把 store 传给 enterScene，便于 flow 调用
+    });
+
+    // 7) 把 store / flow 暴露到 global.state（让 vn.js 的 executeTagAction 使用）
+    state.v22Store = store;
+    state.v22Flow = window.NovelWorldFlow;
+
+    // 8) hook 文字框点击 → 推进段落（PRD：背景/人物不变则继续原文；变化则跳下一场景）
+    var textboxClicked = 0;
+    var advancedParagraphFn = function () {
+      textboxClicked += 1;
+      // 用 flow 决定下一个 paragraph
+      if (!window.NovelWorldFlow) return;
+      var parasAll = store._original_paragraphs || [];
+      if (!parasAll.length) return;
+      var curAnchor = state.v22CurrentAnchor || 0;
+      // PRD 行为：背景/人物不变 → 下一句原文；变化 → 跳下一画面
+      var shouldChangeScene = (textboxClicked % 3 === 0);
+      var nextPara;
+      if (shouldChangeScene) {
+        var jump = Math.floor(textboxClicked / 3) * 5 % parasAll.length;
+        nextPara = parasAll[jump];
+        state.v22CurrentAnchor = jump;
+      } else {
+        nextAnchor = curAnchor + 1;
+        nextPara = parasAll[nextAnchor % parasAll.length];
+        state.v22CurrentAnchor = nextAnchor;
+      }
+      // 显示下一段（打字机）
+      window.NovelWorldVN.enterScene({
+        paragraph: nextPara,
+        genre: store.world_bible.genre,
+        npcs: sceneNpcs,
+        items: sceneItems,
+        actions: sceneActions,
+        speaker: '',
+        ps: store.player_state,
+        scene_id: firstScene.scene_id + '_s' + Math.floor(textboxClicked / 3),
+        store: store
+      });
+      if (toast) {
+        var kind = shouldChangeScene ? '场景切换' : '继续阅读';
+        var msg = shouldChangeScene ? '背景变化，进入下一画面' : '原文逐字播放';
+        toast('ok', kind, msg);
+      }
+    };
+    state.v22AdvanceParagraph = advancedParagraphFn;
+
+    // 8.5) hook 文字框 click → 推进（如果打字机在进行则跳过；否则推进下一段）
+    var textbox = document.querySelector('#ng-v22-textbox');
+    if (textbox && !textbox._v22Hooked) {
+      textbox.addEventListener('click', function () {
+        // 若打字机未完成 → vn.js 的 setupTextboxClick 会跳过；先延迟 50ms 看状态
+        setTimeout(function () {
+          var pending = window.NovelWorldVN && window.NovelWorldVN._PENDING && window.NovelWorldVN._PENDING();
+          if (pending) return;  // 确认弹窗中
+          advancedParagraphFn();
+        }, 60);
+      });
+      textbox._v22Hooked = true;
+    }
+
+    // 9) toast 反馈
+    if (toast) {
+      toast('ok', '视觉小说范式',
+        '题材：' + (store.world_bible.genre || 'jingying') +
+        ' · NPC ' + sceneNpcs.length + ' / 道具 ' + sceneItems.length + ' / 动作 ' + sceneActions.length);
+    }
+    return true;
   }
 
   /* ---------- 帮助弹窗 ---------- */
@@ -1422,7 +1573,9 @@ var DEMO_TEXT = [
   /* ---------- 事件绑定：splash / entry mask / progress mask ---------- */
   $('#ng-splash-start').addEventListener('click', function () {
     if (!state.book) { loadDemo(); return; }
-    showEntryMask();
+    // V22-D：直接进入视觉小说范式（顶部状态栏 + 悬浮标签 + 底部文字框）
+    var ok = startV22Scene(state.bookHash || 'demo');
+    if (!ok) showEntryMask();
   });
   $('#ng-splash-pick').addEventListener('click', function () {
     $('#ng-file').click();

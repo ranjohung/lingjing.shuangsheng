@@ -7,20 +7,20 @@
   'use strict';
   if (window.LJPlot && window.LJPlot.__mounted) return;
 
-  // ---------- 章节数据（mock · 长夜城 + 深海回声 + 三国）----------
+  // ---------- 章节数据（mock · 西游记 + 红楼梦 + 三国）----------
   var NOVELS = {
-    changyecheng: {
-      id: 'changyecheng',
-      title: '长夜城',
+    xiyouji: {
+      id: 'xiyouji',
+      title: '西游记',
       bg: 'linear-gradient(160deg,#2E3A6E,#4A3A8C)',
       bgNight: 'linear-gradient(160deg,#0a0a1a,#1a1a3e)',
       emoji: '🏯',
       chapters: [
-        { id: 'ch1', title: '初入长夜城', scenes: [
+        { id: 'ch1', title: '初入西游记', scenes: [
           { type: 'bg', value: 'bgNight' },
           { type: 'char', speaker: 'narrator', portrait: '🌙', emotion: 'calm',
-            text: '夜色沉沉，你独自一人踏入长夜城。街巷空寂，唯有远处宫灯微微明灭。' },
-          { type: 'char', speaker: '林清雪', portrait: '🌸', emotion: 'happy',
+            text: '夜色沉沉，你独自一人踏入西游记。街巷空寂，唯有远处宫灯微微明灭。' },
+          { type: 'char', speaker: '孙悟空', portrait: '🌸', emotion: 'happy',
             text: '你来了。我等你很久了——跟我走吧，我带你去见一个人。' },
           { type: 'choices', items: [
             { text: 'A. 跟她走', delta: { intimacy: +5, trust: +2 } },
@@ -30,7 +30,7 @@
           { type: 'cg', title: '初遇·月下相逢',
             bg: 'linear-gradient(135deg,#E94560,#6C5CE7)' },
           { type: 'char', speaker: 'narrator', portrait: '🌙', emotion: 'calm',
-            text: '——第一章完。你与林清雪的关系开启了一段羁绊。' },
+            text: '——第一章完。你与孙悟空的关系开启了一段羁绊。' },
           { type: 'end', chapter: 1, ending: 'good_start' }
         ]},
         { id: 'ch2', title: '御书房的对峙', scenes: [
@@ -46,16 +46,16 @@
         ]}
       ]
     },
-    shenhuihuisheng: {
-      id: 'shenhuihuisheng',
-      title: '深海回声',
+    hongloumeng: {
+      id: 'hongloumeng',
+      title: '红楼梦',
       bg: 'linear-gradient(160deg,#2E5E56,#00B894)',
       bgNight: 'linear-gradient(160deg,#0a0a1a,#1a3a3e)',
       emoji: '🌊',
       chapters: [
         { id: 'ch1', title: '海边的来电', scenes: [
           { type: 'bg', value: 'bg' },
-          { type: 'char', speaker: '林清雪', portrait: '🌸', emotion: 'calm',
+          { type: 'char', speaker: '孙悟空', portrait: '🌸', emotion: 'calm',
             text: '……你听到了吗？海的那边，有人在叫你的名字。' },
           { type: 'choices', items: [
             { text: 'A. 回答她', delta: { intimacy: +3, trust: +2 } },
@@ -67,7 +67,7 @@
     },
     sanguo: {
       id: 'sanguo',
-      title: '三国·吕布篇',
+      title: '三国演义',
       bg: 'linear-gradient(160deg,#B8863B,#8C5A2B)',
       bgNight: 'linear-gradient(160deg,#2E1A1A,#4A2A1A)',
       emoji: '⚔️',
@@ -85,16 +85,16 @@
         ]}
       ]
     },
-    saibochangye: {
-      id: 'saibochangye',
-      title: '赛博长夜',
+    sanguoyanyi: {
+      id: 'sanguoyanyi',
+      title: '三国演义',
       bg: 'linear-gradient(160deg,#5A6B8E,#C95B9C)',
       bgNight: 'linear-gradient(160deg,#0a0a1a,#3a1a3e)',
       emoji: '🤖',
       chapters: [
         { id: 'ch1', title: '系统上线', scenes: [
           { type: 'bg', value: 'bgNight' },
-          { type: 'char', speaker: '云雀', portrait: '🤖', emotion: 'happy',
+          { type: 'char', speaker: '公版', portrait: '🤖', emotion: 'happy',
             text: '欢迎回来，旅人。今天的赛博城市有什么新故事？' },
           { type: 'choices', items: [
             { text: 'A. 去看看', delta: { intimacy: +2, trust: +1 } },
@@ -123,9 +123,9 @@
   // ---------- 初始化 ----------
   function init() {
     // 解析 URL 参数：?novelId=xx（v5.13 链路）/ ?novel=xx（v6.4 plot-detail 与公版库链路）
-    // V20-I 审查修复：兼容两种参数名，且未知 ID 不再静默回退到《长夜城》
+    // V20-I 审查修复：兼容两种参数名，且未知 ID 不再静默回退到《西游记》
     var params = new URLSearchParams(window.location.search);
-    var novelId = params.get('novelId') || params.get('novel') || 'changyecheng';
+    var novelId = params.get('novelId') || params.get('novel') || 'xiyouji';
     currentNovel = NOVELS[novelId] || null;
     if (!currentNovel) {
       renderUnsupported(novelId);

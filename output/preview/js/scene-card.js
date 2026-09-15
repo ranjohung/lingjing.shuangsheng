@@ -36,7 +36,7 @@
   // ====== 场景卡字段 ======
   const SCENE_FIELDS = [
     { key: 'scene_no', label: '场景编号', hint: '1.1 / 1.2 / 2.1', required: true },
-    { key: 'location', label: '场景地点', hint: '长夜城·城南酒馆', required: true },
+    { key: 'location', label: '场景地点', hint: '西游记·城南酒馆', required: true },
     { key: 'time_setting', label: '场景时间', hint: '傍晚，天色将暗未暗', required: true },
     { key: 'characters_present', label: '在场人物', hint: '主角、酒馆老板、神秘陌生人', required: true },
     { key: 'scene_goal', label: '场景目标', hint: '让主角获得关于记忆篡改的第一个线索', required: true },
@@ -64,7 +64,7 @@
   const SCENE_GEN = {
     scene_no: () => shuffleAndPick(['1.1', '1.2', '1.3', '2.1', '2.2', '3.1', '3.2'], 2),
     location: (ctx) => shuffleAndPick([
-      '长夜城·城南酒馆', '雾锁民国·上海·霞飞路 47 号', '月森林·千年古树下',
+      '西游记·城南酒馆', '雾锁民国·上海·霞飞路 47 号', '月森林·千年古树下',
       '银河纪元·星舰·舰桥', '春风不及·高中·阳光走廊', '天剑宗·议事大殿',
       '幽冥沼泽·废弃祭坛', '皇城·夜宴厅'
     ], 4),

@@ -36,7 +36,7 @@
       label: '场景描写',
       template: '请用 {length} 字描写 {location} 在 {time} 的氛围，要求突出 {emotion}，重点描写 {detail}',
       slots: ['length', 'location', 'time', 'emotion', 'detail'],
-      sample: '请用 200 字描写 长夜城 傍晚 的氛围，要求突出 紧张压抑，重点描写 木门声与陌生人手上的戒指'
+      sample: '请用 200 字描写 花果山 傍晚 的氛围，要求突出 空灵壮阔，重点描写 仙石与飞瀑之间的薄雾'
     },
     scene_transition: {
       category: 'scene',
@@ -57,7 +57,7 @@
       label: '角色出场',
       template: '请设计 {character} 的首次出场，要求在 {scene} 中，通过 {method} 展现其 {trait}',
       slots: ['character', 'scene', 'method', 'trait'],
-      sample: '请设计 林霜晚 的首次出场，要求在 长夜城夜宴 中，通过 一个动作 展现其 冷漠疏离'
+      sample: '请设计 孙悟空 的首次出场，要求在 水帘洞称王 中，通过 一个动作 展现其 果敢不羁'
     },
     character_inner: {
       category: 'character',

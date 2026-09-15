@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>小说世界自动生成 — 灵境 · 双生</title>
+<meta name="description" content="上传小说或选择公版书，自动生成可走进去的小说世界。原著零删减，资产由本地 SD + Blender 产出。">
+<link rel="stylesheet" href="css/mobile-lock.css" />
+<link rel="stylesheet" href="css/tabbar-embed.css" />
+<style>
+:root { --brand:#1A1A2E; --red:#E94560; --purple:#6C5CE7; --green:#00B894; --gold:#FFB347; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--brand); color:#EAEAF0; font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; min-height:100vh; }
+a { color:inherit; text-decoration:none; }
+
+.os-head { position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:10px; padding:12px 14px; background:rgba(26,26,46,.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(255,255,255,.08); }
+.os-head .back { width:34px; height:34px; border-radius:10px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); display:grid; place-items:center; font-size:16px; }
+.os-head h1 { font-size:16px; font-weight:700; }
+.os-head .ver { margin-left:auto; font-size:10px; color:var(--gold); border:1px solid rgba(255,179,71,.4); border-radius:999px; padding:2px 8px; }
+
+.hero { position:relative; height:150px; overflow:hidden; }
+.hero img { width:100%; height:100%; object-fit:cover; display:block; }
+.hero .veil { position:absolute; inset:0; background:linear-gradient(180deg,rgba(26,26,46,.15),rgba(26,26,46,.92)); }
+.hero .cap { position:absolute; left:16px; bottom:14px; right:16px; }
+.hero .cap .t { font-size:19px; font-weight:800; letter-spacing:1px; }
+.hero .cap .s { margin-top:4px; font-size:11px; color:rgba(234,234,240,.75); }
+
+.wrap { padding:14px 14px 110px; }
+.sec-t { font-size:13px; font-weight:700; color:rgba(234,234,240,.9); margin:18px 0 10px; display:flex; align-items:center; gap:8px; }
+.sec-t::before { content:''; width:3px; height:14px; border-radius:2px; background:var(--red); }
+
+.card { background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.09); border-radius:14px; padding:13px; margin-bottom:10px; }
+.card .chead { display:flex; align-items:center; gap:9px; margin-bottom:8px; }
+.card .chead .ico { width:32px; height:32px; border-radius:9px; background:rgba(255,255,255,.08); display:grid; place-items:center; font-size:16px; }
+.card .ct { font-size:14px; font-weight:700; }
+.card .cd { font-size:11px; color:rgba(234,234,240,.55); line-height:1.6; }
+
+.btn { display:block; width:100%; border:none; border-radius:12px; padding:13px; font-size:14px; font-weight:700; color:#fff; background:linear-gradient(135deg,var(--red),#c73a52); cursor:pointer; text-align:center; }
+.btn:disabled { opacity:.35; cursor:not-allowed; }
+.btn.ghost { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); font-weight:500; }
+.btn.go { background:linear-gradient(135deg,var(--green),#019875); }
+.btn.mini { width:auto; display:inline-block; padding:8px 14px; font-size:12px; }
+
+.book-list { max-height:260px; overflow-y:auto; }
+.book { display:flex; gap:10px; align-items:center; cursor:pointer; transition:border-color .2s; padding:10px; border-radius:10px; border:1px solid transparent; }
+.book:hover { background:rgba(255,255,255,.04); }
+.book.sel { border-color:var(--green); background:rgba(0,184,148,.08); }
+.book .ico { width:36px; height:36px; border-radius:9px; display:grid; place-items:center; font-size:18px; background:rgba(255,255,255,.06); flex:none; }
+.book .n { font-size:13px; font-weight:700; }
+.book .d { font-size:10px; color:rgba(234,234,240,.55); margin-top:2px; }
+.book .pick { margin-left:auto; font-size:11px; color:var(--green); opacity:0; }
+.book.sel .pick { opacity:1; }
+
+.filebox { position:relative; display:block; width:100%; border:2px dashed rgba(255,255,255,.12); border-radius:12px; padding:22px; text-align:center; color:rgba(234,234,240,.6); font-size:13px; cursor:pointer; }
+.filebox input { position:absolute; inset:0; opacity:0; cursor:pointer; }
+
+.genre-tag { display:inline-block; font-size:10px; border-radius:999px; padding:3px 9px; border:1px solid rgba(255,255,255,.12); color:rgba(234,234,240,.7); margin-right:5px; }
+.genre-tag.main { border-color:var(--green); color:#7dedc8; }
+
+.pill { display:inline-flex; align-items:center; gap:4px; font-size:11px; color:rgba(234,234,240,.75); background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:999px; padding:4px 10px; margin:3px 3px 0 0; }
+.pill .n { color:#fff; }
+
+.tabs { display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; }
+.tabs .tb { flex:none; padding:7px 13px; font-size:12px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); color:rgba(234,234,240,.65); cursor:pointer; }
+.tabs .tb.on { background:linear-gradient(135deg,var(--purple),#5642c7); color:#fff; border-color:transparent; }
+
+.panel { display:none; }
+.panel.on { display:block; }
+
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.grid2 .card { margin-bottom:0; }
+
+.cmd { background:#0d0d1a; border:1px solid rgba(255,255,255,.08); border-radius:8px; padding:10px; font-family:Consolas,monospace; font-size:11px; color:rgba(234,234,240,.7); line-height:1.6; overflow-x:auto; white-space:pre-wrap; word-break:break-all; }
+
+.hidden { display:none !important; }
+.status { font-size:11px; color:rgba(234,234,240,.55); margin-top:8px; }
+
+.foot { margin-top:18px; font-size:10px; color:rgba(234,234,240,.4); line-height:1.8; text-align:center; }
+</style>
+</head>
+<body>
+
+<header class="os-head">
+  <a class="back" href="library.html" aria-label="返回世界">←</a>
+  <h1>小说世界自动生成</h1>
+  <span class="ver">V25 · Forge</span>
+</header>
+
+<div class="hero">
+  <img src="img/novel-os/street_rain_night.png" alt="场景示意" />
+  <div class="veil"></div>
+  <div class="cap">
+    <div class="t">选择一本小说，生成一个可走进去的世界</div>
+    <div class="s">公版书 40 部 · 本机解析 · 本地 SD + Blender 出资产 · 原著零删减</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="sec-t">① 选择书源</div>
+  <div class="card">
+    <div class="cd" style="margin-bottom:10px">点击下方卡片选择一本公版书，或拖拽/点击上传自己的 .txt</div>
+    <div class="book-list" id="book-list"></div>
+    <label class="filebox" style="margin-top:12px">
+      <input type="file" id="file-in" accept=".txt" />
+      <div>📥 上传我的小说 txt（仅本地解析，不上传服务器）</div>
+    </label>
+    <div class="status" id="sel-status">已选：未选择</div>
+  </div>
+
+  <div class="card" id="cfg-card">
+    <div class="ct">生成选项</div>
+    <div class="grid2" style="margin-top:10px">
+      <label class="cd">原文窗口：<select id="cfg-chars" style="margin-left:4px;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:3px">
+        <option value="30000">3 万字</option><option value="60000" selected>6 万字</option><option value="100000">10 万字</option><option value="0">全文</option>
+      </select></label>
+      <label class="cd">场景最少锚点：<select id="cfg-span" style="margin-left:4px;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:3px">
+        <option value="4">4 段</option><option value="6" selected>6 段</option><option value="10">10 段</option>
+      </select></label>
+    </div>
+  </div>
+
+  <button class="btn" id="btn-forge" disabled>② 自动生成世界蓝图</button>
+
+  <div id="sec-blueprint" class="hidden">
+    <div class="sec-t">世界蓝图</div>
+    <div class="card">
+      <div class="chead"><div class="ico">📜</div><div><div class="ct" id="bp-title">—</div><div class="cd" id="bp-meta">—</div></div></div>
+      <div style="margin:10px 0" id="bp-genre"></div>
+      <div class="grid2">
+        <div class="card"><div class="cd">锚点</div><div class="ct" id="bp-anchors">0</div></div>
+        <div class="card"><div class="cd">场景</div><div class="ct" id="bp-scenes">0</div></div>
+        <div class="card"><div class="cd">角色</div><div class="ct" id="bp-chars">0</div></div>
+        <div class="card"><div class="cd">地点</div><div class="ct" id="bp-locs">0</div></div>
+      </div>
+      <div class="status" id="bp-checks"></div>
+    </div>
+
+    <div class="tabs" id="bp-tabs">
+      <div class="tb on" data-tab="scenes">场景链</div>
+      <div class="tb" data-tab="chars">角色</div>
+      <div class="tb" data-tab="locs">地点</div>
+      <div class="tb" data-tab="props">道具</div>
+      <div class="tb" data-tab="assets">资产清单</div>
+      <div class="tb" data-tab="src">零创造校验</div>
+    </div>
+
+    <div class="panel on" id="tab-scenes"></div>
+    <div class="panel" id="tab-chars"></div>
+    <div class="panel" id="tab-locs"></div>
+    <div class="panel" id="tab-props"></div>
+    <div class="panel" id="tab-assets"></div>
+    <div class="panel" id="tab-src"></div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="ct">③ 本地资产生产</div>
+      <div class="cd" style="margin:8px 0 10px">本页只负责世界蓝图；SD 背景与 Blender 3D 需要在本机后台生成。若已生成，可直接进入世界。</div>
+      <div class="cmd" id="cmd-node">node scripts/forge_build.js --book xiyouji --chars 60000</div>
+      <div class="cmd" id="cmd-sd">python scripts/forge_sd_scenes.py --book xiyouji</div>
+      <div class="cmd" id="cmd-blend">"D:/作品/trae/work Buddy/tools/blender/blender.exe" --background --factory-startup --python scripts/forge_blender.py -- "F:/开发软件项目文件/灵境 · 双生/output/preview/worlds/xiyouji.json" "F:/开发软件项目文件/灵境 · 双生/output/preview/img/novel-forge/xiyouji/3d" "F:/开发软件项目文件/灵境 · 双生/output/preview/models/novel-forge/xiyouji"</div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button class="btn mini ghost" id="btn-dl-json">下载蓝图 JSON</button>
+        <button class="btn mini go" id="btn-enter">进入这个世界 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    原著正文全部来自本地 corpus/books · 不调用任何云端 LLM 写正文 · 不修改任何原文<br/>
+    角色/地点/道具 100% 在原文中可搜到 · 资产提示词来自原文意象映射
+  </div>
+</div>
+
+<nav id="tabbar-mount"></nav>
+<script src="js/novel-world-forge.js"></script>
+<script src="js/tabbar.js"></script>
+<script>
+var SEL = { kind: '', id: '', title: '', author: '', text: '' };
+var MANIFEST = [];
+var WORLD = null;
+
+function $(q) { return document.querySelector(q); }
+function html(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+function loadManifest() {
+  fetch('../../corpus/manifest.json').then(function (r) { return r.json(); }).then(function (list) {
+    MANIFEST = list;
+    renderBooks();
+  }).catch(function (e) {
+    $('#book-list').innerHTML = '<div class="cd">公版书目录加载失败：' + html(e.message) + '</div>';
+  });
+}
+
+function renderBooks() {
+  var box = $('#book-list');
+  box.innerHTML = MANIFEST.slice(0, 40).map(function (b, i) {
+    return '<div class="book" data-idx="' + i + '">' +
+      '<div class="ico">📖</div>' +
+      '<div><div class="n">《' + html(b.title) + '》</div>' +
+      '<div class="d">' + html(b.author || '佚名') + ' · ' + b.chapters + ' 章 · ' + (b.words || 0).toLocaleString() + ' 字</div></div>' +
+      '<span class="pick">已选 ✓</span>' +
+      '</div>';
+  }).join('');
+  box.querySelectorAll('.book').forEach(function (el) {
+    el.addEventListener('click', function () {
+      var b = MANIFEST[parseInt(el.dataset.idx, 10)];
+      pickBook(b);
+    });
+  });
+}
+
+function pickBook(b) {
+  SEL = { kind: 'public', id: b.id, title: b.title, author: b.author || '', text: '' };
+  document.querySelectorAll('.book').forEach(function (el) { el.classList.remove('sel'); });
+  var hit = document.querySelector('.book[data-idx="' + MANIFEST.indexOf(b) + '"]');
+  if (hit) hit.classList.add('sel');
+  $('#sel-status').textContent = '已选：《' + b.title + '》' + (b.author || '');
+  updateCmds();
+  $('#btn-forge').disabled = false;
+  $('#btn-forge').textContent = '② 自动生成《' + b.title + '》世界蓝图';
+  fetchBookText(b.id);
+}
+
+function fetchBookText(id) {
+  fetch('../../corpus/books/' + id + '.txt').then(function (r) { return r.text(); }).then(function (t) {
+    if (SEL.id === id) SEL.text = t.replace(/\r/g, '');
+  });
+}
+
+$('#file-in').addEventListener('change', function (e) {
+  var f = e.target.files && e.target.files[0];
+  if (!f) return;
+  var r = new FileReader();
+  r.onload = function () {
+    SEL = { kind: 'upload', id: f.name.replace(/\.txt$/i, '').replace(/[^a-z0-9\u4e00-\u9fa5_-]/gi, '_'), title: f.name.replace(/\.txt$/i, ''), author: '', text: String(r.result || '').replace(/\r/g, '') };
+    document.querySelectorAll('.book').forEach(function (el) { el.classList.remove('sel'); });
+    $('#sel-status').textContent = '已选：上传文件 ' + f.name;
+    updateCmds();
+    $('#btn-forge').disabled = false;
+    $('#btn-forge').textContent = '② 自动生成《' + SEL.title + '》世界蓝图';
+  };
+  r.readAsText(f, 'utf-8');
+});
+
+function updateCmds() {
+  var id = SEL.id || 'xiyouji';
+  var ch = $('#cfg-chars').value;
+  $('#cmd-node').textContent = 'node scripts/forge_build.js --book ' + id + ' --chars ' + ch;
+  $('#cmd-sd').textContent = 'python scripts/forge_sd_scenes.py --book ' + id;
+  $('#cmd-blend').textContent = '"D:/作品/trae/work Buddy/tools/blender/blender.exe" --background --factory-startup --python scripts/forge_blender.py -- "F:/开发软件项目文件/灵境 · 双生/output/preview/worlds/' + id + '.json" "F:/开发软件项目文件/灵境 · 双生/output/preview/img/novel-forge/' + id + '/3d" "F:/开发软件项目文件/灵境 · 双生/output/preview/models/novel-forge/' + id + '"';
+}
+
+function runForge() {
+  var btn = $('#btn-forge');
+  if (!SEL.text) { btn.textContent = '原文未加载，请稍候'; return; }
+  btn.disabled = true;
+  btn.textContent = '正在生成世界蓝图…';
+  var maxChars = parseInt($('#cfg-chars').value, 10) || 0;
+  var minSpan = parseInt($('#cfg-span').value, 10) || 6;
+  var text = maxChars > 0 ? SEL.text.slice(0, maxChars) : SEL.text;
+  var t0 = Date.now();
+  try {
+    WORLD = NovelWorldForge.forge({
+      bookId: SEL.id,
+      title: SEL.title,
+      author: SEL.author,
+      text: text,
+      sourceKind: SEL.kind === 'public' ? 'public_domain' : 'author_upload',
+      options: { minSpan: minSpan, sceneMinMentions: 3, maxBackgrounds: 12 }
+    });
+    if (!WORLD || WORLD.ok === false) throw new Error(WORLD && WORLD.reason);
+    WORLD.built_ms = Date.now() - t0;
+    showBlueprint();
+    localStorage.setItem('lingjing_forge_current', JSON.stringify({ bookId: SEL.id, world: WORLD, at: Date.now() }));
+  } catch (e) {
+    btn.textContent = '生成失败：' + e.message;
+    btn.disabled = false;
+  }
+}
+
+$('#btn-forge').addEventListener('click', runForge);
+
+function showBlueprint() {
+  $('#sec-blueprint').classList.remove('hidden');
+  var w = WORLD;
+  $('#bp-title').textContent = '《' + w.meta.title + '》';
+  $('#bp-meta').textContent = (w.meta.author || '佚名') + ' · ' + w.meta.chars.toLocaleString() + ' 字 · ' + w.scenes.length + ' 场景 · 生成耗时 ' + w.built_ms + 'ms';
+  $('#bp-genre').innerHTML = '<span class="genre-tag main">' + html(w.genre.primary) + '</span>' +
+    w.genre.list.slice(1).map(function (g) { return '<span class="genre-tag">' + html(g.id) + '</span>'; }).join('');
+  $('#bp-anchors').textContent = w.anchors.length;
+  $('#bp-scenes').textContent = w.scenes.length;
+  $('#bp-chars').textContent = w.characters.length;
+  $('#bp-locs').textContent = w.locations.length;
+  $('#bp-checks').innerHTML = '零删减：' + (w.checks.anchors_byte_equal.ok ? '✓' : '✗') +
+    ' · 零创造：' + (w.checks.from_source.ok ? '✓' : '✗') +
+    ' · 交互热点：' + w.interactions.length;
+  renderTabs();
+  updateCmds();
+}
+
+function renderTabs() {
+  var w = WORLD;
+  $('#tab-scenes').innerHTML = '<div class="card"><div class="cd" style="margin-bottom:6px">' + w.scenes.length + ' 个场景（按原文地点切换自动切分）</div>' +
+    w.scenes.map(function (s) {
+      return '<span class="pill"><span>' + html(s.location) + '</span><span class="n">' + s.span + ' 锚</span></span>';
+    }).join('') + '</div>';
+
+  $('#tab-chars').innerHTML = '<div class="card">' + w.characters.slice(0, 24).map(function (c) {
+    return '<span class="pill"><span>' + html(c.name) + '</span><span class="n">' + c.mentions + '</span></span>';
+  }).join('') + '</div>';
+
+  $('#tab-locs').innerHTML = '<div class="card">' + w.locations.slice(0, 30).map(function (l) {
+    return '<span class="pill"><span>' + html(l.name) + '</span><span class="n">' + l.kind + ' ' + l.mentions + '</span></span>';
+  }).join('') + '</div>';
+
+  $('#tab-props').innerHTML = '<div class="card">' + w.props.slice(0, 24).map(function (p) {
+    return '<span class="pill"><span>' + html(p.name) + '</span><span class="n">' + p.mentions + '</span></span>';
+  }).join('') + '</div>';
+
+  $('#tab-assets').innerHTML = '<div class="card">' +
+    '<div class="cd" style="margin-bottom:6px">SD 背景：' + w.assets.backgrounds.length + ' 张 · 3D 模型：' + w.assets.models3d.length + ' 个 · 人物立绘：' + w.assets.portraits.length + ' 张</div>' +
+    w.assets.backgrounds.map(function (b) {
+      return '<div class="cd" style="margin-top:6px"><b>' + html(b.asset_id) + '</b> · ' + html(b.location) + '<br/>' + html(b.prompt_parts.slice(0, 4).join(' · ')) + '</div>';
+    }).join('') + '</div>';
+
+  $('#tab-src').innerHTML = '<div class="card">' +
+    '<div class="cd"><b>零删减：</b>' + (w.checks.anchors_byte_equal.ok ? '全部 ' + w.checks.anchors_byte_equal.total + ' 个锚点都能在原文中搜到' : '异常：' + w.checks.anchors_byte_equal.bad.join(' ')) + '</div>' +
+    '<div class="cd" style="margin-top:6px"><b>零创造：</b>' + (w.checks.from_source.ok ? '角色/地点/道具全部能在原文中搜到' : '异常：' + w.checks.from_source.bad.join(' ')) + '</div>' +
+    '<div class="cd" style="margin-top:6px"><b>原文意象映射：</b>' + w.stats.imagery.slice(0, 8).map(function (i) { return html(i.zh) + '→' + html(i.en); }).join(' · ') + '</div>' +
+    '</div>';
+}
+
+document.getElementById('bp-tabs').addEventListener('click', function (e) {
+  var t = e.target.closest('.tb');
+  if (!t) return;
+  document.querySelectorAll('.tb').forEach(function (x) { x.classList.remove('on'); });
+  t.classList.add('on');
+  document.querySelectorAll('.panel').forEach(function (x) { x.classList.remove('on'); });
+  document.getElementById('tab-' + t.dataset.tab).classList.add('on');
+});
+
+$('#cfg-chars').addEventListener('change', updateCmds);
+
+$('#btn-dl-json').addEventListener('click', function () {
+  if (!WORLD) return;
+  var blob = new Blob([JSON.stringify(WORLD)], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (WORLD.meta.book_id || 'novel-world') + '.json';
+  a.click();
+});
+
+$('#btn-enter').addEventListener('click', function () {
+  if (!WORLD) return;
+  localStorage.setItem('lingjing_forge_current', JSON.stringify({ bookId: WORLD.meta.book_id, world: WORLD, at: Date.now() }));
+  location.href = 'world-view.html';
+});
+
+loadManifest();
+</script>
+</body>
+</html>

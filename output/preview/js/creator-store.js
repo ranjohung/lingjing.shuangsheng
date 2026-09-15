@@ -39,30 +39,30 @@ window.CreatorStore = (function () {
     var d = {
       quotaUse: {},           // {kind: {windowKey: count}}
       voiceCloneDone: false,  // 音色复刻首次免费标记
-      works: [                // 预置演示作品（V3.0 §4.1 示例）
-        { id: 'w_novel', type: 'novel', title: '《长夜城》', status: '已发布',
-          words: '12.8万字', readers: '1.2万阅读', score: '4.8', income: 8400 },
-        { id: 'w_char', type: 'character', title: '角色：林清雪', status: '已发布',
+      works: [                // 预置演示作品（V3.0 §4.1 示例 · 仅公版名著）
+        { id: 'w_novel', type: 'novel', title: '《西游记》', status: '已发布',
+          words: '86.2万字', readers: '1.2万阅读', score: '4.8', income: 8400 },
+        { id: 'w_char', type: 'character', title: '角色：孙悟空', status: '已发布',
           desc: '3,200次使用', income: 1800 },
-        { id: 'w_prop', type: 'prop', title: '道具：玄铁剑', status: '已发布',
+        { id: 'w_prop', type: 'prop', title: '道具：如意金箍棒', status: '已发布',
           desc: '580次购买', income: 2600 }
       ],
-      interactions: {         // 互动管理四模块（V3.0 §4.3）{charId: {kind: [items]}}
-        char_lin: {
+      interactions: {         // 互动管理四模块（V3.0 §4.3）{charId: {kind: [items]}} · 示例仅公版角色
+        char_wukong: {
           scenes: [
-            { id: 's1', name: '和TA一起看一场雨', open: '雨夜屋檐下偶遇，TA把伞倾向你这边',
-              choices: 3, ending: '雨停后各自归家，关系+2', rel: '+2' }
+            { id: 's1', name: '和TA一起回水帘洞', open: '花果山飞瀑前，TA招手邀你进洞天',
+              choices: 3, ending: '游览后各自归去，关系+2', rel: '+2' }
           ],
           events: [
-            { id: 'e1', name: 'TA今天遇到了一件烦心事', trigger: '亲密度≥30 · 上次互动>1天',
-              content: 'TA主动发来消息，语气比平时低落', options: 3, result: '倾听后关系+3' }
+            { id: 'e1', name: 'TA今天打了一件不平事', trigger: '亲密度≥30 · 上次互动>1天',
+              content: 'TA主动发来消息，语气比平日更爽利', options: 3, result: '倾听后关系+3' }
           ],
           fragments: [
-            { id: 'f1', name: 'TA的童年记忆', unlock: '亲密度≥60', content: '一段可互动的回忆',
+            { id: 'f1', name: 'TA的学艺记忆', unlock: '亲密度≥60', content: '一段可互动的回忆',
               options: 2, impact: '解锁隐藏对话' }
           ],
           missions: [
-            { id: 'm1', name: '帮TA找到丢失的东西', goal: '找回遗失的旧怀表', nodes: 3,
+            { id: 'm1', name: '帮TA找回落海的兵器', goal: '找回沉入东海的趁手兵刃', nodes: 3,
               reward: '关系值+5 · 解锁新互动' }
           ]
         }

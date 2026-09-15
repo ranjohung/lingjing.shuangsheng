@@ -201,33 +201,32 @@
 
   // ---------- 4 推荐板块 ----------
   // 今日推荐：从 world-data.js 复用（2 张卡片）
+  // 今日推荐：只使用 corpus/manifest.json 中的真实公版名著
   var TODAY_RECOMMEND = [
-    // V20-J：三国直达卡改走详细介绍页（详情页内「游玩」进入小说世界）
-    { id: 'sanguoyanyi', title: '三国演义 · 小说世界', author: '罗贯中（公版）', cat: '公版名著', score: 9.6, desc: '120 回 · 卷一免费 · 全书券省 42%', cov: 'linear-gradient(160deg,#6B2737,#B8863B)', emoji: '📖', href: 'output/preview/plot-detail.html?novel=sanguoyanyi' },
-    { id: 'hongloumeng', title: '红楼梦 · 小说世界', author: '曹雪芹（公版）', cat: '公版名著', score: 9.4, desc: '120 回 · 黛玉知己结局', cov: 'linear-gradient(160deg,#B8863B,#8C5A2B)', emoji: '📜' },
-    { id: 'changyecheng', title: '长夜城', author: '夜归人', cat: '古风', score: 9.0, desc: '权谋古风 · 24.6万字', cov: 'linear-gradient(160deg,#2E3A6E,#4A3A8C)', emoji: '🏯' },
-    { id: 'shenhuihuisheng', title: '深海回声', author: '林清雪', cat: '悬疑', score: 8.8, desc: '悬疑 · 18.2万字 · 共写命运', cov: 'linear-gradient(160deg,#2E5E56,#00B894)', emoji: '🌊' }
+    { id: 'sanguoyanyi', title: '三国演义 · 小说世界', author: '罗贯中（公版）', cat: '公版名著', score: 9.6, desc: '120 回 · 沉浸式世界已生成', cov: 'linear-gradient(160deg,#6B2737,#B8863B)', emoji: '📖', href: 'world-view.html?book=sanguoyanyi' },
+    { id: 'hongloumeng', title: '红楼梦 · 小说世界', author: '曹雪芹（公版）', cat: '公版名著', score: 9.4, desc: '120 回 · 大观园可探索', cov: 'linear-gradient(160deg,#B8863B,#8C5A2B)', emoji: '📜', href: 'world-view.html?book=hongloumeng' },
+    { id: 'xiyouji', title: '西游记 · 小说世界', author: '吴承恩（公版）', cat: '公版名著', score: 9.5, desc: '100 回 · 花果山/天宫场景', cov: 'linear-gradient(160deg,#2E5E56,#00B894)', emoji: '🏔', href: 'world-view.html?book=xiyouji' },
+    { id: 'shuihuzhuan', title: '水浒传 · 小说世界', author: '施耐庵（公版）', cat: '公版名著', score: 9.2, desc: '120 回 · 梁山好汉世界', cov: 'linear-gradient(160deg,#2E3A6E,#4A3A8C)', emoji: '🏯', href: 'world-view.html?book=shuihuzhuan' }
   ];
-  // V20-W：删除「三国·吕布篇」重复卡（同原作只用一张 sanguoyanyi）
 
   // 陪伴动态（来自心屿角色最近消息 · V20-L：点击进入角色聊天）
   var COMPANION_FEED = [
-    { cid: 'c06', name: '林清雪', avatar: '🌸', text: '今天路过一家花店，想起你说喜欢向日葵。', time: '2小时前' },
+    { cid: 'c06', name: '孙悟空', avatar: '🌸', text: '今天路过一家花店，想起你说喜欢向日葵。', time: '2小时前' },
     { cid: 'c01', name: '苏晚', avatar: '🌙', text: '你来了。我刚好泡了茶，要不要一起喝？', time: '5小时前' },
     { cid: 'c04', name: '阿岁', avatar: '🏮', text: '今晚月色很好，要不要一起去走走？', time: '昨天' }
   ];
 
-  // 世界更新（V20-L：点击进入世界详情）
+  // 世界更新：只展示 corpus/manifest.json 中的真实公版名著
   var WORLD_UPDATE = [
-    { id: 'saibochangye', title: '《赛博长夜》', chapter: '更新至第12章', author: '云雀', time: '30分钟前', cov: 'linear-gradient(160deg,#5A6B8E,#C95B9C)' },
-    { id: 'changyecheng', title: '《长夜城》', chapter: '更新至第5章', author: '夜归人', time: '2小时前', cov: 'linear-gradient(160deg,#2E3A6E,#4A3A8C)' },
-    { id: 'kuachuan', title: '《快穿之攻略反派》', chapter: '更新至第8章', author: '苏沐橙', time: '今天', cov: 'linear-gradient(160deg,#8E5BD8,#C95B9C)' }
+    { id: 'xiyouji', title: '《西游记》', chapter: '世界已生成 · 12 场景 · 8 立绘 · 5 3D', author: '吴承恩（公版）', time: '刚刚', cov: 'linear-gradient(160deg,#5A6B8E,#C95B9C)', href: 'world-view.html?book=xiyouji' },
+    { id: 'sanguoyanyi', title: '《三国演义》', chapter: '100 回 · 自动生成世界', author: '罗贯中（公版）', time: '今日', cov: 'linear-gradient(160deg,#6B2737,#B8863B)', href: 'world-forge.html?book=sanguoyanyi' },
+    { id: 'hongloumeng', title: '《红楼梦》', chapter: '120 回 · 自动生成世界', author: '曹雪芹（公版）', time: '今日', cov: 'linear-gradient(160deg,#B8863B,#8C5A2B)', href: 'world-forge.html?book=hongloumeng' }
   ];
 
-  // 热门活动
+  // 热门活动：不再使用虚构赛事数据，改为描述真实已上线功能
   var HOT_ACTIVITY = [
-    { ico: '🏆', title: '2026 灵境·双生 创世杯', desc: '正在进行中 · 参赛作品已有 128 部', tag: '进行中' },
-    { ico: '🎁', title: '中秋福利月', desc: '完成充值任务，免费领取限定世界', tag: '活动' },
+    { ico: '📚', title: '公版名著世界计划', desc: '40 部公版名著已接入小说世界自动生成', tag: '已上线' },
+    { ico: '🎁', title: '本地创作激励', desc: '作者上传原创小说经质检后可生成世界', tag: '活动' },
     { ico: '💎', title: '灵玉每日领取', desc: '每日签到 + 任务可领 200 灵玉', tag: '日常' }
   ];
 
@@ -272,8 +271,9 @@
     html += '<section class="home-board"><div class="home-board-head"><h3>世界更新</h3><a class="home-board-more" href="output/preview/library.html">全部 ›</a></div>';
     html += '<div class="home-update-list">';
     WORLD_UPDATE.forEach(function (u) {
+      var href = u.href || 'output/preview/world-forge.html?book=' + u.id;
       html +=
-        '<a class="home-update-item" href="output/preview/plot-detail.html?novel=' + u.id + '">' +
+        '<a class="home-update-item" href="' + href + '">' +
         '<div class="hu-cov-mini" style="background:' + u.cov + '"></div>' +
         '<div class="hu-body">' +
         '<div class="hu-title">' + u.title + '<span class="hu-tag">更新</span></div>' +

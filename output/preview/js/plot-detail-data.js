@@ -7,75 +7,69 @@
   'use strict';
 
   var NOVEL_DETAIL = {
-    changyecheng: {
-      id: 'changyecheng',
-      title: '长夜城',
-      author: '墨白',
-      tags: ['古风', '权谋', '女主成长'],
-      summary: '夜色沉沉，你独自一人踏入长夜城。街巷空寂，唯有远处宫灯微微明灭。林清雪正等你归来——',
+    xiyouji: {
+      id: 'xiyouji',
+      title: '西游记',
+      author: '公版',
+      tags: ['神魔', '取经', '古典'],
+      summary: '混沌初分，鸿蒙始判。东胜神洲傲来国花果山出一石猴，拜师学艺，得号悟空。其后护唐僧西天取经，历九九八十一难。',
       cover: 'linear-gradient(135deg,#2E3A6E,#4A3A8C)',
-      emoji: '🏯',
+      emoji: '🐵',
       stats: { likes: 707, favs: 312, comments: 89, reads: 12450 },
-      // 主演横滑（图 1）
       cast: [
-        { roleId: 'linqingxue', name: '裴桃', emoji: '🌸', bg: 'linear-gradient(160deg,#FFB6C1,#FF8C94)', alias: '特别参演：小桃神' },
-        { roleId: 'shenyiran', name: '沈怡然', emoji: '👩', bg: 'linear-gradient(160deg,#E8D5FF,#C9A8E8)', alias: '特别参演：小曜神' },
-        { roleId: 'longwaner', name: '龙婉儿', emoji: '👧', bg: 'linear-gradient(160deg,#FFE4B5,#FFA07A)', alias: '特别参演：反方' },
-        { roleId: 'fubaiwan', name: '付百万', emoji: '💰', bg: 'linear-gradient(160deg,#FFD700,#FFA500)', alias: '特别参演：贪财猴琐' }
+        { roleId: 'wukong', name: '孙悟空', emoji: '🐵', bg: 'linear-gradient(160deg,#FFB6C1,#FF8C94)', alias: '特别参演：齐天大圣' },
+        { roleId: 'bajie', name: '猪八戒', emoji: '🐷', bg: 'linear-gradient(160deg,#E8D5FF,#C9A8E8)', alias: '特别参演：天蓬元帅' },
+        { roleId: 'sha', name: '沙悟净', emoji: '⚔️', bg: 'linear-gradient(160deg,#FFE4B5,#FFA07A)', alias: '特别参演：卷帘大将' },
+        { roleId: 'tangseng', name: '唐僧', emoji: '📿', bg: 'linear-gradient(160deg,#FFD700,#FFA500)', alias: '特别参演：三藏法师' }
       ],
-      // 中部 banner（图 1）
       ads: [
-        { id: 'spring-festival', title: '优惠限时享', sub: '累计充值送福利', period: '2.8 - 3.15', emoji: '🎊', badge: '限时' }
+        { id: 'public-domain', title: '公版名著计划', sub: '自动生成为世界 · 可沉浸游玩', period: '全年', emoji: '📖', badge: '公版' }
       ],
-      // 互动区（图 1）
       interact: {
         selected: [
-          { id: 'p1', user: '茄孓萌萌哒', avatar: '🍆', time: '08-07 22:19', content: '应大家要求，本次实体福利扩大一下：8月8日晚 24:00', badge: '灵境' },
-          { id: 'p2', user: '不负如来不负卿', avatar: '🌙', time: '08-07 19:42', content: '#反馈 #bug 进入第七章存档读档有概率闪退', badge: '灵境' },
-          { id: 'p3', user: '南风知我意', avatar: '🌿', time: '08-07 15:30', content: '裴桃线结局太虐了，求作者出番外', badge: '灵境' }
+          { id: 'p1', user: '灵境书友', avatar: '📖', time: '09-13 22:19', content: '花果山第一回读完，自动生成的水帘洞场景太棒了。', badge: '灵境' },
+          { id: 'p2', user: '西游行者', avatar: '🐵', time: '09-13 19:42', content: '#反馈 世界地图里"齐天府"热点点击很顺畅', badge: '灵境' },
+          { id: 'p3', user: '公版引路人', avatar: '🏮', time: '09-13 15:30', content: '求继续编译红楼、水浒的全套资产', badge: '灵境' }
         ],
         latest: [
-          { id: 'p4', user: '夜半听风', avatar: '🌌', time: '08-08 09:12', content: '#反馈 #bug 新角色付百万对话选项缺一', badge: '灵境' },
-          { id: 'p5', user: '风起时想你', avatar: '🍃', time: '08-08 08:45', content: '今日签到，第 47 天', badge: '灵境' }
+          { id: 'p4', user: '水帘洞游客', avatar: '🌊', time: '09-14 09:12', content: '#反馈 Blender 花果山 3D 场景加载正常', badge: '灵境' },
+          { id: 'p5', user: '取经人', avatar: '📿', time: '09-14 08:45', content: '今日签到，第 47 天', badge: '灵境' }
         ]
       },
-      // 作品交流区（图 1）
       groups: [
-        { id: 'g-vip', name: '520花VIP交流群', emoji: '💎', type: 'vip', price: 520, members: 1287 },
-        { id: 'g-gift', name: '36花礼包群', emoji: '🎁', type: 'gift', price: 36, members: 892 }
+        { id: 'g-vip', name: '公版名著VIP交流群', emoji: '💎', type: 'vip', price: 520, members: 1287 },
+        { id: 'g-gift', name: '西游角色礼包群', emoji: '🎁', type: 'gift', price: 36, members: 892 }
       ],
-      // 角色表白（图 1 Tab 2）
       roles: [
-        { name: '裴桃', emoji: '🌸', lineCount: 128, fansCount: 3421, topLine: '你来了。我等你很久了——跟我走吧。' },
-        { name: '沈怡然', emoji: '👩', lineCount: 96, fansCount: 2156, topLine: '我不准你独自去长夜城。' },
-        { name: '付百万', emoji: '💰', lineCount: 84, fansCount: 1892, topLine: '老爷我说的话你可敢听？' }
+        { name: '孙悟空', emoji: '🐵', lineCount: 128, fansCount: 3421, topLine: '皇帝轮流做，明年到我家。' },
+        { name: '猪八戒', emoji: '🐷', lineCount: 96, fansCount: 2156, topLine: '大师兄，师父被妖怪抓走了！' },
+        { name: '唐僧', emoji: '📿', lineCount: 84, fansCount: 1892, topLine: '悟空，休得无礼。' }
       ],
-      // 榜单（图 1 Tab 3）
       ranks: [
         { type: '灵韵榜', items: [
-          { name: '裴桃', score: 9.85, emoji: '🌸' },
-          { name: '沈怡然', score: 9.72, emoji: '👩' },
-          { name: '林清雪', score: 9.61, emoji: '❄️' }
+          { name: '孙悟空', score: 9.85, emoji: '🐵' },
+          { name: '唐僧', score: 9.72, emoji: '📿' },
+          { name: '猪八戒', score: 9.61, emoji: '🐷' }
         ]},
         { type: '人气榜', items: [
-          { name: '长夜城', score: 98762, emoji: '🏯' },
-          { name: '深海回声', score: 87521, emoji: '🌊' },
-          { name: '三国·吕布篇', score: 72394, emoji: '⚔️' }
+          { name: '西游记', score: 98762, emoji: '🐵' },
+          { name: '三国演义', score: 87521, emoji: '⚔️' },
+          { name: '红楼梦', score: 72394, emoji: '🌸' }
         ]}
       ]
     },
-    shenhuihuisheng: {
-      id: 'shenhuihuisheng',
-      title: '深海回声',
-      author: '苏晚',
-      tags: ['现代', '奇幻', '海洋'],
-      summary: '海的那边，有人在叫你的名字……',
-      cover: 'linear-gradient(160deg,#2E5E56,#00B894)',
-      emoji: '🌊',
+    hongloumeng: {
+      id: 'hongloumeng',
+      title: '红楼梦',
+      author: '公版',
+      tags: ['世情', '家族', '古典'],
+      summary: '开辟鸿蒙，谁为情种？都只为风月情浓。大观园中，木石前盟与金玉良缘纠葛一场。',
+      cover: 'linear-gradient(160deg,#E94560,#C95B9C)',
+      emoji: '🌸',
       stats: { likes: 423, favs: 198, comments: 56, reads: 8721 },
       cast: [
-        { roleId: 'mermaid', name: '苏晚', emoji: '🧜‍♀️', bg: 'linear-gradient(160deg,#87CEEB,#4682B4)', alias: '特别参演：小海神' },
-        { roleId: 'captain', name: '林船长', emoji: '⚓', bg: 'linear-gradient(160deg,#4682B4,#2F4F4F)', alias: '特别参演：反方' }
+        { roleId: 'daiyu', name: '林黛玉', emoji: '🌸', bg: 'linear-gradient(160deg,#87CEEB,#4682B4)', alias: '特别参演：绛珠仙草' },
+        { roleId: 'baochai', name: '薛宝钗', emoji: '🌺', bg: 'linear-gradient(160deg,#4682B4,#2F4F4F)', alias: '特别参演：蘅芜君' }
       ],
       ads: [],
       interact: { selected: [], latest: [] },

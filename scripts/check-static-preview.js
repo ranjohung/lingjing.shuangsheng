@@ -1,6 +1,6 @@
 async(page)=>{
  const forbidden=[];page.on('request',r=>{if(/localhost|:8010|:3000/.test(r.url()))forbidden.push(r.url())});
- await page.setViewportSize({width:1280,height:900});await page.getByRole('link',{name:'写新小说',exact:true}).click();
+ await page.setViewportSize({width:1280,height:900});await page.locator('.preview-notice').getByRole('link',{name:'写新小说',exact:true}).click();
  await page.getByRole('button',{name:'科幻',exact:true}).click();await page.getByRole('button',{name:'赛博朋克',exact:true}).click();
  await page.getByRole('textbox',{name:'故事名',exact:true}).fill('静态产品验收');await page.getByRole('textbox',{name:'创意概要',exact:true}).fill('寻找失落的记忆');await page.getByRole('button',{name:'确认，下一问',exact:true}).click();
  for(const f of ['主角类型','职业身份','核心性格'])await page.getByRole('textbox',{name:f,exact:true}).fill('自定义'+f);await page.getByRole('button',{name:'确认，下一问',exact:true}).click();

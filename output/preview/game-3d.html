@@ -224,7 +224,7 @@
 <div id="stage" data-page-node-id="eISZq4mZTLLUccfMoBtsYe"></div>
 
 <div class="hud hud-top" data-page-node-id="dIQm2gQAAekyfH9TniVmGf">
-  <div class="chip title" id="hud-title" data-page-node-id="p2eFtqggCEE3yohWbZLMiK">灵境 · <b id="hud-scene-name" data-page-node-id="CZodWneX0U2OJNFmGZBL3E">长夜城 · 雨夜凉亭</b><small data-page-node-id="xLsT4kuHrsELV9jHEgpPrV">LINGJING · DUAL SOULS</small></div>
+  <div class="chip title" id="hud-title" data-page-node-id="p2eFtqggCEE3yohWbZLMiK">灵境 · <b id="hud-scene-name" data-page-node-id="CZodWneX0U2OJNFmGZBL3E">西游记 · 雨夜凉亭</b><small data-page-node-id="xLsT4kuHrsELV9jHEgpPrV">LINGJING · DUAL SOULS</small></div>
   <div class="chip" style="margin-left:auto" data-page-node-id="o8DUx4yTUZTig5GEb9IEUA">亲密度 <b id="hud-intimacy" data-page-node-id="jCbxDPSMGL5TcNFy0e0R7I">12</b></div>
   <div class="chip" data-page-node-id="iJd3kwMA9z5SJWhnwMHvmr">信任 <b id="hud-trust" data-page-node-id="a0cdDzX3HVORJHbLA3NMaO">8</b></div>
   <div class="chip" data-page-node-id="6bW2oT7h3pAULHJAMHJ9SC">冲突 <b id="hud-conflict" data-page-node-id="1ZkvANB2Q5AtJlI0kPA13G">2</b></div>
@@ -282,7 +282,7 @@
 </div>
 
 <div class="dialogue hide" id="dlg" data-page-node-id="iostuFg2faC4F572RvZRY6">
-  <div class="speaker" id="dlg-speaker" data-page-node-id="jzrSB46xD4NcvZTQ30R0IH">林霜晚</div>
+  <div class="speaker" id="dlg-speaker" data-page-node-id="jzrSB46xD4NcvZTQ30R0IH">孙悟空</div>
   <div class="text" id="dlg-text" data-page-node-id="wZ4UeH9D6t7SeigS60psCO"></div>
   <div class="options" id="dlg-options" data-page-node-id="1ELboFiURdc4ndhqTELCc6"></div>
 </div>
@@ -294,7 +294,7 @@
     <div class="card" id="fate-card" data-page-node-id="aOnmVD6oNQXNqLP8yey7H6">
       <div class="rarity" id="fate-rarity" data-page-node-id="vqrmMDzpDgw1x74Js8lzLD">LEGENDARY · 限定</div>
       <div class="f-title" id="fate-title" data-page-node-id="KLlxeaSCDv3T3HW4oVLwLL">雨夜 · 拔剑</div>
-      <div class="f-sub" id="fate-sub" data-page-node-id="SRYGYu9FDwM4bViSN8p4Sw">长夜城 · 第三纪 · 凉亭</div>
+      <div class="f-sub" id="fate-sub" data-page-node-id="SRYGYu9FDwM4bViSN8p4Sw">西游记 · 第三纪 · 凉亭</div>
       <div class="f-quote" id="fate-quote" data-page-node-id="oxuGEOF9JDaecCLfGNabY0">"你没有说话。她也没有。"</div>
       <div class="f-stats" data-page-node-id="YMrxGYLjNV514MnKNGdjxz">
         <span data-page-node-id="898RmEUqhzoSLiIJSNBKME">信任 <b id="fate-trust" data-page-node-id="kAs6LMexO6vAvaGDeVWfmi">+0</b></span>
@@ -1324,29 +1324,29 @@ window.STATE = STATE; // v5.7 暴露给 NPC 模块
 const story = {
   pavilion: {
     start: 'p1',
-    label: '长夜城 · 雨夜凉亭 · 古风',
+    label: '西游记 · 雨夜凉亭 · 古风',
     nodes: {
-      p1: { speaker: '林霜晚', text: '凉亭外，雨声如织。她没有回头。\n你知道她的剑已经出鞘三寸。再近一步，她就会出剑。',
+      p1: { speaker: '孙悟空', text: '凉亭外，雨声如织。她没有回头。\n你知道她的剑已经出鞘三寸。再近一步，她就会出剑。',
         options: [
           { k:'A', label:'拔剑相对', effects:{trust:-10,conflict:+25}, next:'p2a', card:'雨夜·拔剑' },
           { k:'B', label:'缓缓退后', effects:{trust:+6,intimacy:+2},  next:'p2b', card:'雨夜·退后' },
           { k:'C', label:'开口说话："是我。"', effects:{trust:+3,intimacy:+4}, next:'p2c', card:'雨夜·开口' }
         ]},
-      p2a: { speaker: '林霜晚', text: '剑光如雪。她的眼里没有任何感情。\n"你终于来了。"\n她的剑停在你的咽喉前。',
+      p2a: { speaker: '孙悟空', text: '剑光如雪。她的眼里没有任何感情。\n"你终于来了。"\n她的剑停在你的咽喉前。',
         options: [
           { k:'A', label:'反击', effects:{conflict:+30}, next:'p_end_bad', card:'雨夜·血' },
           { k:'B', label:'放下剑', effects:{trust:+8,conflict:-5}, next:'p2b', card:'雨夜·收剑' }
         ]},
-      p2b: { speaker: '林霜晚', text: '你退了三步。她的剑依然没有入鞘。\n但她转过身，第一次正眼看你。\n"……是你。"',
+      p2b: { speaker: '孙悟空', text: '你退了三步。她的剑依然没有入鞘。\n但她转过身，第一次正眼看你。\n"……是你。"',
         options: [{ k:'A', label:'靠近', effects:{intimacy:+5,trust:+3}, next:'p2c', card:'雨夜·靠近' }]},
-      p2c: { speaker: '林霜晚', text: '雨声小了。她把剑收回腰间。\n"三更了。" 她说，"你为什么会在这里。"',
+      p2c: { speaker: '孙悟空', text: '雨声小了。她把剑收回腰间。\n"三更了。" 她说，"你为什么会在这里。"',
         options: [
           { k:'A', label:'实话实说', effects:{trust:+6,intimacy:+4}, next:'p_end_good', card:'雨夜·真相' },
           { k:'B', label:'岔开话题', effects:{intimacy:-1}, next:'p_end_neutral', card:'雨夜·回避' }
         ]},
-      p_end_good:    { speaker: '林霜晚', text: '她沉默了一会儿。灯火映在她脸上，你看不清她的表情。\n"回去吧。" 她说，"下次再来，我请你喝酒。"', end:true },
-      p_end_neutral: { speaker: '林霜晚', text: '她没有追问。她把伞递给你，转身走进了雨里。\n你握了握伞柄——木头上还带着她的温度。', end:true },
-      p_end_bad:     { speaker: '林霜晚', text: '剑光一闪。\n世界安静了下来。', end:true }
+      p_end_good:    { speaker: '孙悟空', text: '她沉默了一会儿。灯火映在她脸上，你看不清她的表情。\n"回去吧。" 她说，"下次再来，我请你喝酒。"', end:true },
+      p_end_neutral: { speaker: '孙悟空', text: '她没有追问。她把伞递给你，转身走进了雨里。\n你握了握伞柄——木头上还带着她的温度。', end:true },
+      p_end_bad:     { speaker: '孙悟空', text: '剑光一闪。\n世界安静了下来。', end:true }
     }
   },
   classroom: {
@@ -1693,7 +1693,7 @@ function switchScene(name) {
   camera.position.set(7, 3.4, 9.5);
   controls.target.set(0, 1.2, 0);
   // 立绘 + 场景氛围图
-  const charMap = { pavilion: ['lin_shuangwan', '林霜晚', '冷面剑客 · 信任阈值 80 · 拔剑相对', 'pavilion_night'],
+  const charMap = { pavilion: ['lin_shuangwan', '孙悟空', '冷面剑客 · 信任阈值 80 · 拔剑相对', 'pavilion_night'],
                     classroom: ['bai_lusheng', '白鹿笙', '校园治愈 · 暖光走廊 · 物理卷子', 'classroom_sunny'],
                     neon: ['shen_zhou', '沈昼', '赛博黑客 · 第二十三层 · 三秒跑', 'neon_street'],
                     livingroom: ['gu_yan', '顾衍', '现代兄长 · 留灯等你 · 汤碗热着', 'livingroom_warm'],
@@ -1860,9 +1860,9 @@ const STORY_TO_ENDING = {
 
 /* ---------- 11 结局数据 ---------- */
 const ENDINGS = {
-  pavilion_trust:   { id: 'pavilion_trust',   rarity: 'legendary', title: '雨夜 · 收剑',     scene: '长夜城 · 雨夜凉亭', quote: '"伞下无话，剑已归鞘。这一刻，我们比任何誓言更近。"', deltas: { trust: 30, intimacy: 25 } },
-  pavilion_conflict:{ id: 'pavilion_conflict',rarity: 'epic',      title: '雨夜 · 拔剑',     scene: '长夜城 · 雨夜凉亭', quote: '"你没有说话。她也没有。剑鸣止于三尺。"', deltas: { trust: 0, intimacy: 5 } },
-  pavilion_breakup: { id: 'pavilion_breakup', rarity: 'rare',      title: '雨夜 · 各自离去', scene: '长夜城 · 雨夜凉亭', quote: '"雨落得很轻。转身很重。"', deltas: { trust: -10, intimacy: -20 } },
+  pavilion_trust:   { id: 'pavilion_trust',   rarity: 'legendary', title: '雨夜 · 收剑',     scene: '西游记 · 雨夜凉亭', quote: '"伞下无话，剑已归鞘。这一刻，我们比任何誓言更近。"', deltas: { trust: 30, intimacy: 25 } },
+  pavilion_conflict:{ id: 'pavilion_conflict',rarity: 'epic',      title: '雨夜 · 拔剑',     scene: '西游记 · 雨夜凉亭', quote: '"你没有说话。她也没有。剑鸣止于三尺。"', deltas: { trust: 0, intimacy: 5 } },
+  pavilion_breakup: { id: 'pavilion_breakup', rarity: 'rare',      title: '雨夜 · 各自离去', scene: '西游记 · 雨夜凉亭', quote: '"雨落得很轻。转身很重。"', deltas: { trust: -10, intimacy: -20 } },
   classroom_warm:   { id: 'classroom_warm',   rarity: 'legendary', title: '走廊 · 暖光',     scene: '校园 · 教室走廊', quote: '"窗外的槐花落了一地，他没说话，递给我半杯热可可。"', deltas: { trust: 20, intimacy: 30 } },
   classroom_crisis: { id: 'classroom_crisis', rarity: 'epic',      title: '走廊 · 风波',     scene: '校园 · 教室走廊', quote: '"冷眼相对三秒钟的沉默，比任何回答都更诚实。"', deltas: { trust: 0, intimacy: -10 } },
   neon_pact:        { id: 'neon_pact',        rarity: 'legendary', title: '霓虹 · 共谋',     scene: '赛博 · 第二十三层', quote: '"黑进霓虹招牌时，他说：从此你是我唯一的共犯。"', deltas: { trust: 35, intimacy: 18 } },
@@ -1873,7 +1873,7 @@ const ENDINGS = {
   xianxia_eternal:  { id: 'xianxia_eternal',  rarity: 'legendary', title: '仙山 · 五百年前', scene: '仙侠 · 仙山之巅', quote: '"飞剑嗡鸣。云海翻涌。我说，你不是白洛。"', deltas: { trust: 40, intimacy: 10 } }
 };
 const GENRE_INFO = [
-  { id: 'pavilion',   tag: 'GUFENG',    title: '雨夜凉亭',   sub: '冷面剑客 · 林霜晚 · 信任阈值 80',  img: 'pavilion_night.png',   color: '#8E5BD8', endings: 3 },
+  { id: 'pavilion',   tag: 'GUFENG',    title: '雨夜凉亭',   sub: '冷面剑客 · 孙悟空 · 信任阈值 80',  img: 'pavilion_night.png',   color: '#8E5BD8', endings: 3 },
   { id: 'classroom',  tag: 'CAMPUS',    title: '教室走廊',   sub: '校园治愈 · 白鹿笙 · 暖光走廊',     img: 'classroom_sunny.png',  color: '#5B9CD8', endings: 2 },
   { id: 'neon',       tag: 'CYBERPUNK', title: '霓虹街',     sub: '赛博黑客 · 沈昼 · 第二十三层',     img: 'neon_street.png',      color: '#5BD8D8', endings: 3 },
   { id: 'livingroom', tag: 'MODERN',    title: '客厅暖灯',   sub: '现代兄长 · 顾衍 · 留灯等你',       img: 'livingroom_warm.png',  color: '#D88E5B', endings: 2 },
@@ -1967,7 +1967,7 @@ function updateHudV5_6() {
   document.getElementById('hud-conflict').textContent = conflict;
   document.getElementById('hud-scene-name').textContent =
     ({
-      pavilion: '长夜城 · 雨夜凉亭', classroom: '校园 · 教室走廊',
+      pavilion: '西游记 · 雨夜凉亭', classroom: '校园 · 教室走廊',
       neon: '赛博 · 霓虹街', livingroom: '现代 · 客厅暖灯', xianxia: '仙侠 · 仙山之巅',
       palace: '大明宫 · 夜宴', study: '民国 · 书房', forest: '精灵 · 森林', starship: '星海 · 灵境号'
     })[GAME_STATE.scene] || GAME_STATE.scene;
@@ -2275,7 +2275,7 @@ setInterval(() => {
   <div class="modal-box" data-page-node-id="COLrrFCbBxGOE9E38Nu69E">
     <div class="end-rarity" id="endRarity" data-page-node-id="5OBHHd1qu9OD1nCtWDzXtd">LEGENDARY · 限定</div>
     <h2 id="endTitle" data-page-node-id="FhMCk2MdF1Ix5tRUtkvX7s">雨夜 · 拔剑</h2>
-    <p class="sub" id="endScene" data-page-node-id="gyh3FfANyFPYepyXKH1Dem">长夜城 · 雨夜凉亭</p>
+    <p class="sub" id="endScene" data-page-node-id="gyh3FfANyFPYepyXKH1Dem">西游记 · 雨夜凉亭</p>
     <p class="end-quote" id="endQuote" data-page-node-id="1162WJcEhmETRnbrt2kSQ4">"你没有说话。她也没有。剑鸣止于三尺。"</p>
     <div class="end-meta" data-page-node-id="7oVBPhh5DOhwfzxcl9Pitp">
       <span data-page-node-id="1AH7b5t0lekNgOiiJmIPjk">信任 <b id="endTrust" data-page-node-id="rFh2iWrR2NDp5on4KVzLXA">+0</b></span>
@@ -2296,7 +2296,7 @@ setInterval(() => {
   <div class="chapter-bg" data-page-node-id="QlVDt9DOphrQXdvErX0z05"></div>
   <div class="chapter-mark" data-page-node-id="GIADJyPRovXPmjQNsPQCyK">第 <b id="chapterNum" data-page-node-id="WkB9PNvCjPJWBKEiENaJS0">1</b> 章</div>
   <div class="chapter-name" id="chapterName" data-page-node-id="mydlZputDcyyeTSBtfOSqX">雨夜·重逢</div>
-  <div class="chapter-sub" id="chapterSub" data-page-node-id="TsJIbdhBlyB2dArDS0Pm4m">长夜城 · 雨夜凉亭</div>
+  <div class="chapter-sub" id="chapterSub" data-page-node-id="TsJIbdhBlyB2dArDS0Pm4m">西游记 · 雨夜凉亭</div>
 </div>
 
 <style>
@@ -2332,7 +2332,7 @@ setInterval(() => {
   'use strict';
 
   const CHAPTERS = {
-    pavilion:   { num: 1, name: '雨夜·重逢',   sub: '长夜城 · 雨夜凉亭',  color1: '#8E5BD8', color2: '#5B6BD8' },
+    pavilion:   { num: 1, name: '雨夜·重逢',   sub: '西游记 · 雨夜凉亭',  color1: '#8E5BD8', color2: '#5B6BD8' },
     classroom:  { num: 2, name: '午后·走廊',   sub: '校园 · 教室走廊',    color1: '#5BC5D8', color2: '#5BD88E' },
     neon:       { num: 3, name: '二十三层',    sub: '霓虹城 · 第二十三层', color1: '#5BD8D8', color2: '#D85BD8' },
     livingroom: { num: 4, name: '深夜·留灯',   sub: '公寓 · 客厅暖灯',    color1: '#D8B45B', color2: '#D85B8E' },
@@ -2418,7 +2418,7 @@ setInterval(() => {
   'use strict';
 
   const NPC_INFO = {
-    pavilion:   { id:'liuchan',    name:'柳蝉',   emoji:'🌸', role:'林霜晚的师妹 · 凉亭外守伞人', affinityKey:'liuchan' },
+    pavilion:   { id:'liuchan',    name:'柳蝉',   emoji:'🌸', role:'孙悟空的师妹 · 凉亭外守伞人', affinityKey:'liuchan' },
     classroom:  { id:'suwan',      name:'苏晚',   emoji:'☕', role:'白鹿笙的室友 · 八卦情报员', affinityKey:'suwan' },
     neon:       { id:'qi',         name:'柒',     emoji:'🔧', role:'沈昼的黑客搭档 · 霓虹街接应', affinityKey:'qi' },
     livingroom: { id:'jibei',      name:'季北',   emoji:'📎', role:'顾衍的同事 · 留钥匙的人', affinityKey:'jibei' },

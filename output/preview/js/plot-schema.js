@@ -22,7 +22,7 @@ window.PLOT_SCHEMA = {
   },
   char: {
     id: 'string',             // 'kfc-lin-shuangwan'
-    name: 'string',           // '林霜晚'
+    name: 'string',           // '孙悟空'
     role: 'main|support|antag',  // 主角/配角/反派
     firstMention: 'chapterId',
     mentions: 'number',       // 提及次数

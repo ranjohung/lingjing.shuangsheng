@@ -281,12 +281,13 @@ with sync_playwright() as p:
     # D.6 灵境工坊工作台 5 入口
     count(".wb-item", "D.6.1 工作台 5 入口", P, 5)
 
-    # D.7 我的作品
-    count(".work-list .work", "D.7.1 我的作品 ≥ 1 项", P, 1)
-    count(".work .acts .a", "D.7.2 我的作品每项有 2 操作按钮", P, 2)
+    # D.7 我的作品 → V26 起收进功能按键（历史全集在 my-works.html）
+    exists("a.func[href='my-works.html']", "D.7.1 编辑我的作品功能按键", P)
+    gone = page.evaluate("!!document.querySelector('.work-list')")
+    results.append({"page": P, "item": "D.7.2 创作页不再内嵌作品长列表", "result": "PASS" if not gone else "FAIL"})
 
-    # D.8 3 大功能区 4 卡
-    count(".func-grid .func", "D.8.1 3 大功能区 4 卡（小说辅助/上传/上架/创建）", P, 4)
+    # D.8 功能区 5 卡（编辑我的作品/小说辅助/上传/上架/创建）
+    count(".func-grid .func", "D.8.1 功能区 5 卡", P, 5)
 
     # D.9 创作者法律卡
     exists(".legal-card", "D.9.1 创作者法律卡", P)

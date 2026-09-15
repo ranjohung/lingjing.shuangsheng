@@ -204,6 +204,40 @@
       });
     });
 
+    // 模式 4（V22-D）：文言动词提取 — 公版古典小说（桃花源记/三国/红楼等）没有
+    // 「你拾取/你打算」这类第二人称白话标注，动作直接从原文动词句提取。
+    // 铁律：只提取原文中真实出现的动词，不做任何创造。
+    var classicalOps = [
+      { kw: '捕鱼',   label: '捕鱼',   type: 'operation', gain: { item: '鱼', quantity: 1 } },
+      { kw: '种作',   label: '种作',   type: 'operation', gain: { item: '谷物', quantity: 1 } },
+      { kw: '设酒',   label: '设酒',   type: 'operation', gain: { item: '酒', quantity: 1 } },
+      { kw: '杀鸡',   label: '杀鸡作食', type: 'operation', gain: { item: '鸡肉', quantity: 1 } },
+      { kw: '舍船',   label: '舍船上岸', type: 'travel',   gain: {} },
+      { kw: '前行',   label: '前行',   type: 'travel',   gain: {} },
+      { kw: '复行',   label: '继续前行', type: 'travel',   gain: {} },
+      { kw: '问讯',   label: '问讯',   type: 'social',   gain: {} },
+      { kw: '具言',   label: '具言所闻', type: 'social',   gain: {} },
+      { kw: '饮酒',   label: '饮酒',   type: 'operation', gain: { item: '酒', quantity: 1 } },
+      { kw: '叹惋',   label: '叹惋',   type: 'social',   gain: {} },
+      { kw: '诣',     label: '拜诣',   type: 'social',   gain: {} }
+    ];
+    allParas.forEach(function (p, idx) {
+      classicalOps.forEach(function (op) {
+        if (p.indexOf(op.kw) >= 0 && !seen['cls_' + op.kw]) {
+          seen['cls_' + op.kw] = true;
+          actions.push({
+            action_id: 'act_' + (actions.length + 1),
+            label: op.label,
+            action_type: op.type,
+            position: { x: 0.25 + Math.random() * 0.5, y: 0.45 + Math.random() * 0.4 },
+            target_scene: 'chap_' + (Math.floor(idx / 3) + 1),
+            cost: { action_points: op.type === 'travel' ? 5 : 2, copper: 0 },
+            gain: op.gain
+          });
+        }
+      });
+    });
+
     return actions.slice(0, 20); // 上限 20 个动作
   }
 
