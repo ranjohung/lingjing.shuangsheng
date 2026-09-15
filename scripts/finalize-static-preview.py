@@ -1,0 +1,7 @@
+from pathlib import Path
+import shutil
+p=Path('scripts/static-preview/link.tsx');p.write_text('''import React from "react";export default function Link({href,children,...props}:any){const legacy:Record<string,string>={"/stories":"output/preview/library.html","/companion":"output/preview/heart-island.html","/works/import":"output/preview/novel-upload.html"};return <a {...props} href={legacy[href]||(href.startsWith("/")?"#"+href:href)}>{children}</a>}\n''',encoding='utf-8')
+p=Path('scripts/static-preview/app/world/page.tsx');s=p.read_text(encoding='utf-8').replace('>导入小说</Link>','>写新小说</Link>');p.write_text(s,encoding='utf-8')
+p=Path('product-preview.html');s=p.read_text(encoding='utf-8').replace('<title>','<link rel="icon" href="data:,">\n<title>');p.write_text(s,encoding='utf-8')
+for name in ['moon-pavilion.json','moon-guide.json']:shutil.copyfile(Path('F:/开发软件项目文件/MIRAI灵境/apps/web/public/assets/world')/name,Path('output/latest/assets')/name)
+Path('docs/STATIC_PREVIEW_2026-09-15.md').write_text('''# 静态产品预览发布候选\n\nproduct-preview.html及output/latest为独立静态包，包含世界演出、新小说逐問引导、题材库、作品编辑及收费草稿。复制已实现UI后使用静态适配器，浏览器本地存储命名空间lingjing-static-works-v1；不与本机API或云端账号同步。AI及支付均明确未连接。原有书库/心屿保留旧静态入口。\n\n真实浏览器通过问卷→简报→大纲锁定→正文保存→刷新恢复，390px无横向溢出，未请求localhost/8010/3000。scripts/check-static-preview.js为测试。构建esbuild0.25.9，输出约270KB JS及9KB CSS，使用本地已授权SD资产并保留生成记录。\n\n本地index.html仍为本机服务入口，不在此次线上提交范围，避免把localhost iframe发布给远程用户。八表独立迁移、真实AI及账户/账本不属于静态预览完成项。\n''',encoding='utf-8')

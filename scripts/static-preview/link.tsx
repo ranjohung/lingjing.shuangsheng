@@ -1,0 +1,1 @@
+import React from "react";export default function Link({href,children,...props}:any){const legacy:Record<string,string>={"/stories":"output/preview/library.html","/companion":"output/preview/heart-island.html","/works/import":"output/preview/novel-upload.html"};return <a {...props} href={legacy[href]||(href.startsWith("/")?"#"+href:href)}>{children}</a>}

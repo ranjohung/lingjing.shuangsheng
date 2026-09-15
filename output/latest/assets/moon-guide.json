@@ -1,0 +1,18 @@
+{
+  "request": {
+    "prompt": "anime visual novel illustration, adult Chinese woman age 26, elegant flowing pale blue hanfu robes, long dark hair silver hairpin, calm expressive face, standing under moonlight on a lakeside veranda, three quarter body portrait, beautiful detailed 2d anime key visual, painterly illustration, no text",
+    "negative_prompt": "photograph, photorealistic, 3d, text, watermark, logo, bad anatomy, extra fingers, child, nude",
+    "width": 512,
+    "height": 768,
+    "steps": 24,
+    "cfg_scale": 7,
+    "seed": 9152026,
+    "sampler_name": "DPM++ 2M",
+    "save_images": false,
+    "override_settings": {
+      "sd_model_checkpoint": "dreamshaper_8.safetensors"
+    },
+    "override_settings_restore_afterwards": true
+  },
+  "info": "{\"prompt\": \"anime visual novel illustration, adult Chinese woman age 26, elegant flowing pale blue hanfu robes, long dark hair silver hairpin, calm expressive face, standing under moonlight on a lakeside veranda, three quarter body portrait, beautiful detailed 2d anime key visual, painterly illustration, no text\", \"all_prompts\": [\"anime visual novel illustration, adult Chinese woman age 26, elegant flowing pale blue hanfu robes, long dark hair silver hairpin, calm expressive face, standing under moonlight on a lakeside veranda, three quarter body portrait, beautiful detailed 2d anime key visual, painterly illustration, no text\"], \"negative_prompt\": \"photograph, photorealistic, 3d, text, watermark, logo, bad anatomy, extra fingers, child, nude\", \"all_negative_prompts\": [\"photograph, photorealistic, 3d, text, watermark, logo, bad anatomy, extra fingers, child, nude\"], \"seed\": 9152026, \"all_seeds\": [9152026], \"subseed\": 3982564692, \"all_subseeds\": [3982564692], \"subseed_strength\": 0, \"width\": 512, \"height\": 768, \"sampler_name\": \"DPM++ 2M\", \"cfg_scale\": 7.0, \"steps\": 24, \"batch_size\": 1, \"restore_faces\": false, \"face_restoration_model\": null, \"sd_model_name\": \"dreamshaper_8\", \"sd_model_hash\": \"879db523c3\", \"sd_vae_name\": \"vae-ft-mse-840000-ema-pruned.safetensors\", \"sd_vae_hash\": \"735e4c3a44\", \"seed_resize_from_w\": -1, \"seed_resize_from_h\": -1, \"denoising_strength\": null, \"extra_generation_params\": {\"Schedule type\": \"Karras\"}, \"index_of_first_image\": 0, \"infotexts\": [\"anime visual novel illustration, adult Chinese woman age 26, elegant flowing pale blue hanfu robes, long dark hair silver hairpin, calm expressive face, standing under moonlight on a lakeside veranda, three quarter body portrait, beautiful detailed 2d anime key visual, painterly illustration, no text\\nNegative prompt: photograph, photorealistic, 3d, text, watermark, logo, bad anatomy, extra fingers, child, nude\\nSteps: 24, Sampler: DPM++ 2M, Schedule type: Karras, CFG scale: 7.0, Seed: 9152026, Size: 512x768, Model hash: 879db523c3, Model: dreamshaper_8, VAE hash: 735e4c3a44, VAE: vae-ft-mse-840000-ema-pruned.safetensors, Clip skip: 2, Version: v1.10.1\"], \"styles\": [], \"job_timestamp\": \"20260915074032\", \"clip_skip\": 2, \"is_using_inpainting_conditioning\": false, \"version\": \"v1.10.1\"}"
+}

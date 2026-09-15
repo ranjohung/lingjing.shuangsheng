@@ -1,0 +1,18 @@
+{
+  "request": {
+    "prompt": "anime visual novel background art, beautiful ancient Chinese lakeside pavilion at night, wide cinematic composition, moon above mountain silhouettes, blooming white flowers in foreground, warm hanging lanterns, intricate wooden veranda, shimmering water, ethereal blue and gold lighting, painterly hand painted anime scenery, no people, no text",
+    "negative_prompt": "photograph, photorealistic, 3d, text, watermark, logo, bad anatomy, extra fingers, child, nude",
+    "width": 896,
+    "height": 512,
+    "steps": 24,
+    "cfg_scale": 7,
+    "seed": 9152026,
+    "sampler_name": "DPM++ 2M",
+    "save_images": false,
+    "override_settings": {
+      "sd_model_checkpoint": "dreamshaper_8.safetensors"
+    },
+    "override_settings_restore_afterwards": true
+  },
+  "info": "{\"prompt\": \"anime visual novel background art, beautiful ancient Chinese lakeside pavilion at night, wide cinematic composition, moon above mountain silhouettes, blooming white flowers in foreground, warm hanging lanterns, intricate wooden veranda, shimmering water, ethereal blue and gold lighting, painterly hand painted anime scenery, no people, no text\", \"all_prompts\": [\"anime visual novel background art, beautiful ancient Chinese lakeside pavilion at night, wide cinematic composition, moon above mountain silhouettes, blooming white flowers in foreground, warm hanging lanterns, intricate wooden veranda, shimmering water, ethereal blue and gold lighting, painterly hand painted anime scenery, no people, no text\"], \"negative_prompt\": \"photograph, photorealistic, 3d, text, watermark, logo, bad anatomy, extra fingers, child, nude\", \"all_negative_prompts\": [\"photograph, photorealistic, 3d, text, watermark, logo, bad anatomy, extra fingers, child, nude\"], \"seed\": 9152026, \"all_seeds\": [9152026], \"subseed\": 660204557, \"all_subseeds\": [660204557], \"subseed_strength\": 0, \"width\": 896, \"height\": 512, \"sampler_name\": \"DPM++ 2M\", \"cfg_scale\": 7.0, \"steps\": 24, \"batch_size\": 1, \"restore_faces\": false, \"face_restoration_model\": null, \"sd_model_name\": \"dreamshaper_8\", \"sd_model_hash\": \"879db523c3\", \"sd_vae_name\": \"vae-ft-mse-840000-ema-pruned.safetensors\", \"sd_vae_hash\": \"735e4c3a44\", \"seed_resize_from_w\": -1, \"seed_resize_from_h\": -1, \"denoising_strength\": null, \"extra_generation_params\": {\"Schedule type\": \"Karras\"}, \"index_of_first_image\": 0, \"infotexts\": [\"anime visual novel background art, beautiful ancient Chinese lakeside pavilion at night, wide cinematic composition, moon above mountain silhouettes, blooming white flowers in foreground, warm hanging lanterns, intricate wooden veranda, shimmering water, ethereal blue and gold lighting, painterly hand painted anime scenery, no people, no text\\nNegative prompt: photograph, photorealistic, 3d, text, watermark, logo, bad anatomy, extra fingers, child, nude\\nSteps: 24, Sampler: DPM++ 2M, Schedule type: Karras, CFG scale: 7.0, Seed: 9152026, Size: 896x512, Model hash: 879db523c3, Model: dreamshaper_8, VAE hash: 735e4c3a44, VAE: vae-ft-mse-840000-ema-pruned.safetensors, Clip skip: 2, Version: v1.10.1\"], \"styles\": [], \"job_timestamp\": \"20260915074015\", \"clip_skip\": 2, \"is_using_inpainting_conditioning\": false, \"version\": \"v1.10.1\"}"
+}
