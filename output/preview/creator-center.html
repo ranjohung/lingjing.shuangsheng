@@ -206,19 +206,7 @@
         <button class="mc-btn" onclick="location.href='agent-create.html'"><span class="mi">🤖</span><span class="ml">Agent 创建</span></button>
       </div>
     </section>
-    <!-- V20-L 设计文档 §5.5：灵境工坊 · 创作工作台（编辑器 / AI 辅助 / 收费点 / 封面 / 发布管理） -->
-    <h2 class="sec">灵境工坊 · 工作台</h2>
-    <div class="create-hub">
-      <div class="workbench">
-        <a class="wb-item" href="work-editor.html"><span class="wi">📝</span><span class="wl">编辑作品</span></a>
-        <a class="wb-item" href="novel-ai-helper.html" onclick="event.preventDefault(); window.LJRealname && window.LJRealname.gate(this.href);"><span class="wi">🤖</span><span class="wl">AI 辅助</span></a>
-        <a class="wb-item" href="novel-outline.html" onclick="event.preventDefault(); window.LJRealname && window.LJRealname.gate(this.href);"><span class="wi">🗺️</span><span class="wl">大纲规划</span></a>
-        <a class="wb-item" href="novel-writer.html" onclick="event.preventDefault(); window.LJRealname && window.LJRealname.gate(this.href);"><span class="wi">✍️</span><span class="wl">逐章创作台</span></a>
-        <a class="wb-item" href="commerce.html"><span class="wi">💰</span><span class="wl">收费点设置</span></a>
-        <a class="wb-item" href="novel-edit.html" onclick="showToast('info','封面设置','在编辑器内上传或 AI 生成封面')"><span class="wi">🖼️</span><span class="wl">封面设置</span></a>
-        <a class="wb-item" href="commerce.html"><span class="wi">📤</span><span class="wl">发布管理</span></a>
-      </div>
-    </div>
+    <!-- V26：灵境工坊·工作台七宫格整体迁入 workshop.html（去重），创作页不再重复罗列 -->
     <!-- 我的作品 → V26：收进功能按键，历史全集在 my-works.html（创作 Tab 不再内嵌长列表） -->
     <!-- 功能区 -->
     <h2 class="sec" data-page-node-id="Cp221FhPpoZmJL6vRkvdft">功能区 <a class="more" href="my-works.html" data-page-node-id="Y1A0eqLuFxXJCUAYwhAIBE">编辑我的作品 ›</a></h2>

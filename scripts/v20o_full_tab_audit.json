@@ -71,14 +71,14 @@
       "page": "product-preview.html",
       "item": "A.4.2 快捷入口 1 → library.html",
       "result": "PASS",
-      "after": "http://localhost:8767/output/preview/library.html",
+      "after": "http://127.0.0.1:8801/output/preview/library.html",
       "newErrors": []
     },
     {
       "page": "product-preview.html",
       "item": "A.4.3 快捷入口 3（创作）→ creator-center.html",
       "result": "PASS",
-      "after": "http://localhost:8767/output/preview/creator-center.html",
+      "after": "http://127.0.0.1:8801/output/preview/creator-center.html",
       "newErrors": []
     },
     {
@@ -92,7 +92,7 @@
       "page": "product-preview.html",
       "item": "A.6.1 今日推荐卡 ≥ 1",
       "result": "PASS",
-      "n": 7,
+      "n": 4,
       "min": 1
     },
     {
@@ -104,8 +104,8 @@
     {
       "page": "product-preview.html",
       "item": "A.8.1 世界更新 N 项（点进 plot-detail）",
-      "result": "PASS",
-      "n": 7
+      "result": "FAIL",
+      "n": 0
     },
     {
       "page": "product-preview.html",
@@ -160,7 +160,7 @@
       "page": "library.html",
       "item": "B.3.2 全部分类金刚 → 抽屉打开",
       "result": "FAIL",
-      "after": "http://localhost:8767/output/preview/library.html",
+      "after": "http://127.0.0.1:8801/output/preview/library.html",
       "newErrors": []
     },
     {
@@ -404,31 +404,26 @@
     },
     {
       "page": "creator-center.html",
-      "item": "D.6.1 工作台 5 入口",
+      "item": "D.6.1 工作台七宫格已迁出创作页",
+      "result": "PASS"
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.7.1 编辑我的作品功能按键",
+      "result": "PASS",
+      "sel": "a.func[href='my-works.html']"
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.7.2 创作页不再内嵌作品长列表",
+      "result": "PASS"
+    },
+    {
+      "page": "creator-center.html",
+      "item": "D.8.1 功能区 5 卡",
       "result": "PASS",
       "n": 5,
       "min": 5
-    },
-    {
-      "page": "creator-center.html",
-      "item": "D.7.1 我的作品 ≥ 1 项",
-      "result": "PASS",
-      "n": 2,
-      "min": 1
-    },
-    {
-      "page": "creator-center.html",
-      "item": "D.7.2 我的作品每项有 2 操作按钮",
-      "result": "PASS",
-      "n": 4,
-      "min": 2
-    },
-    {
-      "page": "creator-center.html",
-      "item": "D.8.1 3 大功能区 4 卡（小说辅助/上传/上架/创建）",
-      "result": "PASS",
-      "n": 4,
-      "min": 4
     },
     {
       "page": "creator-center.html",
@@ -452,35 +447,35 @@
       "page": "creator-center.html",
       "item": "D.11.1 点击创建智能体 → character-create.html",
       "result": "PASS",
-      "after": "http://localhost:8767/output/preview/character-create.html",
+      "after": "http://127.0.0.1:8801/output/preview/character-create.html",
       "newErrors": []
     },
     {
       "page": "creator-center.html",
-      "item": "D.12.1 点击灵境工坊 → novel-edit.html",
+      "item": "D.12.1 点击灵境工坊 → workshop.html",
       "result": "PASS",
-      "after": "http://localhost:8767/output/preview/novel-edit.html",
+      "after": "http://127.0.0.1:8801/output/preview/workshop.html",
       "newErrors": []
     },
     {
       "page": "creator-center.html",
-      "item": "D.13.1 工作台 AI 辅助 → novel-ai-helper.html",
+      "item": "D.13.1 编辑我的作品 → my-works.html",
       "result": "PASS",
-      "after": "http://localhost:8767/output/preview/novel-ai-helper.html",
+      "after": "http://127.0.0.1:8801/output/preview/my-works.html",
       "newErrors": []
     },
     {
       "page": "creator-center.html",
-      "item": "D.14.1 顶栏草稿箱 → novel-edit.html",
+      "item": "D.14.1 顶栏草稿箱 → work-editor.html",
       "result": "PASS",
-      "after": "http://localhost:8767/output/preview/novel-edit.html",
+      "after": "http://127.0.0.1:8801/output/preview/work-editor.html",
       "newErrors": []
     },
     {
       "page": "creator-center.html",
       "item": "D.15.1 顶栏我的 → me.html",
       "result": "PASS",
-      "after": "http://localhost:8767/output/preview/me.html",
+      "after": "http://127.0.0.1:8801/output/preview/me.html",
       "newErrors": []
     }
   ],

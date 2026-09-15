@@ -101,7 +101,7 @@ def main():
                                ("voice-clone.html", "复刻音色"), ("create-card.html", "创建灵念"),
                                ("agent-create.html", "Agent 创建")]:
                 check(f"A5 入口接线 {label}", pg.locator(f"[onclick*='{key}']").count() >= 1)
-            check("A6 小说编辑器入口保留", pg.locator("[href*='novel-writer'],[href*='novel-outline']").count() >= 1)
+            check("A6 工作台去重(创作页无 novel-* 直链,已迁工坊)", pg.locator("[href*='novel-writer'],[href*='novel-outline']").count() == 0)
             check("A7 tabbar 存在", pg.locator(".tabbar, #tabbar-mount, [data-page-node-id*='tabbar']").count() >= 1)
             pg.screenshot(path=str(OUT / "v23-01-creator-center.png"))
 
@@ -156,10 +156,13 @@ def main():
             P("workshop.html")
             check("D1 等级卡渲染 L3", "L3" in pg.locator("#ljLevelName").inner_text())
             check("D2 总收益渲染", pg.locator("#ljIncomeTotal").inner_text().replace(",", "").isdigit())
-            check("D3 我的作品含长夜城", "长夜城" in pg.locator("#ljWorkList").inner_text())
+            check("D3 我的作品含西游记(公版种子)", "西游记" in pg.locator("#ljWorkList").inner_text())
             check("D4 角色卡带互动管理", pg.locator("#ljWorkList [onclick*='interaction-manage']").count() >= 1)
             check("D5 模板库四类", pg.locator("[onclick*='ljTpl']").count() >= 4)
             check("D6 数据看板入口", pg.locator("[onclick*='dashboard.html']").count() >= 1)
+            check("D7 工作台 7 入口迁入工坊", pg.locator("#ljWorkbench .tool-item").count() == 7)
+            check("D8 工作台含逐章创作台+大纲规划", pg.locator("#ljWorkbench [href*='novel-writer']").count() == 1
+                  and pg.locator("#ljWorkbench [href*='novel-outline']").count() == 1)
             pg.screenshot(path=str(OUT / "v23-04-workshop.png"))
 
             # ---------- E. 互动管理四模块 ----------
@@ -174,7 +177,7 @@ def main():
             check("E3 换一批刷新候选", pg.locator("#lj-ai-box .candidate-item").count() >= 3)
             pg.fill("#createForm input", "测试场景 · 雨夜同行")
             pg.evaluate("typeof saveAndBack==='function' && saveAndBack()"); pg.wait_for_timeout(300)
-            sc = pg.evaluate("(function(){var d=JSON.parse(localStorage.getItem('lingjing_v523_creator_v1'));return d.interactions.char_lin.scenes.length})()")
+            sc = pg.evaluate("(function(){var d=JSON.parse(localStorage.getItem('lingjing_v523_creator_v1'));var c=d.interactions.char_wukong;return c&&c.scenes?c.scenes.length:0})()")
             check("E4 保存入库互动场景", sc == 2)
             pg.screenshot(path=str(OUT / "v23-05-interaction.png"))
 

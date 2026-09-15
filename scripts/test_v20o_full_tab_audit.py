@@ -5,10 +5,11 @@ V20-O · 全 Tab 按键实测审计（V20-N 方法论推广到 5 Tab）
 来源需求：docs/sources/2026-09-12/S01-v20l-full-app-design-doc.txt
 """
 from playwright.sync_api import sync_playwright
-import json, sys
+import json, os, sys
 from pathlib import Path
 
-BASE = "http://localhost:8767"
+# 坑#4：8767 根可被并行会话占用/受代理干扰 → LJ_TEST_PORT 自起端口 + 127.0.0.1 直连
+BASE = "http://127.0.0.1:" + os.environ.get("LJ_TEST_PORT", "8767")
 results = []
 errs = []
 
@@ -278,8 +279,9 @@ with sync_playwright() as p:
     # D.5 4 mc-btn（动态/音色/灵念/Agent）
     count(".mc-btn", "D.5.1 4 更多创建按钮（动态/音色/灵念/Agent）", P, 4)
 
-    # D.6 灵境工坊工作台 5 入口
-    count(".wb-item", "D.6.1 工作台 5 入口", P, 5)
+    # D.6 工作台 → V26 迁入 workshop.html（创作页不再重复罗列）
+    wb_gone = page.evaluate("!!document.querySelector('.wb-item')")
+    results.append({"page": P, "item": "D.6.1 工作台七宫格已迁出创作页", "result": "PASS" if not wb_gone else "FAIL"})
 
     # D.7 我的作品 → V26 起收进功能按键（历史全集在 my-works.html）
     exists("a.func[href='my-works.html']", "D.7.1 编辑我的作品功能按键", P)
@@ -301,23 +303,23 @@ with sync_playwright() as p:
     click(".big-btn.agent", "D.11.1 点击创建智能体 → character-create.html", P,
           lambda pg: "character-create" in pg.url)
 
-    # D.12 真点击「灵境工坊」按钮
+    # D.12 真点击「灵境工坊」按钮（v22 起直达 workshop.html）
     page.goto(BASE + "/output/preview/creator-center.html", wait_until="domcontentloaded")
     page.wait_for_timeout(1000)
-    click(".big-btn.workshop", "D.12.1 点击灵境工坊 → novel-edit.html", P,
-          lambda pg: "novel-edit" in pg.url)
+    click(".big-btn.workshop", "D.12.1 点击灵境工坊 → workshop.html", P,
+          lambda pg: "workshop" in pg.url)
 
-    # D.13 真点击工作台「AI 辅助」
+    # D.13 真点击「编辑我的作品」功能按键（V26 工作台迁出后创作页新增）
     page.goto(BASE + "/output/preview/creator-center.html", wait_until="domcontentloaded")
     page.wait_for_timeout(1000)
-    click(".workbench a[href*='novel-ai-helper']", "D.13.1 工作台 AI 辅助 → novel-ai-helper.html", P,
-          lambda pg: "novel-ai-helper" in pg.url)
+    click("a.func[href*='my-works']", "D.13.1 编辑我的作品 → my-works.html", P,
+          lambda pg: "my-works" in pg.url)
 
-    # D.14 真点击「草稿箱」入口
+    # D.14 真点击「草稿箱」入口（v22 起直达 work-editor.html）
     page.goto(BASE + "/output/preview/creator-center.html", wait_until="domcontentloaded")
     page.wait_for_timeout(1000)
-    click(".topbar-acts a[href*='novel-edit']", "D.14.1 顶栏草稿箱 → novel-edit.html", P,
-          lambda pg: "novel-edit" in pg.url)
+    click(".topbar-acts a[href*='work-editor']", "D.14.1 顶栏草稿箱 → work-editor.html", P,
+          lambda pg: "work-editor" in pg.url)
 
     # D.15 真点击「我的」（顶栏 → me.html）
     page.goto(BASE + "/output/preview/creator-center.html", wait_until="domcontentloaded")

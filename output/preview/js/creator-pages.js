@@ -262,7 +262,7 @@
 
   /* ================= 互动管理（四模块真数据）================= */
   if (page === 'interaction-manage') {
-    var CHAR = 'char_lin';
+    var CHAR = 'char_wukong';
     var IMAP = {
       scene: { pid: 'pageScene', key: 'scenes',    pool: 'scene',    label: '互动场景' },
       daily: { pid: 'pageDaily', key: 'events',    pool: 'event',    label: '日常事件' },

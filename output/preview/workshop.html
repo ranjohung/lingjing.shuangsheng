@@ -101,6 +101,17 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div class="tool-item" style="margin-top:12px;text-align:center;padding:14px" onclick="location.href='work-editor.html'"><div class="tool-name" style="color:var(--accent);font-weight:600">＋ 创建新作品</div></div>
   </div>
 
+  <div class="section-title"><span class="icon">🛠️</span> 创作工作台 <span style="font-size:10px;color:var(--sub);font-weight:400">（自创作页迁入 · V26）</span></div>
+  <div class="tools-grid" id="ljWorkbench">
+    <a class="tool-item" href="work-editor.html" style="text-decoration:none;color:inherit"><div class="tool-icon">📝</div><div class="tool-name">编辑作品</div><div class="tool-desc">续写 / 改写</div></a>
+    <a class="tool-item" href="novel-ai-helper.html" onclick="event.preventDefault(); window.LJRealname && window.LJRealname.gate(this.href);" style="text-decoration:none;color:inherit"><div class="tool-icon">🤖</div><div class="tool-name">AI 辅助</div><div class="tool-desc">续写候选</div></a>
+    <a class="tool-item" href="novel-outline.html" onclick="event.preventDefault(); window.LJRealname && window.LJRealname.gate(this.href);" style="text-decoration:none;color:inherit"><div class="tool-icon">🗺️</div><div class="tool-name">大纲规划</div><div class="tool-desc">章节规划</div></a>
+    <a class="tool-item" href="novel-writer.html" onclick="event.preventDefault(); window.LJRealname && window.LJRealname.gate(this.href);" style="text-decoration:none;color:inherit"><div class="tool-icon">✍️</div><div class="tool-name">逐章创作台</div><div class="tool-desc">三栏创作</div></a>
+    <a class="tool-item" href="commerce.html" style="text-decoration:none;color:inherit"><div class="tool-icon">💰</div><div class="tool-name">收费点设置</div><div class="tool-desc">22 收费点</div></a>
+    <a class="tool-item" href="work-editor.html?tab=assets" style="text-decoration:none;color:inherit"><div class="tool-icon">🖼️</div><div class="tool-name">封面设置</div><div class="tool-desc">上传 / AI 生成</div></a>
+    <a class="tool-item" href="commerce.html" style="text-decoration:none;color:inherit"><div class="tool-icon">📤</div><div class="tool-name">发布管理</div><div class="tool-desc">上架 / 定价</div></a>
+  </div>
+
   <div class="section-title"><span class="icon">🧩</span> 模板库</div>
   <div class="tools-grid">
     <div class="tool-item" onclick="ljTpl('世界模板')"><div class="tool-icon">🌍</div><div class="tool-name">世界模板</div><div class="tool-desc">都市/修仙/末日等</div></div>
@@ -175,6 +186,7 @@ function toggleAI(){document.getElementById('aiPanel').classList.toggle('show')}
 document.querySelectorAll('.asset-tab').forEach(t=>t.addEventListener('click',function(){document.querySelectorAll('.asset-tab').forEach(x=>x.classList.remove('active'));this.classList.add('active')}));
 </script>
 <script src="js/creator-store.js"></script>
+<script src="js/realname-gate.js"></script>
 <script src="js/tabbar.js"></script>
 <script src="js/creator-ai.js"></script>
 <script src="js/creator-pages.js"></script>

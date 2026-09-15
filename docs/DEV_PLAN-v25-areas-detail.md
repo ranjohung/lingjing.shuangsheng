@@ -24,9 +24,10 @@
 - 第 1 次登录直进首页；≥2 且新会话 → 全屏打招呼（阿岁 · 分时段问候 · 打字机 · [进入灵境]）
 - 接入 product-preview.html + index.html（双镜像 cmp 一致）
 
-### V25-C 创作 Tab 文案（已交付）
+### V25-C 创作 Tab 文案（已交付，V26 结构升级）
 - creator-center.html「我的作品」→「编辑我的作品」
+- **V26**（用户 09-15 反馈）：内嵌作品列表移除，「编辑我的作品」改为功能按键 → `my-works.html` 历史全集页；「灵境工坊·工作台」七宫格迁入 workshop.html 去重
 
 ### V25-D 验收
 - `scripts/test_v25_boot.py`：首次登录无界面 / 二次登录出界面 / 点击进入消失 / 会话内不重复 / 0 PageError
-- 回归：test_v23（45 项）不回退
+- 回归：test_v23（47 项）不回退；test_v26_my_works（24 项）全绿
