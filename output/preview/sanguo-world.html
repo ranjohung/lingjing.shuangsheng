@@ -361,7 +361,33 @@ function tryLoadText(idx) {
 }
 function loadText() {
   setLoadHint('loading');
-  tryLoadText(0);
+  var cached = window.__LJ_BOOK__ && window.__LJ_BOOK__['sanguoyanyi'];
+  if (cached && cached.indexOf('第') >= 0 && cached.length > 10000) {
+    parseChapters(cached);
+    SG_TEXT_OK = true;
+    return;
+  }
+  loadFromScript();
+}
+
+// 优先用 <script> 加载内置语料（file:// 下 fetch 会被浏览器拦截）
+function loadFromScript() {
+  var s = document.createElement('script');
+  s.src = '../../corpus/books/sanguoyanyi.js';
+  s.onload = function () {
+    var t = (window.__LJ_BOOK__ && window.__LJ_BOOK__['sanguoyanyi']) || '';
+    if (t && t.indexOf('第') >= 0 && t.length > 10000) { parseChapters(t); SG_TEXT_OK = true; }
+    else { tryLoadText(0); }
+  };
+  s.onerror = function () {
+    if (location.protocol === 'file:' || location.protocol === 'about:') {
+      SG_TEXT_OK = false;
+      setLoadHint('fail-permanent');
+      return;
+    }
+    tryLoadText(0);
+  };
+  document.head.appendChild(s);
 }
 function reloadText() {
   SG.chapters = [];

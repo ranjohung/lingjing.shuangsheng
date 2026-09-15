@@ -182,12 +182,32 @@ var WORLD = null;
 function $(q) { return document.querySelector(q); }
 function html(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 
+function isFileProto() {
+  return location.protocol === 'file:' || location.protocol === 'about:';
+}
+
+function loadScriptOnce(src, cb) {
+  var s = document.createElement('script');
+  s.src = src;
+  s.onload = function () { cb(true); };
+  s.onerror = function () { cb(false); };
+  document.head.appendChild(s);
+}
+
 function loadManifest() {
-  fetch('../../corpus/manifest.json').then(function (r) { return r.json(); }).then(function (list) {
-    MANIFEST = list;
-    renderBooks();
-  }).catch(function (e) {
-    $('#book-list').innerHTML = '<div class="cd">公版书目录加载失败：' + html(e.message) + '</div>';
+  if (window.__LJ_MANIFEST__) { MANIFEST = window.__LJ_MANIFEST__; renderBooks(); return; }
+  loadScriptOnce('../../corpus/manifest.js', function (ok) {
+    if (ok && window.__LJ_MANIFEST__) { MANIFEST = window.__LJ_MANIFEST__; renderBooks(); return; }
+    if (isFileProto()) {
+      $('#book-list').innerHTML = '<div class="cd">当前是本地文件方式打开，浏览器不允许直接读取语料目录。<br>可以改用下方「上传 txt」，或用本地服务打开本页。</div>';
+      return;
+    }
+    fetch('../../corpus/manifest.json').then(function (r) { return r.json(); }).then(function (list) {
+      MANIFEST = list;
+      renderBooks();
+    }).catch(function (e) {
+      $('#book-list').innerHTML = '<div class="cd">公版书目录加载失败：' + html(e.message) + '</div>';
+    });
   });
 }
 
@@ -222,8 +242,23 @@ function pickBook(b) {
 }
 
 function fetchBookText(id) {
-  fetch('../../corpus/books/' + id + '.txt').then(function (r) { return r.text(); }).then(function (t) {
-    if (SEL.id === id) SEL.text = t.replace(/\r/g, '');
+  if (window.__LJ_BOOK__ && window.__LJ_BOOK__[id]) {
+    SEL.text = window.__LJ_BOOK__[id].replace(/\r/g, '');
+    return;
+  }
+  loadScriptOnce('../../corpus/books/' + id + '.js', function (ok) {
+    if (ok && window.__LJ_BOOK__ && window.__LJ_BOOK__[id]) {
+      SEL.text = window.__LJ_BOOK__[id].replace(/\r/g, '');
+      return;
+    }
+    if (isFileProto()) {
+      SEL.text = '';
+      $('#sel-status').textContent = '已选：《' + SEL.title + '》· 该书原文未内置，请改用「上传 txt」';
+      return;
+    }
+    fetch('../../corpus/books/' + id + '.txt').then(function (r) { return r.text(); }).then(function (t) {
+      if (SEL.id === id) SEL.text = t.replace(/\r/g, '');
+    });
   });
 }
 

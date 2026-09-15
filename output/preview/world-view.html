@@ -159,17 +159,36 @@ function loadWorld() {
   var p = new URLSearchParams(location.search).get('book');
   if (p) {
     BOOK = p;
-    fetch('worlds/' + BOOK + '.json').then(function (r) {
-      if (!r.ok) throw new Error('status ' + r.status);
-      return r.json();
-    }).then(function (w) {
-      WORLD = w; boot();
-    }).catch(function () {
-      fromLocal();
-    });
+    loadWorldById(p);
   } else {
     fromLocal();
   }
+}
+
+// 优先走 script 标签加载（file:// 下 fetch 会被浏览器拦截，script 不会）
+function loadWorldById(id) {
+  if (window.__LJ_WORLD__ && window.__LJ_WORLD__[id]) {
+    WORLD = window.__LJ_WORLD__[id]; boot(); return;
+  }
+  var sc = document.createElement('script');
+  sc.src = 'worlds/' + id + '.js';
+  sc.onload = function () {
+    if (window.__LJ_WORLD__ && window.__LJ_WORLD__[id]) { WORLD = window.__LJ_WORLD__[id]; boot(); }
+    else { fetchWorld(id); }
+  };
+  sc.onerror = function () { fetchWorld(id); };
+  document.head.appendChild(sc);
+}
+
+function fetchWorld(id) {
+  fetch('worlds/' + id + '.json').then(function (r) {
+    if (!r.ok) throw new Error('status ' + r.status);
+    return r.json();
+  }).then(function (w) {
+    WORLD = w; boot();
+  }).catch(function () {
+    fromLocal();
+  });
 }
 
 function fromLocal() {
