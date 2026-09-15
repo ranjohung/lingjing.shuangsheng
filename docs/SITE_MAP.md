@@ -257,3 +257,18 @@ V17-V20 新增页面此前未入目录，现补记：
 | 合规 · legal-view.html | 目录化 | 无 ?doc= 参数渲染 16 法律文档目录（原死胡同）；失败态加返回链接 |
 
 变更明细以 [ALL_FUNCTIONS.md](ALL_FUNCTIONS.md) §16（MR-01~06）为准。
+
+---
+
+### 补遗四（2026-09-15 · V24 小说世界OS V2.0）
+
+> Canon Lock 七层架构落地；测试 `scripts/test_v24_novel_os.py` 51/51 全绿。
+
+| 区 · 页面 | 说明 |
+|---|---|
+| 世界区 · world-os-upload.html | 上传质检 + Quality Gate 报告 + 作者确认 + World Compiler + 收费点裁决（挂 5 Tab，世界 Tab 高亮） |
+| 世界区 · world-os.html | **沉浸豁免**（返回+世界浮钮）：三身份选择 / Scene OS / Canon 锚点推进 / 探索热点 / SIMULATION 标记 |
+| 资产 · img/novel-os/ | SD 二次元摄影风背景 ×3（雨夜街/书房/酒楼，dreamshaper_8） |
+| 数据 · js/novel-os-store.js | L0-L7 七层 + 哈希锁 + Gate + Compiler；键 `lingjing_v524_novel_os_v1` |
+
+变更明细以 [ALL_FUNCTIONS.md](ALL_FUNCTIONS.md) §19（NR-01~08）为准。

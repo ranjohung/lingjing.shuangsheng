@@ -595,3 +595,32 @@ NovelWorldVN.typewrite(text);  // 单独打字机
 - 与 V21-novel-sim 联动（两工作线独立）
 
 **V22 详细规范**：[PRD-v22-novel-world-engine.md](PRD-v22-novel-world-engine.md) + [DEV_PLAN-v22-novel-world-engine.md](DEV_PLAN-v22-novel-world-engine.md)
+
+## 19. V24 小说世界OS V2.0：Canon Lock 七层架构（2026-09-15 交付登记）
+
+> 产品宪法：原著零删减，世界可扩展，主线不可篡改，支线允许创造。
+> 需求原文：[sources/2026-09-15/S05](sources/2026-09-15/S05-novel-world-os-v2.txt) · 规格：[PRD-v24](PRD-v24-novel-world-os.md) + [DEV_PLAN-v24](DEV_PLAN-v24-novel-world-os.md)
+
+### 19.1 新增功能（NR-01~08）
+| # | 功能 | 实现 |
+|---|---|---|
+| NR-01 | L0 SOURCE 原文锁定 | `js/novel-os-store.js`：SHA-256（crypto.subtle，非安全上下文降级 FNV-1a×2 并标注算法） |
+| NR-02 | L1 CANON 锚点 | 分段→锚点（叙述/对白/旁白/转折四型），immutable=true，逐锚点哈希 |
+| NR-03 | Novel Quality Gate | 文本检测（乱码/缺章/重复/对话占比/相似人名编辑距离≤1/敏感词）+ 五维结构分报告 |
+| NR-04 | 作者确认 + World Compiler | 五项确认门禁 → 五步编译（World/Character/Location Bible/Canon Graph/Manifest） |
+| NR-05 | Canon Integrity Check | 锚点原文逐字比对 + 哈希校验，失败阻止发布 |
+| NR-06 | 三玩家身份 | A 原著阅读者 / B 世界游客（自由探索+回主线）/ C 同人玩家（即将开放） |
+| NR-07 | 四内容标记 | 【原著剧情】金标 · 【世界探索】青标 · SIMULATION 紫标 · 【同人分支】占位 |
+| NR-08 | 收费点 AI 推荐 + 作者裁决 | 星级+理由+建议灵玉价；接受/取消；主线零付费墙 |
+
+### 19.2 新增页面
+- `world-os-upload.html`：选书（内嵌演示文本/公版节选/上传txt）→ 质检 → 报告 → 确认 → 编译 → 收费点裁决
+- `world-os.html`：沉浸豁免页（返回+世界浮钮），Scene OS + Canon 锚点推进 + 热点交互
+- `js/novel-os-store.js`：七层状态中枢，键 `lingjing_v524_novel_os_v1`
+- `img/novel-os/*.png`：SD 生成二次元摄影风场景背景 ×3（dreamshaper_8）
+- `scripts/sd_gen_novel_os_scenes.py` + `scripts/test_v24_novel_os.py`（51 断言）
+
+### 19.3 铁律落点
+- 主线渲染零 LLM 路径（只读 canon.source_text）；世界功能区 0 聊天气泡
+- L5/L6/L7 结构占位 + 界面"即将开放"（不砍功能不隐藏）
+- 货币双轨：UI 收费点只用灵玉；铜钱/银两不进 UI
