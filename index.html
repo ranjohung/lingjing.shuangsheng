@@ -582,7 +582,8 @@ var LJ = window.LJ = {};
 
 LJ.go = function (id, qs, hash) {
   if (!id || id === 'index' || id === 'product-preview') id = 'home';
-  if (id === 'novel-game') { id = 'world-view'; }\r\n  if (id === 'world-forge' && /^(home|library|novel-shelf|plot-detail|world-view)$/.test(CUR)) { id = qs && /book=/.test(qs) ? 'world-view' : 'novel-shelf'; }
+  if (id === 'novel-game') { id = 'world-view'; }
+  if (id === 'world-forge' && /^(home|library|novel-shelf|plot-detail|world-view)$/.test(CUR)) { id = qs && /book=/.test(qs) ? 'world-view' : 'novel-shelf'; }
   if (!LJ_PAGES[id]) id = 'home';
   CUR = id;
   qs = qs || '';
@@ -858,4 +859,5 @@ window.LJToast = window.LJToast || {
 </script>
 </body>
 </html>
+
 
