@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="LukodC8BHdKgTIKeF6pS9b">
+<head data-page-node-id="Sq9svH09PWL5IwdELDBmuU">
+<meta charset="UTF-8" data-page-node-id="UxtYGpmnK6AzshgOHt7W4s" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" data-page-node-id="7FiUtheiEXX7c8lxwvebcG" />
+<title>三国演义 · 小说世界 · 灵境 · 双生</title>
+<meta name="theme-color" content="#0D0D12" data-page-node-id="EF7KtIq1UzDBZFePd2Ihej" />
+<link rel="stylesheet" href="css/shell-v64.css" data-page-node-id="x96ncSZli0z9c9GV9Oc67b" />
+<style>
+/* =================================================================
+ * 三国演义 · 小说世界（沉浸页 · 豁免 5 Tab，仅返回按钮）
+ * 主题：夜色玄铁 + 鎏金 + 赤焰
+ * ================================================================= */
+:root{
+  --sg-bg:#0D0D12; --sg-panel:#15151D; --sg-line:#2A2A38;
+  --sg-gold:#E8C36A; --sg-gold-deep:#B8933E; --sg-fire:#C9403A;
+  --sg-text:#E8E2D4; --sg-sub:#9A937F; --sg-free:#4ECCA3;
+}
+body{background:var(--sg-bg);color:var(--sg-text);font-family:'Noto Serif SC',serif}
+.sg-wrap{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:110px}
+
+/* 顶栏 */
+.sg-top{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;padding:12px 16px;background:linear-gradient(180deg,rgba(13,13,18,.97),rgba(13,13,18,.88) 80%,transparent);backdrop-filter:blur(8px)}
+.sg-back{width:34px;height:34px;border-radius:10px;background:rgba(232,195,106,.12);border:1px solid rgba(232,195,106,.3);color:var(--sg-gold);font-size:16px;display:grid;place-items:center;cursor:pointer;flex:none}
+.sg-title{flex:1;min-width:0}
+.sg-title b{font-size:15px;color:var(--sg-gold);display:block;letter-spacing:2px}
+.sg-title span{font-size:10px;color:var(--sg-sub);letter-spacing:1px}
+.sg-wallet{display:flex;gap:6px;flex:none}
+.sg-wc{display:flex;align-items:center;gap:3px;padding:5px 9px;border-radius:8px;background:var(--sg-panel);border:1px solid var(--sg-line);font-size:11px}
+.sg-wc.jade{color:#7EC8B4}.sg-wc.crystal{color:var(--sg-gold)}
+.sg-wc b{font-family:var(--font-mono,'monospace')}
+
+/* 横幅封面 */
+.sg-hero{margin:6px 16px 0;border-radius:16px;overflow:hidden;position:relative;background:linear-gradient(160deg,#1A1610 0%,#2A1A12 45%,#141419 100%);border:1px solid rgba(232,195,106,.25);min-height:140px}
+.sg-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.85;z-index:0}
+.sg-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%,rgba(232,195,106,.14),transparent 55%),radial-gradient(ellipse at 15% 85%,rgba(201,64,58,.18),transparent 50%);z-index:1}
+.sg-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,13,18,.45) 0%,rgba(13,13,18,.78) 100%);z-index:1}
+.sg-hero-in{position:relative;padding:22px 18px 16px;z-index:2}
+.sg-hero-emoji{font-size:40px;filter:drop-shadow(0 4px 12px rgba(232,195,106,.35))}
+.sg-hero h1{font-size:26px;color:var(--sg-gold);letter-spacing:6px;margin:8px 0 4px;font-weight:700}
+.sg-hero .sg-by{font-size:11px;color:var(--sg-sub);letter-spacing:2px;margin-bottom:12px}
+.sg-hero-meta{display:flex;gap:8px;flex-wrap:wrap}
+.sg-chip{font-size:10px;padding:4px 10px;border-radius:99px;border:1px solid rgba(232,195,106,.3);color:var(--sg-gold);background:rgba(232,195,106,.06)}
+.sg-chip.free{border-color:rgba(78,204,163,.4);color:var(--sg-free);background:rgba(78,204,163,.06)}
+.sg-readon{margin-top:14px;display:flex;gap:10px}
+.sg-btn{flex:1;padding:12px;border-radius:12px;font-size:14px;font-weight:700;letter-spacing:2px;cursor:pointer;border:none;font-family:inherit}
+.sg-btn.primary{background:linear-gradient(135deg,#E8C36A,#B8933E);color:#141419;box-shadow:0 6px 20px rgba(232,195,106,.25)}
+.sg-btn.ghost{background:rgba(232,226,212,.06);color:var(--sg-text);border:1px solid var(--sg-line)}
+
+/* 签到/道具条 */
+.sg-perk{display:flex;gap:8px;margin:12px 16px 0}
+.sg-perk-card{flex:1;background:var(--sg-panel);border:1px solid var(--sg-line);border-radius:12px;padding:10px 12px;cursor:pointer}
+.sg-perk-card .p-ico{font-size:16px}
+.sg-perk-card .p-t{font-size:12px;font-weight:700;margin-top:3px}
+.sg-perk-card .p-s{font-size:10px;color:var(--sg-sub);margin-top:1px}
+.sg-perk-card.done{opacity:.45}
+.sg-perk-card.done .p-s{color:var(--sg-free)}
+
+/* 全书券横幅 */
+.sg-pass{margin:12px 16px 0;display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;background:linear-gradient(135deg,rgba(232,195,106,.14),rgba(201,64,58,.08));border:1px solid rgba(232,195,106,.35);cursor:pointer}
+.sg-pass .ps-ico{width:44px;height:44px;border-radius:12px;background:rgba(232,195,106,.15);display:grid;place-items:center;font-size:22px;flex:none}
+.sg-pass .ps-b{flex:1;min-width:0}
+.sg-pass .ps-t{font-size:14px;font-weight:700;color:var(--sg-gold)}
+.sg-pass .ps-s{font-size:10px;color:var(--sg-sub);margin-top:2px;line-height:1.5}
+.sg-pass .ps-price{text-align:right;flex:none}
+.sg-pass .ps-price b{font-size:17px;color:var(--sg-gold)}
+.sg-pass .ps-price s{font-size:10px;color:var(--sg-sub);display:block}
+
+/* 卷/章节列表 */
+.sg-catalog{margin:18px 16px 0}
+.sg-vol{margin-bottom:14px;border:1px solid var(--sg-line);border-radius:14px;overflow:hidden;background:var(--sg-panel)}
+.sg-vol-head{display:flex;align-items:center;gap:10px;padding:12px 14px;background:rgba(232,195,106,.04);border-bottom:1px solid var(--sg-line)}
+.sg-vol-thumb{width:54px;height:72px;border-radius:8px;background-size:cover;background-position:center;flex:none;box-shadow:0 4px 12px rgba(0,0,0,.35);position:relative}
+.sg-vol-thumb::after{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,.55) 100%)}
+.sg-vol-head .v-meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.sg-vol-head .v-ico{font-size:15px;display:none}
+.sg-vol-head .v-name{font-size:13px;font-weight:700;letter-spacing:1px}
+.sg-vol-head .v-tag{font-size:10px;padding:3px 10px;border-radius:99px}
+.sg-vol-head .v-tag.free{color:var(--sg-free);border:1px solid rgba(78,204,163,.4)}
+.sg-vol-head .v-tag.lock{color:var(--sg-gold);border:1px solid rgba(232,195,106,.4);cursor:pointer}
+.sg-vol-head .v-tag.owned{color:var(--sg-free);border:1px solid rgba(78,204,163,.4);background:rgba(78,204,163,.08)}
+.sg-ch{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid rgba(42,42,56,.5);cursor:pointer}
+.sg-ch:last-child{border-bottom:none}
+.sg-ch .c-no{width:34px;font-size:11px;color:var(--sg-sub);font-family:var(--font-mono,'monospace');flex:none}
+.sg-ch .c-title{flex:1;font-size:13px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sg-ch .c-words{font-size:10px;color:var(--sg-sub);flex:none}
+.sg-ch .c-state{font-size:10px;flex:none;width:16px;text-align:center}
+.sg-ch.locked{opacity:.55}
+.sg-ch.current .c-title{color:var(--sg-gold)}
+
+/* 阅读器 */
+.sg-reader{position:fixed;inset:0;z-index:100;background:var(--sg-bg);display:none;overflow-y:auto}
+.sg-reader.open{display:block}
+.sg-reader-bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px;padding:10px 14px;background:linear-gradient(180deg,rgba(13,13,18,.98),rgba(13,13,18,.9) 70%,transparent);backdrop-filter:blur(6px)}
+.sg-reader-bar .rb-back{width:32px;height:32px;border-radius:9px;background:rgba(232,195,106,.12);border:1px solid rgba(232,195,106,.3);color:var(--sg-gold);display:grid;place-items:center;cursor:pointer;flex:none}
+.sg-reader-bar .rb-title{flex:1;min-width:0;font-size:13px;color:var(--sg-gold);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:1px}
+.sg-reader-bar .rb-cfg{width:32px;height:32px;border-radius:9px;background:rgba(232,226,212,.06);border:1px solid var(--sg-line);color:var(--sg-sub);display:grid;place-items:center;cursor:pointer;flex:none;font-size:14px}
+.sg-progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,#E8C36A,#C9403A);z-index:110;transition:width .2s}
+.sg-article{max-width:480px;margin:0 auto;padding:26px 22px 120px}
+.sg-article h2{font-size:19px;color:var(--sg-gold);letter-spacing:2px;line-height:1.6;margin-bottom:6px;text-align:center}
+.sg-article .a-no{text-align:center;font-size:10px;color:var(--sg-sub);letter-spacing:3px;margin-bottom:24px}
+.sg-chapter-img{display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px}
+.sg-chapter-caption{font-size:10px;color:rgba(255,255,255,.85);letter-spacing:3px;background:rgba(0,0,0,.45);padding:4px 12px;border-radius:99px;backdrop-filter:blur(4px);text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.sg-article p{font-size:17px;line-height:1.95;margin:0 0 14px;text-indent:2em;color:var(--sg-text)}
+.sg-article p.sg-verse{text-indent:0;text-align:center;color:var(--sg-gold);font-size:15px}
+.sg-nav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;display:flex;gap:10px;padding:12px 16px 22px;background:linear-gradient(0deg,rgba(13,13,18,.98) 40%,transparent)}
+.sg-nav button{flex:1;padding:11px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:inherit;letter-spacing:1px}
+.sg-nav .prev{background:rgba(232,226,212,.06);color:var(--sg-text);border:1px solid var(--sg-line)}
+.sg-nav .next{background:linear-gradient(135deg,#E8C36A,#B8933E);color:#141419}
+
+/* 弹窗 */
+.sg-dialog{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.72);display:none;align-items:flex-end;justify-content:center}
+.sg-dialog.open{display:flex}
+.sg-sheet{width:100%;max-width:480px;background:var(--sg-panel);border-radius:20px 20px 0 0;padding:20px 18px 30px;border-top:1px solid rgba(232,195,106,.3);animation:up .28s}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.sg-sheet h3{font-size:16px;color:var(--sg-gold);letter-spacing:2px;text-align:center;margin-bottom:4px}
+.sg-sheet .sh-sub{font-size:11px;color:var(--sg-sub);text-align:center;margin-bottom:16px}
+.sg-opt{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid var(--sg-line);border-radius:12px;margin-bottom:10px;cursor:pointer;background:rgba(232,226,212,.02)}
+.sg-opt:active{background:rgba(232,195,106,.08)}
+.sg-opt .o-ico{width:40px;height:40px;border-radius:10px;background:rgba(232,195,106,.1);display:grid;place-items:center;font-size:18px;flex:none}
+.sg-opt .o-b{flex:1;min-width:0}
+.sg-opt .o-t{font-size:13px;font-weight:700}
+.sg-opt .o-s{font-size:10px;color:var(--sg-sub);margin-top:2px;line-height:1.5}
+.sg-opt .o-p{font-size:13px;font-weight:700;color:var(--sg-gold);flex:none}
+.sg-opt .o-p.jade{color:#7EC8B4}
+.sg-sheet .sh-close{width:100%;padding:12px;border-radius:12px;background:rgba(232,226,212,.05);color:var(--sg-sub);border:1px solid var(--sg-line);font-size:13px;cursor:pointer;margin-top:4px;font-family:inherit}
+.sg-opt.recommend{border-color:rgba(232,195,106,.45);background:rgba(232,195,106,.07)}
+
+/* Toast */
+.sg-toast-wrap{position:fixed;top:70px;left:0;right:0;z-index:200;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
+.sg-toast{padding:10px 18px;border-radius:12px;background:rgba(21,21,29,.95);border:1px solid rgba(232,195,106,.4);color:var(--sg-text);font-size:12px;animation:tin .3s;max-width:86%}
+.sg-toast b{color:var(--sg-gold)}
+.sg-toast.warn{border-color:rgba(255,179,71,.5)}.sg-toast.warn b{color:#FFB347}
+.sg-toast.ok{border-color:rgba(78,204,163,.5)}.sg-toast.ok b{color:var(--sg-free)}
+@keyframes tin{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+
+/* 字号设置 */
+.sg-font-row{display:flex;gap:8px;margin-top:10px}
+.sg-font-row button{flex:1;padding:10px;border-radius:10px;background:rgba(232,226,212,.05);border:1px solid var(--sg-line);color:var(--sg-text);font-size:14px;cursor:pointer;font-family:inherit}
+.sg-font-row button.on{border-color:var(--sg-gold);color:var(--sg-gold);background:rgba(232,195,106,.1)}
+
+/* 加载态 */
+.sg-loading{text-align:center;padding:60px 0;color:var(--sg-sub);font-size:12px;letter-spacing:2px}
+.sg-loading .ring{width:36px;height:36px;border:3px solid rgba(232,195,106,.15);border-top-color:var(--sg-gold);border-radius:50%;margin:0 auto 14px;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body data-page-node-id="nXy8wG3GM97ltPifeL3ere">
+<div class="sg-wrap" id="sg-app" data-page-node-id="OgBhiUVU5HFS0jvNRWc0e3">
+  <!-- 顶栏 -->
+  <div class="sg-top" data-page-node-id="bFbtN8taBPyB1OzvA8gUD2">
+    <div class="sg-back" onclick="history.back()" data-page-node-id="Az4gJkrPFhbuMSK6F7Dhzx">←</div>
+    <div class="sg-title" data-page-node-id="lGX3Kaf7MdLy0aVzbYQMDX"><b data-page-node-id="OkRzUMFWDAYScPRkv3WnM6">三国演义 · 小说世界</b><span data-page-node-id="U4dKU2NtCJNqya9TlQZnwi">罗贯中 · 全一百二十回</span></div>
+    <div class="sg-wallet" data-page-node-id="rvJm1mlAJYKA4nFqmhB22N">
+      <div class="sg-wc jade" data-page-node-id="unfjcSHnZOiGNgwwfRuWzW">🟢 <b id="sg-jade" data-page-node-id="R05l96zllBLnxp8bSUXMcz">0</b></div>
+      <div class="sg-wc crystal" data-page-node-id="0fxUqYFVIXFg8RpGRZPOvt">💎 <b id="sg-crystal" data-page-node-id="Ggcd9jLLDQmjlkEDaUfI25">0</b></div>
+    </div>
+  </div>
+
+  <!-- 横幅（V20-Q：真人摄影卷一封面图作为背景） -->
+  <div class="sg-hero" id="sg-hero" data-page-node-id="M3NuBwzmmHUSPIJzj3MmLp">
+    <div class="sg-hero-bg" id="sg-hero-bg" data-page-node-id="v20q-hero-bg"></div>
+    <div class="sg-hero-in" data-page-node-id="zHGAA9vY7n6fxV5gVjYrar">
+      <div class="sg-hero-emoji" data-page-node-id="EXpbhzNsrNRX3oeyyk5TYS">⚔️</div>
+      <h1 data-page-node-id="JXFKM4HxnwxIwTf1h2zk9q">三国演义</h1>
+      <div class="sg-by" data-page-node-id="IwRsFF92kcVgOOBdovSKNc">明 · 罗贯中 · 公版名著 · 语文教材推荐阅读</div>
+      <div class="sg-hero-meta" data-page-node-id="2iEPCQMP9MFAhBC7Cy9CAE">
+        <span class="sg-chip" data-page-node-id="abq7YqRx0ycNJQ6701fvKx">120 回 · 48.5 万字</span>
+        <span class="sg-chip free" data-page-node-id="9E4AULV6XJ9b0DBZ5CmjL1">前 10 回免费</span>
+        <span class="sg-chip" data-page-node-id="8gd2p6JpmKsQOaAZKsqgD0">完整全文 · 简体</span>
+      </div>
+      <div class="sg-readon" data-page-node-id="mEh1t3Mh0gf8FbG7LJABgB">
+        <button class="sg-btn primary" onclick="SGWorld.continueRead()" data-page-node-id="kDgOpTpdMU6PIBQqK8zIMf">📖 继续阅读</button>
+        <button class="sg-btn ghost" onclick="SGWorld.jumpCatalog()" data-page-node-id="JFSdyxwKEcCIClPm2viyHF">📑 全部目录</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 道具/签到条 -->
+  <div class="sg-perk" data-page-node-id="bt1W6Kvz8wkaJn20amzWqg">
+    <div class="sg-perk-card" id="sg-checkin" onclick="SGWorld.checkin()" data-page-node-id="mCZ6LMSaCrzR3f6L2rXd8K">
+      <div class="p-ico" data-page-node-id="Y2AIKgVzGymJgyAuuCz5Qw">📅</div>
+      <div class="p-t" data-page-node-id="U5U0xmhhCXEKlLVt39B292">每日签到</div>
+      <div class="p-s" id="sg-checkin-sub" data-page-node-id="SGtPMfIque9Kriem6K6ZCO">送 10 灵玉</div>
+    </div>
+    <div class="sg-perk-card" onclick="SGWorld.openExchange()" data-page-node-id="WBVoDgx7uT5BiUsco6CdBj">
+      <div class="p-ico" data-page-node-id="fSDQyD5J9GRsIWQ1z0jXgk">🎟️</div>
+      <div class="p-t" data-page-node-id="o889PdUibpOoFPsc7frIyl">阅读券 <b id="sg-tickets" data-page-node-id="EbiXtScFMBcCdRhRfNMFOZ">0</b></div>
+      <div class="p-s" data-page-node-id="RISrBtyq9WC6qrUn0sjI3t">10 灵玉兑 1 张 · 解锁单回</div>
+    </div>
+  </div>
+
+  <!-- 全书券 -->
+  <div class="sg-pass" id="sg-pass-card" onclick="SGWorld.openPassSheet()" data-page-node-id="SHmkubJk1I9x1HlnghH5rP">
+    <div class="ps-ico" data-page-node-id="yQCegXklW0BzH8Ei0gQ2Cb">📜</div>
+    <div class="ps-b" data-page-node-id="E1DiWFUI8O9BNrgVNvzPqU">
+      <div class="ps-t" data-page-node-id="XPCtnxaxYbztoIgSdrs0Kq">全书通行券</div>
+      <div class="ps-s" data-page-node-id="O2n24CkapSkfihOZlTHHW5">解锁全部 120 回 · 永久有效 · 较单卷购买立省 92 灵晶</div>
+    </div>
+    <div class="ps-price" data-page-node-id="x27PGwDHWQWPQ7uaip1Ht6"><b data-page-node-id="rzx4j5NC6OmZzxIo30qajH">128 💎</b><s data-page-node-id="eSnY76kxJlEBRSpUGN7djJ">220 💎</s></div>
+  </div>
+
+  <!-- 目录 -->
+  <div class="sg-catalog" id="sg-catalog" data-page-node-id="ZqVELZ8VD4zZoepEasKZrA">
+    <div class="sg-loading" data-page-node-id="AkDUgErIdF1vNG5YfR94cc"><div class="ring" data-page-node-id="BDGEJOgCpHx2OTkGGf4U5t"></div>正在展开一百二十回全卷……</div>
+  </div>
+</div>
+
+<!-- 阅读器 -->
+<div class="sg-reader" id="sg-reader" data-page-node-id="meykJsOM9b3UqkFxr6mppl">
+  <div class="sg-progress" id="sg-progress" style="width:0" data-page-node-id="cCtC9DYcLesYXxNWPGpPkA"></div>
+  <div class="sg-reader-bar" data-page-node-id="WlG82QID6aAn09Wm2hJ3zm">
+    <div class="rb-back" onclick="SGWorld.closeReader()" data-page-node-id="MW3EsLFIDXOFyLmM7RYDcP">←</div>
+    <div class="rb-title" id="rb-title" data-page-node-id="kZpB70gLSqUYfcAuaH4lzE">回目</div>
+    <div class="rb-cfg" onclick="SGWorld.toggleFontCfg()" data-page-node-id="8HQoghvzmCiTYQpTj87Fz0">Aa</div>
+  </div>
+  <div class="sg-article" id="sg-article" data-page-node-id="ubYcgYtkAB5jd88iTy6hRw"></div>
+  <div class="sg-nav" data-page-node-id="gzFBkORJNb8wE3vSmE8Aoy">
+    <button class="prev" onclick="SGWorld.prevChapter()" data-page-node-id="vGiOzRvUpJMf772RjiAF5O">上一回</button>
+    <button class="next" onclick="SGWorld.nextChapter()" data-page-node-id="RacEMRqo9IDRwT8DJzDuXb">下一回</button>
+  </div>
+</div>
+
+<!-- 付费/道具弹窗 -->
+<div class="sg-dialog" id="sg-sheet" data-page-node-id="Kh5gE31I3Q7AuslAe1va6e">
+  <div class="sg-sheet" id="sg-sheet-body" data-page-node-id="S6FQHmAt4t4DJzpqPSmWBW"></div>
+</div>
+
+<div class="sg-toast-wrap" id="sg-toast-wrap" data-page-node-id="BtNSum48ftkVsplpy9LZ94"></div>
+
+<script>
+/* =================================================================
+ * V20-Q · 三国演义·真人摄影风格升级
+ * 24 张 SD 真人写实图（majicMIX realisticv7）+ 卷封面 + 关键回主图
+ * 文件：../../assets/scenes/sg_*.jpg
+ * ================================================================= */
+var SG_SCENES = {
+  // 12 张卷封面
+  VOL_COVER: {
+    1: 'sg_v01_cover', 2: 'sg_v02_cover', 3: 'sg_v03_cover',
+    4: 'sg_v04_cover', 5: 'sg_v05_cover', 6: 'sg_v06_cover',
+    7: 'sg_v07_cover', 8: 'sg_v08_cover', 9: 'sg_v09_cover',
+    10: 'sg_v10_cover', 11: 'sg_v11_cover', 12: 'sg_v12_cover'
+  },
+  // 12 张关键回主图（ch → file）
+  KEY_CHAPTER: {
+    5: 'sg_ch05_huaxiong',
+    6: 'sg_ch06_3v1lvmbu',
+    25: 'sg_ch25_threevisits',
+    30: 'sg_ch30_wuchao',
+    44: 'sg_ch44_caoqianjiejian',
+    47: 'sg_ch47_zhouyu',
+    49: 'sg_ch49_huarong',
+    61: 'sg_ch61_zhaoyun',
+    74: 'sg_ch74_guagu',
+    76: 'sg_ch76_maicheng',
+    91: 'sg_ch91_baidi',
+    95: 'sg_ch95_emptycity'
+  },
+  ASSET_BASE: '../../assets/scenes/'
+};
+function sgSceneUrl(file) {
+  return SG_SCENES.ASSET_BASE + file + '.jpg';
+}
+function sgFallbackGradient(v) {
+  var grads = [
+    'linear-gradient(160deg,#6B2737,#B8863B)',
+    'linear-gradient(160deg,#2E3A6E,#4A3A8C)',
+    'linear-gradient(160deg,#5A6B8E,#C95B9C)',
+    'linear-gradient(160deg,#3A5E4A,#00B894)',
+    'linear-gradient(160deg,#5A2E1A,#B85535)',
+    'linear-gradient(160deg,#8C1A1A,#C73652)',
+    'linear-gradient(160deg,#2E5A8C,#5A8CC7)',
+    'linear-gradient(160deg,#3A8C5E,#00B894)',
+    'linear-gradient(160deg,#8C3A1A,#E94560)',
+    'linear-gradient(160deg,#1A2E5A,#3A5E8C)',
+    'linear-gradient(160deg,#5A1A3A,#8C2E5A)',
+    'linear-gradient(160deg,#8C5A1A,#E8C36A)'
+  ];
+  return grads[(v - 1) % 12];
+}
+
+/* =================================================================
+ * 三国演义小说世界 · 数据与状态
+ * 经济体系（灵境双轨制）：
+ *   灵玉 = 免费货币（签到/任务获取，可兑阅读券）
+ *   灵晶 = 付费货币（1 元 = 100 灵晶，充值获取）
+ * 收费点设计（对齐公版内容 0 版权成本 · 低门槛普惠定价）：
+ *   卷制：12 卷 × 10 回；卷一（1-10 回）免费
+ *   单卷解锁 20 灵晶（约 0.2 元/回）
+ *   全书通行券 128 灵晶（vs 单卷合计 220，省 42%）
+ *   阅读券：10 灵玉兑 1 张，可解锁任意单回（免费玩家签到可持续阅读）
+ * ================================================================= */
+var SG = {
+  KEYS: {
+    unlockedVols: 'lingjing_v520_sanguo_vols',      // 已解锁卷 [1..12]
+    unlockedChs:  'lingjing_v520_sanguo_chs',       // 阅读券解锁的单回 [n]
+    pass:         'lingjing_v520_sanguo_pass',      // 全书券 bool
+    progress:     'lingjing_v520_sanguo_progress',  // {ch: 回数, pct: 滚动}
+    tickets:      'lingjing_v520_sanguo_tickets',   // 阅读券数
+    checkin:      'lingjing_v520_sanguo_checkin',   // 最后签到日期
+    wallet:       'lingjing_v520_sanguo_wallet',    // {jade, crystal}
+    font:         'lingjing_v520_sanguo_font'       // 字号档 0/1/2
+  },
+  VOL_SIZE: 10, TOTAL_CH: 120,
+  VOL_PRICE: 20, PASS_PRICE: 128,
+  chapters: [],   // [{no, title, words, text}]
+  cur: 1
+};
+
+function sgGet(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch(e) { return d; } }
+function sgSet(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+
+function wallet() { return sgGet(SG.KEYS.wallet, { jade: 100, crystal: 60 }); }
+function saveWallet(w) { sgSet(SG.KEYS.wallet, w); renderWallet(); }
+function hasPass() { return sgGet(SG.KEYS.pass, false); }
+function volOf(ch) { return Math.ceil(ch / SG.VOL_SIZE); }
+function volUnlocked(v) { return v === 1 || hasPass() || sgGet(SG.KEYS.unlockedVols, []).indexOf(v) >= 0; }
+function chUnlocked(ch) {
+  if (hasPass() || volUnlocked(volOf(ch))) return true;
+  return sgGet(SG.KEYS.unlockedChs, []).indexOf(ch) >= 0;
+}
+
+/* ---------- 文本加载与切章 ---------- */
+// V20-S：多路径 fallback（兼容用户从 output/preview 或仓库根启动 server）
+var SG_TEXT_CANDIDATES = [
+  '../../corpus/books/sanguoyanyi.txt',                          // 仓库根启动（推荐）
+  '../../../corpus/books/sanguoyanyi.txt',                      // 兼容多嵌 output/
+  'http://localhost:8767/corpus/books/sanguoyanyi.txt',         // 直连 8767
+  'http://127.0.0.1:8767/corpus/books/sanguoyanyi.txt'
+];
+var SG_TEXT_OK = false;  // 标记：true=已成功加载至少一次
+function setLoadHint(state, msg) {
+  // state: 'loading' | 'fail-retry' | 'fail-permanent'
+  var cat = document.getElementById('sg-catalog');
+  if (!cat) return;
+  if (state === 'loading') {
+    cat.innerHTML = '<div class="sg-loading"><div class="ring"></div>' + (msg || '正在展开一百二十回全卷……') + '</div>';
+  } else if (state === 'fail-retry') {
+    cat.innerHTML = '<div class="sg-loading">' + (msg || '全文加载失败，正在重试…') + '<br><small style="opacity:.6">请确认本地服务器从仓库根启动 (端口 8767)</small></div>';
+  }
+}
+function tryLoadText(idx) {
+  if (idx >= SG_TEXT_CANDIDATES.length) {
+    SG_TEXT_OK = false;
+    setLoadHint('fail-permanent');
+    return;
+  }
+  var p = SG_TEXT_CANDIDATES[idx];
+  fetch(p).then(function (r) {
+    if (!r.ok) throw new Error(r.status);
+    return r.text();
+  }).then(function (raw) {
+    if (raw && raw.indexOf('第') >= 0 && raw.length > 10000) {
+      parseChapters(raw);
+      SG_TEXT_OK = true;
+    } else throw new Error('content short');
+  }).catch(function () {
+    tryLoadText(idx + 1);
+  });
+}
+function loadText() {
+  setLoadHint('loading');
+  var cached = window.__LJ_BOOK__ && window.__LJ_BOOK__['sanguoyanyi'];
+  if (cached && cached.indexOf('第') >= 0 && cached.length > 10000) {
+    parseChapters(cached);
+    SG_TEXT_OK = true;
+    return;
+  }
+  loadFromScript();
+}
+
+// 优先用 <script> 加载内置语料（file:// 下 fetch 会被浏览器拦截）
+function loadFromScript() {
+  var s = document.createElement('script');
+  s.src = '../../corpus/books/sanguoyanyi.js';
+  s.onload = function () {
+    var t = (window.__LJ_BOOK__ && window.__LJ_BOOK__['sanguoyanyi']) || '';
+    if (t && t.indexOf('第') >= 0 && t.length > 10000) { parseChapters(t); SG_TEXT_OK = true; }
+    else { tryLoadText(0); }
+  };
+  s.onerror = function () {
+    if (location.protocol === 'file:' || location.protocol === 'about:') {
+      SG_TEXT_OK = false;
+      setLoadHint('fail-permanent');
+      return;
+    }
+    tryLoadText(0);
+  };
+  document.head.appendChild(s);
+}
+function reloadText() {
+  SG.chapters = [];
+  loadText();
+}
+
+var CH_RE = /^(第[一二三四五六七八九十百零两0-9]{1,8}回[^\n]{0,40})$/gm;
+function parseChapters(raw) {
+  var ms = [], m;
+  CH_RE.lastIndex = 0;
+  while ((m = CH_RE.exec(raw)) !== null) ms.push({ title: m[1], idx: m.index });
+  for (var i = 0; i < ms.length; i++) {
+    var body = raw.slice(ms[i].idx + ms[i].title.length, i + 1 < ms.length ? ms[i+1].idx : raw.length);
+    var cn = i + 1;
+    SG.chapters.push({ no: cn, title: ms[i].title, words: body.replace(/\s/g, '').length, body: body });
+  }
+  renderCatalog();
+  renderWallet();
+  applyProgressLabel();
+}
+
+/* ---------- 目录渲染 ---------- */
+function volName(v) {
+  var names = ['桃园结义','群雄逐鹿','官渡风云','三顾茅庐','赤壁鏖战','三分天下',
+               '西川攻略','汉中争锋','荆州易手','白帝托孤','南征北战','三分归晋'];
+  return '卷' + '一二三四五六七八九十'[v-1] + ' · ' + names[v-1];
+}
+function renderCatalog() {
+  var host = document.getElementById('sg-catalog');
+  host.innerHTML = '';
+  var totalVols = Math.ceil(SG.chapters.length / SG.VOL_SIZE);
+  for (var v = 1; v <= totalVols; v++) {
+    var owned = volUnlocked(v);
+    var vol = document.createElement('div');
+    vol.className = 'sg-vol';
+    var head = document.createElement('div');
+    head.className = 'sg-vol-head';
+    var tagHtml;
+    if (v === 1) tagHtml = '<span class="v-tag free">免费</span>';
+    else if (hasPass() || owned) tagHtml = '<span class="v-tag owned">已解锁</span>';
+    else tagHtml = '<span class="v-tag lock" data-vol="' + v + '">🔒 20 💎 解锁</span>';
+    // V20-Q：每卷左侧加真人摄影缩略图
+    var thumbFile = SG_SCENES.VOL_COVER[v];
+    var thumbStyle = 'background-image:url(' + sgSceneUrl(thumbFile) + '),' + sgFallbackGradient(v);
+    head.innerHTML =
+      '<div class="sg-vol-thumb" style="' + thumbStyle + '"></div>' +
+      '<div class="v-meta">' +
+      '<span class="v-name">' + volName(v) + '（第' + ((v-1)*10+1) + '–' + (v*10) + '回）</span>' + tagHtml +
+      '</div>';
+    vol.appendChild(head);
+    for (var c = (v-1)*10 + 1; c <= v*10 && c <= SG.chapters.length; c++) {
+      (function (n) {
+        var ch = SG.chapters[n-1];
+        var row = document.createElement('div');
+        row.className = 'sg-ch' + (chUnlocked(n) ? '' : ' locked') + (n === (sgGet(SG.KEYS.progress, {}).ch || 0) ? ' current' : '');
+        var st = chUnlocked(n) ? '📖' : '🔒';
+        row.innerHTML = '<span class="c-no">' + String(n).padStart(3, '0') + '</span>' +
+          '<span class="c-title">' + ch.title.slice(ch.title.indexOf('回') + 1).trim() + '</span>' +
+          '<span class="c-words">' + (ch.words / 1000).toFixed(1) + 'k 字</span><span class="c-state">' + st + '</span>';
+        row.addEventListener('click', function () { SGWorld.readChapter(n); });
+        vol.appendChild(row);
+      })(c);
+    }
+    host.appendChild(vol);
+  }
+  // 卷解锁按钮
+  host.querySelectorAll('.v-tag.lock').forEach(function (t) {
+    t.addEventListener('click', function (e) {
+      e.stopPropagation();
+      openVolSheet(parseInt(t.getAttribute('data-vol'), 10));
+    });
+  });
+}
+
+/* ---------- 阅读器 ---------- */
+function renderChapter(n) {
+  var ch = SG.chapters[n-1];
+  SG.cur = n;
+  document.getElementById('rb-title').textContent = ch.title.slice(0, 18);
+  var art = document.getElementById('sg-article');
+  art.innerHTML = '';
+  // V20-Q：关键回顶部加真人摄影主图
+  var keyFile = SG_SCENES.KEY_CHAPTER[n];
+  if (keyFile) {
+    var img = document.createElement('div');
+    img.className = 'sg-chapter-img';
+    img.style.cssText = 'width:100%;height:200px;border-radius:10px;background-image:url(' + sgSceneUrl(keyFile) + '),' + sgFallbackGradient(volOf(n)) + ';background-size:cover;background-position:center;margin-bottom:18px;box-shadow:0 6px 20px rgba(0,0,0,.4);position:relative';
+    var imgCaption = document.createElement('div');
+    imgCaption.className = 'sg-chapter-caption';
+    imgCaption.textContent = '— 真人摄影 · AI 写实场景 —';
+    img.appendChild(imgCaption);
+    art.appendChild(img);
+  }
+  var h = document.createElement('h2');
+  h.textContent = ch.title.slice(ch.title.indexOf('回') + 1).trim();
+  var no = document.createElement('div');
+  no.className = 'a-no'; no.textContent = '— 三国演义 · 第' + n + '回 —';
+  art.appendChild(no); art.appendChild(h);
+  ch.body.split(/\n\s*\n/).forEach(function (para) {
+    var t = para.replace(/\s+/g, ' ').trim();
+    if (!t) return;
+    var p = document.createElement('p');
+    if (/^[「『《（(]/.test(t) || (t.length < 40 && /[,，。！？]/.test(t.slice(0, 12)) && !/，.{8,}/.test(t))) p.className = 'sg-verse';
+    p.textContent = t;
+    art.appendChild(p);
+  });
+  applyFont();
+  document.getElementById('sg-reader').classList.add('open');
+  document.getElementById('sg-reader').scrollTop = 0;
+  var prog = sgGet(SG.KEYS.progress, {});
+  prog.ch = n; prog.pct = 0; sgSet(SG.KEYS.progress, prog);
+  applyProgressLabel();
+  renderCatalog();
+}
+function readerScroll() {
+  var r = document.getElementById('sg-reader');
+  var max = r.scrollHeight - r.clientHeight;
+  var pct = max > 0 ? Math.min(100, Math.round(r.scrollTop / max * 100)) : 100;
+  document.getElementById('sg-progress').style.width = pct + '%';
+  var prog = sgGet(SG.KEYS.progress, {});
+  if (prog.ch === SG.cur) { prog.pct = pct; sgSet(SG.KEYS.progress, prog); }
+}
+function applyProgressLabel() {
+  var prog = sgGet(SG.KEYS.progress, {});
+  if (!prog.ch) return;
+  var btn = document.querySelector('.sg-btn.primary');
+  if (btn && SG.chapters.length) btn.textContent = '📖 继续读第 ' + prog.ch + ' 回';
+}
+function applyFont() {
+  var sizes = ['15px', '17px', '19px'];
+  var lvl = sgGet(SG.KEYS.font, 1);
+  document.querySelectorAll('#sg-article p').forEach(function (p) { p.style.fontSize = sizes[lvl]; });
+}
+
+/* ---------- 付费弹窗 ---------- */
+function openSheet(html) {
+  document.getElementById('sg-sheet-body').innerHTML = html;
+  document.getElementById('sg-sheet').classList.add('open');
+}
+function closeSheet() { document.getElementById('sg-sheet').classList.remove('open'); }
+
+function openVolSheet(v) {
+  openSheet(
+    '<h3>解锁' + volName(v) + '</h3>' +
+    '<div class="sh-sub">第' + ((v-1)*10+1) + '–' + (v*10) + '回 · 共 10 回 · 解锁后永久可读</div>' +
+    '<div class="sg-opt recommend" onclick="SGWorld.buyVol(' + v + ')">' +
+      '<div class="o-ico">📖</div><div class="o-b"><div class="o-t">解锁本卷（10 回）</div>' +
+      '<div class="o-s">约 0.2 元 / 回 · 公版普惠定价</div></div><div class="o-p">20 💎</div></div>' +
+    '<div class="sg-opt" onclick="SGWorld.openPassSheet(true)">' +
+      '<div class="o-ico">📜</div><div class="o-b"><div class="o-t">全书通行券（更划算）</div>' +
+      '<div class="o-s">120 回全解锁 · 较 11 卷合计 220 立省 92 💎</div></div><div class="o-p">128 💎</div></div>' +
+    '<div class="sg-opt" onclick="SGWorld.useTicket(' + ((v-1)*10+1) + ')">' +
+      '<div class="o-ico">🎟️</div><div class="o-b"><div class="o-t">阅读券解锁单回</div>' +
+      '<div class="o-s">当前 ' + sgGet(SG.KEYS.tickets, 0) + ' 张 · 10 灵玉可兑 1 张</div></div>' +
+      '<div class="o-p jade">1 张</div></div>' +
+    '<button class="sh-close" onclick="SGWorld.closeSheet()">再想想</button>');
+}
+
+function openPassSheet(keep) {
+  openSheet(
+    '<h3>📜 全书通行券</h3>' +
+    '<div class="sh-sub">三国演义 120 回全部解锁 · 永久有效 · 一次购买全书畅读</div>' +
+    '<div class="sg-opt recommend" onclick="SGWorld.buyPass()">' +
+      '<div class="o-ico">📜</div><div class="o-b"><div class="o-t">购买通行券</div>' +
+      '<div class="o-s">卷二至卷十二共 110 回 · 单卷买要 220 💎 · 现省 92 💎（42%）</div></div>' +
+      '<div class="o-p">128 💎</div></div>' +
+    '<div class="sg-opt" onclick="SGWorld.closeSheet();SGWorld.openExchange()">' +
+      '<div class="o-ico">🟢</div><div class="o-b"><div class="o-t">我是免费读者</div>' +
+      '<div class="o-s">每日签到领灵玉 → 兑阅读券 → 也能解锁单回阅读</div></div><div class="o-p jade">0 元</div></div>' +
+    '<button class="sh-close" onclick="SGWorld.closeSheet()">再想想</button>');
+}
+
+function openExchange() {
+  var w = wallet();
+  openSheet(
+    '<h3>🎟️ 阅读券兑换</h3>' +
+    '<div class="sh-sub">阅读券可解锁任意单回 · 免费玩家的持续阅读之路</div>' +
+    '<div class="sg-opt recommend" onclick="SGWorld.exchange(1)">' +
+      '<div class="o-ico">🎟️</div><div class="o-b"><div class="o-t">兑 1 张阅读券</div>' +
+      '<div class="o-s">解锁任意 1 回 · 当日签到即可兑换</div></div><div class="o-p jade">10 🟢</div></div>' +
+    '<div class="sg-opt" onclick="SGWorld.exchange(5)">' +
+      '<div class="o-ico">🎟️</div><div class="o-b"><div class="o-t">兑 5 张（送 1 张）</div>' +
+      '<div class="o-s">50 灵玉兑 5 张，额外送 1 张 = 共 6 回</div></div><div class="o-p jade">50 🟢</div></div>' +
+    '<div class="sg-opt" onclick="SGWorld.openRecharge()">' +
+      '<div class="o-ico">💎</div><div class="o-b"><div class="o-t">灵晶不足？去充值</div>' +
+      '<div class="o-s">1 元 = 100 灵晶 · 6 元起充</div></div><div class="o-p">→</div></div>' +
+    '<button class="sh-close" onclick="SGWorld.closeSheet()">再想想</button>');
+}
+
+function openRecharge() {
+  closeSheet();
+  toast('ok', '充值入口', '正式版接入支付 · 当前演示跳过');
+}
+
+/* ---------- 交易逻辑 ---------- */
+function buyVol(v) {
+  var w = wallet();
+  if (volUnlocked(v)) { toast('warn', '已解锁', volName(v) + ' 无需重复购买'); closeSheet(); return; }
+  if (w.crystal < SG.VOL_PRICE) { toast('warn', '灵晶不足', '还差 ' + (SG.VOL_PRICE - w.crystal) + ' 💎，可去充值'); return; }
+  w.crystal -= SG.VOL_PRICE; saveWallet(w);
+  var vols = sgGet(SG.KEYS.unlockedVols, []); vols.push(v); sgSet(SG.KEYS.unlockedVols, vols);
+  closeSheet(); toast('ok', '解锁成功 🎉', volName(v) + ' 10 回已永久解锁');
+  renderCatalog();
+}
+function buyPass() {
+  if (hasPass()) { toast('warn', '已持有', '全书通行券已生效'); closeSheet(); return; }
+  var w = wallet();
+  if (w.crystal < SG.PASS_PRICE) { toast('warn', '灵晶不足', '还差 ' + (SG.PASS_PRICE - w.crystal) + ' 💎，可去充值'); return; }
+  w.crystal -= SG.PASS_PRICE; saveWallet(w);
+  sgSet(SG.KEYS.pass, true);
+  closeSheet(); toast('ok', '全书解锁 🎉', '三国演义 120 回永久畅读');
+  renderCatalog();
+}
+function exchange(n) {
+  var cost = n === 5 ? 50 : 10;
+  var gain = n === 5 ? 6 : 1;
+  var w = wallet();
+  if (w.jade < cost) { toast('warn', '灵玉不足', '每日签到领 10 🟢，还差 ' + (cost - w.jade)); return; }
+  w.jade -= cost; saveWallet(w);
+  sgSet(SG.KEYS.tickets, sgGet(SG.KEYS.tickets, 0) + gain);
+  closeSheet(); toast('ok', '兑换成功', '获得 ' + gain + ' 张阅读券');
+  renderWallet();
+}
+function useTicket(ch) {
+  var t = sgGet(SG.KEYS.tickets, 0);
+  if (t < 1) { toast('warn', '没有阅读券', '10 灵玉可兑 1 张（签到送灵玉）'); return; }
+  sgSet(SG.KEYS.tickets, t - 1);
+  var chs = sgGet(SG.KEYS.unlockedChs, []); chs.push(ch); sgSet(SG.KEYS.unlockedChs, chs);
+  closeSheet(); toast('ok', '已用 1 张阅读券', '第 ' + ch + ' 回已解锁');
+  renderWallet(); renderCatalog();
+  SGWorld.readChapter(ch);
+}
+function checkin() {
+  var today = new Date().toISOString().slice(0, 10);
+  if (sgGet(SG.KEYS.checkin, '') === today) { toast('warn', '今日已签到', '明天再来领 10 🟢'); return; }
+  sgSet(SG.KEYS.checkin, today);
+  var w = wallet(); w.jade += 10; saveWallet(w);
+  document.getElementById('sg-checkin').classList.add('done');
+  document.getElementById('sg-checkin-sub').textContent = '今日已领 ✓';
+  toast('ok', '签到成功', '+10 灵玉 · 可兑 1 张阅读券');
+}
+
+/* ---------- 公开 API ---------- */
+window.SGWorld = {
+  readChapter: function (n) {
+    if (!SG.chapters.length) return;
+    if (!chUnlocked(n)) { openVolSheet(volOf(n)); return; }
+    renderChapter(n);
+  },
+  continueRead: function () {
+    var prog = sgGet(SG.KEYS.progress, {});
+    var n = prog.ch || 1;
+    if (n > SG.chapters.length) n = 1;
+    if (!chUnlocked(n)) { openVolSheet(volOf(n)); return; }
+    renderChapter(n);
+    document.getElementById('sg-reader').scrollTop = 0;
+  },
+  jumpCatalog: function () {
+    document.getElementById('sg-catalog').scrollIntoView({ behavior: 'smooth' });
+  },
+  closeReader: function () {
+    document.getElementById('sg-reader').classList.remove('open');
+    renderCatalog();
+  },
+  prevChapter: function () { if (SG.cur > 1) SGWorld.readChapter(SG.cur - 1); else toast('warn', '已是第一回', '桃园结义就在眼前'); },
+  nextChapter: function () {
+    if (SG.cur >= SG.chapters.length) { toast('ok', '全书完', '是非成败转头空，青山依旧在'); return; }
+    SGWorld.readChapter(SG.cur + 1);
+  },
+  openVolSheet: openVolSheet,
+  openPassSheet: openPassSheet,
+  openExchange: openExchange,
+  openRecharge: openRecharge,
+  buyVol: buyVol, buyPass: buyPass, exchange: exchange,
+  useTicket: useTicket, checkin: checkin, closeSheet: closeSheet,
+  toggleFontCfg: function () {
+    openSheet('<h3>Aa 字号</h3><div class="sh-sub">选择舒适的阅读字号</div>' +
+      '<div class="sg-font-row">' +
+      '<button onclick="SGWorld.setFont(0)">小</button>' +
+      '<button onclick="SGWorld.setFont(1)">标准</button>' +
+      '<button onclick="SGWorld.setFont(2)">大</button></div>' +
+      '<button class="sh-close" onclick="SGWorld.closeSheet()">完成</button>');
+  },
+  setFont: function (lvl) { sgSet(SG.KEYS.font, lvl); applyFont(); closeSheet(); }
+};
+
+/* ---------- 渲染辅助 ---------- */
+function renderWallet() {
+  var w = wallet();
+  document.getElementById('sg-jade').textContent = w.jade;
+  document.getElementById('sg-crystal').textContent = w.crystal;
+  document.getElementById('sg-tickets').textContent = sgGet(SG.KEYS.tickets, 0);
+  if (hasPass()) {
+    var card = document.getElementById('sg-pass-card');
+    card.style.opacity = '.5'; card.style.pointerEvents = 'none';
+    card.querySelector('.ps-t').textContent = '全书通行券 · 已生效 🎉';
+    card.querySelector('.ps-price').innerHTML = '<b style="color:#4ECCA3">已持有</b>';
+  }
+  var today = new Date().toISOString().slice(0, 10);
+  if (sgGet(SG.KEYS.checkin, '') === today) {
+    document.getElementById('sg-checkin').classList.add('done');
+    document.getElementById('sg-checkin-sub').textContent = '今日已领 ✓';
+  }
+}
+function toast(kind, title, msg) {
+  var wrap = document.getElementById('sg-toast-wrap');
+  var t = document.createElement('div');
+  t.className = 'sg-toast ' + kind;
+  t.innerHTML = '<b>' + title + '</b>' + (msg ? ' · ' + msg : '');
+  wrap.appendChild(t);
+  setTimeout(function () { t.remove(); }, 3000);
+}
+
+/* ---------- 启动 ---------- */
+document.getElementById('sg-reader').addEventListener('scroll', readerScroll);
+document.getElementById('sg-sheet').addEventListener('click', function (e) {
+  if (e.target === this) closeSheet();
+});
+
+/* ---------- V20-Q：Hero 背景图（卷一封面） ---------- */
+(function initHeroBg(){
+  var bg = document.getElementById('sg-hero-bg');
+  if (!bg) return;
+  bg.style.backgroundImage = 'url(' + sgSceneUrl(SG_SCENES.VOL_COVER[1]) + '),' + sgFallbackGradient(1);
+})();
+renderWallet();
+loadText();
+</script>
+</body>
+</html>

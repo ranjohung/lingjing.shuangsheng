@@ -1,0 +1,2325 @@
+<!doctype html>
+<html lang="zh-CN" data-page-node-id="dz1i4gOJXAHALfdPtrXSGi">
+<head data-page-node-id="CLYM5BsQrV79E2BrU6hUXy">
+<meta charset="utf-8" data-page-node-id="ZTVstSDHAW1JY34FaIjH2i" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" data-page-node-id="u9wQBbdlbpdum6txP6nwIa" />
+<meta name="apple-mobile-web-app-capable" content="yes" data-page-node-id="o3aw3vVJvgOPXXmTcde6hz" />
+<meta name="theme-color" content="#0a0d1a" data-page-node-id="wRj0Bp0eWxE7vBfGtkq7iL" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0d1a'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-size='32' fill='%235BC5D8'%3E灵%3C/text%3E%3C/svg%3E" data-page-node-id="gDB53vTZOKIZI5bElLDYZT" />
+<title>灵境 · 双生 · v5.9 重设计（历史归档）</title>
+<style>
+:root {
+  --bg: #0a0d1a;
+  --bg2: #14182b;
+  --bg3: #1c2342;
+  --text: #e8ecf4;
+  --text2: #b6c4dc;
+  --text3: #6e7d96;
+  --line: rgba(255,255,255,.08);
+  --line2: rgba(255,255,255,.14);
+  --violet: #8E5BD8;
+  --cyan: #5BC5D8;
+  --mint: #5BD88E;
+  --rose: #D85B8E;
+  --gold: #D8B45B;
+  --shadow-glow: 0 0 32px rgba(142,91,216,.30);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; -webkit-font-smoothing: antialiased; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+::-webkit-scrollbar { display: none; }
+
+/* ====== 应用外壳 ====== */
+#app {
+  width: 100vw; height: 100vh; height: 100dvh;
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden;
+}
+.aurora-bg {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(142,91,216,.18) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(91,197,216,.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(216,91,142,.06) 0%, transparent 70%);
+}
+
+/* ====== 视图栈 ====== */
+.view {
+  position: absolute; inset: 0;
+  display: none; flex-direction: column;
+  overflow: hidden;
+  z-index: 1;
+}
+.view.active { display: flex; }
+.view-body {
+  flex: 1; min-height: 0; overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative; z-index: 1;
+}
+.view-body.no-scroll { overflow: hidden; }
+
+/* ====== 顶部导航（各视图通用） ====== */
+.topbar {
+  flex-shrink: 0; height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(10,13,26,.95), rgba(10,13,26,.85));
+  backdrop-filter: blur(20px);
+  position: relative; z-index: 5;
+}
+.topbar h1 { font-size: 17px; font-weight: 600; letter-spacing: 0.5px; }
+.topbar .back {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.06); font-size: 18px;
+}
+.topbar .icon-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.06); font-size: 16px;
+}
+.topbar .actions { display: flex; gap: 8px; }
+
+/* ====== 底部 4 Tab（移动端主导航） ====== */
+.tabbar {
+  flex-shrink: 0; height: 64px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--line);
+  background: rgba(10,13,26,.95);
+  backdrop-filter: blur(20px);
+  padding-bottom: env(safe-area-inset-bottom);
+  position: relative; z-index: 5;
+}
+.tab {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; color: var(--text3);
+  font-size: 11px; transition: color .2s;
+}
+.tab.active { color: var(--cyan); }
+.tab i { font-size: 22px; line-height: 1; font-style: normal; }
+.tab.cta {
+  background: linear-gradient(135deg, var(--violet), var(--cyan));
+  color: #fff; margin: 8px 12px; border-radius: 14px;
+  font-size: 13px; font-weight: 600;
+}
+
+/* ====== 首页（我的世界） ====== */
+.home-hero {
+  position: relative;
+  padding: 16px 20px 80px;
+  background: linear-gradient(180deg, rgba(142,91,216,.18) 0%, transparent 50%);
+}
+.home-hero .avatar-row {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px;
+}
+.home-hero .me {
+  display: flex; align-items: center; gap: 10px;
+}
+.home-hero .me .av {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet), var(--rose));
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+  border: 2px solid rgba(255,255,255,.18);
+}
+.home-hero .me .name { font-size: 13px; color: var(--text2); }
+.home-hero .me .name b { color: var(--text); font-size: 15px; font-weight: 600; }
+.home-hero .top-icons { display: flex; gap: 8px; }
+.home-hero .top-icons .icon-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,.06);
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+}
+
+.hero-card {
+  position: relative; height: 220px; border-radius: 20px; overflow: hidden;
+  background: linear-gradient(135deg, #2a1a4e, #4e1a3a);
+  box-shadow: var(--shadow-glow);
+}
+.hero-card .scene { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.55; }
+.hero-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 30%, rgba(10,13,26,.85));
+}
+.hero-card .char-portrait {
+  position: absolute; right: 12px; bottom: 0; height: 200px;
+  background-size: cover; background-position: top center;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,.5));
+}
+.hero-card .text-block {
+  position: absolute; left: 18px; bottom: 18px; z-index: 2; max-width: 60%;
+}
+.hero-card .greet { font-size: 12px; color: var(--cyan); margin-bottom: 4px; }
+.hero-card .name { font-size: 24px; font-weight: 700; letter-spacing: 1px; }
+.hero-card .quote { font-size: 12px; color: var(--text2); margin-top: 6px; line-height: 1.5; }
+.hero-card .cta-row { display: flex; gap: 8px; margin-top: 12px; }
+.hero-card .cta-row .btn {
+  padding: 8px 16px; border-radius: 999px; font-size: 12px; font-weight: 600;
+}
+.hero-card .cta-row .btn.primary { background: linear-gradient(120deg, var(--violet), var(--cyan)); color: #fff; }
+.hero-card .cta-row .btn.ghost { background: rgba(255,255,255,.10); border: 1px solid var(--line2); color: var(--text); }
+
+/* ====== 功能区入口卡片 ====== */
+.section-title {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 20px 12px; font-size: 16px; font-weight: 600;
+}
+.section-title small { font-size: 11px; color: var(--text3); font-weight: 400; }
+
+.func-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  padding: 0 20px;
+}
+.func-card {
+  position: relative;
+  aspect-ratio: 1 / 1.35;
+  border-radius: 18px; padding: 14px;
+  display: flex; flex-direction: column;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.func-card:active { transform: scale(0.97); }
+.func-card .icon {
+  width: 40px; height: 40px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  background: rgba(255,255,255,.10);
+  backdrop-filter: blur(8px);
+  margin-bottom: 12px;
+}
+.func-card .label { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.func-card .desc { font-size: 11px; color: rgba(255,255,255,.72); line-height: 1.4; }
+.func-card .badge {
+  position: absolute; top: 12px; right: 12px;
+  padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 600;
+  background: rgba(255,255,255,.18); color: #fff;
+}
+.func-card.novel  { background: linear-gradient(135deg, #2a1a4e 0%, #4e1a3a 100%); }
+.func-card.companion { background: linear-gradient(135deg, #1a3a4e 0%, #1a4e3a 100%); }
+.func-card.studio { background: linear-gradient(135deg, #4e3a1a 0%, #4e1a2a 100%); }
+.func-card.discover { background: linear-gradient(135deg, #1a4e4e 0%, #3a1a4e 100%); }
+
+/* ====== 小说世界 ====== */
+.genre-tabs {
+  display: flex; gap: 8px; padding: 12px 16px;
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  border-bottom: 1px solid var(--line);
+  background: rgba(10,13,26,.85);
+}
+.genre-tab {
+  flex-shrink: 0; padding: 7px 16px; border-radius: 999px;
+  font-size: 13px; font-weight: 500;
+  background: rgba(255,255,255,.06); color: var(--text2);
+  border: 1px solid transparent;
+  transition: all .2s;
+  scroll-snap-align: start;
+}
+.genre-tab.active {
+  background: linear-gradient(120deg, var(--violet), var(--cyan));
+  color: #fff;
+  border-color: rgba(255,255,255,.18);
+  box-shadow: 0 4px 14px rgba(142,91,216,.35);
+}
+.genre-tab .count { font-size: 10px; opacity: 0.7; margin-left: 4px; }
+
+.genre-banner {
+  margin: 16px 16px 0; padding: 16px; border-radius: 16px;
+  display: flex; align-items: center; gap: 12px;
+  border: 1px solid var(--line);
+}
+.genre-banner .emoji { font-size: 32px; }
+.genre-banner .info h3 { font-size: 17px; font-weight: 700; }
+.genre-banner .info p { font-size: 11px; color: var(--text2); margin-top: 2px; line-height: 1.4; }
+
+.novel-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  padding: 16px;
+}
+.novel-card {
+  border-radius: 14px; overflow: hidden;
+  background: var(--bg2); border: 1px solid var(--line);
+  cursor: pointer; transition: transform .2s;
+}
+.novel-card:active { transform: scale(0.97); }
+.novel-card .cover {
+  aspect-ratio: 3 / 4;
+  background-size: cover; background-position: center;
+  position: relative;
+}
+.novel-card .cover .tag-row {
+  position: absolute; top: 8px; left: 8px; right: 8px;
+  display: flex; justify-content: space-between;
+}
+.novel-card .cover .badge {
+  padding: 3px 8px; border-radius: 6px;
+  font-size: 10px; font-weight: 600;
+  background: rgba(0,0,0,.55); color: #fff; backdrop-filter: blur(8px);
+}
+.novel-card .cover .badge.free   { background: rgba(91,216,142,.85); color: #0a0d1a; }
+.novel-card .cover .badge.paid   { background: rgba(216,180,91,.85); color: #0a0d1a; }
+.novel-card .cover .badge.serial { background: rgba(91,197,216,.85); color: #0a0d1a; }
+.novel-card .cover .badge.try    { background: rgba(142,91,216,.85); color: #fff; }
+.novel-card .info { padding: 10px 12px 12px; }
+.novel-card .info h4 { font-size: 13px; font-weight: 600; line-height: 1.3; }
+.novel-card .info .author { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.novel-card .info .meta { font-size: 10px; color: var(--text3); margin-top: 6px; display: flex; gap: 8px; }
+.novel-card .info .meta .stars { color: var(--gold); }
+
+/* ====== 小说详情（沉浸剧情式） ====== */
+.detail-hero {
+  position: relative; height: 320px; overflow: hidden;
+}
+.detail-hero .cover {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  filter: blur(2px) brightness(0.45);
+  transform: scale(1.1);
+}
+.detail-hero .portrait {
+  position: absolute; right: 0; bottom: 0; height: 280px;
+  background-size: cover; background-position: top center;
+  filter: drop-shadow(0 12px 40px rgba(0,0,0,.6));
+}
+.detail-hero .info {
+  position: absolute; left: 20px; bottom: 20px; z-index: 2;
+  max-width: 65%;
+}
+.detail-hero .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.detail-hero .tag {
+  padding: 2px 8px; border-radius: 6px;
+  font-size: 10px; font-weight: 500;
+  background: rgba(255,255,255,.18); color: #fff;
+  backdrop-filter: blur(8px);
+}
+.detail-hero h2 { font-size: 24px; font-weight: 700; line-height: 1.2; margin-bottom: 4px; }
+.detail-hero .author { font-size: 12px; color: var(--text2); margin-bottom: 8px; }
+.detail-hero .meta { font-size: 11px; color: var(--text3); display: flex; gap: 12px; }
+
+.detail-body { padding: 20px; }
+.detail-body .intro {
+  font-size: 13px; line-height: 1.8; color: var(--text2);
+  margin-bottom: 20px;
+}
+.detail-body .stat-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; margin-bottom: 24px;
+  padding: 14px; border-radius: 12px;
+  background: var(--bg2); border: 1px solid var(--line);
+}
+.detail-body .stat-row .stat { text-align: center; }
+.detail-body .stat-row .stat b { display: block; font-size: 18px; color: var(--cyan); }
+.detail-body .stat-row .stat span { font-size: 11px; color: var(--text3); }
+
+.chapter-list-title {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px; font-size: 14px; font-weight: 600;
+}
+.chapter-list-title small { font-size: 11px; color: var(--text3); font-weight: 400; }
+.chapter-list { display: flex; flex-direction: column; gap: 1px; }
+.chapter {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--bg2); border-radius: 10px;
+  font-size: 13px; cursor: pointer;
+  border: 1px solid transparent;
+  transition: border-color .2s;
+}
+.chapter + .chapter { margin-top: 6px; }
+.chapter:hover { border-color: var(--cyan); }
+.chapter .ch-num { color: var(--text3); font-size: 11px; margin-right: 12px; min-width: 32px; }
+.chapter .ch-title { flex: 1; }
+.chapter .ch-meta { font-size: 11px; color: var(--text3); display: flex; align-items: center; gap: 8px; }
+.chapter .ch-meta .badge {
+  padding: 2px 6px; border-radius: 4px;
+  background: rgba(255,255,255,.06); color: var(--text2);
+}
+.chapter.locked { opacity: 0.5; }
+
+.detail-cta {
+  position: sticky; bottom: 0;
+  display: flex; gap: 10px; padding: 14px 20px;
+  background: linear-gradient(180deg, transparent, var(--bg) 30%);
+  border-top: 1px solid var(--line);
+  z-index: 10;
+}
+.detail-cta .btn { flex: 1; padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 600; }
+.detail-cta .btn.primary {
+  background: linear-gradient(120deg, var(--violet), var(--cyan));
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(142,91,216,.35);
+}
+.detail-cta .btn.ghost {
+  background: var(--bg2); border: 1px solid var(--line2);
+  color: var(--text);
+}
+
+/* ====== 沉浸剧情游戏页 ====== */
+.game-view { background: #000; }
+.game-stage {
+  position: relative; flex: 1; min-height: 0;
+  background: #0a0d1a; overflow: hidden;
+}
+.game-scene {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  filter: brightness(0.75);
+  transition: opacity .5s ease, transform .8s ease;
+}
+.game-character {
+  position: absolute; right: 5%; bottom: 0; height: 75%;
+  background-size: cover; background-position: top center;
+  filter: drop-shadow(0 12px 40px rgba(0,0,0,.6));
+  transition: opacity .4s, transform .4s;
+}
+.game-vignette {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.4) 0%, transparent 25%, transparent 60%, rgba(0,0,0,.8) 100%);
+}
+.game-topbar {
+  position: absolute; top: 0; left: 0; right: 0; height: 50px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px; z-index: 10;
+  background: linear-gradient(180deg, rgba(0,0,0,.55), transparent);
+}
+.game-topbar .icon-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(0,0,0,.4); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+  color: #fff;
+}
+.game-topbar .title { font-size: 13px; color: #fff; opacity: 0.85; }
+.game-topbar .actions { display: flex; gap: 8px; }
+
+.game-chapter-tag {
+  position: absolute; top: 60px; left: 16px;
+  padding: 4px 12px; border-radius: 999px;
+  background: rgba(0,0,0,.45); backdrop-filter: blur(8px);
+  font-size: 11px; color: #fff; letter-spacing: 1px;
+}
+
+.game-dialogue {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 0 14px 14px;
+  z-index: 5;
+}
+.game-speaker {
+  display: inline-block;
+  padding: 4px 14px; border-radius: 999px;
+  background: linear-gradient(120deg, var(--violet), var(--cyan));
+  color: #fff; font-size: 12px; font-weight: 600;
+  margin-bottom: 8px; box-shadow: 0 4px 14px rgba(142,91,216,.4);
+}
+.game-bubble {
+  background: rgba(10,13,26,.92);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 16px;
+  padding: 16px 18px;
+  backdrop-filter: blur(20px);
+  max-height: 50vh;
+  overflow-y: auto;
+}
+.game-bubble .text {
+  font-size: 14px; line-height: 1.8;
+  color: #e8ecf4; margin-bottom: 14px;
+  white-space: pre-line;
+}
+.game-options { display: flex; flex-direction: column; gap: 8px; }
+.game-opt {
+  padding: 12px 16px; border-radius: 12px;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.10);
+  font-size: 13px; text-align: left; color: #cdd6e3;
+  cursor: pointer; transition: all .2s;
+}
+.game-opt:hover { background: rgba(255,255,255,.08); border-color: var(--cyan); }
+.game-opt .k {
+  display: inline-block; width: 22px; height: 22px; line-height: 22px;
+  text-align: center; border-radius: 6px;
+  background: rgba(91,197,216,.18); color: var(--cyan);
+  font-size: 11px; font-weight: 700; margin-right: 10px;
+}
+.game-opt.npc { background: linear-gradient(120deg, rgba(91,197,216,.10), rgba(142,91,216,.08)); border-color: rgba(91,197,216,.30); }
+.game-opt.npc .k { background: rgba(91,197,216,.30); color: #fff; }
+
+.game-stats {
+  position: absolute; top: 60px; right: 16px;
+  display: flex; flex-direction: column; gap: 6px; z-index: 10;
+}
+.game-stats .stat {
+  padding: 4px 10px; border-radius: 999px;
+  background: rgba(0,0,0,.45); backdrop-filter: blur(8px);
+  font-size: 11px; color: #fff;
+}
+.game-stats .stat b { color: var(--cyan); margin-left: 4px; }
+
+/* ====== 双生陪伴 ====== */
+.companion-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px;
+}
+.companion-card {
+  border-radius: 14px; overflow: hidden;
+  background: var(--bg2); border: 1px solid var(--line);
+  cursor: pointer;
+}
+.companion-card .av {
+  aspect-ratio: 1;
+  background-size: cover; background-position: top center;
+  position: relative;
+}
+.companion-card .av .status {
+  position: absolute; top: 8px; right: 8px;
+  padding: 3px 8px; border-radius: 999px;
+  background: rgba(91,216,142,.85); color: #0a0d1a;
+  font-size: 10px; font-weight: 600;
+}
+.companion-card .av .mood {
+  position: absolute; bottom: 8px; left: 8px; right: 8px;
+  padding: 5px 10px; border-radius: 8px;
+  background: rgba(0,0,0,.55); backdrop-filter: blur(8px);
+  font-size: 11px; color: #fff; line-height: 1.4;
+}
+.companion-card .info { padding: 10px 12px 12px; }
+.companion-card .info h4 { font-size: 13px; font-weight: 600; }
+.companion-card .info p { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.companion-card .info .aff { font-size: 10px; color: var(--rose); margin-top: 6px; }
+
+/* ====== 占位区 ====== */
+.placeholder {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 60vh; padding: 40px 20px; text-align: center;
+}
+.placeholder .emoji { font-size: 56px; margin-bottom: 16px; opacity: 0.6; }
+.placeholder h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.placeholder p { font-size: 13px; color: var(--text2); max-width: 280px; line-height: 1.6; }
+
+/* ====== Toast ====== */
+.toast {
+  position: fixed; top: 70px; left: 50%; transform: translateX(-50%) translateY(-20px);
+  padding: 10px 18px; border-radius: 999px;
+  background: rgba(10,13,26,.92); backdrop-filter: blur(20px);
+  border: 1px solid var(--line2); color: #fff;
+  font-size: 13px; z-index: 9999;
+  opacity: 0; transition: all .3s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ====== 移动端适配 ====== */
+@media (min-width: 768px) {
+  .func-grid, .novel-grid, .companion-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .home-hero { padding: 24px 32px 100px; }
+  .detail-body, .novel-grid, .companion-grid { padding-left: 32px; padding-right: 32px; }
+  .genre-tabs { padding-left: 32px; padding-right: 32px; }
+}
+@media (min-width: 1024px) {
+  .novel-grid { grid-template-columns: repeat(4, 1fr); }
+  .companion-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ============ v5.9 聊天视图 ============ */
+.chat-body { flex: 1; overflow-y: auto; padding: 16px 16px 8px; display: flex; flex-direction: column; gap: 12px; }
+.msg { display: flex; gap: 8px; max-width: 82%; animation: msgIn .25s ease; }
+@keyframes msgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.msg.me { align-self: flex-end; flex-direction: row-reverse; }
+.msg .avatar { width: 34px; height: 34px; border-radius: 50%; flex: none; background-size: cover; background-position: center top; background-color: var(--bg3); }
+.msg .bubble { padding: 10px 13px; border-radius: 16px; font-size: 13px; line-height: 1.6; background: var(--bg3); border: 1px solid var(--line); border-top-left-radius: 4px; word-break: break-word; }
+.msg.me .bubble { background: linear-gradient(120deg, var(--violet), var(--cyan)); border: none; color: #fff; border-radius: 16px; border-top-right-radius: 4px; }
+.msg .time { display: block; font-size: 10px; color: var(--text3); margin-top: 4px; }
+.msg .bubble.typing { color: var(--text3); font-style: italic; }
+.chat-input-bar { flex: none; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--bg2); }
+.quick-topics { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+.quick-topics::-webkit-scrollbar { display: none; }
+.quick-topics button { flex: none; padding: 6px 12px; border-radius: 999px; font-size: 11px; background: var(--bg3); border: 1px solid var(--line); color: var(--text2); cursor: pointer; font-family: inherit; }
+.quick-topics button:hover { border-color: var(--violet); color: var(--text); }
+.chat-row { display: flex; gap: 8px; }
+.chat-row input { flex: 1; padding: 11px 14px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); color: var(--text); font-size: 13px; outline: none; font-family: inherit; }
+.chat-row input:focus { border-color: var(--violet); }
+.chat-row button.send { padding: 0 18px; border-radius: 999px; border: none; background: linear-gradient(120deg, var(--violet), var(--cyan)); color: #fff; font-size: 13px; cursor: pointer; font-family: inherit; }
+.chat-header-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.chat-header-info .av { width: 34px; height: 34px; border-radius: 50%; background-size: cover; background-position: center top; background-color: var(--bg3); }
+.chat-header-info .nm { font-size: 14px; font-weight: 600; }
+.chat-header-info .st { font-size: 10px; color: #6BD88E; }
+.mood-card { margin: 0 16px 14px; padding: 14px; border-radius: 14px; background: linear-gradient(120deg, rgba(142,91,216,.15), rgba(91,197,216,.08)); border: 1px solid var(--line); display: flex; gap: 12px; align-items: center; }
+.mood-card .emo { font-size: 30px; }
+.mood-card h4 { font-size: 13px; margin-bottom: 3px; }
+.mood-card p { font-size: 11px; color: var(--text2); line-height: 1.5; }
+.mood-card .checkin { margin-left: auto; padding: 8px 14px; border-radius: 999px; border: none; background: linear-gradient(120deg, var(--violet), var(--cyan)); color: #fff; font-size: 12px; cursor: pointer; font-family: inherit; flex: none; }
+.mood-card .checkin.done { background: var(--bg3); color: var(--text3); }
+
+/* ============ v5.9 创作中心 + 发现 ============ */
+.work-card { display: flex; gap: 12px; padding: 12px; border-radius: 14px; background: var(--bg2); border: 1px solid var(--line); margin-bottom: 10px; cursor: pointer; }
+.work-card:active { transform: scale(.985); }
+.work-card .wc-cover { width: 56px; height: 74px; border-radius: 8px; flex: none; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+.work-card .wc-info { flex: 1; min-width: 0; }
+.work-card .wc-info h4 { font-size: 13px; margin-bottom: 3px; }
+.work-card .wc-info p { font-size: 11px; color: var(--text2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.work-card .wc-meta { display: flex; gap: 6px; margin-top: 6px; }
+.work-card .wc-meta .badge { font-size: 9px; padding: 2px 8px; border-radius: 999px; background: var(--bg3); color: var(--text2); border: 1px solid var(--line); }
+.work-card .wc-meta .badge.pub { color: #6BD88E; border-color: #6BD88E40; }
+.studio-actions { display: flex; gap: 10px; margin-bottom: 14px; }
+.studio-actions button { flex: 1; padding: 12px; border-radius: 12px; border: 1px dashed var(--line); background: var(--bg2); color: var(--text2); font-size: 12px; cursor: pointer; font-family: inherit; }
+.studio-actions button.primary { border-style: solid; background: linear-gradient(120deg, var(--violet), var(--cyan)); color: #fff; border: none; font-weight: 600; }
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: 11px; color: var(--text2); margin-bottom: 5px; }
+.field input[type=text], .field select, .field textarea { width: 100%; padding: 10px 12px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); color: var(--text); font-size: 13px; outline: none; font-family: inherit; box-sizing: border-box; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--violet); }
+.field textarea { min-height: 72px; resize: vertical; line-height: 1.6; }
+.cover-palette { display: flex; gap: 8px; flex-wrap: wrap; }
+.cover-palette .sw { width: 44px; height: 44px; border-radius: 10px; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.cover-palette .sw.sel { border-color: #fff; box-shadow: 0 0 0 2px var(--violet); }
+.node-editor { border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-bottom: 12px; background: var(--bg2); }
+.node-editor .ne-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.node-editor .ne-head b { font-size: 12px; color: var(--cyan); }
+.node-editor .ne-del { padding: 4px 10px; border-radius: 8px; background: rgba(216,91,110,.12); border: 1px solid rgba(216,91,110,.3); color: #D85B6E; font-size: 11px; cursor: pointer; font-family: inherit; }
+.opt-editor { border: 1px dashed var(--line); border-radius: 10px; padding: 10px; margin-top: 8px; background: rgba(255,255,255,.02); }
+.opt-editor .oe-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 11px; color: var(--text3); }
+.opt-editor .oe-del { color: #D85B6E; cursor: pointer; background: none; border: none; font-family: inherit; font-size: 11px; }
+.eff-row { display: flex; gap: 8px; margin-top: 6px; }
+.eff-row .field { flex: 1; margin: 0; }
+.btn-row { display: flex; gap: 10px; margin-top: 16px; }
+.btn-row button { flex: 1; padding: 12px; border-radius: 12px; border: none; background: var(--bg3); color: var(--text); font-size: 13px; cursor: pointer; font-family: inherit; }
+.btn-row button.primary { background: linear-gradient(120deg, var(--violet), var(--cyan)); color: #fff; font-weight: 600; }
+.add-btn { width: 100%; padding: 12px; border-radius: 12px; border: 1px dashed var(--violet); background: rgba(142,91,216,.06); color: var(--violet); font-size: 12px; cursor: pointer; font-family: inherit; margin-bottom: 4px; }
+/* 发现页 */
+.search-bar { display: flex; gap: 8px; margin-bottom: 14px; }
+.search-bar input { flex: 1; padding: 11px 14px; border-radius: 999px; background: var(--bg2); border: 1px solid var(--line); color: var(--text); font-size: 13px; outline: none; font-family: inherit; }
+.search-bar input:focus { border-color: var(--violet); }
+.rank-item { display: flex; align-items: center; gap: 12px; padding: 12px 10px; border-bottom: 1px solid var(--line); cursor: pointer; }
+.rank-item:last-child { border-bottom: none; }
+.rank-item .rk { width: 26px; text-align: center; font-size: 16px; font-weight: 800; color: var(--text3); font-style: italic; }
+.rank-item.rk-1 .rk { color: #FFD700; } .rank-item.rk-2 .rk { color: #C0C0C0; } .rank-item.rk-3 .rk { color: #CD7F32; }
+.rank-item .rk-cover { width: 42px; height: 56px; border-radius: 8px; flex: none; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.rank-item .rk-info { flex: 1; min-width: 0; }
+.rank-item .rk-info h4 { font-size: 13px; margin-bottom: 2px; }
+.rank-item .rk-info p { font-size: 10px; color: var(--text2); }
+.rank-item .rk-score { font-size: 12px; color: var(--cyan); font-weight: 600; flex: none; }
+.seg-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+.seg-tabs button { padding: 7px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg2); color: var(--text2); font-size: 12px; cursor: pointer; font-family: inherit; }
+.seg-tabs button.active { background: linear-gradient(120deg, var(--violet), var(--cyan)); color: #fff; border: none; }
+.ach-wall { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.ach-cell { padding: 14px 8px; border-radius: 12px; background: var(--bg2); border: 1px solid var(--line); text-align: center; }
+.ach-cell .emo { font-size: 26px; margin-bottom: 6px; }
+.ach-cell h5 { font-size: 11px; margin-bottom: 3px; }
+.ach-cell p { font-size: 9px; color: var(--text3); }
+.ach-cell.locked { opacity: .45; }
+</style>
+<link rel="stylesheet" href="css/mobile-lock.css" />
+</head>
+<body data-page-node-id="MzU7atE6TWpbxNWZ57OwZN">
+<div id="app" data-page-node-id="TBII8aLSsoAqHqA12MAIjA">
+  <div class="aurora-bg" data-page-node-id="QUrALRKDfPiphQ0QY25IQI"></div>
+
+  <!-- 历史归档 banner -->
+  <div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(120deg,rgba(232,199,90,.18),rgba(216,91,142,.18));border-bottom:1px solid rgba(232,199,90,.35);padding:8px 22px;font-size:11px;color:#e8c75a;letter-spacing:.08em;text-align:center;">
+    ⚠ 历史归档（v5.9）· 当前主线请前往 <a href="library.html" style="color:#ffd980;text-decoration:underline;">30 题材库（v5.14）</a> 或 <a href="plot-runner.html?novelId=demo_palace" style="color:#ffd980;text-decoration:underline;">剧情对话（v5.13）</a> 或 <a href="commerce.html" style="color:#ffd980;text-decoration:underline;">商业化（v5.14）</a>
+  </div>
+
+  <!-- ============ 视图 1：首页（我的世界） ============ -->
+  <section class="view active" id="view-home" data-page-node-id="LEgqvbEGzh2K6Wi4WgfBl3">
+    <header class="topbar" style="background:transparent; border:none;" data-page-node-id="aiRYRToR6UnDD3OWnYaVyR">
+      <div class="me" data-page-node-id="nMEFUsmxQmxg5EaBYieHRF">
+        <div class="av" data-page-node-id="N9w2KHPenNvKMb6OE0YPwX">灵</div>
+        <div class="name" data-page-node-id="jJbQjE5cWFzDndadT29Nf6">
+          <small style="display:block; font-size:10px; opacity:.6;" data-page-node-id="PgOiYDCqJssfq5fHsAqnok">Lv.12 · 灵主</small>
+          <b id="userName" data-page-node-id="YVLPNLDUk3PjZ1o9Hj1b1F">我</b>
+        </div>
+      </div>
+      <div class="top-icons" data-page-node-id="TjxObMyhCZ4cExf8lOyo1R">
+        <div class="icon-btn" data-page-node-id="M4n4b25e1qoGRZJh0AJgxQ">🔍</div>
+        <div class="icon-btn" data-page-node-id="x3j6ABQxbCDNnU22WfpsJE">🔔</div>
+      </div>
+    </header>
+    <div class="view-body" data-page-node-id="wqaKBjcIZsv1uR2mOg0zTl">
+      <!-- Hero 角色卡 -->
+      <div class="home-hero" data-page-node-id="6YY2uqXhnN1m0TIz6C7bNp">
+        <div class="hero-card" data-page-node-id="RKAeKsEJLfdLrg2Ghh7Owe">
+          <div class="scene" style="background-image:url('scenes/pavilion_night.png')" data-page-node-id="jZf2yUlBhvMSBH2PAKFM7C"></div>
+          <div class="char-portrait" style="background-image:url('portraits/lin_shuangwan.png')" data-page-node-id="8vB5mKQGRDJrA6Iz3Rb0lJ"></div>
+          <div class="text-block" data-page-node-id="jU5i0J4bZsA4ewB7BXHxjU">
+            <div class="greet" data-page-node-id="jw6adVuv0AYGC8u9c58QCy">孙悟空 · 西游记</div>
+            <div class="name" data-page-node-id="DQfY1owR9Lkdn7TVHNS4TO">雨夜等你</div>
+            <div class="quote" data-page-node-id="8JzJREyP3XAFgydxo9LX4d">"三更了。你为什么会在这里。"</div>
+            <div class="cta-row" data-page-node-id="3z3P4s75MFul2ZjgJKQ8nn">
+              <button class="btn primary" onclick="goView('novel-list')" data-page-node-id="2gJiblF8aIVr7gcnTbhEDQ">📖 进入小说世界</button>
+              <button class="btn ghost" onclick="quickPlay()" data-page-node-id="7Nif7pAU2mmPuRwrvfcTxJ">⚡ 立即开玩</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 功能区入口 -->
+      <div class="section-title" data-page-node-id="evBW62AXymbCUU1WdoStU4">
+        <span data-page-node-id="1hZht1VAbsgZpC91GUmPaK">功能区 · 一卡直达</span>
+        <small data-page-node-id="P5h7Sb6J3qvWLWcZ7AAp9d">4 个完整功能区 · 不滑动</small>
+      </div>
+      <div class="func-grid" data-page-node-id="XFq2NukxLjdpHFRaOe1oPN">
+        <div class="func-card novel" onclick="goView('novel-list')" data-page-node-id="Ue9DDINluPPGXrIQ9ukX9R">
+          <div class="badge" data-page-node-id="GDmL8tVSOt0CSIEwoyoRPO">22 题材</div>
+          <div class="icon" data-page-node-id="ydDi2FNCz5DXtotv8GEftc">📖</div>
+          <div data-page-node-id="i8ESFF4CN5lPzCPQwDr2Nk">
+            <div class="label" data-page-node-id="bBVpoI9RAd1XX1MYiPQLbE">小说世界</div>
+            <div class="desc" data-page-node-id="KWiTNylk0NcHgmRYmzBCfv">题材目录 · 沉浸剧情对话风格</div>
+          </div>
+        </div>
+        <div class="func-card companion" onclick="goView('companion')" data-page-node-id="lKyMy0bqLMERvzqkDtA6mT">
+          <div class="badge" data-page-node-id="izDBzVQg5iZ9VU5bMh5C4u">4 角色</div>
+          <div class="icon" data-page-node-id="Kp8QMhHKbp4gRb0QoadaUA">💞</div>
+          <div data-page-node-id="wKK07HQJvsJX1mYc992NWy">
+            <div class="label" data-page-node-id="E45GGGoRu1xnIdtWESiNA7">双生陪伴</div>
+            <div class="desc" data-page-node-id="aoFNyspBFCYe98Xt9naOJx">角色在线 · 每日陪伴</div>
+          </div>
+        </div>
+        <div class="func-card studio" onclick="goView('studio')" data-page-node-id="dQeNqvfECJAvLBQQRtahQb">
+          <div class="badge" data-page-node-id="BTpq29YiR4NkZVod9k52af">3 栏</div>
+          <div class="icon" data-page-node-id="Juet1cKNnq3o2SFEL4heQS">✍️</div>
+          <div data-page-node-id="W0xTOWohz6IRkEsNnybD5I">
+            <div class="label" data-page-node-id="trEv7PAzjCbGMkQ6gJMsIn">创作中心</div>
+            <div class="desc" data-page-node-id="a4PeMMPJ05gRN0XbRYh0rQ">编辑器 · AI 辅助写故事</div>
+          </div>
+        </div>
+        <div class="func-card discover" onclick="goView('discover')" data-page-node-id="bRsgR88kXrH7UPDbhlDU3b">
+          <div class="badge" data-page-node-id="JdCf6ZWlGrYOoAtkS59N8z">Hot</div>
+          <div class="icon" data-page-node-id="AQKjNCCEeR1fSG63NpNBwf">🧭</div>
+          <div data-page-node-id="DKd1LREdnkbUIfqWSRMxj3">
+            <div class="label" data-page-node-id="WrlkOu5JRE5MEaA14wo5e1">发现</div>
+            <div class="desc" data-page-node-id="ORlIih4vjHqjzloGn0IdwD">推荐 · 活动 · 玩家榜</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 最近在玩 -->
+      <div class="section-title" data-page-node-id="T3FAkrs4bnlccWnswo1fGj">
+        <span data-page-node-id="4FC0StcrX7qXndgqqetfR5">最近在玩</span>
+        <small data-page-node-id="ligRsBz6RoM9F0rYonygdM">3 条记录</small>
+      </div>
+      <div class="novel-grid" data-page-node-id="lopkWbLvTg5BTecUoG6QXL">
+        <div class="novel-card" onclick="openNovel('pavilion')" data-page-node-id="BsGC1GxKRZ79eNwWf7hgh1">
+          <div class="cover" style="background-image:url('scenes/pavilion_night.png')" data-page-node-id="dNhkLWyF8cGStBUS5dhjlX">
+            <div class="tag-row" data-page-node-id="3XGKDf7JpfoqmH9qQFvsMK">
+              <span class="badge try" data-page-node-id="pCsKIqrCJs7hJRO1gSNWGV">试玩</span>
+              <span class="badge" data-page-node-id="pMh96wYSg557tLeVRtz0MF">古风</span>
+            </div>
+          </div>
+          <div class="info" data-page-node-id="ApmJeX3oam2Pz5EnEs33Ni">
+            <h4 data-page-node-id="HqTMOEeFsFyVyeRcxk31ez">雨夜·拔剑</h4>
+            <div class="author" data-page-node-id="WpqhuR8iMXHpBYz125IYpZ">灵境官方 · 孙悟空</div>
+            <div class="meta" data-page-node-id="WiKZ78U3mdCTTKM0xCTvNo"><span data-page-node-id="ALUehlP4LDP9v0Tzuaj04W">8.7</span><span class="stars" data-page-node-id="oytClQjcyOtci2fWjzwtC4">★</span><span data-page-node-id="DJdyU3HRYYMKLhO4e7JjUP">1.2 万玩过</span></div>
+          </div>
+        </div>
+        <div class="novel-card" onclick="openNovel('classroom')" data-page-node-id="7DU9jNfu8r78SXAVWqFIQp">
+          <div class="cover" style="background-image:url('scenes/classroom_sunny.png')" data-page-node-id="HaeC3eVkFDDLutlwC3CSaS">
+            <div class="tag-row" data-page-node-id="AD45q39qpOA4nV9vlrl54k">
+              <span class="badge free" data-page-node-id="oKcMEhei3aa4ghqFwIdXdj">免费</span>
+              <span class="badge" data-page-node-id="3NmHeVyshMGlv0zgpbHhlb">校园</span>
+            </div>
+          </div>
+          <div class="info" data-page-node-id="0iVsqVOcInrGH8zA0iTOGz">
+            <h4 data-page-node-id="GNxAzfL4FjoptCEgsUvirr">同桌的你</h4>
+            <div class="author" data-page-node-id="C70zbesAY6DcOzv0sResIG">纸鸢文字 · 白鹿笙</div>
+            <div class="meta" data-page-node-id="kXajysRbM3V4fDJ33zJyb7"><span data-page-node-id="WYK6F8KrbgAtjDeWdpydLe">8.5</span><span class="stars" data-page-node-id="sKmNwxo4fzXCrmJjNseCbz">★</span><span data-page-node-id="vxWBmtL1DTAGJdCeA6VMyI">5.6 千玩过</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 空间留白 -->
+      <div style="height: 40px" data-page-node-id="sfAp7YkCFycg6MQMOY2wBi"></div>
+    </div>
+    <nav class="tabbar" data-page-node-id="0gdtbQL9BW1anrEkVOBSfS">
+      <div class="tab active" onclick="goView('home')" data-page-node-id="jNRDseke4xSiQf59mgqH55"><i data-page-node-id="dCPOJJ27crijFC4YLf9IH2">🏠</i>主页</div>
+      <div class="tab" onclick="goView('companion')" data-page-node-id="9h9ZH1jbpdyGUJ7JWT8eW6"><i data-page-node-id="Y3xnskiag2FwiuEGvVFYUp">💞</i>陪伴</div>
+      <div class="tab cta" onclick="goView('novel-list')" data-page-node-id="haUYbwpxnqzHzxuPKea88L"><i data-page-node-id="pIox1FttQYnY022Z8hNQPL">📖</i>小说</div>
+      <div class="tab" onclick="goView('studio')" data-page-node-id="Lx2wfMqMrOJWJLiDkYS1o1"><i data-page-node-id="Y6SChEpxhtCw7PYfzSbdPC">✍️</i>创作</div>
+    </nav>
+  </section>
+
+  <!-- ============ 视图 2：小说世界 ============ -->
+  <section class="view" id="view-novel-list" data-page-node-id="en6hxZDKyBBnknSYw5RiDT">
+    <header class="topbar" data-page-node-id="uwDSjRBnbiwgFjKhqG1yyw">
+      <button class="back" onclick="goView('home')" data-page-node-id="pPPlibpH6GFxPV2Z2XMvXp">‹</button>
+      <h1 data-page-node-id="YHfwDWfWERc2NFbmYM3nSk">小说世界</h1>
+      <div class="actions" data-page-node-id="iPqY77H2GOqm82g5Zlrwfi">
+        <button class="icon-btn" data-page-node-id="A18pNY7n0GSvHkBCGL90jW">🔍</button>
+        <button class="icon-btn" data-page-node-id="RhPktxFr4uBY9ucKSOTLNp">⋮</button>
+      </div>
+    </header>
+    <div class="view-body" data-page-node-id="yjRizFVAr2SeCoz5JpIYo2">
+      <div class="genre-tabs" id="genreTabs" data-page-node-id="CioqaL4YeJAQ3HTAmdZrVL"></div>
+      <div class="genre-banner" id="genreBanner" data-page-node-id="kclYRvCqFMI7is0k3aXKSD"></div>
+      <div class="section-title" data-page-node-id="5YKDrFh2heaqfk7EEBrZXz">
+        <span id="novelGridTitle" data-page-node-id="Oj8fd7iH3SSM2GizWvACti">热门推荐</span>
+        <small data-page-node-id="5qnwCCxnHOcx6XlfirxB4t"><span id="novelCount" data-page-node-id="4JEmTHfu2TYnZZvQqUNvRI">0</span> 部作品</small>
+      </div>
+      <div class="novel-grid" id="novelGrid" data-page-node-id="9KSHCQFOTGSbxtLZpEY4t3"></div>
+      <div style="height: 24px" data-page-node-id="Vbg9S6gaWCiEfKNUqnncwj"></div>
+    </div>
+    <nav class="tabbar" data-page-node-id="AxxSg4LCIQFrB6Xv8s0jDw">
+      <div class="tab" onclick="goView('home')" data-page-node-id="uMhSeBDE878CdkXbR9QQED"><i data-page-node-id="5ws1ACNi6k8DiPEzOZ3EGr">🏠</i>主页</div>
+      <div class="tab" onclick="goView('companion')" data-page-node-id="Y6RFb2HqIuismMKrdi6GMn"><i data-page-node-id="Gno1tso6ylM7HBFFZkV2AL">💞</i>陪伴</div>
+      <div class="tab active" data-page-node-id="TNEnKt8ZBxzbI2yJi4Donj"><i data-page-node-id="uYgtZXXqTXDI1BBy8urDKR">📖</i>小说</div>
+      <div class="tab" onclick="goView('studio')" data-page-node-id="UGpeHgOjW9P0iYezFX4itO"><i data-page-node-id="3FebX1nwV30zsz6q53g5NJ">✍️</i>创作</div>
+    </nav>
+  </section>
+
+  <!-- ============ 视图 3：小说详情 ============ -->
+  <section class="view" id="view-novel-detail" data-page-node-id="0NyMk5qKd6EhO0nmnEjJS7">
+    <header class="topbar" style="background:transparent; border:none; position:absolute; top:0; left:0; right:0; z-index:10;" data-page-node-id="FBcN1J79APa92zmlGus8x2">
+      <button class="back" onclick="goView('novel-list')" style="background:rgba(0,0,0,.4); backdrop-filter:blur(8px);" data-page-node-id="eRGU5BfcT4cDzl4J1bvpuk">‹</button>
+      <div class="actions" data-page-node-id="mB7WU9rUEZopBuz4HiPF8K">
+        <button class="icon-btn" style="background:rgba(0,0,0,.4); backdrop-filter:blur(8px);" data-page-node-id="GkxV4Jd2PEllntvNSTh0e1">♡</button>
+        <button class="icon-btn" style="background:rgba(0,0,0,.4); backdrop-filter:blur(8px);" data-page-node-id="Rje1QMam2d2rKoaTABauKR">↗</button>
+      </div>
+    </header>
+    <div class="view-body" data-page-node-id="u2dh9mJeyWCELH9vjKMV76">
+      <div class="detail-hero" id="detailHero" data-page-node-id="BaFJVY3veASIsVzmYuBDdT"></div>
+      <div class="detail-body" data-page-node-id="3uYLeGKgnUat0rVmPE58Bu">
+        <p class="intro" id="detailIntro" data-page-node-id="n8Cd1332LGFVGCdAk3ZGv9"></p>
+        <div class="stat-row" data-page-node-id="TxcPGgRMjzPl1WPkpxhTDv">
+          <div class="stat" data-page-node-id="QGcHKzOAQPTJ5fMzOljv4z"><b id="statRating" data-page-node-id="oZs7OBC4Wm1MO7DIMa4hSW">8.7</b><span data-page-node-id="Lw898oa4Io42Zp6o95grKg">玩家评分</span></div>
+          <div class="stat" data-page-node-id="tGzVhWD8B5vs9CkMleFb2L"><b id="statPlays" data-page-node-id="rdtJOKAO8ffRtT3QTVav3r">1.2 万</b><span data-page-node-id="3Y0vgqDIknEqdVqZqf8A6z">玩过人数</span></div>
+          <div class="stat" data-page-node-id="xC8HPkN6boRi5OfJD2U3jY"><b id="statWords" data-page-node-id="2HUJzEXoviXMVITBhiBO0t">3.8 万</b><span data-page-node-id="e0BWuExIaRoe42J25yqYzg">总字数</span></div>
+        </div>
+        <div class="chapter-list-title" data-page-node-id="VRLVCJ3kblODN76dFPJVGO">
+          <span data-page-node-id="p4Q46Rmr5APn2DUdQpbG8O">章节列表 · 共 <span id="chapterTotal" data-page-node-id="CbgyO0gDruTPrcbfmBzD1S">5</span> 章</span>
+          <small data-page-node-id="mN3KqTZaFzzMFemcxGXGPw">11 个结局</small>
+        </div>
+        <div class="chapter-list" id="chapterList" data-page-node-id="dMdPbocXeMl5iNg5OLCBxz"></div>
+        <div style="height: 80px" data-page-node-id="5CVKgCG4buEtyDgaLt91tT"></div>
+      </div>
+    </div>
+    <div class="detail-cta" data-page-node-id="EYypS0NEGKdbnClrHD62DB">
+      <button class="btn primary" onclick="startGame()" data-page-node-id="yuhGkcx6Ady4FKFaVb0S4H">▶ 开始游戏</button>
+      <button class="btn ghost" onclick="startGame(true)" data-page-node-id="za9UECH3oX7gWFCWzmH4B9">⌖ 沉浸模式（3D）</button>
+    </div>
+  </section>
+
+  <!-- ============ 视图 4：沉浸剧情游戏页 ============ -->
+  <section class="view game-view" id="view-game" data-page-node-id="tzxlZ4f7KOtVLQxeHmcZVJ">
+    <div class="game-stage" id="gameStage" data-page-node-id="uQESR6glA7DkSDVJUpXRCh">
+      <div class="game-scene" id="gameScene" data-page-node-id="SdpkokLCBpH8CyDZCvhAAq"></div>
+      <div class="game-character" id="gameChar" data-page-node-id="ntmctk1W2ulPxBu4FnYVwn"></div>
+      <div class="game-vignette" data-page-node-id="CIdbPWF7wFeYEOaec7A4xk"></div>
+      <div class="game-topbar" data-page-node-id="xv2xEAbRCZ3Tm7uBPkCEvv">
+        <button class="icon-btn" onclick="exitGame()" data-page-node-id="OtZ5VGxGlEFJfbYSjQdNUY">‹</button>
+        <div class="title" id="gameTitle" data-page-node-id="ISWMRBbTDHt6836c1LDbUu">西游记 · 雨夜凉亭</div>
+        <div class="actions" data-page-node-id="eVpVshQZBX883S9KiXqHrd">
+          <button class="icon-btn" onclick="saveGame()" data-page-node-id="7vJjN4JfKuZ18Rc0afmyE9">💾</button>
+          <button class="icon-btn" data-page-node-id="ZQ5dt4SZ5T2UtURciwLDdm">⚙</button>
+        </div>
+      </div>
+      <div class="game-chapter-tag" id="gameChapter" data-page-node-id="7jEabF8VSoxxKF1ODbPZBK">第 1 章 · 雨夜·重逢</div>
+      <div class="game-stats" id="gameStats" data-page-node-id="Jv47NCL9Slg1df5Ep1q9Yq"></div>
+      <div class="game-dialogue" id="gameDialogue" data-page-node-id="uJ27xFYOuDZ6l7RbBqZamR">
+        <div class="game-speaker" id="gameSpeaker" data-page-node-id="yBB0orOPalFU4t6tUGC0Mt">孙悟空</div>
+        <div class="game-bubble" data-page-node-id="vZb8BiBR5UxR8213b2AKa2">
+          <div class="text" id="gameText" data-page-node-id="YvClzTOL2QQ0wjnzicVqGU">加载中…</div>
+          <div class="game-options" id="gameOptions" data-page-node-id="AI8zDFXpxdphjnYRgyCdCR"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 视图 5：双生陪伴 ============ -->
+  <section class="view" id="view-companion" data-page-node-id="35Dn76D9eprVsk7O8X2sPo">
+    <header class="topbar" data-page-node-id="mHfZO79yqKwkr6UKC3fsiN">
+      <button class="back" onclick="goView('home')" data-page-node-id="3DdYcXj5HMJ2857pDxgj7G">‹</button>
+      <h1 data-page-node-id="ZwFjHTgbokZHvvOuQYp8us">双生陪伴</h1>
+      <div class="actions" data-page-node-id="fyCt5w2sUQKV73On8bAApz">
+        <button class="icon-btn" data-page-node-id="492rJSbpYSqXqAByOUVDsa">＋</button>
+      </div>
+    </header>
+    <div class="view-body" data-page-node-id="IUKU63CkWQlCvhCfxBgwm0">
+      <div class="mood-card" id="moodCard" data-page-node-id="kQ2bN8vLx9pTm4RdFhE7sW">
+        <div class="emo">🌅</div>
+        <div>
+          <h4 id="moodTitle">今日签到</h4>
+          <p id="moodText">连续签到可提升角色好感，今天 TA 们都在等你。</p>
+        </div>
+        <button class="checkin" id="checkinBtn" onclick="doCheckin()">签到 +5 好感</button>
+      </div>
+      <div class="section-title" data-page-node-id="qh86ofPKW2hk69H3B6T46E">
+        <span data-page-node-id="GFdbdy95d43uBpjSmgRqTr">我的角色 · 4 位在线</span>
+        <small data-page-node-id="r8HV5ZArxBR4MFE4DdsiRr">随时找 TA 聊聊</small>
+      </div>
+      <div class="companion-grid" id="companionGrid" data-page-node-id="rQTsr3bk7fmGMyNLNsgo7d"></div>
+      <div style="height: 24px" data-page-node-id="c7m9FJ3pBHixCAQCiB4z9v"></div>
+    </div>
+    <nav class="tabbar" data-page-node-id="yBCDEaqU8cPCpSzDyaQctd">
+      <div class="tab" onclick="goView('home')" data-page-node-id="0oCvRCR9QAYvCw5KayBQfu"><i data-page-node-id="GDjfzZA1Vz8nHFIiTWrpzC">🏠</i>主页</div>
+      <div class="tab active" data-page-node-id="rDGJnMRUmtCUoEoR25PhDA"><i data-page-node-id="ZpBkyspEVpIHTVxybeHodD">💞</i>陪伴</div>
+      <div class="tab" onclick="goView('novel-list')" data-page-node-id="k9iw1vNRa9vnuhZgMLXZlc"><i data-page-node-id="Ml2XmgmtjZU8SED2FAfJDn">📖</i>小说</div>
+      <div class="tab" onclick="goView('studio')" data-page-node-id="5YVzwRtVUzC0w1ohIH1xrW"><i data-page-node-id="UR4tqOB9Jx5Pztgo5rvyVJ">✍️</i>创作</div>
+    </nav>
+  </section>
+
+  <!-- ============ 视图 5b：角色聊天 ============ -->
+  <section class="view" id="view-chat">
+    <header class="topbar">
+      <button class="back" onclick="goView('companion')">‹</button>
+      <div class="chat-header-info" id="chatHeaderInfo"></div>
+    </header>
+    <div class="chat-body" id="chatBody"></div>
+    <div class="chat-input-bar">
+      <div class="quick-topics" id="quickTopics"></div>
+      <div class="chat-row">
+        <input id="chatInput" type="text" placeholder="说点什么…" onkeydown="if(event.key==='Enter')sendChat()" />
+        <button class="send" onclick="sendChat()">发送</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 视图 6：创作中心（占位） ============ -->
+  <section class="view" id="view-studio" data-page-node-id="yaT6EEY1KnLBmUOHzSE9E5">
+    <header class="topbar" data-page-node-id="RNGd1Uv5KhnaCBuKVQkEpf">
+      <button class="back" onclick="goView('home')" data-page-node-id="5hr62mJxT1ZigLu1uPjHtM">‹</button>
+      <h1 data-page-node-id="rjOJB95rWyKHitXYDqxG76">创作中心</h1>
+      <div class="actions" data-page-node-id="OT8RO0iv9fHVhGDO0K3eEY">
+        <button class="icon-btn" onclick="newWork()" data-page-node-id="JzAAvc5O73NLDOqcxtfsgW">＋</button>
+      </div>
+    </header>
+    <div class="view-body" data-page-node-id="SeOinCuR49fEadFQX1BWeE">
+      <div class="studio-actions">
+        <button class="primary" onclick="newWork()">✍️ 新建作品</button>
+        <button onclick="importJSON()">📥 导入 JSON</button>
+        <button onclick="exportAllJSON()">📤 导出全部</button>
+      </div>
+      <div class="section-title"><span>我的作品</span><small id="workCount">0 部</small></div>
+      <div id="workList"></div>
+      <p style="font-size:10px;color:var(--text3);line-height:1.6;margin-top:8px">
+        说明：内容人工创作 / 上传，发布后立即出现在「小说世界」。支持多节点剧情（对话 + 选项 + 分支 + 结局）。
+      </p>
+    </div>
+    <nav class="tabbar" data-page-node-id="9WiAaNldum5NdnTwMz00yT">
+      <div class="tab" onclick="goView('home')" data-page-node-id="tl4gnifH9tEGDhvYz6aF1b"><i data-page-node-id="l8RkbT3O7cZUFMKA0YoxQA">🏠</i>主页</div>
+      <div class="tab" onclick="goView('companion')" data-page-node-id="Di24QmMbd0lNAYdC4zF0ki"><i data-page-node-id="J0qvpQAP1tgvU7V14alyYl">💞</i>陪伴</div>
+      <div class="tab" onclick="goView('novel-list')" data-page-node-id="J94QJLDhNfCspgiE9w1jrN"><i data-page-node-id="Fw1XeVXJGXd8ut91Uzql0D">📖</i>小说</div>
+      <div class="tab active" data-page-node-id="gBdXQfCyEiTREMT8ehirCl"><i data-page-node-id="ggLoVHsVkRQS1xp4iaGHxs">✍️</i>创作</div>
+    </nav>
+  </section>
+
+  <!-- ============ 视图 6b：作品编辑器 ============ -->
+  <section class="view" id="view-editor">
+    <header class="topbar">
+      <button class="back" onclick="goView('studio')">‹</button>
+      <h1 id="editorTitle">新建作品</h1>
+      <div class="actions"><button class="icon-btn" onclick="previewWork()" title="试玩">▶</button></div>
+    </header>
+    <div class="view-body" id="editorBody"></div>
+  </section>
+
+  <!-- ============ 视图 7：发现 ============ -->
+  <section class="view" id="view-discover" data-page-node-id="oVLhUYnI2ScHqGjbWQprcH">
+    <header class="topbar" data-page-node-id="8BHMQPwuEJWvg0wOBRybMx">
+      <button class="back" onclick="goView('home')" data-page-node-id="FgKyYON4emXhqJkdRRgREr">‹</button>
+      <h1 data-page-node-id="3jHKDhF4hNGPTER2eOAxty">发现</h1>
+      <div class="actions" data-page-node-id="qaT0p0qufqRS3pS7deqHrh">
+        <button class="icon-btn" data-page-node-id="ZFyikFpq2LlMzdD3UP0nXC">⚙</button>
+      </div>
+    </header>
+    <div class="view-body" data-page-node-id="ED2IS8HLKdvNQB18R3XXqp">
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="🔍 搜作品名 / 作者…" oninput="renderSearchResults()" />
+      </div>
+      <div id="searchResults"></div>
+
+      <div class="section-title"><span>本周精选 · 公版名著季</span><small>全部免费可商用</small></div>
+      <div id="weeklyPicks"></div>
+
+      <div class="section-title" style="margin-top:18px"><span>排行榜</span></div>
+      <div class="seg-tabs">
+        <button class="active" id="rkTabRating" onclick="renderRank('rating')">按评分</button>
+        <button id="rkTabPlays" onclick="renderRank('plays')">按热度</button>
+      </div>
+      <div id="rankList"></div>
+
+      <div class="section-title" style="margin-top:18px"><span>题材快捷入口</span></div>
+      <div class="quick-topics" id="genreQuick"></div>
+
+      <div class="section-title" style="margin-top:18px"><span>我的成就</span><small id="achCount"></small></div>
+      <div class="ach-wall" id="achWall"></div>
+      <div style="height:30px"></div>
+    </div>
+  </section>
+
+  <div class="toast" id="toast" data-page-node-id="CsHuonKJ9yNaM16Mybd3uc"></div>
+</div>
+
+<script>
+// ============ 数据 ============
+const GENRES = [
+  // ===== 公版名著（可商用 · 内容已人工整理） =====
+  { slug: 'mingzhu', name: '名著', emoji: '📜', color: '#C9A45B',
+    desc: '公版可商用 · 西游记 / 三国演义 / 水浒传 / 红楼梦 / 聊斋 / 封神',
+    scene: '', portrait: '',
+    speaker: '公版原著', count: 6, publicDomain: true,
+    novels: [
+      { id: 'xyj', title: '西游记 · 三打白骨精', author: '吴承恩', rating: 9.2, plays: '2.3 万', words: '1.2 万', access: 'free', genre: '名著', chapters: 3,
+        emoji: '🐵', cover: 'linear-gradient(160deg,#B8860B,#8B5A2B 60%,#3E2723)',
+        chapterTitles: ['尸魔三戏','圣僧逐猴','白骨现形'],
+        intro: '山高必有怪，岭峻却生精。白骨夫人三次幻化：村姑、老妪、老翁——金箍棒起落之间，你可愿替大圣辩一句？\n\n原著第二十七回，改编互动版。' },
+      { id: 'sgyy', title: '三国演义 · 三顾茅庐', author: '罗贯中', rating: 9.4, plays: '1.8 万', words: '1.0 万', access: 'free', genre: '名著', chapters: 3,
+        emoji: '🪶', cover: 'linear-gradient(160deg,#4A6FA5,#2C3E6B 60%,#1A2440)',
+        chapterTitles: ['一顾不遇','雪夜再顾','隆中对'],
+        intro: '凡三往，乃见。新野到隆中，四十六里雪路。\n\n这一次，你替玄德叩门——卧龙先生睡醒之前，天下大势已在草庐之中。' },
+      { id: 'shz', title: '水浒传 · 风雪山神庙', author: '施耐庵', rating: 9.3, plays: '1.5 万', words: '0.9 万', access: 'free', genre: '名著', chapters: 3,
+        emoji: '🗡', cover: 'linear-gradient(160deg,#5D6D7E,#34495E 60%,#17202A)',
+        chapterTitles: ['草料场','山神庙','雪夜上梁山'],
+        intro: '那雪正下得紧。花枪挑着酒葫芦，草料场的火光映红了半边天。\n\n八十万禁军教头林冲，人生最后一步退路，就在这座山神庙里。' },
+      { id: 'hlm', title: '红楼梦 · 黛玉葬花', author: '曹雪芹', rating: 9.5, plays: '2.1 万', words: '1.1 万', access: 'free', genre: '名著', chapters: 3,
+        emoji: '🌸', cover: 'linear-gradient(160deg,#D4839B,#A0526D 60%,#5C2E3E)',
+        chapterTitles: ['沁芳闸','葬花吟','知己'],
+        intro: '花谢花飞飞满天，红消香断有谁怜？\n\n宝玉荷着花锄走过沁芳闸——那山坡上，有人正把落花收进绢袋，埋进香丘。' },
+      { id: 'lzzy', title: '聊斋志异 · 画皮', author: '蒲松龄', rating: 9.0, plays: '1.3 万', words: '0.8 万', access: 'free', genre: '名著', chapters: 3,
+        emoji: '🏮', cover: 'linear-gradient(160deg,#6B4E8E,#4A2C5E 60%,#241333)',
+        chapterTitles: ['遇美','窥皮','道士'],
+        intro: '愚哉世人！明明妖也，而以为美。\n\n清晨书斋外，那个提着画卷的女子——你开门，还是不开？' },
+      { id: 'fsyy', title: '封神演义 · 哪吒闹海', author: '许仲琳', rating: 8.9, plays: '1.1 万', words: '0.9 万', access: 'free', genre: '名著', chapters: 3,
+        emoji: '🔥', cover: 'linear-gradient(160deg,#D85B3B,#A03323 60%,#5C1A10)',
+        chapterTitles: ['东海洗澡','抽龙筋','割肉还母'],
+        intro: '吾一命换一命，不累双亲。\n\n七岁的哪吒脚踏乾坤圈搅动东海——龙宫震怒之时，你替他选：闯祸到底，还是舍身还债？' }
+    ]},
+  { slug: 'pavilion',  name: '古风',   emoji: '🏯', color: '#8E5BD8',
+    desc: '冷面剑客 · 西游记 · 雨夜凉亭',
+    scene: 'scenes/pavilion_night.png', portrait: 'portraits/lin_shuangwan.png',
+    speaker: '孙悟空', count: 8,
+    novels: [
+      { id: 'pavilion', title: '雨夜·拔剑', author: '灵境官方', rating: 8.7, plays: '1.2 万', words: '3.8 万', access: 'try', genre: '古风', intro: '凉亭外，雨声如织。她没有回头。你知道她的剑已经出鞘三寸。再近一步，她就会出剑。\n\n这是一个关于等待与选择的故事。你的每一步，都会改变结局。', chapters: 5 },
+      { id: 'pavilion-jian', title: '剑鸣三尺', author: '柳蝉', rating: 8.4, plays: '6.5 千', words: '2.6 万', access: 'free', genre: '古风', intro: '她等的是你，但你来得太晚。\n\n剑已出鞘，你还要不要转身？', chapters: 4 },
+      { id: 'pavilion-gu', title: '古刹暮钟', author: '清远', rating: 8.9, plays: '4.2 千', words: '4.1 万', access: 'paid', genre: '古风', intro: '暮钟三响，是归人还是过客？', chapters: 6 },
+      { id: 'pavilion-xia', title: '下山路', author: '灵境官方', rating: 8.6, plays: '3.8 千', words: '3.2 万', access: 'serial', genre: '古风', intro: '下山路上，你想起师父说过的话：剑要藏，不要露。', chapters: 5 }
+    ]},
+  { slug: 'classroom', name: '校园', emoji: '🎒', color: '#5BC5D8',
+    desc: '治愈日常 · 阳光走廊 · 物理卷子',
+    scene: 'scenes/classroom_sunny.png', portrait: 'portraits/bai_lusheng.png',
+    speaker: '白鹿笙', count: 12,
+    novels: [
+      { id: 'classroom', title: '同桌的你', author: '纸鸢文字', rating: 8.5, plays: '5.6 千', words: '1.8 万', access: 'free', genre: '校园', intro: '下午四点的走廊。阳光穿过玻璃洒在她身上。她转过头，看到你。\n"你怎么又站在这里发呆？"\n\n教室窗外的蝉鸣，比谁都记得我们。', chapters: 4 },
+      { id: 'classroom-lib', title: '图书馆的第七排', author: '听风', rating: 8.7, plays: '4.1 千', words: '2.2 万', access: 'free', genre: '校园', intro: '她总坐在第七排靠窗的位置。我总坐在她对面。', chapters: 5 },
+      { id: 'classroom-exam', title: '期末前夜', author: '白纸', rating: 8.3, plays: '3.2 千', words: '1.6 万', access: 'try', genre: '校园', intro: '考试前夜，我们都没有复习。', chapters: 3 }
+    ]},
+  { slug: 'neon', name: '赛博', emoji: '🌃', color: '#5BD8D8',
+    desc: '黑客少女 · 第二十三层 · 三秒跑',
+    scene: 'scenes/neon_street.png', portrait: 'portraits/shen_zhou.png',
+    speaker: '沈昼', count: 6,
+    novels: [
+      { id: 'neon', title: '霓虹玫瑰', author: '蓝鸟工作室', rating: 8.7, plays: '7.8 千', words: '4.1 万', access: 'complete', genre: '赛博', intro: '霓虹不夜城，每一条街道都是新的副本。\n\n霓虹从二十三层倾泻而下。她的手指在键盘上停了一下。', chapters: 5 },
+      { id: 'neon-23', title: '二十三层的秘密', author: '夜枭', rating: 9.0, plays: '5.4 千', words: '5.2 万', access: 'paid', genre: '赛博', intro: '二十三层以下，没有人活着回来过。', chapters: 6 },
+      { id: 'neon-glitch', title: '故障时间', author: '破晓', rating: 8.5, plays: '2.9 千', words: '2.8 万', access: 'free', genre: '赛博', intro: '她能从故障时间里带走什么？', chapters: 4 }
+    ]},
+  { slug: 'livingroom', name: '现代', emoji: '🏠', color: '#D8B45B',
+    desc: '兄长留灯 · 汤碗热着 · 等你回来',
+    scene: 'scenes/livingroom_warm.png', portrait: 'portraits/gu_yan.png',
+    speaker: '顾衍', count: 4,
+    novels: [
+      { id: 'livingroom', title: '深夜·留灯', author: '灵境官方', rating: 8.6, plays: '4.3 千', words: '1.9 万', access: 'free', genre: '现代', intro: '客厅的灯还亮着。他坐在沙发上等你，茶几上放着一碗你爱吃的汤。\n\n"回来了。"', chapters: 3 },
+      { id: 'livingroom-boss', title: '上司不在家', author: '季北', rating: 8.4, plays: '2.7 千', words: '1.5 万', access: 'try', genre: '现代', intro: '他把钥匙留在门口。三天前他就这样说过。', chapters: 3 }
+    ]},
+  { slug: 'xianxia', name: '仙侠', emoji: '☁️', color: '#8E5BD8',
+    desc: '仙山之巅 · 飞剑嗡鸣 · 五百年前',
+    scene: 'scenes/pavilion_night.png', portrait: 'portraits/lin_shuangwan.png',
+    speaker: '白洛', count: 5,
+    novels: [
+      { id: 'xianxia', title: '仙山·之巅', author: '云止', rating: 8.9, plays: '5.1 千', words: '3.5 万', access: 'free', genre: '仙侠', intro: '飞剑停在祭坛前。仙气缭绕，一白衣女子盘坐在石台之上。\n\n她睁开眼——瞳孔是淡金色的。\n"你来了。"', chapters: 4 },
+      { id: 'xianxia-sword', title: '剑心', author: '清风', rating: 9.1, plays: '4.8 千', words: '4.2 万', access: 'paid', genre: '仙侠', intro: '她把剑给你的时候说："我等了你五百年。"', chapters: 5 }
+    ]},
+  { slug: 'chuanyue', name: '穿越', emoji: '⚡', color: '#D85B8E',
+    desc: '现代灵魂 · 古代身体 · 历史分岔',
+    scene: 'scenes/pavilion_night.png', portrait: 'portraits/lin_shuangwan.png',
+    speaker: '——', count: 9,
+    novels: [
+      { id: 'chuanyue-1', title: '穿越成 NPC', author: '云起东方', rating: 8.6, plays: '6.7 千', words: '3.2 万', access: 'free', genre: '穿越', intro: '我转生成了最强 NPC，但我不想当主角，我只想种田。', chapters: 4 },
+      { id: 'chuanyue-2', title: '回到大唐', author: '听风', rating: 8.4, plays: '3.1 千', words: '2.7 万', access: 'try', genre: '穿越', intro: '贞观之治，我刚好赶上。', chapters: 5 }
+    ]},
+  { slug: 'xuanyi', name: '悬疑', emoji: '🔍', color: '#5B9CD8',
+    desc: '密室推理 · 十年心结 · 真相',
+    scene: 'scenes/neon_street.png', portrait: 'portraits/shen_zhou.png',
+    speaker: '——', count: 7,
+    novels: [
+      { id: 'xuanyi-1', title: '第七个访客', author: '无尘', rating: 9.4, plays: '4.2 千', words: '2.2 万', access: 'paid', genre: '悬疑', intro: '看似密室，却藏着十年心结。', chapters: 5 },
+      { id: 'xuanyi-2', title: '没有目击者', author: '夜枭', rating: 9.0, plays: '3.6 千', words: '3.1 万', access: 'paid', genre: '悬疑', intro: '当所有人都可能撒谎。', chapters: 6 }
+    ]},
+  { slug: 'qihuan', name: '奇幻', emoji: '🧙', color: '#B79BEA',
+    desc: '魔法学院 · 塔顶长灯 · 等人',
+    scene: 'scenes/classroom_sunny.png', portrait: 'portraits/bai_lusheng.png',
+    speaker: '——', count: 5,
+    novels: [
+      { id: 'qihuan-1', title: '魔法学院的夜班', author: '灵境官方', rating: 8.9, plays: '8.9 千', words: '2.8 万', access: 'try', genre: '奇幻', intro: '塔顶的灯永远不灭，因为总有人在等。', chapters: 5 }
+    ]},
+  { slug: 'kehuan', name: '科幻', emoji: '🚀', color: '#5BD88E',
+    desc: '星际远航 · 深海四万米 · 时间悖论',
+    scene: 'scenes/neon_street.png', portrait: 'portraits/shen_zhou.png',
+    speaker: '——', count: 4,
+    novels: [
+      { id: 'kehuan-1', title: '深海四万米', author: '潜渊', rating: 9.1, plays: '3.4 千', words: '3.0 万', access: 'paid', genre: '科幻', intro: '潜水器的舱门，从来不让回来的人拿到。', chapters: 5 }
+    ]}
+];
+
+// 简化剧情数据（5 主题材完整）
+const STORY = {
+  // ================= 公版名著 =================
+  xyj: {
+    title: '西游记 · 三打白骨精', speaker: '孙悟空',
+    chapter: '第二十七回 · 尸魔三戏唐三藏',
+    chapters: ['xj1','xj2a','xj2b','xj3a','xj3b','xj_end_expel','xj_end_truth'],
+    nodes: {
+      xj1: { speaker: '旁白', text: '却说三藏师徒行至白虎岭。山高必有怪，岭峻却生精。那山里有一个尸魔，唤作白骨夫人。\n\n唐僧腹中饥饿，行者去南山摘桃。忽然山坳里走来一个月貌花容的女子，提着青砂罐……',
+        options: [
+          { k:'A', label:'（大圣视角）火眼金睛一照——是妖精！举棒就打', effects:{conflict:+10}, next:'xj2a' },
+          { k:'B', label:'先隐在树上观察，看看她要做什么', effects:{trust:+5}, next:'xj2b' }
+        ]
+      },
+      xj2a: { speaker: '孙悟空', text: '"妖精！哪里走！"\n棒起处，那女子应声倒地——却是一具假尸，元神化烟遁走。罐子里滚出的，是长蛆的烂蛤蟆。\n\n唐僧大惊："你这泼猴！她送斋饭来，你怎的打死她！"',
+        options: [
+          { k:'A', label:'"师父，她是妖精变的！你看这罐里都是蛆！"', effects:{trust:+6}, next:'xj3a' },
+          { k:'B', label:'低头不辩，只把桃捧给师父', effects:{intimacy:+4,trust:+2}, next:'xj3b' }
+        ]
+      },
+      xj2b: { speaker: '白骨夫人', text: '（你在树上看得真切）那"女子"行至近前，眼中闪过一道阴光——她指尖悄悄变了形状。\n\n唐僧浑然不觉，正要接罐……',
+        options: [
+          { k:'A', label:'大喝一声，跳下来一棒打杀', effects:{conflict:+15}, next:'xj2a' },
+          { k:'B', label:'落下尘土迷她双眼，先护师父走', effects:{trust:+8,intimacy:+2}, next:'xj3b' }
+        ]
+      },
+      xj3a: { speaker: '唐僧', text: '"你这猴子，倒会巧辩！"\n唐僧念起紧箍咒。行者抱头翻滚："师父莫念！莫念！有话好说！"\n此时八戒在旁煽风："师兄使了障眼法哩。"\n\n白骨夫人不甘心，又变成八十岁的老妇人，哭着来寻女儿……',
+        options: [
+          { k:'A', label:'再打！纵使被逐，也不能让妖精害了师父', effects:{trust:+10,conflict:+10}, next:'xj_end_expel' },
+          { k:'B', label:'唤来本方土地山神作证，当面对质', effects:{trust:+12}, next:'xj_end_truth' }
+        ]
+      },
+      xj3b: { speaker: '孙悟空', text: '你护着师父退到山神庙。桃子虽甜，唐僧脸色却越来越沉。\n"悟空，你连伤两命，为师如何容你。"\n\n行者跪下："师父，这岭里当真有妖精。"',
+        options: [
+          { k:'A', label:'请师父暂留庙中，去南海请观音来验', effects:{trust:+10}, next:'xj_end_truth' },
+          { k:'B', label:'"师父若不信，老孙这便走！只是妖精再来时，无人救你！"', effects:{conflict:+20}, next:'xj_end_expel' }
+        ]
+      },
+      xj_end_expel: { speaker: '旁白', text: '白骨夫人第三次化作老翁寻来，被你一棒打杀——脊梁上现出"白骨夫人"四字。\n可惜迟了。唐僧写下贬书："执此为照，再不要你做徒弟了！"\n\n行者望师父拜了四拜，驾筋斗云回了花果山。\n——结局「拜别师父」· 你守住了师父，却失了名分。', end:true, endingName:'拜别师父', rarity:'EPIC' },
+      xj_end_truth: { speaker: '观音', text: '菩萨踏莲而至，杨柳枝一拂——白骨夫人的残魂在半空现形，化作一缕青烟消散。\n\n唐僧长叹："悟空，为师错怪你了。"\n行者咧嘴一笑，搀起师父："走罢，西天还远着哩。"\n——结局「真相大白」· 师徒同心，其利断金。', end:true, endingName:'真相大白', rarity:'LEGENDARY' }
+    }
+  },
+  sgyy: {
+    title: '三国演义 · 三顾茅庐', speaker: '刘备',
+    chapter: '第三十八回 · 定三分隆中决策',
+    chapters: ['sg1','sg2a','sg2b','sg3a','sg3b','sg_end'],
+    nodes: {
+      sg1: { speaker: '旁白', text: '建安十二年冬。玄德同关、张再访隆中。时值严寒，彤云密布，朔风凛凛，瑞雪霏霏。\n\n行不数里，忽然蹿出一人，歌曰："凤翱翔于千仞兮，非梧不栖……"',
+        options: [
+          { k:'A', label:'（玄德视角）下马施礼："先生可是卧龙？"', effects:{trust:+3}, next:'sg2a' },
+          { k:'B', label:'静立雪中听他唱完', effects:{intimacy:+3}, next:'sg2b' }
+        ]
+      },
+      sg2a: { speaker: '崔州平', text: '那人大笑："吾非卧龙，吾乃卧龙之友崔州平。将军欲见孔明，便是要他出山救世乱乎？"\n\n"治乱有数，不可强求。将军何苦汲汲于此？"',
+        options: [
+          { k:'A', label:'"备不才，愿闻治国之道。"', effects:{trust:+5}, next:'sg2b' },
+          { k:'B', label:'拱手谢教，冒雪再行', effects:{intimacy:+2}, next:'sg2b' }
+        ]
+      },
+      sg2b: { speaker: '童子', text: '数日后三顾。到庄前叩门，童子出应："先生今日虽在家，但昼寝未醒。"\n\n玄德吩咐关张门外等候，自己拱立于阶下。\n一个时辰过去了……张飞在门外已按捺不住。',
+        options: [
+          { k:'A', label:'继续侍立，等先生自醒', effects:{trust:+10}, next:'sg3a' },
+          { k:'B', label:'唤童子通报："汉左将军宜城亭侯领豫州牧皇叔刘备特来拜见。"', effects:{trust:+2}, next:'sg3b' }
+        ]
+      },
+      sg3a: { speaker: '诸葛亮', text: '孔明翻身将起——忽又朝里睡着。童子欲报，玄德曰："勿惊动。"\n又立一个时辰，孔明才悠悠醒转，吟曰："大梦谁先觉？平生我自知。草堂春睡足，窗外日迟迟。"\n\n"将军既来，亮已等候多时。"',
+        options: [
+          { k:'A', label:'屏退左右，请教天下大计', effects:{trust:+12}, next:'sg_end' }
+        ]
+      },
+      sg3b: { speaker: '诸葛亮', text: '童子入内通报，孔明笑吟吟整衣冠出迎："将军何不直呼刘备？头衔太长，亮记不住。"\n\n玄德愕然，随即大笑——雪还没停，草庐里已燃起炉火。',
+        options: [
+          { k:'A', label:'促膝而谈，请教天下大计', effects:{trust:+8,intimacy:+4}, next:'sg_end' }
+        ]
+      },
+      sg_end: { speaker: '诸葛亮', text: '孔明命童子取出画一轴，挂于中堂："将军欲成霸业，北让曹操占天时，南让孙权占地利，将军可占人和。先取荆州为家，后取西川建基业，以成鼎足之势。"\n\n玄德闻言，避席拱手谢："先生之言，顿开茅塞！"\n——结局「隆中对」· 未出茅庐，已知三分天下。', end:true, endingName:'隆中对', rarity:'LEGENDARY' }
+    }
+  },
+  shz: {
+    title: '水浒传 · 风雪山神庙', speaker: '林冲',
+    chapter: '第十回 · 林教头风雪山神庙',
+    chapters: ['sh1','sh2a','sh2b','sh3','sh_end'],
+    nodes: {
+      sh1: { speaker: '旁白', text: '林冲自来天王堂看守草料场。正是严冬天气，彤云密布，朔风渐起，却早纷纷扬扬卷下一天大雪来。\n\n（林教头视角）你揣了钥匙，把花枪挑了酒葫芦，锁了大门，信步投东。雪地里踏着碎琼乱玉，迤逦背着北风而行——那雪正下得紧。',
+        options: [
+          { k:'A', label:'去市井沽酒御寒，顺便买些牛肉', effects:{trust:+3}, next:'sh2a' },
+          { k:'B', label:'先回草厅检查火盆，防火要紧', effects:{trust:+5}, next:'sh2b' }
+        ]
+      },
+      sh2a: { speaker: '旁白', text: '你沽了酒，买了牛肉。回来时，两间草厅已被大雪压倒了。\n\n"火盆内火种都被雪水浸灭了。" 你想：这条命，是捡回来的。\n离草场半里路有一古庙，你推开庙门，把枪掩了，掩上门，掇一块大石头靠了门。取出葫芦冷酒，就着牛肉吃。',
+        options: [
+          { k:'A', label:'吃饱后靠墙休息，听雪落之声', effects:{intimacy:+2}, next:'sh3' }
+        ]
+      },
+      sh2b: { speaker: '旁白', text: '你回去时，草厅已被大雪压倒。幸而你先查了火盆——不然这场火，便是天灾人祸说不清了。\n\n你投东寻宿，来至山神庙。推门入内，掩上门，掇一块大石头靠了。风雪愈紧。',
+        options: [
+          { k:'A', label:'和衣而坐，半睡半醒听风雪', effects:{intimacy:+3}, next:'sh3' }
+        ]
+      },
+      sh3: { speaker: '旁白', text: '只听得外面必必剥剥地爆响。你从壁缝里张时——草料场内火起，刮刮杂杂地烧着。\n\n正欲开门救火，只听得门外有三个人脚步响，直奔庙前来。用手推门——被你靠的那块大石头推不开。三人在庙檐下立地看火。\n一个道："这条计好么？" 另一个道："张教头那厮，三回五次托人情去说……高衙内这病便好了！"\n——说话的正是陆谦！',
+        options: [
+          { k:'A', label:'轻轻把石头挪开，挺着花枪，拽开庙门，大喝一声！', effects:{conflict:+30,trust:+8}, next:'sh_end' }
+        ]
+      },
+      sh_end: { speaker: '林冲', text: '"泼贼那里去！"\n你举手肐察的一枪，先搠倒差拨。陆谦叫饶命，你道："杀人可恕，情理难容！" 剜心提首，雪地里三具尸首。\n\n你把葫芦里冷酒都吃尽了，提了枪，便出庙门投东去。\n雪地里，一行脚印，直到梁山泊。\n——结局「雪夜上梁山」· 逼上梁山，再无归路。', end:true, endingName:'雪夜上梁山', rarity:'LEGENDARY' }
+    }
+  },
+  hlm: {
+    title: '红楼梦 · 黛玉葬花', speaker: '贾宝玉',
+    chapter: '第二十八回 · 葬花吟',
+    chapters: ['hl1','hl2a','hl2b','hl3','hl_end'],
+    nodes: {
+      hl1: { speaker: '旁白', text: '那一日，正是三月中浣。宝玉携了一套《会真记》，走到沁芳闸桥边桃花底下一块石上坐着。展开《会真记》，从头细玩。\n\n正看到"落红成阵"，只见一阵风过，把树头上桃花吹下一大半来，落的满身满书满地皆是。\n（宝玉视角）你兜了那花瓣，抖在池内。',
+        options: [
+          { k:'A', label:'身后有人叫："你在这里做什么？"——回头', effects:{trust:+3}, next:'hl2a' },
+          { k:'B', label:'先把书里的花瓣都抖进流水', effects:{intimacy:+2}, next:'hl2b' }
+        ]
+      },
+      hl2a: { speaker: '林黛玉', text: '回头却见黛玉来了，肩上担着花锄，锄上挂着花囊，手内拿着花帚。\n\n宝玉笑道："来的正好，你把这些花瓣扫起来，撂在那水里去罢。"\n黛玉道："撂在水里不好。你看这里的水干净，只一流出去，有人家的地方脏的臭的混倒，仍旧把花糟蹋了。那畸角上我有一个花冢，如今把他扫了，装在这绢袋里，拿土埋上，日久不过随土化了，岂不干净。"',
+        options: [
+          { k:'A', label:'"待我放下书，帮你来收拾。"', effects:{intimacy:+6,trust:+3}, next:'hl3' },
+          { k:'B', label:'把《会真记》递给她："妹妹，你看这书。"', effects:{intimacy:+4}, next:'hl3' }
+        ]
+      },
+      hl2b: { speaker: '林黛玉', text: '你正抖着花瓣，忽听身后叹道："花落在水里，流出这园子就脏了。"\n黛玉担着花锄立在坡下："我在那畸角上做了一个花冢，扫了装在绢袋里，埋进土里，随土化了，才干净。"',
+        options: [
+          { k:'A', label:'放下书，接她的花帚', effects:{intimacy:+6}, next:'hl3' }
+        ]
+      },
+      hl3: { speaker: '林黛玉', text: '二人埋完花，黛玉忽然倚着花锄，呜咽一声，念出一段——\n"花谢花飞飞满天，红消香断有谁怜？"\n"侬今葬花人笑痴，他年葬侬知是谁？"\n"试看春残花渐落，便是红颜老死时。一朝春尽红颜老，花落人亡两不知！"\n\n宝玉听到"花落人亡两不知"一句，恸倒在山坡之上，怀里的落花撒了一地。',
+        options: [
+          { k:'A', label:'"妹妹，你说的「他年葬侬知是谁」——是我。是我知道了，也会痛。"', effects:{intimacy:+10,trust:+8}, next:'hl_end' },
+          { k:'B', label:'沉默地拾起地上的落花，一瓣一瓣埋进花冢', effects:{intimacy:+6,trust:+4}, next:'hl_end' }
+        ]
+      },
+      hl_end: { speaker: '林黛玉', text: '黛玉听了，怔怔地看着你，眼圈一红，却笑了："你这个人，偏偏会说出这种话来。"\n\n她把绢袋里最后一捧花，轻轻倒进花冢。\n"罢了。花开易见落难寻——今日有人陪我葬花，也算这花有福气。"\n——结局「知己」· 万两黄金容易得，知心一个也难求。', end:true, endingName:'知己', rarity:'LEGENDARY' }
+    }
+  },
+  lzzy: {
+    title: '聊斋志异 · 画皮', speaker: '王生',
+    chapter: '卷一 · 画皮',
+    chapters: ['lz1','lz2a','lz2b','lz3','lz_end_dao','lz_end_doom'],
+    nodes: {
+      lz1: { speaker: '旁白', text: '太原王生，早行，遇一女子，抱袱独奔，甚艰于步。\n\n（王生视角）你急走趁之，乃二八姝丽。女曰："在路贪行，忘携妆具，家中昼夜悬念。"\n生视其容，心好之。问："何不夜行？"\n女曰："日暮迷途，遇好心人留宿，反遭其辱。若肯容我，拜为义母也可。"\n\n天色已晚，前面就是你的书斋……',
+        options: [
+          { k:'A', label:'"小生书斋就在前面，姑娘可暂避一晚。"', effects:{intimacy:+5}, next:'lz2a' },
+          { k:'B', label:'"孤男寡女，恐有不便。"婉拒，各自赶路', effects:{trust:+6}, next:'lz2b' }
+        ]
+      },
+      lz2a: { speaker: '旁白', text: '女子随你入斋。过了二日，市人遇之，惊问："君何所遇？面色血气全无。"\n\n你不以为意。一日早起入市，遇一道士。道士视你而惊："君身邪气萦绕，何也？"\n"我无病。" 你答。\n道士叹："惑矣！世固有死将临而不悟者！"',
+        options: [
+          { k:'A', label:'心疑，回家后蹑足窗前窥之', effects:{trust:+8}, next:'lz3' },
+          { k:'B', label:'"妖言惑众！"拂袖而去', effects:{conflict:+10}, next:'lz_end_doom' }
+        ]
+      },
+      lz2b: { speaker: '旁白', text: '你婉拒了女子。她眼波流转，忽而一笑："书生倒是守礼。"\n\n她转身走进夜色。你到书斋安歇，一夜无事。\n次日清晨，书斋门外放着一个包袱——里面是一幅画卷，画上空无一人，唯有一角朱砂题字："还君明珠。"',
+        options: [
+          { k:'A', label:'烧掉画卷，从此不走那条早路', effects:{trust:+5}, next:'lz_end_dao' },
+          { k:'B', label:'收藏画卷，每日端详', effects:{intimacy:+8}, next:'lz3' }
+        ]
+      },
+      lz3: { speaker: '旁白', text: '你蹑足而归，推门不得入——门内闩了。逾垛而入，则室门亦闭。\n\n悄立窗前窥之：见一狞鬼，面翠色，齿巉巉如锯。铺人皮于榻上，执彩笔而绘之——绘毕，抖擞披在身上，遂化为女子！\n\n你大骇，兽伏而出。急寻道士……',
+        options: [
+          { k:'A', label:'长跪求救："道长救命！"', effects:{trust:+10}, next:'lz_end_dao' },
+          { k:'B', label:'返身回斋，欲亲眼戳穿她', effects:{conflict:+25}, next:'lz_end_doom' }
+        ]
+      },
+      lz_end_dao: { speaker: '道士', text: '道士叹："此物亦良苦，甫能觅代者，予亦不忍伤其生。" 乃授你一拂尘："挂在寝门。"\n\n夜半，那女子来，见拂尘不敢进，咬牙切齿而去。翌日道士寻至，以木剑枭其首，卷人皮收入葫芦。\n——结局「拂尘镇邪」· 愚哉世人，明明妖也而以为美；迷哉愚人，明明忠也而以为妄。', end:true, endingName:'拂尘镇邪', rarity:'EPIC' },
+      lz_end_doom: { speaker: '旁白', text: '你回到斋中。女子——不，是那披着人皮的狞鬼——正在灯下描眉。\n她从镜中看见你，笑了："你看见了。"\n\n翠面獠牙撕开人皮……天明后，道士赶到时，只找到一颗被挖去的心。\n——结局「剖腹掬心」· 爱人之色而渔之，妻亦怒而尸之。', end:true, endingName:'剖腹掬心', rarity:'COMMON' }
+    }
+  },
+  fsyy: {
+    title: '封神演义 · 哪吒闹海', speaker: '哪吒',
+    chapter: '第十二回 · 陈塘关哪吒出世',
+    chapters: ['fs1','fs2a','fs2b','fs3','fs_end'],
+    nodes: {
+      fs1: { speaker: '旁白', text: '哪吒年方七岁，身长六尺。时逢五月，天气炎热。哪吒见关外绿柳荫中，河光潋滟，便解了七尺混天绫，脱了衣裳，坐在石上，把七尺混天绫放在水里蘸水洗澡。\n\n不知这河是九湾河，乃东海口上。混天绫一搅，把水晶宫都映得红了。\n（哪吒视角）巡海夜叉出来喝骂："那孩子将甚么作怪，把宫殿映红！"',
+        options: [
+          { k:'A', label:'"我在此洗澡，碍你何事？"不惧', effects:{conflict:+10}, next:'fs2a' },
+          { k:'B', label:'收了混天绫："此宝乃乾元山镇金光洞之物，你的龙宫怎经得起它。"', effects:{trust:+3}, next:'fs2b' }
+        ]
+      },
+      fs2a: { speaker: '旁白', text: '夜叉举斧劈来。你闪身躲过，把乾坤圈望空一举——夜叉脑浆迸流，倒在水中。\n\n龙王三太子敖丙驾逼水兽赶来："泼贼！打死我家夜叉，还敢在此撒野！"',
+        options: [
+          { k:'A', label:'上前一步："是我打的，你要怎样？"', effects:{conflict:+20}, next:'fs3' },
+          { k:'B', label:'"是他先动手。" 护住混天绫严阵以待', effects:{trust:+5}, next:'fs3' }
+        ]
+      },
+      fs2b: { speaker: '敖丙', text: '三太子敖丙驾逼水兽而出，听了你的话，冷笑："乾元山金光洞？太乙真人的弟子？"\n\n"纵然是金光洞之宝，打死我家夜叉，也须偿命！"\n说罢举画戟便刺。',
+        options: [
+          { k:'A', label:'以乾坤圈架住："要打便打！"', effects:{conflict:+15}, next:'fs3' },
+          { k:'B', label:'退上岸去："我随你去见龙王分说。"', effects:{trust:+8}, next:'fs3' }
+        ]
+      },
+      fs3: { speaker: '旁白', text: '战不数合，乾坤圈打出——敖丙现出原形，是一条龙。你把他的筋抽了，做了条龙筋绦，要给父亲束甲。\n\n东海龙王大怒，水淹陈塘关，上奏天庭。李靖跪在城头："逆子！你闯下的祸，连累满城百姓！"\n四海龙王齐聚陈塘关上空，乌云压城。',
+        options: [
+          { k:'A', label:'（哪吒挺身）"一人做事一人当！我割肉还母，剔骨还父，不累双亲！"', effects:{trust:+15}, next:'fs_end' },
+          { k:'B', label:'"父亲，儿有乾坤圈混天绫，怕他何来！再战！"', effects:{conflict:+25}, next:'fs_end' }
+        ]
+      },
+      fs_end: { speaker: '哪吒', text: '哪吒右手提剑，先去一臂膊，后自剖腹、剜肠、剔骨肉，还于父母。\n"爹爹！母亲！孩儿今日还了骨肉，不累你们了！"\n魂魄无依，飘飘荡荡往乾元山来。\n太乙真人以荷叶莲花塑其身——"哪吒，从今往后，你不再是肉身，是莲花化身。"\n——结局「莲花化身」· 我命由我不由天。', end:true, endingName:'莲花化身', rarity:'LEGENDARY' }
+    }
+  },
+  pavilion: {
+    title: '西游记 · 雨夜凉亭', speaker: '孙悟空',
+    chapter: '第 1 章 · 雨夜·重逢',
+    chapters: ['p1','p2a','p2b','p2c','p_end'],
+    nodes: {
+      p1: { speaker: '孙悟空', text: '凉亭外，雨声如织。她没有回头。\n你知道她的剑已经出鞘三寸。再近一步，她就会出剑。',
+        options: [
+          { k:'A', label:'拔剑相对', effects:{trust:-10,conflict:+25}, next:'p2a' },
+          { k:'B', label:'缓缓退后', effects:{trust:+6,intimacy:+2}, next:'p2b' },
+          { k:'C', label:'开口说话："是我。"', effects:{trust:+3,intimacy:+4}, next:'p2c' }
+        ]
+      },
+      p2a: { speaker: '孙悟空', text: '剑光如雪。她的眼里没有任何感情。\n"你终于来了。"\n她的剑停在你的咽喉前。',
+        options: [
+          { k:'A', label:'反击', effects:{conflict:+30}, next:'p_end' },
+          { k:'B', label:'放下剑', effects:{trust:+8,conflict:-5}, next:'p2b' }
+        ]
+      },
+      p2b: { speaker: '孙悟空', text: '你退了三步。她的剑依然没有入鞘。\n但她转过身，第一次正眼看你。\n"……是你。"',
+        options: [{ k:'A', label:'靠近', effects:{intimacy:+5,trust:+3}, next:'p2c' }]
+      },
+      p2c: { speaker: '孙悟空', text: '雨声小了。她把剑收回腰间。\n"三更了。" 她说，"你为什么会在这里。"',
+        options: [
+          { k:'A', label:'实话实说', effects:{trust:+6,intimacy:+4}, next:'p_end' },
+          { k:'B', label:'岔开话题', effects:{intimacy:-1}, next:'p_end' }
+        ]
+      },
+      p_end: { speaker: '孙悟空', text: '她沉默了一会儿。灯火映在她脸上，你看不清她的表情。\n"回去吧。" 她说，"下次再来，我请你喝酒。"', end:true }
+    }
+  },
+  classroom: {
+    title: '校园 · 走廊 · 下午四点', speaker: '白鹿笙',
+    chapter: '第 2 章 · 午后·走廊',
+    chapters: ['c1','c2a','c2b','c2c','c_end'],
+    nodes: {
+      c1: { speaker: '白鹿笙', text: '下午四点的走廊。阳光穿过玻璃洒在她身上。\n她转过头，看到你。\n"你怎么又站在这里发呆？"',
+        options: [
+          { k:'A', label:'"看你啊。"', effects:{intimacy:+8,trust:-2}, next:'c2a' },
+          { k:'B', label:'"作业不会。"', effects:{trust:+3}, next:'c2b' },
+          { k:'C', label:'转身走', effects:{intimacy:-2}, next:'c2c' }
+        ]
+      },
+      c2a: { speaker: '白鹿笙', text: '她的耳根红了一瞬。\n"胡说。" 她把书抱得更紧，"……物理卷子还欠我一份。"',
+        options: [{ k:'A', label:'答应', effects:{intimacy:+4,trust:+2}, next:'c_end' }]
+      },
+      c2b: { speaker: '白鹿笙', text: '她把本子拍到你面前。\n"哪一题？"',
+        options: [{ k:'A', label:'坐到她旁边', effects:{intimacy:+3}, next:'c_end' }]
+      },
+      c2c: { speaker: '白鹿笙', text: '"喂！" 她在身后喊你，"卷子还没给我啊。"', end:true },
+      c_end: { speaker: '白鹿笙', text: '窗外的风把她的刘海吹起来。她笑了一下，眼睛弯弯的。\n"明天还不会的话，再来找我。"', end:true }
+    }
+  },
+  neon: {
+    title: '霓虹城 · 第二十三层', speaker: '沈昼',
+    chapter: '第 3 章 · 二十三层',
+    chapters: ['n1','n_end_run','n_end_fight','n_end_close','n_end'],
+    nodes: {
+      n1: { speaker: '沈昼', text: '霓虹从二十三层倾泻而下。她的手指在键盘上停了一下。\n你看到屏幕上的红色警告。\n\n"他们来了。"',
+        options: [
+          { k:'A', label:'"跑还是打？"', effects:{trust:+5}, next:'n_end' },
+          { k:'B', label:'拔出武器', effects:{conflict:+20}, next:'n_end' },
+          { k:'C', label:'走到她身边', effects:{intimacy:+3}, next:'n_end' }
+        ]
+      },
+      n_end: { speaker: '沈昼', text: '她笑了一下。"挺硬。"\n她没躲到你身后。她拉住你的手。\n\n"三秒之内。" 她说。', end:true }
+    }
+  },
+  livingroom: {
+    title: '公寓 · 客厅 · 深夜', speaker: '顾衍',
+    chapter: '第 4 章 · 深夜·留灯',
+    chapters: ['l1','l2a','l2b','l_end'],
+    nodes: {
+      l1: { speaker: '顾衍', text: '客厅的灯还亮着。他坐在沙发上等你，茶几上放着一碗你爱吃的汤。\n\n"回来了。"',
+        options: [
+          { k:'A', label:'"你还没睡。"', effects:{intimacy:+4}, next:'l_end' },
+          { k:'B', label:'不说话，坐下', effects:{trust:+3}, next:'l_end' }
+        ]
+      },
+      l_end: { speaker: '顾衍', text: '"等你回来才能睡。" 他把汤推到你面前。\n他的肩膀松了下来。', end:true }
+    }
+  },
+  xianxia: {
+    title: '仙山之巅 · 修真界', speaker: '白洛',
+    chapter: '第 5 章 · 仙山·之巅',
+    chapters: ['x1','x2a','x2b','x2c','x_end'],
+    nodes: {
+      x1: { speaker: '白洛', text: '飞剑停在祭坛前。仙气缭绕，一白衣女子盘坐在石台之上。\n\n她睁开眼——瞳孔是淡金色的。\n"你来了。"',
+        options: [
+          { k:'A', label:'"师父。"', effects:{trust:+8}, next:'x_end' },
+          { k:'B', label:'"晚辈有要事相求。"', effects:{trust:+4,intimacy:+2}, next:'x_end' },
+          { k:'C', label:'默默行礼', effects:{intimacy:+3}, next:'x_end' }
+        ]
+      },
+      x_end: { speaker: '白洛', text: '"五百年了。" 她站起身，飞剑在她身边嗡鸣。\n"你终于来了。"\n她向你伸出手。', end:true }
+    }
+  }
+};
+
+const NPC_DIAL = {
+  pavilion: { name: '柳蝉', emoji: '🌸', text: '师姐在三更前就到了。她把伞递给我，自己走了进去。', opts: [
+    { label: '她经常来？', aff: +2, reply: '她每隔几日就会来一次。每次都坐到雨停。' },
+    { label: '她在等谁？', aff: +4, reply: '等你。我见过她看信的样子——你写给她的。' },
+    { label: '我们走吧。', aff: -2, reply: '……好。' }
+  ]},
+  classroom: { name: '苏晚', emoji: '☕', text: '白鹿笙每天下午四点都会来这条走廊晒太阳。今天她带了卷子。', opts: [
+    { label: '她在看什么？', aff: +3, reply: '看你来没来。她自己没意识到。' },
+    { label: '帮我照顾她。', aff: +5, reply: '本来就会。但你说出来……她会更开心。' },
+    { label: '我只是路过。', aff: -3, reply: '那你去吧。她会等的。' }
+  ]},
+  neon: { name: '柒', emoji: '🔧', text: '沈昼从七十二小时前就没睡过。她在跑一段 23 层的权限链。', opts: [
+    { label: '她为什么不睡？', aff: +4, reply: '有人说——二十三层的最深处有一份名单。她在找名字。' },
+    { label: '我去帮忙。', aff: +6, reply: '她不会要你帮。但你可以进去。' },
+    { label: '这太危险了。', aff: -2, reply: '她从来不听这句话。' }
+  ]},
+  livingroom: { name: '季北', emoji: '📎', text: '顾衍已经三天没回公司了。他把你家的钥匙放在我这里。', opts: [
+    { label: '他为什么不来？', aff: +3, reply: '他在等你。他不肯先开口。' },
+    { label: '我自己去找他。', aff: +5, reply: '他在你家。灯一直亮着。' },
+    { label: '我还没准备好。', aff: -1, reply: '……那我把钥匙放着。' }
+  ]},
+  xianxia: { name: '云止', emoji: '☁️', text: '师父五百年没下山了。她在等一个人。我以为是天命之子。', opts: [
+    { label: '她等的是谁？', aff: +4, reply: '她没告诉我。但她梦里念过你的名字。' },
+    { label: '我会好好待她。', aff: +6, reply: '……好。我信你。' },
+    { label: '我只是路过。', aff: -3, reply: '那你不要进去。她会认错人。' }
+  ]}
+};
+
+const COMPANIONS = [
+  { id: 'lin', name: '孙悟空', role: '古风 · 冷面剑客', mood: '"三更了。你为什么会在这里。"', status: '在线', portrait: 'portraits/lin_shuangwan.png', aff: 64 },
+  { id: 'bai', name: '白鹿笙', role: '校园 · 治愈日常', mood: '"卷子还欠我一份呢。"', status: '在线', portrait: 'portraits/bai_lusheng.png', aff: 72 },
+  { id: 'shen', name: '沈昼', role: '赛博 · 黑客少女', mood: '"三秒之内。"', status: '在线', portrait: 'portraits/shen_zhou.png', aff: 48 },
+  { id: 'gu', name: '顾衍', role: '现代 · 兄长', mood: '"等你回来才能睡。"', status: '在线', portrait: 'portraits/gu_yan.png', aff: 85 }
+];
+
+// ============ 状态 ============
+let currentGenre = 'all';
+let currentNovel = null;
+let currentChat = null;
+let gameState = { intimacy: 0, trust: 0, conflict: 0, currentNode: null, ended: false, npcRel: {} };
+let immersive3D = false;
+
+// ============ 视图切换 ============
+function goView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const target = document.getElementById('view-' + id);
+  if (target) target.classList.add('active');
+  // 滚动复位
+  const body = target.querySelector('.view-body');
+  if (body) body.scrollTop = 0;
+  // tab 高亮（home/novel-list/companion/studio）
+  document.querySelectorAll('.tabbar').forEach(tb => {
+    const map = { home: 0, companion: 1, 'novel-list': 2, studio: 3 };
+    const idx = map[id];
+    if (idx !== undefined) {
+      tb.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+    }
+  });
+}
+
+// ============ 小说世界：题材 + 卡片 ============
+function getPublishedUserNovels() {
+  return getWorks().filter(w => w.published).map(userWorkToNovel);
+}
+
+function renderGenreTabs() {
+  const wrap = document.getElementById('genreTabs');
+  const myNovels = getPublishedUserNovels();
+  const allCount = GENRES.reduce((s, g) => s + g.novels.length, 0) + myNovels.length;
+  let html = `<button class="genre-tab ${currentGenre === 'all' ? 'active' : ''}" onclick="selectGenre('all')">全部<span class="count">${allCount}</span></button>`;
+  if (myNovels.length) {
+    html += `<button class="genre-tab ${currentGenre === 'mine' ? 'active' : ''}" style="border-color:#6BD88E40" onclick="selectGenre('mine')">✍️ 我的创作<span class="count">${myNovels.length}</span></button>`;
+  }
+  GENRES.forEach(g => {
+    html += `<button class="genre-tab ${currentGenre === g.slug ? 'active' : ''}" style="${currentGenre === g.slug ? '' : 'border-color: ' + g.color + '30'}" onclick="selectGenre('${g.slug}')">${g.emoji} ${g.name}<span class="count">${g.novels.length}</span></button>`;
+  });
+  wrap.innerHTML = html;
+}
+
+function renderGenreBanner() {
+  const banner = document.getElementById('genreBanner');
+  if (currentGenre === 'all') {
+    banner.style.background = 'linear-gradient(135deg, rgba(142,91,216,.18), rgba(91,197,216,.10))';
+    banner.innerHTML = `<div class="emoji">✨</div><div class="info"><h3>公版名著 + 22 题材</h3><p>西游记 / 三国 / 水浒 / 红楼 / 聊斋 / 封神已上线，其余题材等人工创作上传。</p></div>`;
+  } else if (currentGenre === 'mine') {
+    banner.style.background = 'linear-gradient(135deg, rgba(107,216,142,.16), rgba(91,197,216,.08))';
+    banner.innerHTML = `<div class="emoji">✍️</div><div class="info"><h3>我的创作 · ${getPublishedUserNovels().length} 部</h3><p>你在创作中心发布 / 上传的作品，全部在这里。</p></div>`;
+  } else {
+    const g = GENRES.find(x => x.slug === currentGenre);
+    if (!g) return;
+    banner.style.background = `linear-gradient(135deg, ${g.color}22, ${g.color}08)`;
+    banner.innerHTML = `<div class="emoji">${g.emoji}</div><div class="info"><h3>${g.name} · ${g.novels.length} 部作品</h3><p>${g.desc}</p></div>`;
+  }
+}
+
+function renderNovelGrid() {
+  const grid = document.getElementById('novelGrid');
+  let novels = [];
+  let title = '热门推荐';
+  if (currentGenre === 'all') {
+    GENRES.forEach(g => g.novels.forEach(n => novels.push({...n, genre: g.name, scene: g.scene, portrait: g.portrait, color: g.color})));
+    novels = novels.concat(getPublishedUserNovels());
+    title = '全部题材 · 热门推荐';
+  } else if (currentGenre === 'mine') {
+    novels = getPublishedUserNovels();
+    title = '我的创作';
+  } else {
+    const g = GENRES.find(x => x.slug === currentGenre);
+    if (!g) return;
+    novels = g.novels.map(n => ({...n, genre: g.name, scene: g.scene, portrait: g.portrait, color: g.color}));
+    title = g.name + ' · 推荐';
+  }
+  document.getElementById('novelGridTitle').textContent = title;
+  document.getElementById('novelCount').textContent = novels.length;
+  grid.innerHTML = novels.map((n, i) => {
+    const accessLabel = { try: '试玩', free: '免费', paid: '付费', serial: '连载', complete: '完结' }[n.access] || n.access;
+    const coverStyle = n.cover
+      ? `background:${n.cover}`
+      : `background-image:url('${n.scene || 'scenes/pavilion_night.png'}')`;
+    const emojiBadge = n.cover ? `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:52px;text-shadow:0 4px 24px rgba(0,0,0,.45)">${n.emoji || '📜'}</div>` : '';
+    return `
+      <div class="novel-card" onclick="openNovel('${n.id}')">
+        <div class="cover" style="${coverStyle}">
+          ${emojiBadge}
+          <div class="tag-row">
+            <span class="badge ${n.access}">${accessLabel}</span>
+            <span class="badge">${n.genre}</span>
+          </div>
+        </div>
+        <div class="info">
+          <h4>${n.title}</h4>
+          <div class="author">${n.author}${n.publicDomain ? ' · 公版' : ''}</div>
+          <div class="meta"><span>${n.rating}</span><span class="stars">★</span><span>${n.plays}玩过</span><span>·</span><span>${n.chapters}章</span></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function selectGenre(slug) {
+  currentGenre = slug;
+  renderGenreTabs();
+  renderGenreBanner();
+  renderNovelGrid();
+}
+window.selectGenre = selectGenre; // 暴露给 eval
+window.openNovel = openNovel;
+window.startGame = startGame;
+window.goView = goView;
+window.chatWith = chatWith;
+window.sendChat = sendChat;
+window.doCheckin = doCheckin;
+window.newWork = newWork;
+window.editWork = editWork;
+window.saveEditor = saveEditor;
+window.previewWork = previewWork;
+window.addNode = addNode;
+window.addOpt = addOpt;
+window.renderRank = renderRank;
+window.renderDiscover = renderDiscover;
+window.renderSearchResults = renderSearchResults;
+
+// ============ 小说详情 ============
+function openNovel(id) {
+  let novel = null, genre = null;
+  // 优先查用户创作 / 上传的作品
+  const uw = getWorks().find(w => w.id === id);
+  if (uw) {
+    novel = userWorkToNovel(uw);
+    genre = { name: uw.genre, color: '#6BD88E', speaker: (uw.nodes[0] && uw.nodes[0].speaker) || '——', publicDomain: false };
+    currentNovel = { ...novel, genre: genre.name, color: genre.color, scene: null, portrait: null };
+  }
+  if (!novel) {
+    for (const g of GENRES) {
+      const n = g.novels.find(x => x.id === id);
+      if (n) { novel = n; genre = g; break; }
+    }
+  }
+  if (!novel) {
+    // fallback: pavilion
+    genre = GENRES[0]; novel = genre.novels[0];
+  }
+  currentNovel = { ...novel, genre: genre.name, color: genre.color, scene: novel.scene || genre.scene, portrait: novel.portrait || genre.portrait };
+
+  // 渲染详情
+  const hero = document.getElementById('detailHero');
+  if (novel.cover) {
+    // 公版名著：渐变封面 + emoji 大字，不用图片
+    hero.innerHTML = `
+      <div class="cover" style="background:${novel.cover}"></div>
+      <div class="portrait" style="background:rgba(10,12,20,.35);display:flex;align-items:center;justify-content:center;font-size:64px;text-shadow:0 6px 30px rgba(0,0,0,.5)">${novel.emoji || '📜'}</div>
+      <div class="info">
+        <div class="tags">
+          <span class="tag">${genre.name}</span>
+          <span class="tag">${novel.access === 'paid' ? '付费' : novel.access === 'free' ? '免费' : '试玩'}</span>
+          <span class="tag">${novel.chapters} 章</span>
+          <span class="tag">${novel.words}</span>
+        </div>
+        <h2>${novel.title}</h2>
+        <div class="author">${novel.author} · ${novel.publicDomain ? '公版可商用' : (genre.speaker || genre.name) + ' 主线'}</div>
+        <div class="meta">
+          <span>★ ${novel.rating}</span>
+          <span>${novel.plays}玩过</span>
+        </div>
+      </div>
+    `;
+  } else {
+    hero.innerHTML = `
+      <div class="cover" style="background-image:url('${currentNovel.scene}')"></div>
+      <div class="portrait" style="background-image:url('${currentNovel.portrait}')"></div>
+      <div class="info">
+        <div class="tags">
+          <span class="tag">${genre.name}</span>
+          <span class="tag">${novel.access === 'paid' ? '付费' : novel.access === 'free' ? '免费' : '试玩'}</span>
+          <span class="tag">${novel.chapters} 章</span>
+          <span class="tag">${novel.words}</span>
+        </div>
+        <h2>${novel.title}</h2>
+        <div class="author">${novel.author} · ${genre.speaker || genre.name} 主线</div>
+        <div class="meta">
+          <span>★ ${novel.rating}</span>
+          <span>${novel.plays}玩过</span>
+          <span>11 结局</span>
+        </div>
+      </div>
+    `;
+  }
+  document.getElementById('detailIntro').textContent = novel.intro;
+  document.getElementById('statRating').textContent = novel.rating;
+  document.getElementById('statPlays').textContent = novel.plays;
+  document.getElementById('statWords').textContent = novel.words;
+  document.getElementById('chapterTotal').textContent = novel.chapters;
+
+  // 章节列表
+  const list = document.getElementById('chapterList');
+  const hasStory = !!STORY[novel.id];
+  const chNames = novel.chapterTitles || ['重逢','试探','真相','别离','归途','余响','尾声'];
+  let chapterHTML = '';
+  for (let i = 0; i < novel.chapters; i++) {
+    const locked = i >= 2 && !hasStory;
+    const lockedOnclick = locked ? `toast('后续章节敬请期待')` : `startGame()`;
+    chapterHTML += `
+      <div class="chapter ${locked ? 'locked' : ''}" onclick="${lockedOnclick}">
+        <div>
+          <span class="ch-num">第 ${String(i+1).padStart(2,'0')} 章</span>
+          <span class="ch-title">${chNames[i] || '后续'}</span>
+        </div>
+        <div class="ch-meta">
+          ${locked ? '<span class="badge">🔒</span>' : '<span class="badge">' + Math.floor(Math.random()*15+5) + ' 分钟</span>'}
+        </div>
+      </div>
+    `;
+  }
+  list.innerHTML = chapterHTML;
+  goView('novel-detail');
+}
+
+// ============ 沉浸剧情游戏页 ============
+function startGame(use3D = false) {
+  if (!currentNovel) openNovel('xyj');
+  const novelId = currentNovel.id;
+  const story = STORY[novelId] || STORY.pavilion;
+  // 重置游戏状态
+  gameState = { intimacy: 0, trust: 0, conflict: 0, currentNode: story.chapters[0], chapterIdx: 0, ended: false, npcRel: {} };
+  immersive3D = use3D;
+
+  // 设置场景 + 立绘（名著：渐变 + emoji；原创：图片）
+  const genre = GENRES.find(g => g.novels.find(n => n.id === novelId)) || GENRES[0];
+  const sceneEl = document.getElementById('gameScene');
+  const charEl = document.getElementById('gameChar');
+  if (currentNovel.cover) {
+    sceneEl.style.background = currentNovel.cover;
+    sceneEl.style.backgroundImage = 'none';
+    charEl.style.background = 'rgba(8,10,18,.25)';
+    charEl.style.backgroundImage = 'none';
+    charEl.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:96px;filter:drop-shadow(0 8px 40px rgba(0,0,0,.55))">${currentNovel.emoji || '📜'}</div>`;
+  } else {
+    sceneEl.style.backgroundImage = `url('${currentNovel.scene || genre.scene}')`;
+    charEl.style.backgroundImage = `url('${currentNovel.portrait || genre.portrait}')`;
+    charEl.innerHTML = '';
+  }
+  document.getElementById('gameTitle').textContent = story.title;
+  document.getElementById('gameChapter').textContent = story.chapter;
+
+  // 切到游戏视图
+  goView('game');
+  renderNode();
+  updateGameStats();
+  if (use3D) toast('⌖ 沉浸模式：可关闭窗口返回 2D');
+}
+
+function renderNode() {
+  const story = STORY[currentNovel.id] || STORY.pavilion;
+  const node = story.nodes[gameState.currentNode];
+  if (!node) return;
+
+  document.getElementById('gameSpeaker').textContent = node.speaker;
+  document.getElementById('gameText').textContent = node.text;
+  const optBox = document.getElementById('gameOptions');
+  optBox.innerHTML = '';
+
+  // 结局页
+  if (node.end) {
+    const restart = document.createElement('button');
+    restart.className = 'game-opt';
+    restart.innerHTML = '<span class="k">↻</span>重新开始';
+    restart.onclick = () => { gameState.currentNode = story.chapters[0]; gameState.intimacy = 0; gameState.trust = 0; gameState.conflict = 0; renderNode(); updateGameStats(); };
+    const back = document.createElement('button');
+    back.className = 'game-opt';
+    back.innerHTML = '<span class="k">⌂</span>选其他题材';
+    back.onclick = () => goView('novel-list');
+    optBox.appendChild(restart);
+    optBox.appendChild(back);
+    showEndingCard();
+    return;
+  }
+
+  // 选项
+  node.options.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'game-opt';
+    btn.innerHTML = `<span class="k">${o.k}</span>${o.label}`;
+    btn.onclick = () => {
+      applyEffects(o.effects);
+      gameState.currentNode = o.next;
+      renderNode();
+      updateGameStats();
+    };
+    optBox.appendChild(btn);
+  });
+
+  // NPC 入口
+  const npc = NPC_DIAL[currentNovel.id];
+  if (npc) {
+    const btn = document.createElement('button');
+    btn.className = 'game-opt npc';
+    btn.innerHTML = `<span class="k">N</span>问 ${npc.name} 的近况`;
+    btn.onclick = () => askNPC(npc);
+    optBox.appendChild(btn);
+  }
+}
+
+function applyEffects(eff) {
+  for (const k in eff) gameState[k] = (gameState[k] || 0) + eff[k];
+}
+
+function updateGameStats() {
+  document.getElementById('gameStats').innerHTML = `
+    <div class="stat">亲密度 <b>${gameState.intimacy}</b></div>
+    <div class="stat">信任 <b>${gameState.trust}</b></div>
+    <div class="stat">冲突 <b>${gameState.conflict}</b></div>
+  `;
+}
+
+function askNPC(npc) {
+  const text = document.getElementById('gameText');
+  const optBox = document.getElementById('gameOptions');
+  text.innerHTML = `<b>${npc.emoji} ${npc.name}</b>：${npc.text}`;
+  optBox.innerHTML = '';
+  npc.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'game-opt';
+    btn.innerHTML = `<span class="k">${String.fromCharCode(65+i)}</span>${o.label}`;
+    btn.onclick = () => {
+      gameState.npcRel[npc.name] = (gameState.npcRel[npc.name] || 0) + o.aff;
+      text.innerHTML = `<b>${npc.emoji} ${npc.name}</b>：${o.reply}<br><br><small style="color:var(--cyan)">好感度 ${o.aff > 0 ? '+' : ''}${o.aff} · 当前 ${gameState.npcRel[npc.name]}</small>`;
+      optBox.innerHTML = '';
+      const back = document.createElement('button');
+      back.className = 'game-opt';
+      back.innerHTML = '<span class="k">↩</span>返回主线';
+      back.onclick = () => renderNode();
+      optBox.appendChild(back);
+    };
+    optBox.appendChild(btn);
+  });
+}
+
+function showEndingCard() {
+  const story = STORY[currentNovel.id] || STORY.pavilion;
+  const node = story.nodes[gameState.currentNode] || {};
+  const rarity = node.rarity ||
+    ((gameState.intimacy > 4 || gameState.trust > 6) ? 'LEGENDARY · 限定' :
+      (gameState.intimacy > 0) ? 'EPIC · 史诗' :
+      (gameState.trust > 3) ? 'RARE · 稀有' : 'COMMON · 普通');
+  const name = node.endingName || '结局';
+  // 结局入图鉴（localStorage 持久化）
+  try {
+    const gal = JSON.parse(localStorage.getItem('ljss_gallery_v5_9') || '[]');
+    if (!gal.find(e => e.novel === currentNovel.id && e.name === name)) {
+      gal.push({ novel: currentNovel.id, novelTitle: currentNovel.title, name, rarity: String(rarity).split(' ')[0], ts: Date.now() });
+      localStorage.setItem('ljss_gallery_v5_9', JSON.stringify(gal));
+    }
+  } catch (e) {}
+  setTimeout(() => {
+    toast('🎉 解锁结局「' + name + '」· ' + rarity);
+  }, 800);
+}
+
+function exitGame() {
+  goView('novel-list');
+}
+
+function saveGame() {
+  try {
+    localStorage.setItem('ljss_save_v5_8', JSON.stringify({
+      novel: currentNovel, state: gameState, ts: Date.now()
+    }));
+    toast('💾 已存档');
+  } catch (e) {}
+}
+
+// ============ 双生陪伴 ============
+function renderCompanions() {
+  const grid = document.getElementById('companionGrid');
+  grid.innerHTML = COMPANIONS.map(c => {
+    const aff = getAff(c.id);
+    const chats = getChats(c.id);
+    const last = chats && chats.length ? chats[chats.length - 1].text : c.mood;
+    return `
+    <div class="companion-card" onclick="chatWith('${c.id}')">
+      <div class="av" style="background-image:url('${c.portrait}')">
+        <div class="status">● ${c.status}</div>
+        <div class="mood">${last.length > 18 ? last.slice(0, 18) + '…' : last}</div>
+      </div>
+      <div class="info">
+        <h4>${c.name}</h4>
+        <p>${c.role}</p>
+        <div class="aff">♥ 好感 ${aff}</div>
+      </div>
+    </div>
+  `; }).join('');
+}
+
+function chatWith(id) {
+  const c = COMPANIONS.find(x => x.id === id);
+  if (!c) return;
+  currentChat = id;
+  // 头部
+  document.getElementById('chatHeaderInfo').innerHTML = `
+    <div class="av" style="background-image:url('${c.portrait}')"></div>
+    <div><div class="nm">${c.name} <span style="font-weight:400;font-size:10px;color:var(--text3)">♥ ${getAff(id)}</span></div>
+    <div class="st">● ${c.status} · ${c.role.split(' · ')[0]}</div></div>
+  `;
+  renderQuickTopics(id);
+  renderChatBody();
+  goView('chat');
+  setTimeout(() => { const i = document.getElementById('chatInput'); if (i) i.focus(); }, 300);
+}
+
+// ---- 角色性格回复引擎（本地模板，等接 LLM 后替换） ----
+const PERSONA = {
+  lin: { rules: [
+    { kw: ['雨','凉亭','伞'], reply: ['今晚也有雨。你要是来凉亭，自己带伞——我不借。', '雨声比人话可信。你也这么觉得？'] },
+    { kw: ['剑','出鞘','打'], reply: ['剑只在两种时候出鞘：护人，和谢幕。', '你想看我的剑？先回答我，你在等谁。'] },
+    { kw: ['等','等谁','等你'], reply: ['……我等谁，与你无关。（她别过脸，耳根却红了）', '等一个三更才来、还敢迟到的人。'] },
+    { kw: ['喜欢','爱','心'], reply: ['江湖儿女不讲这些。（剑穗晃了一下）', '……酒先喝完再说。'] }
+  ], fallback: ['嗯。', '……说下去。', '三更了，你有话就直说。', '（她看了你一眼，没说话）'] },
+  bai: { rules: [
+    { kw: ['卷子','作业','考试','复习'], reply: ['数学最后一道大题我真的不会！你教我嘛。', '错题本都记满了三本……你陪我整理好不好？'] },
+    { kw: ['走廊','晒太阳','四点'], reply: ['下午四点的走廊，阳光刚好落在第三块地砖上。我每天看着那块地砖等你。', '今天物理课我又睡着了，你别告诉老师呀。'] },
+    { kw: ['累','难过','烦'], reply: ['抱抱你。深呼吸，一分钟就好，我陪着你。', '给你带了牛奶，温的。喝完我们再聊。'] },
+    { kw: ['喜欢','爱','心'], reply: ['诶？！你、你突然说这个……（脸红）那我也……嗯。', '喜欢呀。从同桌第一天就喜欢了。'] }
+  ], fallback: ['然后呢然后呢？', '哈哈哈真的假的！', '嗯嗯我在听～', '你今天看起来心情不错哦。'] },
+  shen: { rules: [
+    { kw: ['黑客','代码','数据','防火墙'], reply: ['这套防火墙我三年前就绕过一次。给他们留了 40 秒。', '数据不说谎，说谎的是人。所以要盯住数据。'] },
+    { kw: ['睡','休息','累'], reply: ['七十二小时之后，睡眠是奢侈品。', '等我拿到那份名单就睡。……这是第三次这么说了？'] },
+    { kw: ['危险','怕','别去'], reply: ['二十三层以下没人活着回来——所以我要去。', '怕。但名单上有我妹妹的名字。'] },
+    { kw: ['帮忙','一起'], reply: ['你帮不了。……但你要跟来，我不拦。', '好。三秒之内，别回头。'] }
+  ], fallback: ['三秒。', '继续说，我在监听三条线。', '（键盘声）……嗯，知道了。', '信息不足，下一条。'] },
+  gu: { rules: [
+    { kw: ['回来','回家','晚了'], reply: ['汤在桌上，还温着。去热一下。', '多晚都行，灯我留着。'] },
+    { kw: ['吃','饿','饭','汤'], reply: ['先吃饭。天大的事，吃完再说。', '你小时候就这样，一忙起来就忘了饿。'] },
+    { kw: ['谢谢','对不起','辛苦'], reply: ['跟我说这些做什么。一家人。', '（揉了揉你的头）傻话。'] },
+    { kw: ['公司','加班','老板'], reply: ['身体是自己的，班是老板的。别搞反了。', '干不下去就回来。家里养得起你。'] }
+  ], fallback: ['嗯，我在。', '说吧，听着呢。', '（他把电视音量调小了）', '先坐下，慢慢说。'] }
+};
+
+const QUICK_TOPICS = {
+  lin: ['你在等谁？', '雨好像小了', '收剑吧', '我带了酒'],
+  bai: ['今天过得怎么样', '教我数学吧', '下午四点的走廊', '给你带了牛奶'],
+  shen: ['二十三层是什么', '你该睡了', '名单找到了吗', '我跟你一起'],
+  gu: ['我回来了', '汤还热着吗', '今天加班了', '谢谢你']
+};
+
+function aiReply(id, text) {
+  const p = PERSONA[id];
+  if (!p) return '……';
+  const t = (text || '').toLowerCase();
+  for (const r of p.rules) {
+    if (r.kw.some(k => t.includes(k))) return r.reply[Math.floor(Math.random() * r.reply.length)];
+  }
+  return p.fallback[Math.floor(Math.random() * p.fallback.length)];
+}
+
+// ---- 持久化 ----
+function loadJSON(key, dft) { try { return JSON.parse(localStorage.getItem(key)) || dft; } catch (e) { return dft; } }
+function saveJSON(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) {} }
+function getAff(id) { const a = loadJSON('ljss_aff_v5_9', {}); return a[id] !== undefined ? a[id] : (COMPANIONS.find(c => c.id === id) || {}).aff || 0; }
+function setAff(id, v) { const a = loadJSON('ljss_aff_v5_9', {}); a[id] = v; saveJSON('ljss_aff_v5_9', a); }
+
+function getChats(id) { return loadJSON('ljss_chats_v5_9', {})[id] || null; }
+function pushChat(id, msg) { const all = loadJSON('ljss_chats_v5_9', {}); if (!all[id]) all[id] = []; all[id].push(msg); if (all[id].length > 200) all[id] = all[id].slice(-200); saveJSON('ljss_chats_v5_9', all); }
+
+function renderQuickTopics(id) {
+  const box = document.getElementById('quickTopics');
+  box.innerHTML = (QUICK_TOPICS[id] || []).map(t => `<button onclick="sendChat('${t.replace(/'/g, "\\'")}')">${t}</button>`).join('');
+}
+
+function renderChatBody() {
+  const body = document.getElementById('chatBody');
+  const c = COMPANIONS.find(x => x.id === currentChat);
+  const msgs = getChats(currentChat) || [];
+  let html = '';
+  if (!msgs.length) {
+    html += `<div class="msg"><div class="avatar" style="background-image:url('${c.portrait}')"></div>
+      <div class="bubble">${c.mood}<span class="time">现在</span></div></div>`;
+  } else {
+    msgs.forEach(m => {
+      html += m.role === 'me'
+        ? `<div class="msg me"><div class="bubble">${m.text}<span class="time">${fmtTime(m.ts)}</span></div></div>`
+        : `<div class="msg"><div class="avatar" style="background-image:url('${c.portrait}')"></div>
+           <div class="bubble">${m.text}<span class="time">${fmtTime(m.ts)}</span></div></div>`;
+    });
+  }
+  body.innerHTML = html;
+  body.scrollTop = body.scrollHeight;
+}
+
+function fmtTime(ts) {
+  const d = new Date(ts);
+  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function sendChat(preset) {
+  const input = document.getElementById('chatInput');
+  const text = (preset || input.value).trim();
+  if (!text) return;
+  input.value = '';
+  pushChat(currentChat, { role: 'me', text, ts: Date.now() });
+  // 好感度：每条 +1
+  setAff(currentChat, getAff(currentChat) + 1);
+  renderChatBody();
+  // 输入中… 指示
+  const c = COMPANIONS.find(x => x.id === currentChat);
+  const body = document.getElementById('chatBody');
+  const typingEl = document.createElement('div');
+  typingEl.className = 'msg';
+  typingEl.innerHTML = `<div class="avatar" style="background-image:url('${c.portrait}')"></div>
+    <div class="bubble typing" id="typingBubble">${c.name} 正在输入…</div>`;
+  body.appendChild(typingEl);
+  body.scrollTop = body.scrollHeight;
+  setTimeout(() => {
+    const tb = document.getElementById('typingBubble');
+    if (tb) tb.parentElement.remove();
+    pushChat(currentChat, { role: 'ai', text: aiReply(currentChat, text), ts: Date.now() });
+    renderChatBody();
+  }, 700 + Math.random() * 600);
+}
+
+// ---- 每日签到 ----
+function doCheckin() {
+  const today = new Date().toISOString().slice(0, 10);
+  const ck = loadJSON('ljss_checkin_v5_9', { last: '', streak: 0 });
+  if (ck.last === today) { toast('今天已签到'); return; }
+  ck.streak = (ck.streak || 0) + 1; ck.last = today;
+  saveJSON('ljss_checkin_v5_9', ck);
+  COMPANIONS.forEach(c => setAff(c.id, getAff(c.id) + 5));
+  renderCompanions();
+  const btn = document.getElementById('checkinBtn');
+  btn.textContent = '已签到 · 连续 ' + ck.streak + ' 天';
+  btn.classList.add('done');
+  toast('🌅 签到成功 · 全角色好感 +5（连续 ' + ck.streak + ' 天）');
+}
+
+function initCheckinState() {
+  const today = new Date().toISOString().slice(0, 10);
+  const ck = loadJSON('ljss_checkin_v5_9', { last: '', streak: 0 });
+  const btn = document.getElementById('checkinBtn');
+  if (ck.last === today) {
+    btn.textContent = '已签到 · 连续 ' + (ck.streak || 1) + ' 天';
+    btn.classList.add('done');
+  } else if (ck.streak) {
+    document.getElementById('moodText').textContent = '你已连续签到 ' + ck.streak + ' 天，今天 TA 们还在等你。';
+  }
+}
+
+// ============ 创作中心 ============
+const COVER_PALETTES = [
+  { name: '紫夜', g: 'linear-gradient(160deg,#8E5BD8,#4A2C6E 60%,#241333)', e: '🔮' },
+  { name: '青霓', g: 'linear-gradient(160deg,#5BC5D8,#2A6E7E 60%,#10262E)', e: '🌃' },
+  { name: '赤焰', g: 'linear-gradient(160deg,#D85B3B,#A03323 60%,#3E140C)', e: '🔥' },
+  { name: '金卷', g: 'linear-gradient(160deg,#C9A45B,#8B6914 60%,#3E2E08)', e: '📜' },
+  { name: '桃夭', g: 'linear-gradient(160deg,#D4839B,#A0526D 60%,#421420)', e: '🌸' },
+  { name: '松风', g: 'linear-gradient(160deg,#5B8E5B,#2E5B2E 60%,#122412)', e: '🌿' },
+  { name: '霜刃', g: 'linear-gradient(160deg,#5D6D7E,#34495E 60%,#141C24)', e: '🗡' },
+  { name: '墨玉', g: 'linear-gradient(160deg,#3A3A4E,#22222E 60%,#0E0E14)', e: '🖤' }
+];
+const WORKS_KEY = 'ljss_works_v5_9';
+let editingWork = null;
+
+function getWorks() { return loadJSON(WORKS_KEY, []); }
+function saveWorks(w) { saveJSON(WORKS_KEY, w); }
+
+function blankWork() {
+  return {
+    id: 'u_' + Date.now(), title: '', author: '我', genre: '古风', intro: '',
+    coverIdx: 0, published: false, ts: Date.now(),
+    nodes: [ { speaker: '旁白', text: '', options: [ { label: '', trust: 0, intimacy: 0, conflict: 0, next: -1 } ] } ],
+    ending: { name: '结局', text: '' }
+  };
+}
+
+function workCover(w) { return COVER_PALETTES[w.coverIdx] || COVER_PALETTES[0]; }
+
+function renderWorkList() {
+  const list = getWorks();
+  document.getElementById('workCount').textContent = list.length + ' 部';
+  const box = document.getElementById('workList');
+  if (!list.length) {
+    box.innerHTML = `<div style="text-align:center;padding:36px 0;color:var(--text3);font-size:12px">还没有作品<br><span style="font-size:10px">点「新建作品」写下第一章</span></div>`;
+    return;
+  }
+  box.innerHTML = list.map(w => {
+    const cv = workCover(w);
+    return `
+    <div class="work-card" onclick="editWork('${w.id}')">
+      <div class="wc-cover" style="background:${cv.g}">${cv.e}</div>
+      <div class="wc-info">
+        <h4>${w.title || '未命名'}</h4>
+        <p>${(w.intro || '暂无简介').slice(0, 30)}</p>
+        <div class="wc-meta">
+          <span class="badge">${w.genre}</span>
+          <span class="badge">${w.nodes.length} 节点</span>
+          ${w.published ? '<span class="badge pub">● 已发布</span>' : '<span class="badge">草稿</span>'}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function newWork() { editingWork = blankWork(); renderEditor(); goView('editor'); }
+function editWork(id) { const w = getWorks().find(x => x.id === id); if (w) { editingWork = JSON.parse(JSON.stringify(w)); renderEditor(); goView('editor'); } }
+
+function renderEditor() {
+  const w = editingWork;
+  document.getElementById('editorTitle').textContent = (w.title || '未命名') + ' · 编辑';
+  const genreOpts = GENRES.filter(g => g.slug !== 'mingzhu').map(g => `<option ${w.genre === g.name ? 'selected' : ''}>${g.name}</option>`).join('') + '<option ' + (w.genre === '其他' ? 'selected' : '') + '>其他</option>';
+  let html = `
+    <div class="section-title"><span>基本信息</span></div>
+    <div class="field"><label>作品标题</label><input type="text" id="f_title" value="${escAttr(w.title)}" placeholder="例：长安夜雨录" oninput="editingWork.title=this.value;edTitleSync()"></div>
+    <div class="field"><label>题材分类（决定出现在小说世界哪个题材）</label><select onchange="editingWork.genre=this.value">${genreOpts}</select></div>
+    <div class="field"><label>作品简介（显示在详情页）</label><textarea id="f_intro" placeholder="一句话勾住读者…" oninput="editingWork.intro=this.value">${escHtml(w.intro)}</textarea></div>
+    <div class="field"><label>封面风格</label>
+      <div class="cover-palette">${COVER_PALETTES.map((p, i) => `<div class="sw ${w.coverIdx === i ? 'sel' : ''}" style="background:${p.g}" onclick="editingWork.coverIdx=${i};renderEditor()" title="${p.name}">${p.e}</div>`).join('')}</div>
+    </div>
+    <div class="section-title" style="margin-top:18px"><span>剧情节点（${w.nodes.length}）</span><small>玩家按节点顺序推进，选项跳转</small></div>
+  `;
+  w.nodes.forEach((n, ni) => {
+    html += `
+    <div class="node-editor">
+      <div class="ne-head"><b>节点 ${ni + 1}</b><button class="ne-del" onclick="delNode(${ni})">删除节点</button></div>
+      <div class="field"><label>说话人</label><input type="text" value="${escAttr(n.speaker)}" oninput="editingWork.nodes[${ni}].speaker=this.value"></div>
+      <div class="field"><label>对话 / 旁白文本</label><textarea oninput="editingWork.nodes[${ni}].text=this.value">${escHtml(n.text)}</textarea></div>
+      <div class="field"><label style="margin-top:6px">选项（${n.options.length}）</label></div>
+    `;
+    n.options.forEach((o, oi) => {
+      const nextOpts = w.nodes.map((_, j) => `<option value="${j}" ${o.next === j ? 'selected' : ''}>跳到节点 ${j + 1}</option>`).join('')
+        + `<option value="-1" ${o.next === -1 ? 'selected' : ''}>→ 结局</option>`;
+      html += `
+      <div class="opt-editor">
+        <div class="oe-head"><span>选项 ${String.fromCharCode(65 + oi)}</span><button class="oe-del" onclick="delOpt(${ni},${oi})">✕ 删除</button></div>
+        <div class="field"><input type="text" value="${escAttr(o.label)}" placeholder="选项文字，例：上前一步" oninput="editingWork.nodes[${ni}].options[${oi}].label=this.value"></div>
+        <div class="field"><label>跳转</label><select onchange="editingWork.nodes[${ni}].options[${oi}].next=parseInt(this.value)">${nextOpts}</select></div>
+        <div class="eff-row">
+          <div class="field"><label>信任</label><input type="text" value="${o.trust || 0}" oninput="editingWork.nodes[${ni}].options[${oi}].trust=parseInt(this.value)||0"></div>
+          <div class="field"><label>亲密</label><input type="text" value="${o.intimacy || 0}" oninput="editingWork.nodes[${ni}].options[${oi}].intimacy=parseInt(this.value)||0"></div>
+          <div class="field"><label>冲突</label><input type="text" value="${o.conflict || 0}" oninput="editingWork.nodes[${ni}].options[${oi}].conflict=parseInt(this.value)||0"></div>
+        </div>
+      </div>`;
+    });
+    html += `<button class="add-btn" onclick="addOpt(${ni})">＋ 添加选项</button>
+    </div>`;
+  });
+  html += `
+    <button class="add-btn" onclick="addNode()">＋ 添加节点</button>
+    <div class="section-title" style="margin-top:18px"><span>结局</span></div>
+    <div class="field"><label>结局名称（例：雨过天晴）</label><input type="text" value="${escAttr(w.ending.name)}" oninput="editingWork.ending.name=this.value"></div>
+    <div class="field"><label>结局文本</label><textarea oninput="editingWork.ending.text=this.value">${escHtml(w.ending.text)}</textarea></div>
+    <div class="btn-row">
+      <button onclick="saveEditor(false)">💾 存草稿</button>
+      <button onclick="saveEditor(true)">🚀 发布到小说世界</button>
+      <button onclick="previewWork()">▶ 试玩</button>
+    </div>
+    <div style="height:30px"></div>
+  `;
+  document.getElementById('editorBody').innerHTML = html;
+}
+
+function edTitleSync() { document.getElementById('editorTitle').textContent = (editingWork.title || '未命名') + ' · 编辑'; }
+function escAttr(s) { return String(s || '').replace(/"/g, '&quot;'); }
+function escHtml(s) { return String(s || '').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+function addNode() { editingWork.nodes.push({ speaker: '旁白', text: '', options: [{ label: '', trust: 0, intimacy: 0, conflict: 0, next: -1 }] }); renderEditor(); }
+function delNode(i) { if (editingWork.nodes.length <= 1) { toast('至少保留 1 个节点'); return; } editingWork.nodes.splice(i, 1); fixNexts(i); renderEditor(); }
+function addOpt(ni) { if (editingWork.nodes[ni].options.length >= 4) { toast('每节点最多 4 个选项'); return; } editingWork.nodes[ni].options.push({ label: '', trust: 0, intimacy: 0, conflict: 0, next: -1 }); renderEditor(); }
+function delOpt(ni, oi) { if (editingWork.nodes[ni].options.length <= 1) { toast('每节点至少 1 个选项'); return; } editingWork.nodes[ni].options.splice(oi, 1); renderEditor(); }
+function fixNexts(removedIdx) {
+  editingWork.nodes.forEach(n => n.options.forEach(o => {
+    if (o.next === removedIdx) o.next = -1;
+    else if (o.next > removedIdx) o.next -= 1;
+  }));
+}
+
+function validateWork(w) {
+  if (!w.title.trim()) return '请填写作品标题';
+  if (!w.intro.trim()) return '请填写作品简介';
+  for (let i = 0; i < w.nodes.length; i++) {
+    const n = w.nodes[i];
+    if (!n.text.trim()) return `节点 ${i + 1} 缺少文本`;
+    for (let j = 0; j < n.options.length; j++) {
+      if (!n.options[j].label.trim()) return `节点 ${i + 1} 的选项 ${String.fromCharCode(65 + j)} 缺少文字`;
+    }
+  }
+  if (!w.ending.text.trim()) return '请填写结局文本';
+  return null;
+}
+
+function saveEditor(publish) {
+  const err = validateWork(editingWork);
+  if (err) { toast('⚠️ ' + err); return; }
+  const works = getWorks();
+  const idx = works.findIndex(x => x.id === editingWork.id);
+  if (publish) editingWork.published = true;
+  if (idx >= 0) works[idx] = JSON.parse(JSON.stringify(editingWork));
+  else works.push(JSON.parse(JSON.stringify(editingWork)));
+  saveWorks(works);
+  registerUserStories();
+  renderWorkList();
+  selectGenre('all');
+  toast(publish ? '🚀 已发布！可在「小说世界」游玩' : '💾 草稿已保存');
+  if (publish) goView('studio');
+}
+
+function deleteWork(id) {
+  const works = getWorks().filter(w => w.id !== id);
+  saveWorks(works);
+  delete STORY[id];
+  renderWorkList();
+  selectGenre('all');
+  toast('已删除');
+}
+
+// 用户作品 → 游戏引擎格式
+function userStoryToEngine(w) {
+  const nodes = {};
+  w.nodes.forEach((n, i) => {
+    nodes['u' + i] = {
+      speaker: n.speaker || '旁白', text: n.text,
+      options: n.options.map((o, j) => ({
+        k: String.fromCharCode(65 + j), label: o.label,
+        effects: { trust: o.trust || 0, intimacy: o.intimacy || 0, conflict: o.conflict || 0 },
+        next: o.next < 0 ? 'u_end' : 'u' + o.next
+      }))
+    };
+  });
+  nodes['u_end'] = { speaker: w.nodes[0].speaker || '——', text: w.ending.text, end: true, endingName: w.ending.name || '结局', rarity: 'RARE · 稀有' };
+  return { title: w.title, speaker: w.nodes[0].speaker || '——', chapter: '第 1 章 · ' + (w.title || ''), chapters: ['u0'], nodes };
+}
+
+function registerUserStories() {
+  getWorks().forEach(w => {
+    const err = validateWork(w);
+    if (!err) STORY[w.id] = userStoryToEngine(w);
+  });
+}
+
+// 用户作品 → 小说卡片
+function userWorkToNovel(w) {
+  const cv = workCover(w);
+  return { id: w.id, title: w.title, author: w.author || '我', rating: '新', plays: '0', words: '自创', access: 'free',
+    genre: w.genre, chapters: 1, emoji: cv.e, cover: cv.g, chapterTitles: ['第一章'], intro: w.intro,
+    publicDomain: false, userCreated: true };
+}
+
+function previewWork() {
+  const err = validateWork(editingWork);
+  if (err) { toast('⚠️ ' + err); return; }
+  STORY[editingWork.id] = userStoryToEngine(editingWork);
+  currentNovel = userWorkToNovel(editingWork);
+  currentNovel.scene = null; currentNovel.portrait = null;
+  startGame();
+}
+
+function importJSON() {
+  const s = prompt('粘贴作品 JSON（可由「导出全部」生成）');
+  if (!s) return;
+  try {
+    const obj = JSON.parse(s);
+    const arr = Array.isArray(obj) ? obj : [obj];
+    const works = getWorks();
+    let added = 0;
+    arr.forEach(w => {
+      if (w && w.title && w.nodes && w.nodes.length) {
+        w.id = 'u_' + Date.now() + '_' + Math.floor(Math.random() * 999);
+        if (!w.ending) w.ending = { name: '结局', text: '（未设置结局文本）' };
+        works.push(w); added++;
+      }
+    });
+    saveWorks(works);
+    registerUserStories(); renderWorkList(); selectGenre('all');
+    toast('📥 导入 ' + added + ' 部作品');
+  } catch (e) { toast('⚠️ JSON 解析失败'); }
+}
+
+function exportAllJSON() {
+  const works = getWorks();
+  if (!works.length) { toast('暂无作品可导出'); return; }
+  const s = JSON.stringify(works, null, 2);
+  try {
+    navigator.clipboard.writeText(s).then(() => toast('📤 已复制 ' + works.length + ' 部作品 JSON 到剪贴板'));
+  } catch (e) { prompt('复制以下 JSON：', s); }
+}
+
+
+// ============ 发现页 ============
+function allNovelsFlat() {
+  let arr = [];
+  GENRES.forEach(g => g.novels.forEach(n => arr.push({ ...n, gname: g.name, gemoji: g.emoji, gcolor: g.color, scene: n.cover ? null : g.scene, portrait: n.cover ? null : g.portrait })));
+  arr = arr.concat(getPublishedUserNovels().map(n => ({ ...n, gname: n.genre, gemoji: '✍️', gcolor: '#6BD88E' })));
+  return arr;
+}
+function playsToNum(s) { return parseFloat(String(s).replace('万', '')) * (String(s).includes('万') ? 10000 : 1) || 0; }
+
+function renderSearchResults() {
+  const q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+  const box = document.getElementById('searchResults');
+  if (!q) { box.innerHTML = ''; return; }
+  const hits = allNovelsFlat().filter(n => (n.title + n.author + n.gname).toLowerCase().includes(q)).slice(0, 8);
+  box.innerHTML = hits.length
+    ? hits.map(n => `
+      <div class="rank-item" onclick="openNovel('${n.id}')">
+        <div class="rk-cover" style="${n.cover ? 'background:' + n.cover : 'background-image:url(\'' + n.scene + '\')'}">${n.cover ? (n.emoji || '📖') : ''}</div>
+        <div class="rk-info"><h4>${n.title}</h4><p>${n.author} · ${n.gname}${n.publicDomain ? ' · 公版' : ''}</p></div>
+        <div class="rk-score">★ ${n.rating}</div>
+      </div>`).join('')
+    : `<div style="padding:20px 0;text-align:center;color:var(--text3);font-size:12px">没有找到「${escHtml(q)}」相关作品<br><span style="font-size:10px">去创作中心写一部？</span></div>`;
+}
+
+function renderWeeklyPicks() {
+  const picks = ['sgyy', 'hlm', 'shz'];
+  const box = document.getElementById('weeklyPicks');
+  if (!box) return;
+  box.innerHTML = picks.map(id => {
+    const n = allNovelsFlat().find(x => x.id === id);
+    if (!n) return '';
+    return `
+      <div class="rank-item" onclick="openNovel('${n.id}')">
+        <div class="rk-cover" style="background:${n.cover}">${n.emoji}</div>
+        <div class="rk-info"><h4>${n.title}</h4><p>${n.author} · ${n.intro.slice(0, 26)}…</p></div>
+        <div class="rk-score">★ ${n.rating}</div>
+      </div>`;
+  }).join('');
+}
+
+let rankMode = 'rating';
+function renderRank(mode) {
+  rankMode = mode || rankMode;
+  document.getElementById('rkTabRating').classList.toggle('active', rankMode === 'rating');
+  document.getElementById('rkTabPlays').classList.toggle('active', rankMode === 'plays');
+  let arr = allNovelsFlat().filter(n => typeof n.rating === 'number');
+  arr.sort((a, b) => rankMode === 'rating' ? b.rating - a.rating : playsToNum(b.plays) - playsToNum(a.plays));
+  arr = arr.slice(0, 10);
+  document.getElementById('rankList').innerHTML = arr.map((n, i) => `
+    <div class="rank-item rk-${i + 1}" onclick="openNovel('${n.id}')">
+      <div class="rk">${i + 1}</div>
+      <div class="rk-cover" style="${n.cover ? 'background:' + n.cover : 'background-image:url(\'' + n.scene + '\')'}">${n.cover ? (n.emoji || '📖') : ''}</div>
+      <div class="rk-info"><h4>${n.title}</h4><p>${n.author} · ${n.gname}</p></div>
+      <div class="rk-score">${rankMode === 'rating' ? '★ ' + n.rating : n.plays + ' 玩过'}</div>
+    </div>`).join('');
+}
+
+function renderGenreQuick() {
+  const box = document.getElementById('genreQuick');
+  if (!box) return;
+  box.innerHTML = GENRES.map(g => `<button onclick="selectGenre('${g.slug}');goView('novel-list')">${g.emoji} ${g.name}</button>`).join('');
+}
+
+const ACHIEVEMENTS = [
+  { id: 'first_play', emo: '🎬', name: '初入灵境', desc: '完成第一章' },
+  { id: 'xyj_done', emo: '🐵', name: '火眼金睛', desc: '通关三打白骨精' },
+  { id: 'sgyy_done', emo: '🪶', name: '三顾之诚', desc: '通关三顾茅庐' },
+  { id: 'shz_done', emo: '🗡', name: '雪夜行者', desc: '通关风雪山神庙' },
+  { id: 'hlm_done', emo: '🌸', name: '葬花知己', desc: '通关黛玉葬花' },
+  { id: 'lzzy_done', emo: '🏮', name: '识破画皮', desc: '通关画皮' },
+  { id: 'fsyy_done', emo: '🔥', name: '莲花化身', desc: '通关哪吒闹海' },
+  { id: 'creator', emo: '✍️', name: '创作者', desc: '发布 1 部作品' },
+  { id: 'gallery_3', emo: '🏆', name: '收藏家', desc: '解锁 3 个结局' }
+];
+
+function renderAchievements() {
+  const gallery = loadJSON('ljss_gallery_v5_9', []);
+  const gNovels = gallery.map(g => g.novel);
+  const works = getWorks();
+  const got = {
+    first_play: gallery.length >= 1,
+    xyj_done: gNovels.includes('xyj'),
+    sgyy_done: gNovels.includes('sgyy'),
+    shz_done: gNovels.includes('shz'),
+    hlm_done: gNovels.includes('hlm'),
+    lzzy_done: gNovels.includes('lzzy'),
+    fsyy_done: gNovels.includes('fsyy'),
+    creator: works.some(w => w.published),
+    gallery_3: gallery.length >= 3
+  };
+  const cnt = Object.values(got).filter(Boolean).length;
+  const el = document.getElementById('achCount');
+  if (el) el.textContent = cnt + ' / ' + ACHIEVEMENTS.length;
+  const wall = document.getElementById('achWall');
+  if (!wall) return;
+  wall.innerHTML = ACHIEVEMENTS.map(a => `
+    <div class="ach-cell ${got[a.id] ? '' : 'locked'}">
+      <div class="emo">${got[a.id] ? a.emo : '🔒'}</div>
+      <h5>${a.name}</h5><p>${a.desc}</p>
+    </div>`).join('');
+}
+
+function renderDiscover() {
+  renderWeeklyPicks();
+  renderRank(rankMode);
+  renderGenreQuick();
+  renderAchievements();
+  const si = document.getElementById('searchInput');
+  if (si) { si.value = ''; }
+  renderSearchResults();
+}
+
+// ============ 快捷开玩 ============
+function quickPlay() {
+  openNovel('xyj');
+  setTimeout(() => startGame(false), 200);
+}
+
+
+// ============ 工具 ============
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(window.__toastT__);
+  window.__toastT__ = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// ============ 初始化 ============
+renderGenreTabs();
+renderGenreBanner();
+renderNovelGrid();
+renderCompanions();
+initCheckinState();
+registerUserStories();
+renderWorkList();
+</script>
+</body>
+</html>

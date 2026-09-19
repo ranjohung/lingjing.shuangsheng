@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>我的收藏 · 灵境 · 双生</title>
+<meta name="description" content="V20-M · 我的收藏 · 小说世界 / 角色 / 卡牌 / 动态 · 分类筛选 + 取消收藏" />
+<meta name="theme-color" content="#0d0b22" />
+<link rel="stylesheet" href="css/shell-v64.css" />
+<style>
+.fav-page{padding-bottom:32px}
+.fav-tabs{
+  display:flex;gap:4px;padding:4px;margin:14px var(--margin);
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+}
+.fav-tab{
+  flex:1;padding:9px 0;text-align:center;font-size:13px;color:var(--sub);
+  border-radius:9px;cursor:pointer;transition:all .2s;
+}
+.fav-tab.on{background:linear-gradient(135deg,var(--accent),#C73652);color:#fff;font-weight:600}
+.fav-filter{display:flex;gap:6px;margin:0 var(--margin) 12px;flex-wrap:wrap}
+.fav-chip{padding:6px 12px;border-radius:14px;font-size:11px;cursor:pointer;background:var(--card);border:1px solid var(--line);color:var(--sub)}
+.fav-chip.on{background:rgba(233,69,96,.14);border-color:rgba(233,69,96,.4);color:var(--accent)}
+.fav-list{margin:0 var(--margin);display:flex;flex-direction:column;gap:10px}
+.fav-item{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  border-radius:var(--radius);background:var(--card);border:1px solid var(--line);
+  text-decoration:none;color:inherit;
+}
+.fav-item .cov{
+  width:52px;height:52px;border-radius:12px;flex-shrink:0;
+  display:grid;place-items:center;font-size:24px;
+}
+.fav-item .body{flex:1;min-width:0}
+.fav-item .t{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fav-item .s{font-size:11px;color:var(--sub);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fav-item .del{
+  flex-shrink:0;padding:7px 12px;border-radius:8px;font-size:11px;cursor:pointer;
+  background:rgba(233,69,96,.08);border:1px solid rgba(233,69,96,.25);color:var(--accent);
+}
+.fav-empty{
+  margin:40px var(--margin);text-align:center;color:var(--sub);font-size:13px;line-height:2;
+}
+.fav-count{font-size:11px;color:var(--sub);margin:0 var(--margin) 10px}
+</style>
+<link rel="stylesheet" href="css/mobile-lock.css" />
+</head>
+<body>
+<div id="app" class="fav-page">
+  <header class="topbar">
+    <a class="icon-btn" href="me.html" title="返回">‹</a>
+    <div class="topbar-title"><span class="dot"></span>我的收藏</div>
+    <div class="topbar-acts"></div>
+  </header>
+
+  <main>
+    <!-- 四类收藏 Tab（设计文档 §3.3） -->
+    <div class="fav-tabs" id="fav-tabs">
+      <div class="fav-tab on" data-cat="world">📖 小说世界</div>
+      <div class="fav-tab" data-cat="char">💬 角色</div>
+      <div class="fav-tab" data-cat="card">🃏 卡牌</div>
+      <div class="fav-tab" data-cat="post">🔥 动态</div>
+    </div>
+    <div class="fav-filter" id="fav-filter"></div>
+    <div class="fav-count" id="fav-count"></div>
+    <div class="fav-list" id="fav-list"></div>
+    <div class="fav-empty" id="fav-empty" style="display:none">这里还空着<br/>去世界 / 心屿逛逛，点亮⭐收藏吧</div>
+  </main>
+</div>
+
+<div id="toast"></div>
+<dialog id="del-dialog" style="background:none;border:0;padding:0;max-width:300px;width:82%">
+  <div style="background:#16213E;border:1px solid rgba(233,69,96,.3);border-radius:14px;padding:20px 18px;text-align:center">
+    <div style="font-size:30px;margin-bottom:8px">💔</div>
+    <div style="font:600 15px 'Noto Serif SC';color:#fff;margin-bottom:6px">取消收藏？</div>
+    <div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.7" id="del-dialog-sub">将《》移出收藏列表</div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button id="del-no" style="flex:1;padding:10px 0;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:none;color:rgba(255,255,255,.75);font-size:13px;cursor:pointer">再想想</button>
+      <button id="del-yes" style="flex:1;padding:10px 0;border-radius:10px;border:0;background:#E94560;color:#fff;font-size:13px;font-weight:600;cursor:pointer">取消收藏</button>
+    </div>
+  </div>
+</dialog>
+<script>
+function showToast(kind, title, msg){
+  var c = document.getElementById('toast');
+  var t = document.createElement('div');
+  t.className = 'toast-item ' + (kind || 'ok');
+  t.innerHTML = '<span class="ti"></span><span><b>' + title + '</b>' + (msg ? '<span style="opacity:.65"> · ' + msg + '</span>' : '') + '</span>';
+  c.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 3000);
+}
+
+/* ---------- 收藏数据（默认 mock · 仅公版名著+占位角色 · localStorage lingjing_v52x_favs 持久化） ---------- */
+var DEFAULT_FAVS = [
+  // 小说世界（全部公版）
+  { id: 'f-w1', cat: 'world', emoji: '🐵', bg: 'linear-gradient(160deg,#2E3A6E,#4A3A8C)', title: '西游记', sub: '公版 · 神魔 · 评分 9.4', filter: '完结', href: 'plot-detail.html?novel=xiyouji' },
+  { id: 'f-w2', cat: 'world', emoji: '🌸', bg: 'linear-gradient(160deg,#E94560,#C95B9C)', title: '红楼梦', sub: '公版 · 世情 · 评分 9.5', filter: '完结', href: 'plot-detail.html?novel=hongloumeng' },
+  { id: 'f-w3', cat: 'world', emoji: '⚔️', bg: 'linear-gradient(160deg,#6E5A2E,#8C7A3A)', title: '三国演义', sub: '罗贯中 · 公版名著 · 免费', filter: '完结', href: 'plot-detail.html?novel=sanguoyanyi' },
+  { id: 'f-w4', cat: 'world', emoji: '🐯', bg: 'linear-gradient(160deg,#1F5C4D,#2E8B6E)', title: '水浒传', sub: '公版 · 侠义 · 评分 9.2', filter: '完结', href: 'plot-detail.html?novel=shuihuzhuan' },
+  // 角色（全部公版角色）
+  { id: 'f-c1', cat: 'char', emoji: '🏮', bg: 'linear-gradient(160deg,#6E2E3A,#8C3A4A)', title: '阿岁', sub: '我创建 · 心理咨询师 · 亲密 92', filter: '我创建的', href: 'character-detail.html' },
+  { id: 'f-c2', cat: 'char', emoji: '🐵', bg: 'linear-gradient(160deg,#4A6E2E,#5E8C3A)', title: '孙悟空', sub: '双生 · 西游记 · 亲密 72', filter: '双生角色', href: 'chat.html?cid=c06' },
+  { id: 'f-c3', cat: 'char', emoji: '⚔️', bg: 'linear-gradient(160deg,#6E5A2E,#8C6E3A)', title: '武松', sub: '双生 · 水浒传 · 亲密 38', filter: '双生角色', href: 'chat.html?cid=c08' },
+  // 卡牌
+  { id: 'f-k1', cat: 'card', emoji: '🌸', bg: 'linear-gradient(160deg,#8C3A6E,#A85B8C)', title: '限定卡牌 · 初见', sub: '命运卡牌 · 来自红楼梦', filter: '限定', href: 'my-cards.html' },
+  { id: 'f-k2', cat: 'card', emoji: '⚔️', bg: 'linear-gradient(160deg,#8C6E2E,#B09040)', title: '史诗卡牌 · 并肩', sub: '命运卡牌 · 来自孙悟空', filter: '史诗', href: 'my-cards.html' },
+  // 动态
+  { id: 'f-p1', cat: 'post', emoji: '📖', bg: 'linear-gradient(160deg,#3A4A6E,#5B6B8C)', title: '公版名著创作谈', sub: '作者动态 · 2 小时前', filter: '作者动态', href: 'discover.html' },
+  { id: 'f-p2', cat: 'post', emoji: '🏆', bg: 'linear-gradient(160deg,#6E2E5A,#8C3A7A)', title: '创世杯 · 投票开启', sub: '官方动态 · 昨天', filter: '官方动态', href: 'discover.html' }
+];
+var FILTERS = {
+  world: ['全部', '连载', '完结'],
+  char:  ['全部', '我创建的', '双生角色'],
+  card:  ['全部', '普通', '稀有', '史诗', '传说', '限定'],
+  post:  ['全部', '作者动态', '官方动态']
+};
+var curCat = 'world', curFilter = '全部';
+
+function loadFavs() {
+  try {
+    var saved = JSON.parse(localStorage.getItem('lingjing_v52x_favs') || 'null');
+    if (saved && saved.length) return saved;
+  } catch (e) {}
+  return DEFAULT_FAVS.slice();
+}
+function saveFavs(list) {
+  try { localStorage.setItem('lingjing_v52x_favs', JSON.stringify(list)); } catch (e) {}
+}
+function render() {
+  var list = loadFavs().filter(function (f) {
+    return f.cat === curCat && (curFilter === '全部' || f.filter === curFilter);
+  });
+  var box = document.getElementById('fav-list');
+  box.innerHTML = '';
+  document.getElementById('fav-empty').style.display = list.length ? 'none' : '';
+  document.getElementById('fav-count').textContent = list.length ? ('共 ' + list.length + ' 条' + (curFilter !== '全部' ? ' · 筛选：' + curFilter : '')) : '';
+  list.forEach(function (f) {
+    var a = document.createElement('a');
+    a.className = 'fav-item'; a.href = f.href || '#';
+    a.innerHTML =
+      '<div class="cov" style="background:' + f.bg + '">' + f.emoji + '</div>' +
+      '<div class="body"><div class="t">' + f.title + '</div><div class="s">' + f.sub + '</div></div>';
+    var del = document.createElement('button');
+    del.className = 'del'; del.textContent = '取消收藏';
+    del.addEventListener('click', function (ev) { ev.preventDefault(); ev.stopPropagation(); askDelete(f); });
+    a.appendChild(del);
+    box.appendChild(a);
+  });
+}
+function renderFilter() {
+  var fbox = document.getElementById('fav-filter');
+  fbox.innerHTML = '';
+  FILTERS[curCat].forEach(function (f) {
+    var c = document.createElement('span');
+    c.className = 'fav-chip' + (f === curFilter ? ' on' : '');
+    c.textContent = f;
+    c.addEventListener('click', function () { curFilter = f; renderFilter(); render(); });
+    fbox.appendChild(c);
+  });
+}
+var pendingDel = null;
+function askDelete(f) {
+  pendingDel = f;
+  document.getElementById('del-dialog-sub').textContent = '将「' + f.title + '」移出收藏列表';
+  document.getElementById('del-dialog').showModal();
+}
+document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('fav-tabs').addEventListener('click', function (ev) {
+    var t = ev.target.closest('.fav-tab');
+    if (!t) return;
+    curCat = t.dataset.cat; curFilter = '全部';
+    this.querySelectorAll('.fav-tab').forEach(function (x) { x.classList.remove('on'); });
+    t.classList.add('on');
+    renderFilter(); render();
+  });
+  document.getElementById('del-no').addEventListener('click', function () { document.getElementById('del-dialog').close(); });
+  document.getElementById('del-yes').addEventListener('click', function () {
+    if (pendingDel) {
+      saveFavs(loadFavs().filter(function (x) { return x.id !== pendingDel.id; }));
+      showToast('ok', '已取消收藏', pendingDel.title);
+      pendingDel = null;
+    }
+    document.getElementById('del-dialog').close();
+    render();
+  });
+  renderFilter(); render();
+});
+</script>
+<script src="js/tabbar.js"></script>
+</body>
+</html>

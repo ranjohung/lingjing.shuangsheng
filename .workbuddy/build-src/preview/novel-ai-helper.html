@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>小说辅助模拟器 · 创作者中心 · 灵境 · 双生</title>
+<meta name="description" content="V21 小说辅助模拟器 · 对话式引导问卷 + 创作简报 + 专家模式 28 字段" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/design-system.css" />
+<style>
+  /* ---------- V21 模式切换 ---------- */
+  .aih-mode-bar { display:flex; gap:8px; padding: 12px 16px 0; max-width: 860px; margin: 0 auto; }
+  .aih-mode-btn { flex:1; padding:10px 12px; border-radius:var(--r-md); border:1px solid var(--border-default);
+    background:var(--bg-elevated); color:var(--text-secondary); font-size:13px; cursor:pointer; transition:all var(--dur-fast); }
+  .aih-mode-btn.active { background:rgba(139,124,246,.16); border-color:rgba(139,124,246,.55); color:var(--text-primary); font-weight:600; }
+  /* ---------- 引导模式 ---------- */
+  .wz-wrap { max-width: 720px; margin: 0 auto; padding: 16px 16px 48px; }
+  .wz-banner { display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:var(--r-md);
+    background:rgba(78,204,163,.10); border:1px solid rgba(78,204,163,.35); font-size:12.5px; color:var(--text-secondary); margin-bottom:14px; }
+  .wz-banner a { color:var(--brand-green); font-weight:600; text-decoration:none; }
+  .wz-dots { display:flex; gap:6px; align-items:center; margin: 4px 0 14px; }
+  .wz-dot { width:8px; height:8px; border-radius:50%; background:var(--bg-muted); border:1px solid var(--border-default); }
+  .wz-dot.done { background:rgba(139,124,246,.5); border-color:var(--brand-violet); }
+  .wz-dot.cur { background:var(--brand-violet); border-color:var(--brand-violet); box-shadow:0 0 0 3px rgba(139,124,246,.18); }
+  .wz-steplabel { font-size:12px; color:var(--text-tertiary); margin-left:6px; }
+  .wz-log { display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
+  .wz-bubble { align-self:flex-start; max-width:92%; padding:10px 14px; border-radius:14px 14px 14px 4px;
+    background:var(--bg-elevated); border:1px solid var(--border-default); font-size:13px; color:var(--text-secondary); line-height:1.6; }
+  .wz-bubble.ai { background:rgba(232,199,90,.08); border-color:rgba(232,199,90,.3); }
+  .wz-qa { padding:12px 14px; border-radius:var(--r-md); background:var(--bg-elevated); border:1px solid var(--border-subtle); font-size:13px; }
+  .wz-qa .q { color:var(--text-tertiary); font-size:11.5px; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center; }
+  .wz-qa .q button { background:none; border:none; color:var(--brand-violet); cursor:pointer; font-size:11.5px; }
+  .wz-qa .a { color:var(--text-primary); line-height:1.6; }
+  .wz-qa .a em { font-style:normal; color:var(--text-tertiary); }
+  .wz-field { margin-bottom:14px; }
+  .wz-field-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .wz-field-label { font-size:13px; font-weight:500; color:var(--text-secondary); }
+  .wz-field-label .req { color:var(--brand-red); }
+  .wz-chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .wz-chip { padding:8px 14px; border-radius:var(--r-full); border:1px solid var(--border-default);
+    background:var(--bg-elevated); color:var(--text-secondary); font-size:13px; cursor:pointer; transition:all var(--dur-fast); }
+  .wz-chip:hover { border-color:var(--brand-violet); color:var(--text-primary); }
+  .wz-chip.sel { background:rgba(139,124,246,.18); border-color:var(--brand-violet); color:var(--text-primary); font-weight:600; }
+  .wz-actions { display:flex; gap:8px; align-items:center; justify-content:space-between; margin-top:18px; }
+  .wz-actions .l, .wz-actions .r { display:flex; gap:8px; }
+  /* 简报 */
+  .wz-brief-card { padding:20px; border-radius:var(--r-xl); background:var(--bg-elevated); border:1px solid var(--border-default); }
+  .wz-brief-title { font-family:var(--font-display); font-size:20px; margin-bottom:4px; }
+  .wz-brief-sub { font-size:12px; color:var(--text-tertiary); margin-bottom:16px; }
+  .wz-brief-sec { font-size:11px; letter-spacing:.12em; color:var(--text-muted); text-transform:uppercase; margin:14px 0 8px; }
+  .wz-brief-row { display:flex; gap:10px; padding:7px 0; border-bottom:1px dashed var(--border-subtle); font-size:13px; }
+  .wz-brief-row .k { width:88px; flex-shrink:0; color:var(--text-tertiary); }
+  .wz-brief-row .v { flex:1; color:var(--text-primary); line-height:1.55; }
+  .wz-brief-row .v.empty { color:var(--text-muted); font-size:12px; }
+  /* ---------- 专家模式（沿用 v5.18 三栏） ---------- */
+  .aih-layout { display: grid; grid-template-columns: 20% 55% 25%; min-height: calc(100vh - 64px); }
+  .aih-sidebar { flex-shrink:0; background:var(--bg-elevated); backdrop-filter:blur(12px); border-right:1px solid var(--border-subtle);
+    padding:var(--s-6) var(--s-3); position:sticky; top:64px; height:calc(100vh - 64px); overflow-y:auto; }
+  .aih-progress-card { padding:var(--s-4); background:var(--bg-elevated-strong); border:1px solid var(--border-default); border-radius:var(--r-md); margin-bottom:var(--s-4); }
+  .aih-progress-title { font-size:11px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:.1em; margin-bottom:var(--s-2); }
+  .aih-progress-value { font-family:var(--font-display); font-size:22px; font-weight:600; margin-bottom:var(--s-2); }
+  .aih-progress-bar { margin-bottom:var(--s-3); }
+  .aih-section-label { font-size:10px; font-weight:600; letter-spacing:.15em; color:var(--text-muted); text-transform:uppercase; padding:0 var(--s-3); margin:var(--s-4) 0 var(--s-2); }
+  .aih-table-item { display:flex; align-items:center; gap:var(--s-2); padding:10px var(--s-3); border-radius:var(--r-md); font-size:13px;
+    color:var(--text-secondary); transition:all var(--dur-fast); cursor:pointer; position:relative; }
+  .aih-table-item:hover { background:var(--bg-muted); color:var(--text-primary); }
+  .aih-table-item.active { background:rgba(139,124,246,.12); color:var(--text-primary); font-weight:500; }
+  .aih-table-item.active::before { content:''; position:absolute; left:0; width:3px; height:18px; background:var(--brand-violet); border-radius:0 2px 2px 0; }
+  .aih-table-icon { width:20px; text-align:center; font-size:14px; }
+  .aih-table-name { flex:1; }
+  .aih-table-count { font-size:10px; color:var(--text-muted); background:var(--bg-muted); padding:1px 6px; border-radius:var(--r-full); }
+  .aih-main { padding:var(--s-6) var(--s-8); }
+  .aih-right-sidebar { flex-shrink:0; background:var(--bg-elevated); backdrop-filter:blur(12px); border-left:1px solid var(--border-subtle);
+    padding:var(--s-6) var(--s-3); position:sticky; top:64px; height:calc(100vh - 64px); overflow-y:auto; }
+  .aih-breadcrumb-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--s-5); }
+  .aih-title { font-family:var(--font-display); font-size:26px; font-weight:600; display:flex; align-items:center; gap:var(--s-3); }
+  .aih-subtitle { font-size:13px; color:var(--text-tertiary); margin-top:4px; }
+  .aih-field { margin-bottom:var(--s-4); }
+  .aih-field-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+  .aih-field-label { font-size:13px; font-weight:500; color:var(--text-secondary); display:flex; align-items:center; gap:6px; }
+  .aih-field-label .req { color:var(--brand-red); }
+  .aih-field-label .hint { color:var(--text-muted); font-weight:400; font-size:11px; }
+  .aih-ai-btn { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; background:rgba(232,199,90,.1);
+    border:1px solid rgba(232,199,90,.3); border-radius:var(--r-full); font-size:11px; color:var(--brand-gold); cursor:pointer; transition:all var(--dur-fast); }
+  .aih-ai-btn:hover { background:rgba(232,199,90,.18); border-color:rgba(232,199,90,.5); transform:translateY(-1px); }
+  .aih-ai-modal { position:fixed; inset:0; background:rgba(8,7,26,.7); backdrop-filter:blur(8px); z-index:80; display:grid; place-items:center; padding:var(--s-4); animation:ds-fade-in 200ms var(--ease-out) both; }
+  .aih-ai-modal-card { width:100%; max-width:560px; background:var(--bg-overlay); border:1px solid var(--border-default); border-radius:var(--r-xl); overflow:hidden; animation:ds-scale-in 240ms var(--ease-spring) both; }
+  .aih-ai-modal-head { padding:var(--s-5) var(--s-6); border-bottom:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:space-between; }
+  .aih-ai-modal-body { padding:var(--s-6); max-height:60vh; overflow-y:auto; }
+  .aih-ai-modal-foot { padding:var(--s-4) var(--s-6); border-top:1px solid var(--border-subtle); display:flex; gap:var(--s-2); justify-content:flex-end; align-items:center; }
+  .aih-ai-ctx { font-size:11px; color:var(--text-tertiary); margin-right:auto; }
+  .aih-ai-option { padding:var(--s-4); background:var(--bg-elevated); border:1px solid var(--border-default); border-radius:var(--r-md); cursor:pointer; margin-bottom:var(--s-2); transition:all var(--dur-fast); }
+  .aih-ai-option:hover { background:var(--bg-elevated-strong); border-color:var(--brand-violet); transform:translateX(4px); }
+  .aih-ai-option-label { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .aih-ai-option-tag { font-size:10px; color:var(--text-tertiary); background:var(--bg-muted); padding:2px 8px; border-radius:var(--r-full); }
+  .aih-ai-option-text { font-size:13px; color:var(--text-secondary); line-height:1.6; white-space:pre-wrap; }
+  .aih-section { padding:var(--s-6); background:var(--bg-elevated); border:1px solid var(--border-default); border-radius:var(--r-xl); margin-bottom:var(--s-5); }
+  .aih-section-title { font-size:14px; font-weight:600; margin-bottom:var(--s-2); display:flex; align-items:center; gap:8px; }
+  .aih-section-title::before { content:''; width:3px; height:14px; background:var(--brand-violet); border-radius:2px; }
+  .aih-section-desc { font-size:12px; color:var(--text-tertiary); margin-bottom:var(--s-5); }
+  .aih-templates { padding:var(--s-6); background:var(--bg-elevated); border:1px solid var(--border-default); border-radius:var(--r-xl); margin-bottom:var(--s-5); }
+  .aih-template-tabs { display:flex; gap:4px; margin-bottom:var(--s-4); flex-wrap:wrap; }
+  .aih-template-tab { padding:6px 12px; background:var(--bg-elevated); border:1px solid var(--border-subtle); border-radius:var(--r-full); font-size:12px; color:var(--text-tertiary); cursor:pointer; transition:all var(--dur-fast); }
+  .aih-template-tab:hover { color:var(--text-primary); border-color:var(--border-strong); }
+  .aih-template-tab.active { background:rgba(232,199,90,.12); color:var(--brand-gold); border-color:rgba(232,199,90,.4); }
+  .aih-template-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:var(--s-2); }
+  .aih-template { padding:var(--s-3); background:var(--bg-muted); border:1px solid var(--border-subtle); border-radius:var(--r-md); cursor:pointer; font-size:12px; color:var(--text-secondary); transition:all var(--dur-fast); line-height:1.5; }
+  .aih-template:hover { background:rgba(139,124,246,.08); border-color:rgba(139,124,246,.3); color:var(--text-primary); }
+  .aih-template-name { font-weight:500; margin-bottom:2px; color:var(--text-primary); }
+  .aih-quality { padding:var(--s-6); background:var(--bg-elevated); border:1px solid var(--border-default); border-radius:var(--r-xl); }
+  .aih-quality-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s-3); }
+  .aih-quality-cell { padding:var(--s-4); background:var(--bg-muted); border:1px solid var(--border-subtle); border-radius:var(--r-md); }
+  .aih-quality-cell.pass { border-color:rgba(74,222,128,.3); }
+  .aih-quality-cell.warn { border-color:rgba(251,191,36,.3); }
+  .aih-quality-cell.fail { border-color:rgba(248,113,113,.3); }
+  .aih-quality-name { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; margin-bottom:4px; }
+  .aih-quality-name .status { font-size:9px; padding:1px 6px; border-radius:var(--r-full); font-weight:600; }
+  .aih-quality-name .status.pass { background:rgba(74,222,128,.15); color:var(--brand-green); }
+  .aih-quality-name .status.warn { background:rgba(251,191,36,.15); color:var(--brand-amber); }
+  .aih-quality-name .status.fail { background:rgba(248,113,113,.15); color:var(--brand-red); }
+  .aih-quality-desc { font-size:11px; color:var(--text-tertiary); line-height:1.5; }
+  @media (max-width:1024px) {
+    .aih-sidebar { width:100%; height:auto; position:static; border-right:0; border-bottom:1px solid var(--border-subtle); }
+    .aih-layout { grid-template-columns:1fr; }
+    .aih-main { padding:var(--s-4); }
+    .aih-right-sidebar { display:none; }
+    .aih-quality-grid, .aih-template-grid { grid-template-columns:1fr; }
+  }
+</style>
+<link rel="stylesheet" href="css/mobile-lock.css" />
+</head>
+<body>
+
+<header class="ds-page-header">
+  <div class="ds-page-header-inner">
+    <a href="creator-center.html" class="ds-back"><span class="arrow">←</span> 返回创作者中心</a>
+    <nav class="ds-breadcrumb">
+      <a href="library.html">小说世界</a><span class="sep">/</span>
+      <a href="creator-center.html">创作者中心</a><span class="sep">/</span>
+      <span class="current">小说辅助模拟器</span>
+    </nav>
+    <div class="ds-page-header-right">
+      <button class="ds-icon-btn ds-tooltip" data-tip="保存" aria-label="保存" onclick="expertSave()">💾</button>
+      <button class="ds-icon-btn ds-tooltip" data-tip="检测" aria-label="检测" onclick="runQualityCheck()">🛡️</button>
+      <div class="ds-user-chip"><div class="ds-user-avatar">L</div><span>灵境作者</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- V21 模式切换 -->
+<div class="aih-mode-bar">
+  <button class="aih-mode-btn active" id="mode-guide" onclick="switchMode('guide')">🌱 引导模式（推荐）<span style="opacity:.7;font-size:11px;">· 3 必答 + 5 选答</span></button>
+  <button class="aih-mode-btn" id="mode-expert" onclick="switchMode('expert')">🧾 专家模式<span style="opacity:.7;font-size:11px;">· 6 表 28 字段</span></button>
+</div>
+
+<!-- ================= 引导模式 ================= -->
+<section id="guide-view">
+  <div class="wz-wrap">
+    <div id="wz-banner-slot"></div>
+    <div class="wz-dots" id="wz-dots"></div>
+    <div class="wz-log" id="wz-log"></div>
+
+    <!-- 当前问题卡 -->
+    <div class="aih-section" id="wz-card" style="margin-bottom:0;"></div>
+
+    <!-- 创作简报 -->
+    <div class="wz-brief-card" id="wz-brief" style="display:none;">
+      <div class="wz-brief-title">📋 创作简报</div>
+      <div class="wz-brief-sub">这就是你的故事骨架。确认后进入大纲编辑，AI 将严格围绕这份简报工作。</div>
+      <div id="wz-brief-body"></div>
+      <div class="wz-actions">
+        <div class="l"><button class="ds-btn ds-btn-secondary" onclick="backToEdit()">← 返回修改</button></div>
+        <div class="r"><button class="ds-btn ds-btn-primary" id="btn-confirm-brief" onclick="confirmBrief()">✅ 确认，这就是我的故事 →</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 专家模式（v5.18 保留） ================= -->
+<section id="expert-view" style="display:none;">
+  <div class="aih-layout">
+    <aside class="aih-sidebar">
+      <div class="aih-progress-card">
+        <div class="aih-progress-title">总体进度</div>
+        <div class="aih-progress-value" id="overall-progress">0%</div>
+        <div class="aih-progress-bar"><div class="ds-progress"><div class="ds-progress-fill" id="overall-fill" style="width:0%"></div></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-tertiary);">
+          <span>已完成 <strong id="overall-done" style="color:var(--text-primary)">0</strong>/28</span>
+          <span id="overall-remain">28 待填</span>
+        </div>
+      </div>
+      <div class="aih-section-label">6 张表</div>
+      <div id="table-list"></div>
+      <div class="aih-section-label">提问模板</div>
+      <a class="ds-btn ds-btn-secondary ds-btn-sm ds-w-full" href="javascript:void(0)" onclick="scrollToTemplates()">12 类模板 →</a>
+      <div class="aih-section-label">质量检测</div>
+      <button class="ds-btn ds-btn-gold ds-btn-sm ds-w-full" onclick="runQualityCheck()">🛡️ 6 维自动检测</button>
+    </aside>
+
+    <main class="aih-main">
+      <div class="aih-breadcrumb-row ds-anim-fade-in">
+        <div>
+          <h1 class="aih-title" id="table-title">📖 基础信息表</h1>
+          <p class="aih-subtitle" id="table-desc">小说最基本的信息 — 书名、类型、主题、基调、字数、简介、读者</p>
+        </div>
+        <div class="ds-section-meta">
+          <button class="ds-btn ds-btn-ghost ds-btn-sm" onclick="resetTable()">↻ 重置</button>
+          <button class="ds-btn ds-btn-secondary ds-btn-sm" onclick="expertSave()">💾 保存</button>
+        </div>
+      </div>
+      <div id="fields-container"></div>
+      <section class="aih-templates" id="templates-section">
+        <div class="aih-section-title">💡 AI 提问模板（12 类）</div>
+        <p class="aih-section-desc">针对任何字段，让 AI 多版本回答。点击模板 → 在弹窗中获得候选。</p>
+        <div class="aih-template-tabs" id="template-tabs">
+          <button class="aih-template-tab active" data-cat="scene">场景类</button>
+          <button class="aih-template-tab" data-cat="character">角色类</button>
+          <button class="aih-template-tab" data-cat="dialogue">对话类</button>
+          <button class="aih-template-tab" data-cat="plot">情节类</button>
+        </div>
+        <div class="aih-template-grid" id="template-grid"></div>
+      </section>
+      <section class="aih-quality" id="quality-section">
+        <div class="aih-section-title">🛡️ 6 维自动质量检测</div>
+        <p class="aih-section-desc">点击"6 维自动检测"或右上角 🛡️ 按钮运行检测。报告生成后可作为修改参考。</p>
+        <div class="aih-quality-grid" id="quality-grid"></div>
+      </section>
+    </main>
+
+    <aside class="aih-right-sidebar">
+      <div class="aih-section-label">AI 辅助面板</div>
+      <div class="aih-section-label">当前章目标</div>
+      <div class="aih-section-label">出场人物</div>
+      <div class="aih-section-label">未回收伏笔</div>
+      <p style="font-size:11px;color:var(--text-muted);padding:0 12px;line-height:1.7;">逐章创作请使用「逐章创作台」：<br><a href="novel-writer.html" style="color:var(--brand-violet);">打开创作台 →</a></p>
+    </aside>
+  </div>
+</section>
+
+<script src="js/db.js"></script>
+<script src="js/novel-outline.js"></script>
+<script src="js/character-profile.js"></script>
+<script src="js/scene-card.js"></script>
+<script src="js/ai-question.js"></script>
+<script src="js/quality-auto.js"></script>
+<script src="js/novel-sim-store.js"></script>
+<script src="js/novel-sim-ai.js"></script>
+<script>
+  /* =====================================================================
+   * V21-B · 引导模式（对话式问卷 → 创作简报）
+   * ===================================================================== */
+  var AI = window.NovelSimAI, Store = window.NovelSimStore;
+  var WZ_KEY = 'lingjing_v521_wizard_draft';
+
+  var WZ_QUESTIONS = [
+    { id: 'genre', layer: 1, title: '题材与创意概要', desc: '想写一个什么类型的故事？先定方向，再给 AI 一句话概括你脑海里的画面。',
+      fields: [
+        { key: 'genre', label: '题材', type: 'chips', chips: AI.GENRES },
+        { key: 'idea', label: '一句话创意概要', type: 'text', hint: '1-2 句讲清你想要的故事', aiKind: 'genre_ideas' }
+      ] },
+    { id: 'protagonist', layer: 1, title: '主角设定', desc: '故事由谁扛起？选主角类型、职业身份和核心性格——每一项都可以选、可以写、可以让 AI 出主意。',
+      fields: [
+        { key: 'ptype', label: '主角类型', type: 'chips', chips: ['单主角', '双主角', '群像'] },
+        { key: 'job', label: '职业身份', type: 'chips', chips: AI.jobsFor(''), aiKind: 'protag_jobs', free: true },
+        { key: 'traits', label: '核心性格', type: 'chips', chips: AI.TRAITS, free: true }
+      ] },
+    { id: 'conflict', layer: 1, title: '核心冲突与驱动力', desc: '好故事离不开张力：什么在压迫主角？他为什么不能停下来？',
+      fields: [
+        { key: 'ctype', label: '冲突类型', type: 'chips', chips: AI.CONFLICTS },
+        { key: 'drive', label: '内在驱动力', type: 'chips', chips: AI.DRIVES, free: true }
+      ] },
+    { id: 'world', layer: 2, title: '深度定制 · 世界观设定', desc: '选答题。跳过也没关系，AI 会根据前面已答内容自动补一份合理设定。',
+      fields: [ { key: 'world', label: '世界观', type: 'chips', chips: AI.WORLDS, aiKind: 'deep_world', free: true } ] },
+    { id: 'cast', layer: 2, title: '深度定制 · 重要配角', desc: '选答题。描述 1-3 个重要配角，或让 AI 按你的主角配置一组。',
+      fields: [ { key: 'cast', label: '重要配角', type: 'text', hint: '如：亦师亦友的前辈、立场对立的宿敌', aiKind: 'deep_cast' } ] },
+    { id: 'relations', layer: 2, title: '深度定制 · 关系网络', desc: '选答题。故事围绕哪种核心关系展开？',
+      fields: [ { key: 'relations', label: '关系网络', type: 'chips', chips: AI.RELATIONS, aiKind: 'deep_relations', free: true } ] },
+    { id: 'length', layer: 2, title: '深度定制 · 故事长度', desc: '选答题。决定章节规划的规模。',
+      fields: [ { key: 'length', label: '故事长度', type: 'chips', chips: AI.LENGTHS.map(function (x) { return x.k; }) } ] },
+    { id: 'tone', layer: 2, title: '深度定制 · 情感基调', desc: '选答题。读者合上书时，你希望他们心里留下什么？',
+      fields: [ { key: 'tone', label: '情感基调', type: 'chips', chips: AI.TONES } ] }
+  ];
+
+  var wiz = {};
+  var wzIndex = 0;
+  var briefShown = false;
+
+  function loadWiz() {
+    try {
+      var raw = localStorage.getItem(WZ_KEY);
+      if (raw) wiz = JSON.parse(raw); else wiz = {};
+    } catch (e) { wiz = {}; }
+    // 恢复进度：跳到最后一个已答题
+    wzIndex = 0;
+    for (var i = 0; i < WZ_QUESTIONS.length; i++) {
+      var q = WZ_QUESTIONS[i];
+      var answered = q.fields.some(function (f) { return wiz[f.key]; });
+      if (answered) wzIndex = i + 1;
+    }
+    if (wzIndex >= WZ_QUESTIONS.length) { showBrief(); }
+  }
+  function saveWiz() { try { localStorage.setItem(WZ_KEY, JSON.stringify(wiz)); } catch (e) {} }
+
+  function wzAnswerSummary(q) {
+    return q.fields.map(function (f) { return wiz[f.key] ? wiz[f.key] : ''; })
+      .filter(Boolean).join(' · ');
+  }
+
+  function renderDots() {
+    var el = document.getElementById('wz-dots');
+    var html = '';
+    WZ_QUESTIONS.forEach(function (q, i) {
+      var cls = i < wzIndex ? 'done' : (i === wzIndex ? 'cur' : '');
+      html += '<span class="wz-dot ' + cls + '"></span>';
+    });
+    html += '<span class="wz-steplabel" id="wz-step-label"></span>';
+    el.innerHTML = html;
+    var label = document.getElementById('wz-step-label');
+    if (label) {
+      label.textContent = wzIndex < WZ_QUESTIONS.length
+        ? ('第 ' + (wzIndex + 1) + '/' + WZ_QUESTIONS.length + ' 问 · ' + (WZ_QUESTIONS[wzIndex].layer === 1 ? '必答' : '选答'))
+        : '已完成，请确认创作简报';
+    }
+  }
+
+  function renderLog() {
+    var log = document.getElementById('wz-log');
+    var html = '<div class="wz-bubble">你好，我是你的创作引导员。接下来 8 个问题，只需要回答 3 个必答题，就能生成你的<b>创作简报</b>。卡住了就点「AI 随机生成」，有想法就用「自由描述」。</div>';
+    WZ_QUESTIONS.forEach(function (q, i) {
+      if (i >= wzIndex) return;
+      var ans = wzAnswerSummary(q) || '<em>（已跳过 · AI 后续按已答信息生成）</em>';
+      html += '<div class="wz-qa"><div class="q"><span>' + q.title + '</span><button onclick="gotoQuestion(' + i + ')">修改</button></div><div class="a">' + ans + '</div></div>';
+    });
+    log.innerHTML = html;
+  }
+
+  function gotoQuestion(i) { briefShown = false; document.getElementById('wz-brief').style.display = 'none'; wzIndex = i; renderGuide(); }
+
+  function backToEdit() {
+    briefShown = false;
+    document.getElementById('wz-brief').style.display = 'none';
+    wzIndex = 0;
+    renderGuide();
+  }
+
+  function wzFieldHTML(f, q) {
+    var v = wiz[f.key] || '';
+    var req = q.layer === 1 ? ' <span class="req">*</span>' : '';
+    var btns = '';
+    btns += '<button class="aih-ai-btn" onclick="wzAI(\'' + f.key + '\')">🤖 AI随机生成</button>';
+    btns += '<button class="aih-ai-btn" style="margin-left:6px;" onclick="wzFree(\'' + f.key + '\', \'' + f.label + '\')">✏️ 自由描述</button>';
+    var input = '';
+    if (f.type === 'chips') {
+      var chips = f.key === 'job' ? AI.jobsFor(wiz.genre) : f.chips;
+      // 自定义值不在 chips 里时补一个自定义 chip
+      var list = chips.slice();
+      if (v && list.indexOf(v) === -1) list = [v].concat(list);
+      input = '<div class="wz-chips" data-key="' + f.key + '">' + list.map(function (c) {
+        return '<button type="button" class="wz-chip' + (wiz[f.key] === c ? ' sel' : '') + '" data-v="' + c + '" onclick="wzChip(\'' + f.key + '\', this)">' + c + '</button>';
+      }).join('') + '</div>';
+    } else {
+      input = '<textarea class="ds-textarea" id="wz-field-' + f.key + '" rows="2" placeholder="' + (f.hint || '') + '" oninput="wzText(\'' + f.key + '\', this.value)">' + (v || '') + '</textarea>';
+    }
+    return '<div class="wz-field" data-key="' + f.key + '"><div class="wz-field-head"><label class="wz-field-label">' + f.label + req + '</label><div>' + btns + '</div></div>' + input + '</div>';
+  }
+
+  function renderCard() {
+    var card = document.getElementById('wz-card');
+    if (wzIndex >= WZ_QUESTIONS.length) { card.style.display = 'none'; return; }
+    card.style.display = '';
+    var q = WZ_QUESTIONS[wzIndex];
+    var skip = q.layer === 2 ? '<button class="ds-btn ds-btn-ghost ds-btn-sm" id="wz-skip" onclick="wzSkip()">跳过本题 →</button>' : '';
+    card.innerHTML =
+      '<div class="aih-section-title">💬 ' + q.title + '</div>' +
+      '<p class="aih-section-desc">' + q.desc + '</p>' +
+      q.fields.map(function (f) { return wzFieldHTML(f, q); }).join('') +
+      '<div class="wz-actions">' +
+        '<div class="l"><button class="ds-btn ds-btn-secondary ds-btn-sm" id="wz-prev" onclick="wzPrev()" ' + (wzIndex === 0 ? 'disabled' : '') + '>← 上一步</button></div>' +
+        '<div class="r">' + skip + '<button class="ds-btn ds-btn-primary ds-btn-sm" id="wz-next" onclick="wzNext()">下一步 →</button></div>' +
+      '</div>';
+  }
+
+  function renderGuide() {
+    renderDots(); renderLog(); renderCard();
+    var brief = document.getElementById('wz-brief');
+    brief.style.display = briefShown ? '' : 'none';
+    saveWiz();
+  }
+
+  function wzChip(key, btn) {
+    wiz[key] = btn.dataset.v;
+    var box = btn.parentElement;
+    box.querySelectorAll('.wz-chip').forEach(function (c) { c.classList.remove('sel'); });
+    btn.classList.add('sel');
+    saveWiz();
+  }
+  function wzText(key, val) { wiz[key] = val; saveWiz(); }
+
+  /* AI 随机生成（chips 填值 / 文本填概要） */
+  function wzAI(key) {
+    var q = WZ_QUESTIONS[wzIndex];
+    var f = q.fields.filter(function (x) { return x.key === key; })[0];
+    var kind = f.aiKind || (f.type === 'chips' ? 'chip_random' : 'genre_ideas');
+    var ctx = { brief: currentBriefDraft() };
+    var res;
+    if (kind === 'chip_random') {
+      res = { candidates: f.chips.map(function (c) { return { style: '备选', text: c }; }), context: '基于：本题型备选项' };
+    } else {
+      res = AI.gen(kind, ctx);
+    }
+    openCandModal({
+      title: '🤖 AI 帮我答：' + f.label, kind: kind, ctx: ctx, res: res,
+      onPick: function (text) {
+        wiz[key] = text;
+        saveWiz(); renderGuide();
+        showToast('已采纳 AI 建议', 'success');
+      }
+    });
+  }
+
+  /* 自由描述：modal 输入（替代 prompt） */
+  function wzFree(key, label) {
+    openFreeModal(label, function (text) {
+      wiz[key] = text;
+      saveWiz(); renderGuide();
+      showToast('已采纳自由描述', 'success');
+    });
+  }
+
+  function wzSkip() { appendFeedback('已跳过本题，这一项后续交给 AI 按已答信息生成。'); wzIndex++; advance(); }
+  function wzPrev() { if (wzIndex > 0) { wzIndex--; renderGuide(); } }
+
+  function wzNext() {
+    var q = WZ_QUESTIONS[wzIndex];
+    var missing = q.fields.filter(function (f) { return !wiz[f.key] || !String(wiz[f.key]).trim(); });
+    if (q.layer === 1 && missing.length) {
+      showToast('请先完成：' + missing.map(function (f) { return f.label; }).join('、'), 'error');
+      return;
+    }
+    var ans = wzAnswerSummary(q) || '（跳过）';
+    appendFeedback('好的，已记录：「' + ans + '」。' + (wzIndex === 2 ? '三个必答题完成，骨架已经立住了！' : ''));
+    wzIndex++;
+    advance();
+  }
+
+  function advance() {
+    if (wzIndex >= WZ_QUESTIONS.length) { showBrief(); renderDots(); return; }
+    renderGuide();
+  }
+  function appendFeedback(text) {
+    var log = document.getElementById('wz-log');
+    var b = document.createElement('div');
+    b.className = 'wz-bubble ai';
+    b.textContent = text;
+    log.appendChild(b);
+    log.parentElement && (log.scrollTop = 1e9);
+  }
+
+  function currentBriefDraft() {
+    return { genre: wiz.genre || '', idea: wiz.idea || '',
+      protagonist: { type: wiz.ptype || '', job: wiz.job || '', traits: wiz.traits || '' },
+      conflict: { type: wiz.ctype || '', drive: wiz.drive || '' },
+      deep: { world: wiz.world || '', cast: wiz.cast || '', relations: wiz.relations || '', length: wiz.length || '', tone: wiz.tone || '' } };
+  }
+
+  function briefRow(k, v) {
+    var empty = !v;
+    return '<div class="wz-brief-row"><span class="k">' + k + '</span><span class="v' + (empty ? ' empty' : '') + '">' +
+      (empty ? '（选答未填 · AI 将按已答信息生成）' : v) + '</span></div>';
+  }
+  function showBrief() {
+    briefShown = true;
+    document.getElementById('wz-card').style.display = 'none';
+    var b = currentBriefDraft();
+    document.getElementById('wz-brief-body').innerHTML =
+      '<div class="wz-brief-sec">必答 · 故事骨架</div>' +
+      briefRow('题材', b.genre) + briefRow('创意概要', b.idea) +
+      briefRow('主角类型', b.protagonist.type) + briefRow('职业身份', b.protagonist.job) + briefRow('核心性格', b.protagonist.traits) +
+      briefRow('冲突类型', b.conflict.type) + briefRow('内在驱动力', b.conflict.drive) +
+      '<div class="wz-brief-sec">深度定制 · 选答</div>' +
+      briefRow('世界观', b.deep.world) + briefRow('重要配角', b.deep.cast) +
+      briefRow('关系网络', b.deep.relations) + briefRow('故事长度', b.deep.length) + briefRow('情感基调', b.deep.tone);
+    document.getElementById('wz-brief').style.display = '';
+    renderDots();
+  }
+
+  function confirmBrief() {
+    var b = currentBriefDraft();
+    if (!b.genre || !b.idea || !b.protagonist.job || !b.conflict.type) {
+      showToast('必答项未完成，先回到问卷补齐', 'error'); return;
+    }
+    Store.setBrief(b);
+    showToast('创作简报已保存，进入大纲编辑…', 'success');
+    setTimeout(function () { LJNav('novel-outline.html'); }, 600);
+  }
+
+  /* ---------- 通用弹窗：AI 候选（3-5 个 + 换一批 + 我来说） ---------- */
+  function openCandModal(opt) {
+    var res = opt.res || AI.gen(opt.kind, opt.ctx);
+    document.querySelectorAll('.aih-ai-modal').forEach(function (m) { m.remove(); });
+    var modal = document.createElement('div');
+    modal.className = 'aih-ai-modal';
+    modal.innerHTML =
+      '<div class="aih-ai-modal-card">' +
+        '<div class="aih-ai-modal-head"><div style="font-weight:600;font-size:15px;">' + opt.title + '</div>' +
+        '<button class="ds-modal-close" onclick="this.closest(\'.aih-ai-modal\').remove()">✕</button></div>' +
+        '<div class="aih-ai-modal-body" id="cand-body"></div>' +
+        '<div class="aih-ai-modal-foot"><span class="aih-ai-ctx">' + (res.context || '') + '</span>' +
+          '<button class="ds-btn ds-btn-ghost ds-btn-sm" onclick="this.closest(\'.aih-ai-modal\').remove()">关闭</button>' +
+          '<button class="ds-btn ds-btn-secondary ds-btn-sm" id="cand-refresh">🔄 换一批</button>' +
+          '<button class="ds-btn ds-btn-gold ds-btn-sm" id="cand-mysay">✏️ 我来说</button></div>' +
+      '</div>';
+    document.body.appendChild(modal);
+    function draw() {
+      var body = modal.querySelector('#cand-body');
+      body.innerHTML = res.candidates.map(function (c, i) {
+        return '<div class="aih-ai-option" data-i="' + i + '"><div class="aih-ai-option-label">' +
+          '<span style="font-weight:600;color:var(--brand-violet);">候选 ' + String.fromCharCode(65 + i) + '</span>' +
+          '<span class="aih-ai-option-tag">' + c.style + '</span></div>' +
+          '<div class="aih-ai-option-text">' + c.text + '</div></div>';
+      }).join('') + '<textarea class="ds-textarea" id="cand-mysay-input" rows="3" style="display:none;margin-top:8px;" placeholder="用你自己的话说，AI 负责格式化…"></textarea>' +
+      '<button class="ds-btn ds-btn-primary ds-btn-sm" id="cand-mysay-ok" style="display:none;margin-top:8px;">让 AI 格式化并采纳</button>';
+      body.querySelectorAll('.aih-ai-option').forEach(function (el) {
+        el.addEventListener('click', function () {
+          var c = res.candidates[Number(el.dataset.i)];
+          Store.addAiLog((opt.kind || '') + '_pick', res.context, res.candidates.length, Number(el.dataset.i));
+          modal.remove(); opt.onPick(c.text);
+        });
+      });
+      var okBtn = body.querySelector('#cand-mysay-ok');
+      if (okBtn) okBtn.addEventListener('click', function () {
+        var t = body.querySelector('#cand-mysay-input').value;
+        if (!t.trim()) { showToast('先写点想法再让 AI 格式化', 'error'); return; }
+        var c = (opt.kind && opt.kind.indexOf('para_') === 0)
+          ? AI.formatUserText(opt.kind, t, opt.ctx)
+          : { style: '作者口述 · AI 格式化', text: t.trim() };
+        modal.remove(); opt.onPick(c.text);
+      });
+    }
+    draw();
+    modal.querySelector('#cand-refresh').addEventListener('click', function () {
+      res = AI.gen(opt.kind, opt.ctx);
+      modal.querySelector('.aih-ai-ctx').textContent = res.context || '';
+      draw();
+      showToast('已换一批', 'info');
+    });
+    modal.querySelector('#cand-mysay').addEventListener('click', function () {
+      var i = modal.querySelector('#cand-mysay-input'), o = modal.querySelector('#cand-mysay-ok');
+      if (i) { i.style.display = ''; o.style.display = ''; i.focus(); }
+    });
+    modal.addEventListener('click', function (e) { if (e.target === modal) modal.remove(); });
+  }
+  function openFreeModal(label, onOk) {
+    document.querySelectorAll('.aih-ai-modal').forEach(function (m) { m.remove(); });
+    var modal = document.createElement('div');
+    modal.className = 'aih-ai-modal';
+    modal.innerHTML =
+      '<div class="aih-ai-modal-card"><div class="aih-ai-modal-head">' +
+      '<div style="font-weight:600;font-size:15px;">✏️ 自由描述：' + label + '</div>' +
+      '<button class="ds-modal-close" onclick="this.closest(\'.aih-ai-modal\').remove()">✕</button></div>' +
+      '<div class="aih-ai-modal-body"><textarea class="ds-textarea" id="free-input" rows="4" placeholder="按你的想法写，AI 负责格式化"></textarea></div>' +
+      '<div class="aih-ai-modal-foot"><button class="ds-btn ds-btn-ghost ds-btn-sm" onclick="this.closest(\'.aih-ai-modal\').remove()">取消</button>' +
+      '<button class="ds-btn ds-btn-primary ds-btn-sm" id="free-ok">采纳</button></div></div>';
+    document.body.appendChild(modal);
+    modal.addEventListener('click', function (e) { if (e.target === modal) modal.remove(); });
+    modal.querySelector('#free-ok').addEventListener('click', function () {
+      var t = modal.querySelector('#free-input').value;
+      if (!t.trim()) { showToast('先写点什么吧', 'error'); return; }
+      modal.remove(); onOk(t.trim());
+    });
+    modal.querySelector('#free-input').focus();
+  }
+
+  /* ---------- 已有简报横幅 ---------- */
+  function renderResumeBanner() {
+    var b = Store.getBrief();
+    if (!b) return;
+    var slot = document.getElementById('wz-banner-slot');
+    slot.innerHTML = '<div class="wz-banner">📋 检测到已有创作简报（' + (b.genre || '') + '）— ' +
+      '<a href="novel-outline.html">继续去大纲编辑 →</a> 或在下方重新作答覆盖。</div>';
+  }
+
+  /* =====================================================================
+   * 专家模式（v5.18 · 6 表 28 字段 · 原样保留）
+   * ===================================================================== */
+  const TABLES = [
+    { id: 0, name: '基础信息表', icon: '📖', desc: '小说最基本的信息 — 书名、类型、主题、基调、字数、简介、读者', fields: [
+        { key: 'title', label: '书名', required: true, type: 'text', hint: '《长夜将明》《记忆残卷》' },
+        { key: 'genre', label: '类型', required: true, type: 'select', options: ['都市','校园','言情','悬疑','玄幻','仙侠','科幻','末日','历史','架空','无限流','恐怖','游戏'], hint: '可多选' },
+        { key: 'theme', label: '主题', type: 'text', hint: '成长、救赎、权力与代价' },
+        { key: 'tone', label: '基调', type: 'text', hint: '沉重、紧张、带少量幽默' },
+        { key: 'wordcount', label: '预计字数（万字）', type: 'number', hint: '15' },
+        { key: 'logline', label: '一句话简介', required: true, type: 'textarea', hint: '一句话讲完故事' },
+        { key: 'audience', label: '目标读者', type: 'text', hint: '18-30岁，喜欢悬疑+修仙的读者' } ] },
+    { id: 1, name: '世界格局表', icon: '🌍', desc: '故事发生的世界设定 — 类型、时代、力量、势力、冲突', fields: [
+        { key: 'world_type', label: '世界类型', type: 'select', options: ['现实','架空','半架空'] },
+        { key: 'era', label: '时代背景', type: 'text', hint: '类唐宋时期，但存在灵气' },
+        { key: 'power_system', label: '力量体系', type: 'textarea', hint: '炼气→筑基→金丹→元婴→化神五境' },
+        { key: 'factions', label: '主要势力', type: 'textarea', hint: '天剑宗/幽冥教/皇朝' },
+        { key: 'social_class', label: '社会阶层', type: 'textarea', hint: '修士、凡人、被放逐者' },
+        { key: 'core_conflict', label: '核心冲突', type: 'textarea', required: true, hint: '灵气正在枯竭…' },
+        { key: 'geography', label: '地理环境', type: 'textarea', hint: '东：天剑山脉；西：幽冥沼泽…' } ] },
+    { id: 2, name: '主线情节表', icon: '📚', desc: '故事的骨架 — 主线目标、起点、终点、关键事件', fields: [
+        { key: 'main_goal', label: '主线一句话', type: 'text', required: true, hint: '主角要找到自己被篡改的记忆真相' },
+        { key: 'main_start', label: '主线起点', type: 'textarea', hint: '主角在一场战争中醒来…' },
+        { key: 'main_end', label: '主线终点', type: 'textarea', hint: '主角发现真相…' },
+        { key: 'main_events', label: '主线三个关键事件', type: 'textarea', hint: '事件一/二/三' },
+        { key: 'side_quests', label: '辅线（2-3条）', type: 'textarea', hint: '感情线/反派对决/同门寻找' },
+        { key: 'romance', label: '感情线', type: 'textarea', hint: '从戒备→并肩→信任→抉择→结局' } ] },
+    { id: 3, name: '章节细纲表', icon: '📑', desc: '每个事件一张细纲 — 起因/发展/高潮/尾声', fields: [
+        { key: 'event1_cause', label: '事件一 · 起因', type: 'textarea' },
+        { key: 'event1_develop', label: '事件一 · 发展', type: 'textarea' },
+        { key: 'event1_climax', label: '事件一 · 高潮', type: 'textarea' },
+        { key: 'event1_aftermath', label: '事件一 · 尾声', type: 'textarea' } ] },
+    { id: 4, name: '人物小传', icon: '🎭', desc: '主要角色 10 要素 + 语言指纹', fields: [
+        { key: 'char1_name', label: '主角 · 姓名', type: 'text' },
+        { key: 'char1_personality', label: '主角 · 性格特点', type: 'textarea', hint: '优点和缺点分别列出' },
+        { key: 'char1_voice', label: '主角 · 语言指纹', type: 'textarea', hint: '风格/口癖/句长/常用词' },
+        { key: 'char2_name', label: '核心配角 · 姓名', type: 'text' } ] },
+    { id: 5, name: '场景/对话卡', icon: '💬', desc: '每个场景填写三要素 + 对话五原则', fields: [
+        { key: 'scene1_goal', label: '场景 · 目标', type: 'text', hint: '让主角获得第一个线索' },
+        { key: 'scene1_conflict', label: '场景 · 冲突', type: 'textarea', hint: '陌生人暗示主角的身份，但主角不信任他' } ] }
+  ];
+
+  const TEMPLATES = {
+    scene: [
+      { name: '场景描写', q: '请用 200 字描写{地点}在{时间}的氛围，要求突出{情绪}，重点描写{细节}' },
+      { name: '场景过渡', q: '请写一个从{场景A}到{场景B}的过渡段落，要求自然、不超过 100 字' },
+      { name: '场景氛围', q: '请重写这段场景，增加{紧张/温馨/压抑}的氛围，用环境描写烘托情绪' } ],
+    character: [
+      { name: '角色出场', q: '请设计{角色名}的首次出场，要求在{场景}中，通过{动作}展现{性格}' },
+      { name: '角色内心', q: '请写一段{角色名}的内心独白，在{情境}下，体现{情绪}和{矛盾}' },
+      { name: '角色成长', q: '请设计一个让{角色名}从{状态A}转变到{状态B}的关键事件' },
+      { name: '角色关系', q: '请写一段{A}和{B}的互动，体现他们关系从{阶段A}到{阶段B}的变化' } ],
+    dialogue: [
+      { name: '对话重写', q: '请重写这段对话，要求更口语化，增加潜台词，符合{角色名}的语言指纹' },
+      { name: '对话设计', q: '请设计一段{A}和{B}的对话，场景是{场景}，要达成{目标}' },
+      { name: '金句设计', q: '请为{角色名}设计一句可截图传播的金句，体现{主题}' } ],
+    plot: [
+      { name: '转折设计', q: '请在{事件}中设计一个意外转折，要求出人意料但合理' },
+      { name: '伏笔设计', q: '请在{章节}中埋下一个关于{某事}的伏笔，要求在{章节}回收' },
+      { name: '冲突升级', q: '请将{冲突}升级，增加{障碍}，让主角面临更难的抉择' },
+      { name: '节奏调整', q: '这段剧情节奏太{快/慢}，请{压缩/扩展}，保持{核心事件}不变' } ]
+  };
+
+  let currentTable = 0;
+  let fieldValues = {};
+  let currentNovelId = new URLSearchParams(LJSearch()).get('novelId');
+
+  function loadValues() {
+    if (!currentNovelId) return;
+    try {
+      const stored = localStorage.getItem('lingjing_v514_novel_outline_v_' + currentNovelId);
+      if (stored) fieldValues = JSON.parse(stored);
+    } catch (e) { console.warn(e); }
+  }
+
+  function renderTableList() {
+    document.getElementById('table-list').innerHTML = TABLES.map(function (t, i) {
+      return '<div class="aih-table-item' + (i === currentTable ? ' active' : '') + '" data-table="' + i + '" onclick="switchTable(' + i + ')">' +
+        '<span class="aih-table-icon">' + t.icon + '</span><span class="aih-table-name">' + t.name + '</span>' +
+        '<span class="aih-table-count" id="cnt-' + i + '">0/' + t.fields.length + '</span></div>';
+    }).join('');
+  }
+
+  function switchTable(id) {
+    currentTable = id;
+    document.querySelectorAll('.aih-table-item').forEach(function (el) { el.classList.remove('active'); });
+    var item = document.querySelector('.aih-table-item[data-table="' + id + '"]');
+    if (item) item.classList.add('active');
+    var t = TABLES[id];
+    document.getElementById('table-title').textContent = t.icon + ' ' + t.name;
+    document.getElementById('table-desc').textContent = t.desc;
+    renderFields();
+    updateCounts();
+  }
+
+  function renderFields() {
+    var t = TABLES[currentTable];
+    document.getElementById('fields-container').innerHTML = '<section class="aih-section"><div class="aih-section-title">' + t.icon + ' ' + t.name + '</div><p class="aih-section-desc">' + t.desc + '</p><div class="ds-form-grid ds-form-grid-2">' + t.fields.map(function (f) { return renderField(f); }).join('') + '</div></section>';
+  }
+
+  function renderField(f) {
+    const v = fieldValues[f.key] || '';
+    const isRequired = f.required ? '<span class="req">*</span>' : '';
+    const aiBtn = '<button class="aih-ai-btn" onclick="openAI(\'' + f.key + '\', \'' + f.label + '\')">🤖 AI随机生成</button>';
+    const freeInputBtn = '<button class="aih-ai-btn" style="margin-left:6px;" onclick="openFreeInput(\'' + f.key + '\', \'' + f.label + '\')">✏️ 自由描述</button>';
+    let input = '';
+    if (f.type === 'textarea') {
+      input = '<textarea class="ds-textarea" id="field-' + f.key + '" oninput="updateField(\'' + f.key + '\', this.value)" placeholder="' + (f.hint || '') + '">' + v + '</textarea>';
+    } else if (f.type === 'select') {
+      input = '<select class="ds-select" id="field-' + f.key + '" onchange="updateField(\'' + f.key + '\', this.value)"><option value="">请选择</option>' + f.options.map(function (o) { return '<option ' + (v === o ? 'selected' : '') + '>' + o + '</option>'; }).join('') + '</select>';
+    } else if (f.type === 'number') {
+      input = '<input class="ds-input" type="number" id="field-' + f.key + '" value="' + v + '" oninput="updateField(\'' + f.key + '\', this.value)" placeholder="' + (f.hint || '') + '" />';
+    } else {
+      input = '<input class="ds-input" type="text" id="field-' + f.key + '" value="' + v + '" oninput="updateField(\'' + f.key + '\', this.value)" placeholder="' + (f.hint || '') + '" />';
+    }
+    return '<div class="aih-field"><div class="aih-field-head"><label class="aih-field-label">' + f.label + ' ' + isRequired + ' <span class="hint">' + (f.hint || '') + '</span></label><div>' + aiBtn + freeInputBtn + '</div></div>' + input + '</div>';
+  }
+
+  function openFreeInput(key, label) {
+    openFreeModal(label, function (text) {
+      fieldValues[key] = text;
+      var el = document.getElementById('field-' + key);
+      if (el) el.value = text;
+      updateCounts(); expertSave();
+      showToast('已采纳自由描述内容', 'info');
+    });
+  }
+
+  function updateField(key, value) { fieldValues[key] = value; updateCounts(); }
+
+  function updateCounts() {
+    let total = 0, done = 0;
+    TABLES.forEach(function (t, i) {
+      let tDone = 0;
+      t.fields.forEach(function (f) { total++; if (fieldValues[f.key] && String(fieldValues[f.key]).trim()) { done++; tDone++; } });
+      const el = document.getElementById('cnt-' + i);
+      if (el) el.textContent = tDone + '/' + t.fields.length;
+    });
+    const pct = Math.round((done / total) * 100);
+    document.getElementById('overall-progress').textContent = pct + '%';
+    document.getElementById('overall-fill').style.width = pct + '%';
+    document.getElementById('overall-done').textContent = done;
+    document.getElementById('overall-remain').textContent = (total - done) + ' 待填';
+  }
+
+  function resetTable() {
+    var t = TABLES[currentTable];
+    var dlg = document.createElement('div');
+    dlg.className = 'aih-ai-modal';
+    dlg.innerHTML = '<div class="aih-ai-modal-card" style="max-width:380px;"><div class="aih-ai-modal-head"><div style="font-weight:600;">清空「' + t.name + '」所有字段？</div><button class="ds-modal-close" onclick="this.closest(\'.aih-ai-modal\').remove()">✕</button></div><div class="aih-ai-modal-foot"><button class="ds-btn ds-btn-ghost ds-btn-sm" onclick="this.closest(\'.aih-ai-modal\').remove()">取消</button><button class="ds-btn ds-btn-primary ds-btn-sm" id="reset-ok">确认清空</button></div></div>';
+    document.body.appendChild(dlg);
+    dlg.querySelector('#reset-ok').addEventListener('click', function () {
+      t.fields.forEach(function (f) { fieldValues[f.key] = ''; });
+      dlg.remove(); switchTable(currentTable); expertSave(); showToast('已清空', 'info');
+    });
+  }
+
+  function expertSave(showMsg = true) {
+    if (!currentNovelId) currentNovelId = 'novel_' + Date.now();
+    try {
+      localStorage.setItem('lingjing_v514_novel_outline_v_' + currentNovelId, JSON.stringify(fieldValues));
+      if (showMsg) showToast('已保存到本地', 'success');
+    } catch (e) { console.warn(e); }
+  }
+
+  /* 专家模式 AI 弹窗（label → 候选库） */
+  const AI_SEEDS = {
+    '书名': [ { style: '厚重', text: '《长夜将明》—— 暗喻希望终将到来' }, { style: '诗意', text: '《剑与星河》—— 古典与现代的融合' }, { style: '爽文', text: '《我在修真界开挂》—— 轻松幽默' }, { style: '冷峻', text: '《第七次告别》—— 悬念感强' }, { style: '温暖', text: '《巷口那盏灯》—— 生活流' } ],
+    '一句话简介': [ { style: '悬疑', text: '一个失去记忆的修士发现，整个修仙世界的历史都是被人为改写的。' }, { style: '成长', text: '从被遗弃的废柴，到力挽狂澜的传奇，他只用了十年。' }, { style: '爱情', text: '她说要走，他说不必留；十年后她在终点等，他追来时已是白头。' }, { style: '现实', text: '裁员潮里的程序员回乡接手早餐铺，在账本里翻出一笔十年前的汇款。' }, { style: '设定', text: '记忆可以备份的时代，"亲历"成了最贵的奢侈品。' } ]
+  };
+  function openAI(key, label) {
+    var bank = AI_SEEDS[label] || [
+      { style: '紧张', text: '示例内容 1：营造紧张氛围，悬念层层递进。' },
+      { style: '抒情', text: '示例内容 2：情感细腻，触动人心。' },
+      { style: '爽文', text: '示例内容 3：节奏明快，反转不断。' } ];
+    openCandModal({
+      title: '🤖 AI 帮我写：' + label, kind: 'expert_' + key, ctx: { brief: Store.getBrief() },
+      res: { candidates: bank, context: '选项数量根据使用次数动态控制（2-5 个）' },
+      onPick: function (text) {
+        fieldValues[key] = text;
+        var el = document.getElementById('field-' + key);
+        if (el) el.value = text;
+        updateCounts(); expertSave(false);
+        showToast('已采纳 AI 推荐内容', 'success');
+      }
+    });
+  }
+
+  function setupTemplateTabs() {
+    document.querySelectorAll('.aih-template-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('.aih-template-tab').forEach(function (t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        renderTemplates(tab.dataset.cat);
+      });
+    });
+  }
+  function renderTemplates(cat) {
+    document.getElementById('template-grid').innerHTML = TEMPLATES[cat].map(function (t) {
+      return '<div class="aih-template" onclick="useTemplate(\'' + t.name + '\')"><div class="aih-template-name">' + t.name + '</div><div>' + t.q + '</div></div>';
+    }).join('');
+  }
+  function useTemplate(name) { showToast('已应用模板：' + name, 'info'); }
+  function scrollToTemplates() { document.getElementById('templates-section').scrollIntoView({ behavior: 'smooth' }); }
+
+  function runQualityCheck() {
+    if (window.QualityAuto) {
+      try {
+        const report = window.QualityAuto.checkAll(fieldValues);
+        renderQualityReport(report);
+        showToast('检测完成', 'success');
+        return;
+      } catch (e) { console.warn(e); }
+    }
+    renderQualityReport({
+      consistency: { status: 'pass', desc: '角色行为符合人物小传' },
+      voice: { status: 'pass', desc: '对话符合语言指纹' },
+      foreshadowing: { status: 'warn', desc: '回收率 0% — 请设置伏笔' },
+      timeline: { status: 'pass', desc: '时间顺序合理' },
+      world: { status: 'pass', desc: '未违反世界规则' },
+      completeness: { status: 'pass', desc: '场景三要素完整' }
+    });
+    showToast('检测完成', 'success');
+  }
+  function renderQualityReport(r) {
+    const items = [
+      { key: 'consistency', name: '📊 角色一致性' }, { key: 'voice', name: '🗣️ 语言指纹' },
+      { key: 'foreshadowing', name: '🪝 伏笔状态' }, { key: 'timeline', name: '⏰ 时间线' },
+      { key: 'world', name: '📏 世界规则' }, { key: 'completeness', name: '🎬 场景完整度' } ];
+    const grid = document.getElementById('quality-grid');
+    grid.innerHTML = items.map(function (it) {
+      const cell = r[it.key] || { status: 'warn', desc: '待检测' };
+      const status = cell.status === 'pass' ? '✅ PASS' : cell.status === 'warn' ? '⚠️ WARN' : '❌ FAIL';
+      return '<div class="aih-quality-cell ' + cell.status + '"><div class="aih-quality-name">' + it.name.replace(/^[^ ]+ /, '') + ' <span class="status ' + cell.status + '">' + status + '</span></div><div class="aih-quality-desc">' + cell.desc + '</div></div>';
+    }).join('');
+  }
+
+  function showToast(text, type = 'info') {
+    let container = document.querySelector('.ds-toast-container');
+    if (!container) { container = document.createElement('div'); container.className = 'ds-toast-container'; document.body.appendChild(container); }
+    const icon = { success: '✓', error: '✕', info: 'ⓘ' }[type];
+    const toast = document.createElement('div');
+    toast.className = 'ds-toast ' + type;
+    toast.innerHTML = '<div class="ds-toast-icon">' + icon + '</div><div class="ds-toast-body"><div class="ds-toast-desc">' + text + '</div></div>';
+    container.appendChild(toast);
+    setTimeout(function () {
+      toast.style.opacity = '0'; toast.style.transform = 'translateX(20px)'; toast.style.transition = 'all 240ms';
+      setTimeout(function () { toast.remove(); }, 240);
+    }, 2400);
+  }
+
+  /* ---------- 模式切换 ---------- */
+  function switchMode(mode) {
+    var g = mode === 'guide';
+    document.getElementById('mode-guide').classList.toggle('active', g);
+    document.getElementById('mode-expert').classList.toggle('active', !g);
+    document.getElementById('guide-view').style.display = g ? '' : 'none';
+    document.getElementById('expert-view').style.display = g ? 'none' : '';
+    if (!g) { renderTableList(); switchTable(currentTable); setupTemplateTabs(); renderTemplates('scene'); updateCounts(); }
+  }
+
+  /* ---------- init ---------- */
+  document.addEventListener('DOMContentLoaded', function () {
+    loadValues();
+    renderResumeBanner();
+    loadWiz();
+    renderGuide();
+    renderQualityGridIdle();
+  });
+  function renderQualityGridIdle() {
+    var names = ['📊 角色一致性', '🗣️ 语言指纹', '🪝 伏笔状态', '⏰ 时间线', '📏 世界规则', '🎬 场景完整度'];
+    document.getElementById('quality-grid').innerHTML = names.map(function (n) {
+      return '<div class="aih-quality-cell"><div class="aih-quality-name">' + n.slice(2) + ' <span class="status warn">—</span></div><div class="aih-quality-desc">点击运行检测</div></div>';
+    }).join('');
+  }
+</script>
+
+</body>
+</html>

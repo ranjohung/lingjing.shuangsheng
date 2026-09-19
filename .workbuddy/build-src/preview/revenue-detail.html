@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>收益明细</title>
+<link rel="stylesheet" href="css/shell-v64.css">
+<link rel="stylesheet" href="css/mobile-lock.css">
+<style>
+:root{--bg:#1A1A2E;--card:#16213E;--accent:#E94560;--xinyu:#6C5CE7;--ok:#4ECCA3;--warn:#FFB347;--world:#00B894;--text:#EAEAEA;--sub:#8A8A9A;--border:#2A2A4A}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;min-height:100vh;max-width:480px;margin:0 auto;overflow-x:hidden}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;position:sticky;top:0;background:var(--bg);z-index:10}
+.top-bar h1{font-size:20px;font-weight:700}
+.top-bar .back{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--card);cursor:pointer;font-size:18px}
+.ws{padding:0 20px 100px}
+
+/* 总览 */
+.total-card{background:linear-gradient(135deg,rgba(233,69,96,.12),rgba(108,92,231,.12));border-radius:16px;padding:20px;border:1px solid var(--border);margin-bottom:20px;text-align:center}
+.total-card .label{font-size:12px;color:var(--sub);margin-bottom:6px}
+.total-card .amount{font-size:32px;font-weight:800;color:var(--accent)}
+.total-card .unit{font-size:14px;color:var(--sub);margin-left:4px}
+.total-row{display:flex;justify-content:space-around;margin-top:16px}
+.total-row .item{text-align:center}
+.total-row .item .val{font-size:18px;font-weight:700}
+.total-row .item .lbl{font-size:10px;color:var(--sub);margin-top:2px}
+
+/* Tab */
+.tabs{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
+.tab{padding:8px 16px;border-radius:20px;background:var(--card);border:1px solid var(--border);font-size:12px;white-space:nowrap;cursor:pointer;color:var(--sub);flex-shrink:0}
+.tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* 来源分类 */
+.source-section{margin-bottom:20px}
+.source-title{font-size:14px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.source-title .icon{font-size:16px}
+.source-list{display:flex;flex-direction:column;gap:8px}
+.source-item{display:flex;align-items:center;justify-content:space-between;background:var(--card);border-radius:12px;padding:12px 14px;border:1px solid var(--border)}
+.source-item .si-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.source-item .si-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.source-item .si-info{flex:1;min-width:0}
+.source-item .si-name{font-size:13px;font-weight:600;margin-bottom:2px}
+.source-item .si-desc{font-size:11px;color:var(--sub)}
+.source-item .si-amount{font-size:14px;font-weight:700;text-align:right}
+.source-item .si-amount.plus{color:var(--ok)}
+.source-item .si-amount.minus{color:var(--accent)}
+.source-item .si-time{font-size:10px;color:var(--sub);text-align:right;margin-top:2px}
+
+/* 分成规则 */
+.rule-card{background:var(--card);border-radius:14px;padding:16px;border:1px solid var(--border);margin-bottom:12px}
+.rule-card h3{font-size:14px;font-weight:700;margin-bottom:12px}
+.rule-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.6}
+.rule-row:last-child{border-bottom:none}
+.rule-row .rr-label{color:var(--sub);flex:0 0 45%}
+.rule-row .rr-val{font-weight:500;text-align:right;flex:1}
+.rule-row .rr-val .highlight{color:var(--accent);font-weight:700}
+.rule-row .rr-val .ok-text{color:var(--ok);font-weight:600}
+
+/* 提现 */
+.withdraw-card{background:var(--card);border-radius:14px;padding:16px;border:1px solid var(--border);margin-bottom:16px}
+.withdraw-card h3{font-size:14px;font-weight:700;margin-bottom:12px}
+.withdraw-btn{width:100%;padding:12px;border-radius:12px;background:var(--accent);color:#fff;font-size:14px;font-weight:600;border:none;cursor:pointer;margin-bottom:10px}
+.withdraw-btn:active{opacity:.8}
+.withdraw-btn.disabled{background:var(--border);color:var(--sub)}
+.mvp-notice{background:rgba(255,179,71,.08);border:1px solid rgba(255,179,71,.2);border-radius:12px;padding:12px 14px;font-size:11px;color:var(--warn);line-height:1.6}
+
+/* 等级进度 */
+.level-bar{margin-top:16px;margin-bottom:20px}
+.level-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.level-info .current{font-size:14px;font-weight:700;color:var(--warn)}
+.level-info .next{font-size:12px;color:var(--sub)}
+.progress{height:8px;border-radius:4px;background:var(--border);overflow:hidden}
+.progress .fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--warn),var(--accent))}
+.level-stages{display:flex;justify-content:space-between;margin-top:6px}
+.level-stages span{font-size:10px;color:var(--sub)}
+.level-stages span.active{color:var(--warn);font-weight:600}
+</style>
+<link rel="stylesheet" href="css/tabbar-embed.css">
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="back" onclick="history.back()">←</div>
+  <h1>收益明细</h1>
+  <div style="width:36px"></div>
+</div>
+
+<div class="ws">
+
+  <!-- 总览 -->
+  <div class="total-card">
+    <div class="label">累计总收益</div>
+    <div class="amount">12,800<span class="unit">灵晶</span></div>
+    <div class="total-row">
+      <div class="item"><div class="val" style="color:var(--ok)">3,200</div><div class="lbl">待结算</div></div>
+      <div class="item"><div class="val" style="color:var(--warn)">9,600</div><div class="lbl">已结算</div></div>
+      <div class="item"><div class="val">L3</div><div class="lbl">当前等级</div></div>
+    </div>
+  </div>
+
+  <!-- 等级进度 -->
+  <div class="level-bar">
+    <div class="level-info">
+      <span class="current">🥇 L3 黄金（70%分成）</span>
+      <span class="next">→ L4 钻石（75%）</span>
+    </div>
+    <div class="progress"><div class="fill" style="width:64%"></div></div>
+    <div class="level-stages">
+      <span class="active">L3 黄金</span>
+      <span>月流水 ≥5000</span>
+      <span>L4 钻石</span>
+    </div>
+  </div>
+
+  <!-- 提现 -->
+  <div class="withdraw-card">
+    <h3>💰 提现</h3>
+    <button class="withdraw-btn disabled" id="withdrawBtn">MVP阶段暂不可提现</button>
+    <div class="mvp-notice">
+      ⚠️ MVP阶段：收益仅可兑换平台灵晶，月流水超10万元后接入正式提现功能。<br>
+      正式提现规则：最低100元 · 每月1-5日 · 微信/支付宝 · 手续费平台承担 · 税务平台代扣代缴
+    </div>
+  </div>
+
+  <!-- 按来源筛选 -->
+  <div class="tabs">
+    <div class="tab active" onclick="filterSource(this,'all')">全部</div>
+    <div class="tab" onclick="filterSource(this,'chapter')">章节解锁</div>
+    <div class="tab" onclick="filterSource(this,'bring')">角色带出</div>
+    <div class="tab" onclick="filterSource(this,'prop')">道具购买</div>
+    <div class="tab" onclick="filterSource(this,'card')">卡牌交易</div>
+    <div class="tab" onclick="filterSource(this,'sub')">订阅分成</div>
+    <div class="tab" onclick="filterSource(this,'interact')">互动解锁</div>
+  </div>
+
+  <!-- 收益来源明细 -->
+  <div class="source-section">
+    <div class="source-title"><span class="icon">📖</span> 小说章节解锁</div>
+    <div class="source-list">
+      <div class="source-item">
+        <div class="si-left">
+          <div class="si-icon" style="background:rgba(233,69,96,.12)">📖</div>
+          <div class="si-info"><div class="si-name">第4章「月下初见」被解锁</div><div class="si-desc">用户消耗 5灵晶 · 你分成 70%</div></div>
+        </div>
+        <div><div class="si-amount plus">+3.5</div><div class="si-time">今天 18:32</div></div>
+      </div>
+      <div class="source-item">
+        <div class="si-left">
+          <div class="si-icon" style="background:rgba(233,69,96,.12)">📖</div>
+          <div class="si-info"><div class="si-name">第3章「长夜酒馆」被解锁</div><div class="si-desc">用户消耗 5灵晶 · 你分成 70%</div></div>
+        </div>
+        <div><div class="si-amount plus">+3.5</div><div class="si-time">今天 15:20</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="source-section">
+    <div class="source-title"><span class="icon">🧑</span> 角色带出</div>
+    <div class="source-list">
+      <div class="source-item">
+        <div class="si-left">
+          <div class="si-icon" style="background:rgba(108,92,231,.12)">🧑</div>
+          <div class="si-info"><div class="si-name">孙悟空被带出为双生</div><div class="si-desc">用户消耗 2,000灵晶 · 你分成 70%</div></div>
+        </div>
+        <div><div class="si-amount plus">+1,400</div><div class="si-time">昨天 22:15</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="source-section">
+    <div class="source-title"><span class="icon">⚔️</span> 道具购买</div>
+    <div class="source-list">
+      <div class="source-item">
+        <div class="si-left">
+          <div class="si-icon" style="background:rgba(255,179,71,.12)">⚔️</div>
+          <div class="si-info"><div class="si-name">玄铁剑被购买 ×3</div><div class="si-desc">道具价格 50灵晶/把 · 你分成 30%</div></div>
+        </div>
+        <div><div class="si-amount plus">+45</div><div class="si-time">昨天 19:40</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="source-section">
+    <div class="source-title"><span class="icon">✨</span> 卡牌交易</div>
+    <div class="source-list">
+      <div class="source-item">
+        <div class="si-left">
+          <div class="si-icon" style="background:rgba(0,184,148,.12)">✨</div>
+          <div class="si-info"><div class="si-name">「星落之夜」灵念被交易</div><div class="si-desc">交易价 200灵晶 · 平台抽成10% · 你分成 70%</div></div>
+        </div>
+        <div><div class="si-amount plus">+126</div><div class="si-time">3天前</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="source-section">
+    <div class="source-title"><span class="icon">🎭</span> 互动内容解锁</div>
+    <div class="source-list">
+      <div class="source-item">
+        <div class="si-left">
+          <div class="si-icon" style="background:rgba(233,69,96,.12)">🎭</div>
+          <div class="si-info"><div class="si-name">「和TA一起看一场雨」被解锁 ×12</div><div class="si-desc">解锁价 30灵晶 · 你分成 70%</div></div>
+        </div>
+        <div><div class="si-amount plus">+252</div><div class="si-time">今天</div></div>
+      </div>
+      <div class="source-item">
+        <div class="si-left">
+          <div class="si-icon" style="background:rgba(108,92,231,.12)">🧩</div>
+          <div class="si-info"><div class="si-name">「童年记忆」碎片被解锁 ×5</div><div class="si-desc">解锁价 40灵晶 · 你分成 70%</div></div>
+        </div>
+        <div><div class="si-amount plus">+140</div><div class="si-time">今天</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 分成规则 -->
+  <div style="margin-top:24px">
+    <div class="source-title"><span class="icon">📋</span> 分成规则</div>
+    <div class="rule-card">
+      <h3>创作者等级与分成比例</h3>
+      <div class="rule-row"><span class="rr-label">L1 青铜</span><span class="rr-val">注册即享 · <span class="highlight">50%</span></span></div>
+      <div class="rule-row"><span class="rr-label">L2 白银</span><span class="rr-val">累计流水≥500元 · <span class="highlight">60%</span></span></div>
+      <div class="rule-row"><span class="rr-label">L3 黄金 ← 当前</span><span class="rr-val">月流水≥2000元 · <span class="ok-text">70%</span></span></div>
+      <div class="rule-row"><span class="rr-label">L4 钻石</span><span class="rr-val">月流水≥5000元 · <span class="highlight">75%</span></span></div>
+      <div class="rule-row"><span class="rr-label">L5 传奇</span><span class="rr-val">平台签约 · <span class="highlight">80%</span></span></div>
+    </div>
+    <div class="rule-card">
+      <h3>分成场景明细</h3>
+      <div class="rule-row"><span class="rr-label">章节解锁</span><span class="rr-val">用户消耗灵晶 · 分成 <span class="ok-text">70%</span></span></div>
+      <div class="rule-row"><span class="rr-label">角色带出</span><span class="rr-val">800-3000灵晶 · 分成 <span class="ok-text">70%</span></span></div>
+      <div class="rule-row"><span class="rr-label">道具购买</span><span class="rr-val">道具价格 · 分成 <span class="ok-text">30%</span></span></div>
+      <div class="rule-row"><span class="rr-label">卡牌交易</span><span class="rr-val">平台抽成10%后 · 分成 <span class="ok-text">70%</span></span></div>
+      <div class="rule-row"><span class="rr-label">互动解锁</span><span class="rr-val">场景/碎片价格 · 分成 <span class="ok-text">70%</span></span></div>
+      <div class="rule-row"><span class="rr-label">自创角色生成</span><span class="rr-val">自己就是创作者 · <span class="highlight">0分成</span></span></div>
+      <div class="rule-row"><span class="rr-label">纯游玩消耗</span><span class="rr-val">无额外收入 · <span class="highlight">0分成</span></span></div>
+    </div>
+    <div class="rule-card">
+      <h3>⚠️ 核心规则</h3>
+      <div class="rule-row"><span class="rr-label">分成前提</span><span class="rr-val"><span class="highlight">有实际收益才分成</span>，无收益不分</span></div>
+      <div class="rule-row"><span class="rr-label">每日上限</span><span class="rr-val">单角色每日分成上限 <span class="highlight">500灵晶</span></span></div>
+      <div class="rule-row"><span class="rr-label">超出处理</span><span class="rr-val">超出部分归平台</span></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function filterSource(el,type){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+</script>
+<script src="js/creator-store.js"></script>
+<script src="js/tabbar.js"></script>
+</body>
+</html>

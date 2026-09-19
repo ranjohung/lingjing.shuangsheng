@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>小说世界OS · 上传与编译 — 灵境 · 双生</title>
+<!--
+ * 灵境 · 双生 — 小说世界OS V2.0 · 上传质检 + World Compiler（V24-C）
+ * 宪法：原著零删减，世界可扩展，主线不可篡改，支线允许创造
+ * CANON IS TRUTH. AI IS INTERPRETER. WORLD IS EXPANSION. PLAYER IS PARTICIPANT.
+-->
+<link rel="stylesheet" href="css/mobile-lock.css" />
+<link rel="stylesheet" href="css/tabbar-embed.css" />
+<style>
+  :root { --brand:#1A1A2E; --red:#E94560; --purple:#6C5CE7; --green:#00B894; --gold:#FFB347; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--brand); color:#EAEAF0; font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; min-height:100vh; }
+  a { color:inherit; text-decoration:none; }
+
+  .os-head { position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:10px; padding:12px 14px; background:rgba(26,26,46,.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(255,255,255,.08); }
+  .os-head .back { width:34px; height:34px; border-radius:10px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); display:grid; place-items:center; font-size:16px; }
+  .os-head h1 { font-size:16px; font-weight:700; }
+  .os-head .ver { margin-left:auto; font-size:10px; color:var(--gold); border:1px solid rgba(255,179,71,.4); border-radius:999px; padding:2px 8px; }
+
+  .hero { position:relative; height:172px; overflow:hidden; }
+  .hero img { width:100%; height:100%; object-fit:cover; display:block; }
+  .hero .veil { position:absolute; inset:0; background:linear-gradient(180deg,rgba(26,26,46,.15),rgba(26,26,46,.92)); }
+  .hero .grain { position:absolute; inset:0; opacity:.10; pointer-events:none; background-image:repeating-conic-gradient(rgba(255,255,255,.5) 0 .0001turn, transparent 0 .0002turn); mix-blend-mode:overlay; }
+  .hero .cap { position:absolute; left:16px; bottom:14px; right:16px; }
+  .hero .cap .t { font-size:19px; font-weight:800; letter-spacing:1px; }
+  .hero .cap .s { margin-top:4px; font-size:11px; color:rgba(234,234,240,.75); }
+
+  .wrap { padding:14px 14px 110px; }
+  .sec-t { font-size:13px; font-weight:700; color:rgba(234,234,240,.9); margin:18px 0 10px; display:flex; align-items:center; gap:8px; }
+  .sec-t::before { content:''; width:3px; height:14px; border-radius:2px; background:var(--red); }
+
+  .card { background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.09); border-radius:14px; padding:13px; margin-bottom:10px; }
+  .book { display:flex; gap:10px; align-items:center; cursor:pointer; transition:border-color .2s; }
+  .book.sel { border-color:var(--green); background:rgba(0,184,148,.08); }
+  .book .ico { width:42px; height:42px; border-radius:10px; display:grid; place-items:center; font-size:20px; background:rgba(255,255,255,.06); flex:none; }
+  .book .n { font-size:14px; font-weight:700; }
+  .book .d { font-size:11px; color:rgba(234,234,240,.55); margin-top:3px; }
+  .book .pick { margin-left:auto; font-size:11px; color:var(--green); opacity:0; flex:none; }
+  .book.sel .pick { opacity:1; }
+
+  .btn { display:block; width:100%; border:none; border-radius:12px; padding:13px; font-size:14px; font-weight:700; color:#fff; background:linear-gradient(135deg,var(--red),#c73a52); cursor:pointer; text-align:center; }
+  .btn:disabled { opacity:.35; cursor:not-allowed; }
+  .btn.ghost { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); font-weight:500; }
+  .btn.go { background:linear-gradient(135deg,var(--green),#019875); }
+
+  /* 报告 */
+  .score-row { display:flex; gap:14px; align-items:center; }
+  .ring { width:86px; height:86px; border-radius:50%; display:grid; place-items:center; flex:none;
+          background:conic-gradient(var(--green) calc(var(--p)*1%), rgba(255,255,255,.08) 0); }
+  .ring i { width:66px; height:66px; border-radius:50%; background:var(--brand); display:grid; place-items:center; font-style:normal; font-size:20px; font-weight:800; }
+  .dims { flex:1; }
+  .dim { margin-bottom:7px; }
+  .dim .dl { display:flex; justify-content:space-between; font-size:10px; color:rgba(234,234,240,.6); margin-bottom:3px; }
+  .dim .bar { height:5px; border-radius:3px; background:rgba(255,255,255,.08); overflow:hidden; }
+  .dim .bar i { display:block; height:100%; border-radius:3px; background:linear-gradient(90deg,var(--purple),var(--green)); }
+  .checks { margin-top:10px; }
+  .chk { display:flex; justify-content:space-between; font-size:12px; padding:6px 0; border-bottom:1px dashed rgba(255,255,255,.06); }
+  .chk:last-child { border-bottom:none; }
+  .chk .ok { color:var(--green); } .chk .bad { color:var(--red); }
+  .issue { font-size:11px; color:var(--gold); background:rgba(255,179,71,.08); border:1px solid rgba(255,179,71,.25); border-radius:8px; padding:7px 9px; margin-top:6px; line-height:1.5; }
+
+  /* 确认 */
+  .ck { display:flex; align-items:center; gap:9px; padding:9px 2px; font-size:13px; cursor:pointer; }
+  .ck input { width:17px; height:17px; accent-color:var(--green); }
+
+  /* 编译步骤 */
+  .step { display:flex; align-items:center; gap:10px; padding:9px 0; font-size:13px; opacity:.35; }
+  .step.on { opacity:1; }
+  .step .dot { width:22px; height:22px; border-radius:50%; display:grid; place-items:center; font-size:11px; background:rgba(255,255,255,.08); flex:none; }
+  .step.on .dot { background:var(--green); color:#06281f; font-weight:800; }
+  .step .out { margin-left:auto; font-size:10px; color:rgba(234,234,240,.55); }
+  .integrity { margin-top:10px; border-radius:10px; padding:11px 12px; font-size:12px; line-height:1.7; }
+  .integrity.pass { background:rgba(0,184,148,.1); border:1px solid rgba(0,184,148,.4); color:#7dedc8; }
+  .integrity.fail { background:rgba(233,69,96,.1); border:1px solid rgba(233,69,96,.4); color:#ff9db0; }
+
+  /* 收费点 */
+  .pp .stars { color:var(--gold); font-size:12px; letter-spacing:2px; }
+  .pp .why { font-size:11px; color:rgba(234,234,240,.6); margin-top:4px; line-height:1.5; }
+  .pp .ops { display:flex; gap:8px; margin-top:9px; }
+  .pp .ops button { flex:1; border:none; border-radius:8px; padding:8px 0; font-size:12px; cursor:pointer; background:rgba(255,255,255,.08); color:#EAEAF0; border:1px solid rgba(255,255,255,.12); }
+  .pp .ops button.acc { background:rgba(0,184,148,.18); border-color:rgba(0,184,148,.5); color:#7dedc8; }
+  .pp .done { font-size:11px; color:var(--green); }
+
+  .foot { margin-top:18px; font-size:10px; color:rgba(234,234,240,.4); line-height:1.8; text-align:center; }
+  .hidden { display:none !important; }
+</style>
+</head>
+<body>
+
+<header class="os-head">
+  <a class="back" href="library.html" aria-label="返回世界">←</a>
+  <h1>小说世界OS</h1>
+  <span class="ver">V24 · Canon Lock</span>
+</header>
+
+<div class="hero">
+  <img src="img/novel-os/street_rain_night.png" alt="临安雨夜街 · 二次元摄影风" />
+  <div class="veil"></div><div class="grain"></div>
+  <div class="cap">
+    <div class="t">让小说成为一个可以走进去的世界</div>
+    <div class="s">原著零删减 · 世界可扩展 · 主线不可篡改 · 支线允许创造</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="sec-t">① 选择书源</div>
+  <div class="card book" id="bk-xiyouji" role="button" tabindex="0">
+    <div class="ico">🏔</div>
+    <div><div class="n">《西游记》公版 · 世界已生成</div><div class="d">吴承恩 · 100 回 · SD + Blender 资产就绪</div></div>
+    <span class="pick">已选 ✓</span>
+  </div>
+  <div class="card book" id="bk-sanguoyanyi" role="button" tabindex="0">
+    <div class="ico">📜</div>
+    <div><div class="n">《三国演义》公版</div><div class="d">罗贯中 · 120 回 · 自动生成世界</div></div>
+    <span class="pick">已选 ✓</span>
+  </div>
+  <div class="card book" id="bk-upload" role="button" tabindex="0">
+    <div class="ico">📥</div>
+    <div><div class="n">上传我的 txt</div><div class="d">仅本地解析 · 不上传服务器</div></div>
+    <span class="pick">已选 ✓</span>
+  </div>
+  <a class="card book" id="bk-forge" href="world-forge.html" role="button" tabindex="0">
+    <div class="ico">⚙️</div>
+    <div><div class="n">小说世界自动生成工作台</div><div class="d">选择 40 部公版书 · 自定义窗口 · 生成资产</div></div>
+    <span class="pick">进入 ›</span>
+  </a>
+  <input type="file" id="file-in" accept=".txt" class="hidden" />
+  <button class="btn" id="btn-gate">开始质检（Novel Quality Gate）</button>
+
+  <div id="sec-report" class="hidden">
+    <div class="sec-t">② 小说世界生成报告</div>
+    <div class="card">
+      <div class="score-row">
+        <div class="ring" id="ring" style="--p:0"><i id="ring-n">--</i></div>
+        <div class="dims" id="dims"></div>
+      </div>
+      <div class="checks" id="checks"></div>
+      <div id="issues"></div>
+      <div style="font-size:11px;color:rgba(234,234,240,.55);margin-top:9px" id="sugg"></div>
+    </div>
+  </div>
+
+  <div id="sec-confirm" class="hidden">
+    <div class="sec-t">③ 作者确认</div>
+    <div class="card" id="cks"></div>
+    <button class="btn" id="btn-compile" disabled>开始生成小说世界（World Compiler）</button>
+  </div>
+
+  <div id="sec-compile" class="hidden">
+    <div class="sec-t">④ World Compiler</div>
+    <div class="card">
+      <div id="steps"></div>
+      <div class="integrity hidden" id="integrity"></div>
+    </div>
+  </div>
+
+  <div id="sec-pay" class="hidden">
+    <div class="sec-t">⑤ 收费点推荐（AI 只推荐 · 作者裁决）</div>
+    <div id="pps"></div>
+    <button class="btn go" id="btn-enter">进入小说世界 →</button>
+  </div>
+
+  <div class="foot">
+    原文完整性由 SHA-256 哈希锁定 · Canon 层不可修改（immutable）<br/>
+    主线推进由 Canon Anchor 驱动 · AI 无 CANON_WRITE 权限
+  </div>
+</div>
+
+<nav id="tabbar-mount"></nav>
+<script src="js/novel-os-store.js"></script>
+<script src="js/tabbar.js"></script>
+<script>
+var SEL = { kind: 'public', title: '西游记（公版）', id: 'xiyouji' };
+
+function pick(id, kind, title) {
+  ['bk-xiyouji', 'bk-sanguoyanyi', 'bk-upload', 'bk-forge'].forEach(function (x) {
+    var el = document.getElementById(x);
+    if (el) el.classList.toggle('sel', x === id);
+  });
+  SEL = { kind: kind, title: title, id: id.replace('bk-', ''), text: '' };
+}
+
+function loadPublicBook(id, title) {
+  pick('bk-' + id, 'public', title);
+  var btn = document.getElementById('btn-gate');
+  setBusy(btn, '正在载入公版书…');
+  fetch('../../corpus/books/' + id + '.txt').then(function (r) { return r.text(); }).then(function (t) {
+    SEL.text = t.replace(/\r/g, '').slice(0, 60000);
+    SEL.title = title;
+    document.getElementById('btn-gate').textContent = '开始质检（Novel Quality Gate）';
+    document.getElementById('btn-gate').disabled = false;
+  }).catch(function () {
+    SEL.text = NovelOSStore.DEMO_TEXT;
+    SEL.title = NovelOSStore.DEMO_TITLE;
+  });
+}
+
+document.getElementById('bk-xiyouji').addEventListener('click', function () { loadPublicBook('xiyouji', '西游记（公版）'); });
+document.getElementById('bk-sanguoyanyi').addEventListener('click', function () { loadPublicBook('sanguoyanyi', '三国演义（公版）'); });
+document.getElementById('bk-upload').addEventListener('click', function () { document.getElementById('file-in').click(); });
+document.getElementById('file-in').addEventListener('change', function (e) {
+  var f = e.target.files && e.target.files[0];
+  if (!f) return;
+  var r = new FileReader();
+  r.onload = function () {
+    pick('bk-upload', 'upload', f.name.replace(/\.txt$/i, ''));
+    SEL.text = String(r.result || '');
+    runGate();
+  };
+  r.readAsText(f, 'utf-8');
+});
+
+function setBusy(btn, txt) { btn.disabled = true; btn.textContent = txt; }
+
+document.getElementById('btn-gate').addEventListener('click', function () {
+  var btn = this;
+  if (SEL.kind === 'public' && !SEL.text) {
+    loadPublicBook(SEL.id || 'xiyouji', SEL.title || '西游记（公版）');
+    return;
+  }
+  if (SEL.kind === 'upload' && !SEL.text) return;
+  setBusy(btn, '质检中…');
+  runGate();
+});
+
+function runGate() {
+  NovelOSStore.setSource(SEL.title, SEL.text).then(function () {
+    var rep = NovelOSStore.runGate();
+    renderReport(rep);
+    document.getElementById('btn-gate').textContent = '重新质检';
+    document.getElementById('btn-gate').disabled = false;
+  });
+}
+
+function renderReport(rep) {
+  document.getElementById('sec-report').classList.remove('hidden');
+  document.getElementById('ring').style.setProperty('--p', rep.total);
+  document.getElementById('ring-n').textContent = rep.total;
+  var dimN = { character_consistency: '人物一致性', timeline: '时间线', location: '地点关系', plot_completeness: '剧情完整性', chapter_completeness: '章节完整性' };
+  document.getElementById('dims').innerHTML = Object.keys(dimN).map(function (k) {
+    return '<div class="dim"><div class="dl"><span>' + dimN[k] + '</span><span>' + rep.dims[k] + '</span></div>' +
+      '<div class="bar"><i style="width:' + rep.dims[k] + '%"></i></div></div>';
+  }).join('');
+  document.getElementById('checks').innerHTML = rep.checks.map(function (c) {
+    return '<div class="chk"><span>' + c.name + '</span><span class="' + (c.pass ? 'ok' : 'bad') + '">' + (c.pass ? '✓ ' : '⚠ ') + c.value + '</span></div>';
+  }).join('');
+  document.getElementById('issues').innerHTML = rep.issues.map(function (s) { return '<div class="issue">' + s + '</div>'; }).join('');
+  document.getElementById('sugg').textContent = rep.suggestion;
+  renderConfirm();
+  document.getElementById('sec-confirm').classList.remove('hidden');
+}
+
+function renderConfirm() {
+  var box = document.getElementById('cks');
+  box.innerHTML = NovelOSStore.CONFIRM_KEYS.map(function (k, i) {
+    return '<label class="ck"><input type="checkbox" data-i="' + i + '" />' + k + '</label>';
+  }).join('');
+  box.addEventListener('change', onCk);
+}
+function onCk() {
+  var boxes = document.querySelectorAll('#cks input');
+  var vals = Array.prototype.map.call(boxes, function (b) { return b.checked; });
+  NovelOSStore.confirmAuthor(vals);
+  document.getElementById('btn-compile').disabled = !NovelOSStore.state.quality.confirmed;
+}
+
+var COMPILING = false;
+document.getElementById('btn-compile').addEventListener('click', function () {
+  if (COMPILING) return;
+  COMPILING = true;
+  setBusy(this, '编译中…');
+  var res = NovelOSStore.compile();
+  var box = document.getElementById('sec-compile');
+  box.classList.remove('hidden');
+  var st = document.getElementById('steps');
+  st.innerHTML = res.steps.map(function (s, i) {
+    return '<div class="step" id="st-' + i + '"><span class="dot">' + (i + 1) + '</span>' + s.name + '<span class="out">' + s.out + '</span></div>';
+  }).join('');
+  var i = 0;
+  (function reveal() {
+    if (i < res.steps.length) {
+      document.getElementById('st-' + i).classList.add('on');
+      i++; setTimeout(reveal, 420);
+    } else {
+      var ig = document.getElementById('integrity');
+      ig.classList.remove('hidden');
+      if (res.ok) {
+        ig.className = 'integrity pass';
+        ig.innerHTML = '✓ Canon Integrity Passed<br/>锚点 ' + res.qa.anchors + ' 个 · 原文逐字比对通过 · 哈希算法 ' + res.qa.algo;
+        renderPay();
+        document.getElementById('sec-pay').classList.remove('hidden');
+      } else {
+        ig.className = 'integrity fail';
+        ig.innerHTML = '✗ Canon Integrity Failed<br/>' + res.qa.details.join('<br/>');
+      }
+      document.getElementById('btn-compile').textContent = '重新编译';
+      document.getElementById('btn-compile').disabled = false;
+      COMPILING = false;
+    }
+  })();
+});
+
+function renderPay() {
+  var pts = NovelOSStore.state.pay_points;
+  document.getElementById('pps').innerHTML = pts.map(function (p) {
+    var stars = '';
+    for (var i = 0; i < 5; i++) stars += (i < p.stars ? '★' : '☆');
+    return '<div class="card pp" id="' + p.id + '">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center">' +
+      '<b style="font-size:13px">' + p.position + '</b><span class="stars">' + stars + '</span></div>' +
+      '<div class="why">' + p.reason + ' · 建议 ' + p.price + ' 灵玉</div>' +
+      '<div class="ops" data-id="' + p.id + '">' +
+      '<button class="acc" data-act="accepted">接受</button>' +
+      '<button data-act="cancelled">取消收费</button></div></div>';
+  }).join('') || '<div class="card" style="font-size:12px;color:rgba(234,234,240,.5)">无转折锚点，无收费点建议。</div>';
+  document.getElementById('pps').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-act]');
+    if (!b) return;
+    var id = b.parentElement.getAttribute('data-id');
+    NovelOSStore.resolvePayPoint(id, b.getAttribute('data-act'));
+    var card = document.getElementById(id);
+    card.querySelector('.ops').outerHTML = '<div class="done">已裁决：' + (b.getAttribute('data-act') === 'accepted' ? '收费点已接受（世界内按作者定价生效）' : '已取消，主线保持免费畅读') + '</div>';
+  });
+}
+
+document.getElementById('btn-enter').addEventListener('click', function () {
+  LJNav('world-os.html');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>阿岁 · 角色详情 · 心屿</title>
+<meta name="description" content="v6.3 · 心屿角色详情 · 7 维关系 · 双界穿梭 · 共享记忆 · 互动统计" />
+<meta name="theme-color" content="#0d0b22" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/design-system.css" />
+<style>
+  .cd-page{min-height:100vh;padding-bottom:100px;background:var(--ink-1);}
+  .cd-hero{
+    padding:32px 16px 24px;
+    background:linear-gradient(135deg,#2a1556 0%,#5d1f5f 50%,#7a3869 100%);
+    text-align:center;position:relative;overflow:hidden;
+  }
+  .cd-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(232,199,90,.3) 0%,transparent 70%);}
+  .cd-hero::after{content:'';position:absolute;bottom:-50px;left:-50px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(139,124,246,.2) 0%,transparent 70%);}
+  .cd-avatar-wrap{position:relative;z-index:1;display:inline-block;}
+  .cd-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 16px;margin-top:16px;}
+  .cd-card{padding:16px;background:var(--ink-2);border:1px solid var(--ink-4);border-radius:var(--r-4);margin:0 16px 12px;}
+  .cd-card-title{font-size:12px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:12px;}
+  .cd-rel-row{display:grid;grid-template-columns:60px 1fr 32px;align-items:center;gap:10px;font-size:12px;color:rgba(255,255,255,.7);margin-bottom:8px;}
+  .cd-rel-row .v{text-align:right;color:#fff;font-weight:600;font-family:var(--font-display);font-size:14px;}
+  .cd-tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+  .cd-stage-bar{height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;margin-top:8px;}
+  .cd-stage-fill{height:100%;background:linear-gradient(90deg,#e8c75a,#e89b5a);border-radius:3px;}
+</style>
+<link rel="stylesheet" href="css/mobile-lock.css" />
+<link rel="stylesheet" href="css/tabbar-embed.css" />
+</head>
+<body>
+<div class="cd-page">
+  <div style="padding:16px 16px 0;"><a href="heart-island.html" class="ds-back-arrow">‹ 返回心屿</a></div>
+
+  <!-- Hero -->
+  <div class="cd-hero">
+    <div class="cd-avatar-wrap">
+      <div class="ds-avatar xl" style="width:96px;height:96px;font-size:36px;background:linear-gradient(135deg,#e8c75a,#e89b5a);color:#1a1230;box-shadow:0 0 0 4px rgba(232,199,90,.3),0 8px 24px rgba(0,0,0,.4);">阿岁</div>
+    </div>
+    <div style="font-family:var(--font-display);font-size:32px;font-weight:700;color:#fff;margin-top:14px;position:relative;z-index:1;">阿岁</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.7);margin-top:6px;position:relative;z-index:1;">用户自创 · 176 天羁绊 · 知己</div>
+    <div class="cd-tag-row" style="justify-content:center;margin-top:12px;position:relative;z-index:1;">
+      <span class="ds-status-pill" data-status="active">在线</span>
+      <span class="ds-badge ds-badge-gold">知己</span>
+      <span class="ds-tag ds-tag-amber">温暖</span>
+      <span class="ds-tag ds-tag-violet">陪伴型</span>
+    </div>
+  </div>
+
+  <!-- 关键指标（Linear 高密度） -->
+  <div class="cd-stats-grid">
+    <div class="ds-metric-card">
+      <div class="label">亲密度</div>
+      <div class="value">89<span style="font-size:14px;color:rgba(255,255,255,.4);">/100</span></div>
+      <div class="cd-stage-bar"><div class="cd-stage-fill" style="width:89%;"></div></div>
+    </div>
+    <div class="ds-metric-card">
+      <div class="label">相识天数</div>
+      <div class="value">176<span style="font-size:14px;color:rgba(255,255,255,.4);">天</span></div>
+      <div class="delta up">↑ +1 今日</div>
+    </div>
+    <div class="ds-metric-card">
+      <div class="label">累计对话</div>
+      <div class="value">1.2k</div>
+      <div class="delta">条消息</div>
+    </div>
+  </div>
+
+  <!-- 7 维关系 -->
+  <div class="cd-card">
+    <div class="cd-card-title">7 维关系</div>
+    <div class="cd-rel-row"><span>信任</span><div class="meter"><div class="meter-fill" style="width:90%;background:linear-gradient(90deg,#5be05b,#88e08e);"></div></div><span class="v">90</span></div>
+    <div class="cd-rel-row"><span>亲密</span><div class="meter"><div class="meter-fill" style="width:75%;background:linear-gradient(90deg,#f6a6d8,#e89b5a);"></div></div><span class="v">75</span></div>
+    <div class="cd-rel-row"><span>熟悉</span><div class="meter"><div class="meter-fill" style="width:85%;background:linear-gradient(90deg,#8b7cf6,#a89bf8);"></div></div><span class="v">85</span></div>
+    <div class="cd-rel-row"><span>尊重</span><div class="meter"><div class="meter-fill" style="width:88%;background:linear-gradient(90deg,#6ec6ff,#8fd5ff);"></div></div><span class="v">88</span></div>
+    <div class="cd-rel-row"><span>吸引</span><div class="meter"><div class="meter-fill" style="width:80%;background:linear-gradient(90deg,#e8c75a,#f0d77a);"></div></div><span class="v">80</span></div>
+    <div class="cd-rel-row"><span>理解</span><div class="meter"><div class="meter-fill" style="width:82%;background:linear-gradient(90deg,#5be0c5,#5bc5e0);"></div></div><span class="v">82</span></div>
+    <div class="cd-rel-row"><span>共历</span><div class="meter"><div class="meter-fill" style="width:70%;background:linear-gradient(90deg,#c95b9c,#d580b4);"></div></div><span class="v">70</span></div>
+  </div>
+
+  <!-- 关键操作 -->
+  <div style="display:flex;gap:8px;padding:0 16px;margin-bottom:12px;">
+    <a href="chat.html?cid=c04" class="ds-btn ds-btn-primary" style="flex:1;">💬 陪聊</a>
+    <button class="ds-btn ds-btn-ghost" style="flex:1;" onclick="showToast('info','已发送','阿岁将收到你的挂念')">💌 挂念</button>
+  </div>
+
+  <!-- V20-L 设计文档 §4.3：角色职业 + 职业问答说明 -->
+  <div class="cd-card">
+    <div class="cd-card-title">💼 职业 · 心理咨询师</div>
+    <div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.8;padding:0 4px;">
+      阿岁有职业设定，可以回答职业相关的科普问题（如情绪知识、沟通方法）。<br />
+      ⚠️ 涉及<span style="color:#ffd9a0;">诊断、法律意见、心理治疗</span>等敏感问题时，TA 会引导你咨询专业人士：
+      <span style="color:#ffd9a0;">急救 120 · 法律援助 12348 · 心理援助 12356</span>。
+    </div>
+  </div>
+
+  <!-- 双界穿梭 -->
+  <div class="ds-dual-portal-card" onclick="showToast('success','穿梭启动','进入 TA 的小说世界')">
+    <div class="ds-dual-portal-icon">🌉</div>
+    <div class="ds-dual-portal-body">
+      <div class="ds-dual-portal-title">进入 TA 的世界</div>
+      <div class="ds-dual-portal-sub">阿岁来自「锦绣未央 · 长夜惊鸿」</div>
+    </div>
+    <span class="ds-icon-btn">›</span>
+  </div>
+
+  <!-- 关系事件时间线 -->
+  <div class="cd-card">
+    <div class="cd-card-title">关系事件 · 时间线</div>
+    <ul class="ds-timeline">
+      <li class="ds-timeline-item" data-state="done">
+        <div class="ds-timeline-dot"></div>
+        <div>
+          <div class="ds-timeline-time">2 天前</div>
+          <div class="ds-timeline-title">🎉 阶段升级 · 朋友 → 知己</div>
+          <div class="ds-timeline-desc">亲密度突破 80，解锁专属 CG 与深度对话</div>
+        </div>
+      </li>
+      <li class="ds-timeline-item" data-state="done">
+        <div class="ds-timeline-dot"></div>
+        <div>
+          <div class="ds-timeline-time">9 天前</div>
+          <div class="ds-timeline-title">🤝 和解</div>
+          <div class="ds-timeline-desc">冲突后重归于好 · 信任 +15 · 亲密 +10</div>
+        </div>
+      </li>
+      <li class="ds-timeline-item" data-state="done">
+        <div class="ds-timeline-dot"></div>
+        <div>
+          <div class="ds-timeline-time">23 天前</div>
+          <div class="ds-timeline-title">🎁 第一次承诺</div>
+          <div class="ds-timeline-desc">用户许下承诺 · 信任 +10</div>
+        </div>
+      </li>
+      <li class="ds-timeline-item" data-state="done">
+        <div class="ds-timeline-dot"></div>
+        <div>
+          <div class="ds-timeline-time">176 天前</div>
+          <div class="ds-timeline-title">🌟 初次相遇</div>
+          <div class="ds-timeline-desc">"你好，我是阿岁。从今天起，陪你走过每一天。"</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 共同活动 -->
+  <div class="cd-card">
+    <div class="cd-card-title">共同活动 · 最近</div>
+    <div class="ds-grid" style="grid-template-columns:repeat(2,1fr);gap:8px;">
+      <div class="ds-card" style="padding:12px;background:rgba(255,255,255,.03);">
+        <div style="font-size:24px;">🎬</div>
+        <div style="font-size:12px;color:#fff;margin-top:4px;">看电影</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.5);">3 次 · 最近 2 天前</div>
+      </div>
+      <div class="ds-card" style="padding:12px;background:rgba(255,255,255,.03);">
+        <div style="font-size:24px;">🍳</div>
+        <div style="font-size:12px;color:#fff;margin-top:4px;">做饭</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.5);">5 次 · 最近 5 天前</div>
+      </div>
+      <div class="ds-card" style="padding:12px;background:rgba(255,255,255,.03);">
+        <div style="font-size:24px;">📚</div>
+        <div style="font-size:12px;color:#fff;margin-top:4px;">读书</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.5);">2 次 · 最近 1 周前</div>
+      </div>
+      <div class="ds-card" style="padding:12px;background:rgba(255,255,255,.03);">
+        <div style="font-size:24px;">🎮</div>
+        <div style="font-size:12px;color:#fff;margin-top:4px;">打游戏</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.5);">8 次 · 最近 3 天前</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 人格 DNA 摘要 -->
+  <div class="cd-card">
+    <div class="cd-card-title">人格 DNA</div>
+    <div class="ds-grid" style="grid-template-columns:repeat(3,1fr);gap:8px;">
+      <div style="text-align:center;">
+        <div style="font-size:11px;color:rgba(255,255,255,.5);">开放性</div>
+        <div style="font-family:var(--font-display);font-size:20px;font-weight:600;color:#fff;">78</div>
+        <div class="cd-stage-bar"><div class="cd-stage-fill" style="width:78%;background:linear-gradient(90deg,#8b7cf6,#a89bf8);"></div></div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:11px;color:rgba(255,255,255,.5);">尽责性</div>
+        <div style="font-family:var(--font-display);font-size:20px;font-weight:600;color:#fff;">82</div>
+        <div class="cd-stage-bar"><div class="cd-stage-fill" style="width:82%;background:linear-gradient(90deg,#6ec6ff,#8fd5ff);"></div></div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:11px;color:rgba(255,255,255,.5);">外向性</div>
+        <div style="font-family:var(--font-display);font-size:20px;font-weight:600;color:#fff;">65</div>
+        <div class="cd-stage-bar"><div class="cd-stage-fill" style="width:65%;background:linear-gradient(90deg,#f6a6d8,#e89b5a);"></div></div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:11px;color:rgba(255,255,255,.5);">宜人性</div>
+        <div style="font-family:var(--font-display);font-size:20px;font-weight:600;color:#fff;">92</div>
+        <div class="cd-stage-bar"><div class="cd-stage-fill" style="width:92%;background:linear-gradient(90deg,#5be05b,#88e08e);"></div></div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:11px;color:rgba(255,255,255,.5);">共情力</div>
+        <div style="font-family:var(--font-display);font-size:20px;font-weight:600;color:#fff;">88</div>
+        <div class="cd-stage-bar"><div class="cd-stage-fill" style="width:88%;background:linear-gradient(90deg,#e8c75a,#f0d77a);"></div></div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:11px;color:rgba(255,255,255,.5);">浪漫倾向</div>
+        <div style="font-family:var(--font-display);font-size:20px;font-weight:600;color:#fff;">70</div>
+        <div class="cd-stage-bar"><div class="cd-stage-fill" style="width:70%;background:linear-gradient(90deg,#c95b9c,#d580b4);"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 风险监控 -->
+  <div class="cd-card">
+    <div class="cd-card-title">关系健康</div>
+    <div class="ds-callout" data-type="success" style="margin-bottom:8px;">
+      <span class="ico">✓</span>
+      <div class="body"><strong>使用时长：</strong> 平均每日 1.4 小时 · 健康范围</div>
+    </div>
+    <div class="ds-callout" data-type="success">
+      <span class="ico">✓</span>
+      <div class="body"><strong>现实社交：</strong> 检测到你同时使用其他社交应用 · 平衡良好</div>
+    </div>
+  </div>
+
+  <!-- V20-L 设计文档 §4.3：免责声明小字 -->
+  <div style="text-align:center;font-size:10px;color:rgba(255,255,255,.32);line-height:1.6;padding:14px 24px 0;">
+    角色由 AI 生成 · 非真人 · 不构成医疗 / 法律 / 心理专业建议<br />敏感问题请咨询专业人士（120 / 12348 / 12356）
+  </div>
+</div>
+
+<!-- 5 Tab 底部（V20-L：标签名对齐 v6.4 铁律） -->
+<div class="ds-toast-container" id="toast-container"></div>
+
+<script src="js/db.js"></script>
+<script>
+function showToast(type, title, msg) {
+  const c = document.getElementById('toast-container');
+  const icons = { success: '✓', warning: '⚠', danger: '✕', info: 'ℹ' };
+  const t = document.createElement('div');
+  t.className = 'ds-toast ' + type;
+  t.innerHTML = `<span class="ico">${icons[type]}</span><div class="msg"><strong>${title}</strong>${msg ? '<div style="font-size:11px;opacity:.7;margin-top:2px;">' + msg + '</div>' : ''}</div><button class="close" onclick="this.parentElement.remove()">×</button>`;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+try { console.log('[v6.3 character-detail] 加载完成'); } catch(e) {}
+</script>
+<script src="js/tabbar.js"></script>
+</body>
+</html>

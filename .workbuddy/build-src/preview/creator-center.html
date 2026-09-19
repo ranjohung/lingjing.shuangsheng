@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="Hy11bWyxom7BYdeQUWsgAn">
+<head data-page-node-id="qMJXiXOIg4AYKhZLHnct70">
+<meta charset="UTF-8" data-page-node-id="gjVU3qSs43fM4F1SS7ORP5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" data-page-node-id="yL0Vv0ewZYLmBAtRIYCWGX" />
+<title>创作 · 灵境 · 双生</title>
+<meta name="description" content="v6.4 · 第三卷·创世者手册 · 小说辅助 · 我的作品 · 上架定价 · 创作者法律" data-page-node-id="p4mCuA88ccQhkPugyegAE4" />
+<meta name="theme-color" content="#1A1A2E" data-page-node-id="Bf1HN1L9rkrgeByAvriZK4" />
+<link rel="stylesheet" href="css/shell-v64.css" data-page-node-id="Fsj5F7vjAifkVs7MOrZh6g" />
+<style>
+/* ---------- 创作者等级卡 ---------- */
+.level-card{
+  margin:14px var(--margin);padding:16px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(255,179,71,.18),rgba(233,69,96,.10)),var(--card);
+  border:1px solid rgba(255,179,71,.3);
+}
+.lc-row1{display:flex;align-items:center;gap:12px}
+.lc-badge{
+  width:54px;height:54px;border-radius:14px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--warn),#E89B5A);
+  display:grid;place-items:center;font-size:24px;
+  box-shadow:0 4px 14px rgba(255,179,71,.35);
+}
+.lc-meta{flex:1;min-width:0}
+.lc-name{font-size:16px;font-weight:600}
+.lc-level{font-size:11px;color:var(--warn);margin-top:2px;font-weight:500}
+.lc-row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.lc-stat{padding:10px;border-radius:10px;background:rgba(0,0,0,.2);border:1px solid var(--line)}
+.lc-stat .v{font-size:18px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,serif}
+.lc-stat .l{font-size:11px;color:var(--sub);margin-top:2px}
+.lc-stat .v.c1{color:var(--warn)}
+.lc-stat .v.c2{color:#A29BFE}
+.lc-row3{display:flex;gap:8px;margin-top:12px}
+.lc-btn{
+  flex:1;height:40px;border-radius:10px;font-size:13px;font-weight:500;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--text);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.lc-btn.primary{background:linear-gradient(135deg,var(--accent),#C73652);color:#fff;border-color:transparent}
+/* ---------- 3 大功能区（快速入口） ---------- */
+.func-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  margin:0 var(--margin);
+}
+.func{
+  padding:14px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--line);
+  transition:transform .2s cubic-bezier(.16,1,.3,1);
+  display:block;
+}
+.func:active{transform:scale(.97)}
+.func .ico{
+  width:36px;height:36px;border-radius:10px;
+  display:grid;place-items:center;font-size:18px;
+  margin-bottom:10px;
+}
+.func .t{font-size:14px;font-weight:600}
+.func .s{font-size:11px;color:var(--sub);margin-top:3px;line-height:1.5}
+.func .tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.func .tag{font-size:9px;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.06);color:var(--sub)}
+/* ---------- 我的作品列表 ---------- */
+.work-list{margin:0 var(--margin);display:flex;flex-direction:column;gap:10px}
+.work{
+  display:flex;gap:12px;align-items:center;padding:12px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--line);
+}
+.work .cov{
+  width:50px;height:64px;border-radius:8px;flex-shrink:0;
+  display:grid;place-items:center;font-size:22px;
+}
+.work .body{flex:1;min-width:0}
+.work .t{font-size:15px;font-weight:600;line-height:1.3}
+.work .s{font-size:12px;color:var(--sub);margin-top:3px}
+.work .meta{display:flex;gap:8px;font-size:11px;color:rgba(160,160,176,.7);margin-top:5px;align-items:center}
+.work .meta .star{color:var(--warn)}
+.work .acts{display:flex;flex-direction:column;gap:5px;flex-shrink:0}
+.work .acts .a{
+  font-size:11px;padding:5px 10px;border-radius:7px;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--text);text-align:center;
+}
+.work .acts .a.primary{background:rgba(255,179,71,.18);border-color:rgba(255,179,71,.4);color:var(--warn)}
+/* ---------- 创作者法律快捷 ---------- */
+.legal-card{
+  margin:0 var(--margin);padding:14px;border-radius:var(--radius);
+  background:linear-gradient(135deg,rgba(255,179,71,.10),rgba(233,69,96,.06));
+  border:1px solid rgba(255,179,71,.25);
+  display:flex;gap:12px;align-items:center;
+}
+.legal-card .ico{
+  width:42px;height:42px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--warn),#E89B5A);
+  display:grid;place-items:center;font-size:20px;
+}
+.legal-card .t{font-size:14px;font-weight:600}
+.legal-card .s{font-size:11px;color:var(--sub);margin-top:2px}
+/* ---------- V20-L 设计文档 §5：开始创作（两大按钮 + 3 功能 + 4 更多创建） ---------- */
+.create-hub{margin:0 var(--margin) 4px}
+.big-duo{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.big-btn{
+  display:block;padding:18px 12px;border-radius:var(--radius);text-align:center;
+  border:1px solid var(--line);text-decoration:none;
+  transition:transform .2s cubic-bezier(.16,1,.3,1);
+}
+.big-btn:active{transform:scale(.97)}
+.big-btn .bi{font-size:30px;line-height:1}
+.big-btn .bt{font-size:14px;font-weight:600;margin-top:8px}
+.big-btn .bs{font-size:10px;color:var(--sub);margin-top:4px}
+.big-btn.agent{background:linear-gradient(135deg,rgba(108,92,231,.22),rgba(162,155,254,.12));border-color:rgba(108,92,231,.35)}
+.big-btn.workshop{background:linear-gradient(135deg,rgba(255,179,71,.18),rgba(233,69,96,.08));border-color:rgba(255,179,71,.3)}
+.fn-trio{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+.fn-btn{
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:12px 4px;border-radius:12px;background:var(--card);
+  border:1px solid var(--line);cursor:pointer;
+  font-family:inherit;color:var(--text);transition:transform .15s;
+}
+.fn-btn:active{transform:scale(.96)}
+.fn-btn .fi{font-size:20px}
+.fn-btn .fl{font-size:11px}
+.fn-btn .fs{font-size:9px;color:var(--sub)}
+.more-create{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+}
+.mc-btn{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:10px 2px;border-radius:10px;background:rgba(255,255,255,.04);
+  border:1px solid var(--line);cursor:pointer;
+  font-family:inherit;color:var(--text);transition:transform .15s;
+}
+.mc-btn:active{transform:scale(.95)}
+.mc-btn .mi{font-size:16px}
+.mc-btn .ml{font-size:10px;color:var(--sub)}
+/* §5.5 灵境工坊工作台矩阵 */
+.workbench{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:8px 0 4px}
+.wb-item{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:10px 2px;border-radius:10px;text-decoration:none;
+  background:rgba(255,255,255,.04);border:1px solid var(--line);
+}
+.wb-item .wi{font-size:16px}
+.wb-item .wl{font-size:10px;color:var(--sub)}
+</style>
+<link rel="stylesheet" href="css/mobile-lock.css" />
+<link rel="stylesheet" href="css/tabbar-embed.css">
+</head>
+<body data-page-node-id="oxxS0PGP9cqwjW0ged6Z2A">
+<div id="app" data-page-node-id="0n02O0nuuPzIUv5wew67s0">
+  <!-- 顶栏（v6.4 共享壳 · V20-L §5.1：关闭按钮 + 草稿箱） -->
+  <header class="topbar" data-page-node-id="u3LFmWLSa76MaElAb3exNK">
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="icon-btn" onclick="if(history.length>1){history.back()}else{location.href='library.html'}" title="关闭 · 返回上一页">✕</button>
+      <div class="topbar-title" data-page-node-id="Syl2DfkiIxaqHTcgLFxbCm"><span class="dot" data-page-node-id="UC8DfiqlxnM4wCHgpjJH4v"></span>创作</div>
+    </div>
+    <div class="topbar-acts" data-page-node-id="vx3WVDujrlyiN5UlrDUDYR">
+      <a class="icon-btn" href="work-editor.html" title="草稿箱" data-page-node-id="v20l-draftbox">📝<span class="badge" data-page-node-id="v20l-draft-badge">2</span></a>
+      <button class="icon-btn" onclick="location.href='dashboard.html'" title="数据">📊</button>
+      <a class="icon-btn" href="novel-ai-helper.html" title="AI 辅助" data-page-node-id="QwZlFE3twCRVGtRHwfBXCz">✨</a>
+      <button class="icon-btn" onclick="showToast('warn','2 条审核通知','作品 #1234 已通过')" title="通知">🔔<span class="badge" data-page-node-id="k9U4zhf42WaAs8nCTf8dbz">2</span></button>
+      <a class="icon-btn" href="me.html" title="我的" data-page-node-id="a9hXPpQIyfPlCmvTcqkm0b">👤</a>
+    </div>
+  </header>
+  <main data-page-node-id="X7Jk7vH8G94xQzrmRf2dod">
+    <!-- 创作者等级 -->
+    <section class="level-card" data-page-node-id="3kt1RGAUGGRxerl3hLrDu2">
+      <div class="lc-row1" data-page-node-id="UyZoyGtI5RTr0QsF4zayQP">
+        <div class="lc-badge" data-page-node-id="GzK6wbGi3cSitHw0tuATTb">🏆</div>
+        <div class="lc-meta" data-page-node-id="aWoKsQqr7e0DF2KhujSQQ6">
+          <div class="lc-name" data-page-node-id="YkTi6rNmSbHCIQUit1ohht">L3 · 黄金创作者</div>
+          <div class="lc-level" data-page-node-id="F05YuHUlrx8rq7eT59RlCC">距 L4 钻石还差 1,200 灵晶收益</div>
+        </div>
+      </div>
+      <div class="lc-row2" data-page-node-id="fBi8RqdF7AksO0dsFoTrLM">
+        <div class="lc-stat" data-page-node-id="zYzP04COelas1NBF0GE3n5"><div class="v c1" data-page-node-id="ycmIuOyesVe37doFWdikv0">12,800</div><div class="l" data-page-node-id="KpZ09kzAkdZ0drBROOWdGk">总收益灵晶</div></div>
+        <div class="lc-stat" data-page-node-id="n5UNTim5RiBZ2DISpnFTWW"><div class="v c2" data-page-node-id="9Mu1jtNI6baF1nFlXrOyVE">3,200</div><div class="l" data-page-node-id="FrI6jChlMnxNa0gVJ57oT0">待结算</div></div>
+      </div>
+      <div class="lc-row3" data-page-node-id="bdMFFYnohbU0zIwZKc66PU">
+        <a class="lc-btn primary" href="revenue-detail.html">💰 提现</a>
+        <a class="lc-btn" href="revenue-detail.html">📈 收益明细</a>
+        <a class="lc-btn" href="revenue-detail.html" style="background:rgba(255,179,71,.18);border-color:rgba(255,179,71,.5);color:#FFB347;">🪜 5 档分成</a>
+        <a class="lc-btn" href="creator-legal.html">📜 协议</a>
+      </div>
+    </section>
+    <!-- V20-L 设计文档 §5.2-5.4：开始创作（两个大按钮 + 三个功能按钮 + 更多创建） -->
+    <section class="create-hub">
+      <div class="big-duo">
+        <a class="big-btn agent" href="character-create.html" onclick="event.preventDefault(); window.LJRealname && window.LJRealname.gate(this.href);">
+          <div class="bi">🪄</div>
+          <div class="bt">创建智能体</div>
+          <div class="bs" id="ljAgentQuota">本周剩余 10/10</div>
+        </a>
+        <a class="big-btn workshop" href="workshop.html">
+          <div class="bi">🐱</div>
+          <div class="bt">灵境工坊</div>
+          <div class="bs">进入创作者工作台</div>
+        </a>
+      </div>
+      <div class="fn-trio">
+        <button class="fn-btn" onclick="location.href='create-video.html'"><span class="fi">🎬</span><span class="fl">创建视频</span><span class="fs">AI 短视频</span></button>
+        <button class="fn-btn" onclick="location.href='create-image.html'"><span class="fi">🖼️</span><span class="fl">创建图片</span><span class="fs">封面 / 立绘</span></button>
+        <button class="fn-btn" onclick="location.href='create-sound.html'"><span class="fi">🔊</span><span class="fl">创建声音</span><span class="fs">AI 语音</span></button>
+      </div>
+      <div class="more-create">
+        <button class="mc-btn" onclick="location.href='create-post.html'"><span class="mi">✏️</span><span class="ml">创建动态</span></button>
+        <button class="mc-btn" onclick="location.href='voice-clone.html'"><span class="mi">🎤</span><span class="ml">复刻音色</span></button>
+        <button class="mc-btn" onclick="location.href='create-card.html'"><span class="mi">✨</span><span class="ml">创建灵念</span></button>
+        <button class="mc-btn" onclick="location.href='agent-create.html'"><span class="mi">🤖</span><span class="ml">Agent 创建</span></button>
+      </div>
+    </section>
+    <!-- V26：灵境工坊·工作台七宫格整体迁入 workshop.html（去重），创作页不再重复罗列 -->
+    <!-- 我的作品 → V26：收进功能按键，历史全集在 my-works.html（创作 Tab 不再内嵌长列表） -->
+    <!-- 功能区 -->
+    <h2 class="sec" data-page-node-id="Cp221FhPpoZmJL6vRkvdft">功能区 <a class="more" href="my-works.html" data-page-node-id="Y1A0eqLuFxXJCUAYwhAIBE">编辑我的作品 ›</a></h2>
+    <div class="func-grid" data-page-node-id="a88SrcbVBZxkUCQZq0TYy0">
+      <a class="func" href="my-works.html" data-page-node-id="v26-my-works">
+        <div class="ico" style="background:linear-gradient(135deg,rgba(255,179,71,.3),rgba(108,92,231,.2))" data-page-node-id="v26-mw-ico">📚</div>
+        <div class="t" data-page-node-id="v26-mw-t">编辑我的作品</div>
+        <div class="s" data-page-node-id="v26-mw-s">历史生成 / 上传 / 未完工待续写全集 · 续写改写换图调收费</div>
+        <div class="tags" data-page-node-id="v26-mw-tags"><span class="tag">7+ 作品</span><span class="tag">可续写</span></div>
+      </a>
+      <a class="func" href="novel-ai-helper.html" onclick="event.preventDefault(); window.LJRealname && window.LJRealname.gate(this.href);">
+        <div class="ico" style="background:linear-gradient(135deg,rgba(255,179,71,.3),rgba(233,69,96,.2))">📝</div>
+        <div class="t">小说辅助模拟器</div>
+        <div class="s">对话式引导问卷 → 创作简报 → 大纲锁定 → 章节规划 → 三栏创作台</div>
+        <div class="tags"><span class="tag">V21 引导</span><span class="tag">28 字段专家</span></div>
+      </a>
+      <a class="func" href="novel-upload.html" data-page-node-id="boMgtRC8FRhlYqLLklxWo4">
+        <div class="ico" style="background:linear-gradient(135deg,rgba(78,204,163,.3),rgba(0,184,148,.2))" data-page-node-id="LBFaZwqHGsVHlSRi0GUfKP">📤</div>
+        <div class="t" data-page-node-id="rUQ457dYPZV1wH73v4BlKS">上传即生成</div>
+        <div class="s" data-page-node-id="ggKPZGTGSe9zrLDNtJT2Uj">TXT/MD/DOCX 上传 → 自动分章/抽角色/识场景</div>
+        <div class="tags" data-page-node-id="XZv0OHL9nFNbDY26tM78PT"><span class="tag" data-page-node-id="fmotmAOZY8jdI3ZfsWT9cK">3 格式</span><span class="tag" data-page-node-id="E6SjUWexq0dMudejP0alYR">99% 覆盖</span></div>
+      </a>
+      <a class="func" href="commerce.html" data-page-node-id="UfzmxgT6DLdkc21j5aaBKQ">
+        <div class="ico" style="background:linear-gradient(135deg,rgba(108,92,231,.3),rgba(155,91,224,.2))" data-page-node-id="HiTvx7vnsmUz6D1bEBz50a">💰</div>
+        <div class="t" data-page-node-id="0ycWdbTpY0i0UFLbBAC9GS">上架与定价</div>
+        <div class="s" data-page-node-id="ZFFrqwaXcFtXG7aCGjQIwt">版权分层 L1-L4 + 22 收费点 + 5 档分成</div>
+        <div class="tags" data-page-node-id="DIUTfiyTJH3foRBEITZeFQ"><span class="tag" data-page-node-id="zv48WekmrdDixqFWElUlHp">L1-L4</span><span class="tag" data-page-node-id="9ePKr7IiDy0VCKt0UWjX31">22 点</span></div>
+      </a>
+      <a class="func" href="creator-create.html" data-page-node-id="rhTbNcJPJw1EYH7H8yFpva">
+        <div class="ico" style="background:linear-gradient(135deg,rgba(233,69,96,.3),rgba(192,57,82,.2))" data-page-node-id="pC4Wsvkr6RLpCkDZYD7ylf">✨</div>
+        <div class="t" data-page-node-id="aEbjkQqHRBeZsEMEzCzjdz">创建新作品</div>
+        <div class="s" data-page-node-id="yrowt5tiDWL9eSvuJGGRoI">3 步向导：选路径 → 基础信息 → 确认</div>
+        <div class="tags" data-page-node-id="ur9INdWtGugQF0VxVJssjw"><span class="tag" data-page-node-id="uICqHy5DhkkklKIizx5OPj">3 步</span><span class="tag" data-page-node-id="f1fRkugVRDyUacKUNdSsfh">快速</span></div>
+      </a>
+    </div>
+    <!-- 创作者法律 -->
+    <a class="legal-card" href="creator-legal.html" data-page-node-id="CCipn416OF7i40c8mvcorE">
+      <div class="ico" data-page-node-id="zAeJfsTDttTw50WqhoOdpf">📜</div>
+      <div style="flex:1" data-page-node-id="0AUGNWX4Yil8AiAJA4bNWf">
+        <div class="t" data-page-node-id="jFAKWIlazJTtyDtG2ocHiY">创作者法律指南</div>
+        <div class="s" data-page-node-id="uYzsECifVTHx1u4eYEDsOB">13 份专属文书 · AI 创作版权 / 改编授权 / 收益分成</div>
+      </div>
+      <div style="font-size:18px;opacity:.5" data-page-node-id="MAmt0ArCbACV05PYvXwu1G">›</div>
+    </a>
+  </main>
+  <!-- 5 Tab 底部（创作 active） -->
+  <nav class="tabbar" data-page-node-id="LNTCXsoZ2NTiuWxHCjHa98">
+    <a class="tab" href="../../index.html" data-page-node-id="Bhwe4lCdYkAYJrszW5Mx0M"><span class="ico" data-page-node-id="q6YvHuUEMNffh0nc4eENjI">🏠</span><span data-page-node-id="KRbOuIsV2FpiCAqEg5RMVy">首页</span></a>
+    <a class="tab t-world" href="library.html" data-page-node-id="t55OnnCEAzuMFlgw6KtDEm"><span class="ico" data-page-node-id="hC8j5VNm2N2a23U8Q6lwbx">📖</span><span data-page-node-id="gm9AqVva0ltYWBTLYy8E2O">世界</span></a>
+    <a class="tab t-xinyu" href="heart-island.html" data-page-node-id="6jSUlDtd52sjSn1vAEZAZy"><span class="ico" data-page-node-id="D779rEMlNEl8Y573T32Bax">💬</span><span data-page-node-id="h47EPY6xBzOsMQdDzZTkIs">心屿</span></a>
+    <a class="tab t-create active" href="creator-center.html" data-page-node-id="qMysRZsGSjRdU7ZNrKNEWn"><span class="ico" data-page-node-id="UTacBeZNDxwgp5uhyrrH20">✨</span><span data-page-node-id="NM1LWGw6PSBoznVKHoEyns">创作</span></a>
+    <a class="tab" href="me.html" data-page-node-id="TkPOjHyH5SibLYIbCKVOXU"><span class="ico" data-page-node-id="GPeMZDmvlMxoYbm8Jalw7E">👤</span><span data-page-node-id="kunTvrL7n8qUzQk4vpPykE">我的</span></a>
+  </nav>
+</div>
+<div id="toast" data-page-node-id="PUfQrZOdzhqJ31TXHoHUO3"></div>
+<script>
+function showToast(kind, title, msg){
+  var c = document.getElementById('toast');
+  var t = document.createElement('div');
+  t.className = 'toast-item ' + (kind || 'ok');
+  t.innerHTML = '<span class="ti"></span><span><b>' + title + '</b>' + (msg ? '<span style="opacity:.65"> · ' + msg + '</span>' : '') + '</span>';
+  c.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 3000);
+}
+</script>
+<script src="js/tabbar.js" data-page-node-id="v20e-tabbar-mount"></script>
+<script src="js/realname-gate.js"></script>
+<script src="js/creator-store.js"></script>
+<script>
+/* V23-C：智能体周额度角标（每周 10 次） */
+(function () {
+  function ljAgentQuota() {
+    if (!window.CreatorStore) return;
+    var q = CreatorStore.quotaInfo('agent');
+    var el = document.getElementById('ljAgentQuota');
+    if (q && el) el.textContent = '本周剩余 ' + q.remaining + '/' + q.limit;
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ljAgentQuota);
+  else ljAgentQuota();
+})();
+</script>
+</body>
+</html>

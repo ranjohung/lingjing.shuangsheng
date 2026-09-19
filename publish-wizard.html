@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<base href="__LJ_BASE__" />
+<script>
+window.__LJ_PAGE__ = "publish-wizard";
+window.__LJ_PARAMS__ = __LJ_QS__;
+window.__LJ_HASHV__ = __LJ_HASH__;
+window.LJNav = function (url) {
+  if (typeof url === 'string') {
+    var m = /([\w.\-]+)\.html(\?[^#]*)?(#.*)?$/.exec(url);
+    if (m) { try { parent.postMessage({ lj: 'go', id: m[1], qs: m[2] || '', hash: m[3] || '' }, '*'); return; } catch (err) {} }
+    try { parent.LJ.goUrl(url); return; } catch (err2) {}
+  }
+  location.href = url;
+};
+window.LJBack = function () {
+  try { parent.postMessage({ lj: 'back' }, '*'); } catch (err) { history.back(); }
+};
+window.LJSearch = function () { var v = window.__LJ_PARAMS__; return v ? v : location.search; };
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>上架设置 · 创作中心</title>
+<link rel="stylesheet" href="css/shell-v64.css" />
+<link rel="stylesheet" href="css/mobile-lock.css" />
+<style>
+:root{
+  --bg:#0d0d1a; --card:#16213E; --card2:#1C2542;
+  --accent:#E94560; --text:#EAEAEA; --sub:#A0A0B0;
+  --ok:#4ECCA3; --warn:#FFB347; --xinyu:#6C5CE7; --world:#00B894;
+  --line:rgba(255,255,255,.08);
+  --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;font-size:14px}
+
+#app{max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg);position:relative;padding-bottom:calc(72px + env(safe-area-inset-bottom))}
+
+/* ---------- 顶部栏 ---------- */
+.topbar{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:0;z-index:10}
+.tb-back{width:36px;height:36px;border-radius:10px;background:var(--card);display:grid;place-items:center;font-size:20px;color:var(--text);cursor:pointer;border:1px solid var(--line)}
+.tb-title{flex:1;font-size:16px;font-weight:600;text-align:center}
+.tb-right{width:36px}
+
+/* ---------- 进度指示器 ---------- */
+.progress{padding:14px 16px;background:linear-gradient(180deg,rgba(233,69,96,.12),transparent)}
+.progress-book{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.pb-cov{width:40px;height:50px;border-radius:8px;background:linear-gradient(135deg,#E94560,#6C5CE7);display:grid;place-items:center;font-size:20px}
+.pb-info{flex:1;min-width:0}
+.pb-name{font-weight:600;font-size:15px}
+.pb-sub{font-size:11px;color:var(--sub);margin-top:2px}
+.progress-bar{display:flex;gap:4px;margin-bottom:10px}
+.pb-step{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.12);transition:all .3s}
+.pb-step.on{background:linear-gradient(90deg,#E94560,#6C5CE7)}
+.pb-step.done{background:var(--ok)}
+.progress-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--sub)}
+
+/* ---------- 步骤面板 ---------- */
+.step{display:none;padding:0 16px}
+.step.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.step-title{font-size:18px;font-weight:700;margin:16px 0 6px}
+.step-sub{font-size:12px;color:var(--sub);margin-bottom:16px}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:12px}
+.panel-title{font-size:14px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.panel-title::before{content:"";width:3px;height:14px;background:linear-gradient(180deg,#E94560,#6C5CE7);border-radius:2px}
+.panel-hint{font-size:11px;color:var(--sub);line-height:1.6;margin-top:8px}
+
+/* ---------- 作品信息 ---------- */
+.field{margin-bottom:14px}
+.field-label{font-size:12px;color:var(--sub);margin-bottom:6px}
+.field-input{width:100%;padding:10px 12px;background:var(--card2);border:1px solid var(--line);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit}
+.field-input:focus{outline:none;border-color:var(--accent)}
+.field-textarea{min-height:80px;resize:none}
+.field-row{display:flex;gap:10px}
+.field-row .field{flex:1}
+
+.tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{padding:6px 14px;border-radius:20px;background:var(--card2);border:1px solid var(--line);font-size:12px;cursor:pointer;transition:all .15s}
+.tag.on{background:rgba(233,69,96,.18);border-color:rgba(233,69,96,.5);color:var(--accent)}
+
+.radio-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.radio-item{flex:1;min-width:120px;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:12px;text-align:center;cursor:pointer;background:var(--card2);transition:all .15s}
+.radio-item.on{border-color:var(--accent);background:rgba(233,69,96,.1);color:var(--text)}
+
+/* ---------- 章节设置 ---------- */
+.chap{display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;background:var(--card2);margin-bottom:8px}
+.chap-num{width:50px;font-size:12px;color:var(--sub)}
+.chap-info{flex:1;min-width:0}
+.chap-title{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chap-status{font-size:11px;color:var(--sub);margin-top:2px}
+.chap-price{font-size:12px;font-weight:600;min-width:50px;text-align:right;color:var(--warn)}
+.chap-price.free{color:var(--ok)}
+.switch{width:40px;height:22px;border-radius:11px;background:rgba(255,255,255,.12);position:relative;cursor:pointer;flex-shrink:0}
+.switch.on{background:var(--accent)}
+.switch::after{content:"";position:absolute;width:18px;height:18px;border-radius:9px;background:#fff;top:2px;left:2px;transition:transform .15s}
+.switch.on::after{transform:translateX(18px)}
+
+/* ---------- 收费商品 ---------- */
+.product-type{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;-webkit-overflow-scrolling:touch}
+.product-type .tag{white-space:nowrap;flex-shrink:0}
+
+.prod-list .chap, .prod-list .prod-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;background:var(--card2);margin-bottom:6px}
+.prod-ico{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#6C5CE7,#E94560);display:grid;place-items:center;font-size:16px;flex-shrink:0}
+.prod-info{flex:1;min-width:0}
+.prod-name{font-size:13px;font-weight:600}
+.prod-desc{font-size:11px;color:var(--sub);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prod-price{font-size:13px;font-weight:600;color:var(--warn);min-width:50px;text-align:right}
+
+.add-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;border:1px dashed var(--line);border-radius:8px;color:var(--sub);font-size:13px;cursor:pointer;background:rgba(255,255,255,.03);margin-top:8px}
+.add-btn:active{background:rgba(255,255,255,.06)}
+
+/* ---------- 素材卡片 ---------- */
+.asset-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.asset-grid.cols3{grid-template-columns:repeat(3,1fr)}
+.asset-card{background:var(--card2);border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer}
+.asset-thumb{height:90px;background:linear-gradient(135deg,#2E3A6E,#4A3A8C);display:grid;place-items:center;font-size:28px;position:relative;overflow:hidden}
+.asset-thumb.has-img{background-size:cover;background-position:center}
+.asset-thumb .upload-hint{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.55);color:#fff;font-size:10px;padding:3px 6px;text-align:center}
+.asset-body{padding:8px 10px}
+.asset-name{font-size:13px;font-weight:600}
+.asset-sub{font-size:11px;color:var(--sub);margin-top:2px}
+.asset-empty{border-style:dashed;display:grid;place-items:center;color:var(--sub);min-height:130px;font-size:12px;gap:8px}
+.asset-empty .plus{font-size:24px;color:rgba(255,255,255,.3)}
+
+.upload-area{margin-top:10px}
+.upload-btn{display:flex;align-items:center;gap:8px;padding:10px;background:var(--card2);border:1px solid var(--line);border-radius:8px;font-size:13px;cursor:pointer;color:var(--text)}
+.upload-btn input{display:none}
+
+/* ---------- 世界生成 ---------- */
+.protect-box{background:linear-gradient(135deg,rgba(0,184,148,.12),rgba(78,204,163,.06));border:1px solid rgba(0,184,148,.4);border-radius:10px;padding:14px;margin-bottom:14px}
+.protect-title{font-size:14px;font-weight:700;color:var(--ok);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.protect-list{font-size:12px;color:var(--sub);line-height:1.9}
+.protect-list .no{color:#E94560}
+.protect-list .yes{color:var(--ok)}
+
+.gen-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+.gen-stat{background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:10px;text-align:center}
+.gen-stat-num{font-size:20px;font-weight:700;background:linear-gradient(135deg,#E94560,#6C5CE7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.gen-stat-label{font-size:11px;color:var(--sub);margin-top:2px}
+
+.world-form-row{display:flex;gap:8px;margin-bottom:10px}
+
+/* ---------- 生成进度 ---------- */
+.gen-progress{text-align:center;padding:40px 20px}
+.gen-progress .cover{width:100px;height:130px;border-radius:12px;background:linear-gradient(135deg,#E94560,#6C5CE7);margin:0 auto 20px;display:grid;place-items:center;font-size:48px;animation:genPulse 1.5s ease-in-out infinite}
+@keyframes genPulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.05);opacity:1}}
+.gen-step{padding:10px 0;font-size:13px;color:var(--sub);display:flex;align-items:center;gap:10px;justify-content:center}
+.gen-step.done{color:var(--ok)}
+.gen-step .dot{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center;font-size:12px;flex-shrink:0}
+.gen-step.done .dot{background:var(--ok)}
+.gen-step.active{color:var(--text)}
+.gen-step.active .dot{background:var(--accent);animation:spin 1s linear infinite}
+@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.gen-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.12);margin:20px 0;overflow:hidden}
+.gen-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#E94560,#6C5CE7);width:0%;transition:width .3s}
+.gen-percent{font-size:24px;font-weight:700;background:linear-gradient(135deg,#E94560,#6C5CE7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* ---------- 生成完成 ---------- */
+.gen-complete{text-align:center;padding:30px 20px}
+.gen-complete .icon{font-size:60px;margin-bottom:16px}
+.gen-complete h3{font-size:20px;margin-bottom:8px}
+.gen-complete p{font-size:13px;color:var(--sub);margin-bottom:24px}
+
+/* ---------- 底部按钮 ---------- */
+.bottom-btns{position:sticky;bottom:0;background:var(--bg);padding:12px 16px;display:flex;gap:10px;border-top:1px solid var(--line);margin-top:20px}
+.btn{flex:1;padding:13px;border-radius:24px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .15s}
+.btn-primary{background:linear-gradient(90deg,#E94560,#6C5CE7);color:#fff;box-shadow:0 4px 16px rgba(233,69,96,.3)}
+.btn-primary:active{transform:scale(.97)}
+.btn-secondary{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-ghost{background:transparent;border:none;color:var(--sub);flex:none;padding:13px 20px}
+.btn-start-gen{background:linear-gradient(90deg,#E94560,#6C5CE7);color:#fff;box-shadow:0 4px 20px rgba(233,69,96,.4)}
+
+/* ---------- 提示 toast ---------- */
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(22,33,62,.95);padding:10px 20px;border-radius:20px;font-size:13px;color:var(--text);border:1px solid var(--line);opacity:0;pointer-events:none;transition:all .3s;z-index:999}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- 弹窗 ---------- */
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:none;align-items:flex-end}
+.modal-mask.show{display:flex}
+.modal{width:100%;max-width:480px;background:var(--card);border-radius:16px 16px 0 0;padding:20px;max-height:80vh;overflow-y:auto}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- 顶部栏 -->
+<div class="topbar">
+  <button class="tb-back" onclick="LJBack()" title="返回">‹</button>
+  <div class="tb-title" id="tbTitle">上架设置</div>
+  <div class="tb-right"></div>
+</div>
+
+<!-- 进度指示器 -->
+<div class="progress" id="progressBox">
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="progress-labels" id="progressLabels"></div>
+</div>
+
+<!-- ============ Step 1: 作品信息 ============ -->
+<div class="step active" data-step="1">
+  <div class="step-title">作品信息</div>
+  <div class="step-sub">完善上架信息，读者在书架上看到的就是这些</div>
+  
+  <div class="panel">
+    <div class="panel-title">封面 · 标题 · 作者</div>
+    <div class="field">
+      <div class="field-label">作品封面</div>
+      <div class="asset-thumb" style="height:120px;border-radius:10px;background:linear-gradient(135deg,#2E3A6E,#4A3A8C);display:grid;place-items:center;font-size:36px;cursor:pointer" onclick="document.getElementById('coverInput').click()">
+        <span id="coverEmoji">🏯</span>
+        <div class="upload-hint">点击上传封面（1024×1280）</div>
+      </div>
+      <input type="file" id="coverInput" accept="image/*" style="display:none" onchange="onCoverUpload(event)">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <div class="field-label">小说名称</div>
+        <input class="field-input" value="《锦绣未央》" />
+      </div>
+      <div class="field">
+        <div class="field-label">作者</div>
+        <input class="field-input" value="你的笔名" />
+      </div>
+    </div>
+  </div>
+  
+  <div class="panel">
+    <div class="panel-title">作品简介</div>
+    <div class="field">
+      <div class="field-label">一句话让读者入坑</div>
+      <textarea class="field-input field-textarea" placeholder="主角、冲突、世界悬念..."></textarea>
+    </div>
+  </div>
+  
+  <div class="panel">
+    <div class="panel-title">作品类型</div>
+    <div class="tag-row" id="genreTags">
+      <span class="tag" onclick="togTag(this,'古风')">古风</span>
+      <span class="tag" onclick="togTag(this,'言情')">言情</span>
+      <span class="tag" onclick="togTag(this,'武侠')">武侠</span>
+      <span class="tag" onclick="togTag(this,'仙侠')">仙侠</span>
+      <span class="tag" onclick="togTag(this,'悬疑')">悬疑</span>
+      <span class="tag" onclick="togTag(this,'校园')">校园</span>
+      <span class="tag" onclick="togTag(this,'科幻')">科幻</span>
+      <span class="tag" onclick="togTag(this,'历史')">历史</span>
+    </div>
+  </div>
+  
+  <div class="panel">
+    <div class="panel-title">世界风格</div>
+    <div class="radio-row" id="styleRow">
+      <div class="radio-item on" onclick="togRadio(this)">互动小说</div>
+      <div class="radio-item" onclick="togRadio(this)">2D 动漫</div>
+      <div class="radio-item" onclick="togRadio(this)">国风</div>
+      <div class="radio-item" onclick="togRadio(this)">日系</div>
+      <div class="radio-item" onclick="togRadio(this)">半写实</div>
+      <div class="radio-item" onclick="togRadio(this)">古风</div>
+      <div class="radio-item" onclick="togRadio(this)">科幻</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Step 2: 章节收费 ============ -->
+<div class="step" data-step="2">
+  <div class="step-title">章节设置</div>
+  <div class="step-sub">前 3 章建议免费，第 4 章起可收费。AI 会推荐适合作为收费节点的章节</div>
+  
+  <div class="panel">
+    <div class="panel-title">章节列表（12 章）</div>
+    <div id="chapList"></div>
+    <div class="panel-hint">💡 点击右侧开关切换免费/收费，点击数字修改价格</div>
+  </div>
+</div>
+
+<!-- ============ Step 3: 收费商品 ============ -->
+<div class="step" data-step="3">
+  <div class="step-title">收费商品</div>
+  <div class="step-sub">除章节外，还可以卖道具、服装、CG、互动剧情…商品会在世界里真实存在</div>
+  
+  <div class="panel">
+    <div class="panel-title">商品类型</div>
+    <div class="product-type" id="prodType">
+      <span class="tag on" data-type="道具" onclick="togProdType(this)">🗡️ 道具</span>
+      <span class="tag" data-type="服装" onclick="togProdType(this)">👘 服装</span>
+      <span class="tag" data-type="CG" onclick="togProdType(this)">🎨 CG</span>
+      <span class="tag" data-type="场景" onclick="togProdType(this)">🏛️ 场景</span>
+      <span class="tag" data-type="互动" onclick="togProdType(this)">💬 特殊互动</span>
+      <span class="tag" data-type="IF剧情" onclick="togProdType(this)">🔀 IF剧情</span>
+    </div>
+  </div>
+  
+  <div class="panel">
+    <div class="panel-title">道具商品</div>
+    <div id="prodList"></div>
+    <div class="add-btn" onclick="addProduct()">＋ 添加收费道具</div>
+  </div>
+</div>
+
+<!-- ============ Step 4: 人物 / 场景 / 道具 资产 ============ -->
+<div class="step" data-step="4">
+  <div class="step-title">视觉资产</div>
+  <div class="step-sub">给小说里的人物、场景、道具上传图片，让读者走进世界时看到的就是你设计的样子</div>
+  
+  <!-- 人物 -->
+  <div class="panel">
+    <div class="panel-title">人物立绘（自动从小说提取）</div>
+    <div class="asset-grid">
+      <div class="asset-card" onclick="uploadAsset(this,'character','顾言')">
+        <div class="asset-thumb">👤<div class="upload-hint">点击上传</div></div>
+        <div class="asset-body"><div class="asset-name">顾言</div><div class="asset-sub">主角 · 外冷内热</div></div>
+      </div>
+      <div class="asset-card" onclick="uploadAsset(this,'character','林晚')">
+        <div class="asset-thumb">👩<div class="upload-hint">点击上传</div></div>
+        <div class="asset-body"><div class="asset-name">林晚</div><div class="asset-sub">女主 · 温润如玉</div></div>
+      </div>
+      <div class="asset-card" onclick="uploadAsset(this,'character','沈月')">
+        <div class="asset-thumb">👧<div class="upload-hint">点击上传</div></div>
+        <div class="asset-body"><div class="asset-name">沈月</div><div class="asset-sub">闺蜜 · 古灵精怪</div></div>
+      </div>
+      <div class="asset-card asset-empty" onclick="addAsset('character')">
+        <div class="plus">＋</div>
+        <div>添加人物</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 场景 -->
+  <div class="panel">
+    <div class="panel-title">场景背景（24 处）</div>
+    <div class="asset-grid cols3">
+      <div class="asset-card" onclick="uploadAsset(this,'scene','顾府书房')">
+        <div class="asset-thumb">🏯<div class="upload-hint">点击上传</div></div>
+        <div class="asset-body"><div class="asset-name">顾府书房</div></div>
+      </div>
+      <div class="asset-card" onclick="uploadAsset(this,'scene','顾府庭院')">
+        <div class="asset-thumb">🌳<div class="upload-hint">点击上传</div></div>
+        <div class="asset-body"><div class="asset-name">顾府庭院</div></div>
+      </div>
+      <div class="asset-card" onclick="uploadAsset(this,'scene','城门')">
+        <div class="asset-thumb">🚪<div class="upload-hint">点击上传</div></div>
+        <div class="asset-body"><div class="asset-name">城门</div></div>
+      </div>
+      <div class="asset-card asset-empty" onclick="addAsset('scene')">
+        <div class="plus">＋</div>
+        <div>添加场景</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 道具 -->
+  <div class="panel">
+    <div class="panel-title">道具（86 件）</div>
+    <div class="asset-grid cols3">
+      <div class="asset-card" onclick="uploadAsset(this,'item','玉佩')">
+        <div class="asset-thumb">💎<div class="upload-hint">点击上传</div></div>
+        <div class="asset-body"><div class="asset-name">玉佩</div></div>
+      </div>
+      <div class="asset-card" onclick="uploadAsset(this,'item','折扇')">
+        <div class="asset-thumb">🪭<div class="upload-hint">点击上传</div></div>
+        <div class="asset-body"><div class="asset-name">折扇</div></div>
+      </div>
+      <div class="asset-card" onclick="uploadAsset(this,'item','书信')">
+        <div class="asset-thumb">📜<div class="upload-hint">点击上传</div></div>
+        <div class="asset-body"><div class="asset-name">书信</div></div>
+      </div>
+      <div class="asset-card asset-empty" onclick="addAsset('item')">
+        <div class="plus">＋</div>
+        <div>添加道具</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- CG -->
+  <div class="panel">
+    <div class="panel-title">CG / 插画</div>
+    <div class="asset-grid">
+      <div class="asset-card" onclick="uploadAsset(this,'cg','雨夜相遇')">
+        <div class="asset-thumb">🌧️<div class="upload-hint">点击上传</div></div>
+        <div class="asset-body"><div class="asset-name">雨夜相遇</div><div class="asset-sub">第 12 章</div></div>
+      </div>
+      <div class="asset-card asset-empty" onclick="addAsset('cg')">
+        <div class="plus">＋</div>
+        <div>添加 CG</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Step 5: 世界生成设置 ============ -->
+<div class="step" data-step="5">
+  <div class="step-title">世界生成设置</div>
+  <div class="step-sub">设置世界形式和 AI 生成内容。<span style="color:var(--ok);font-weight:600">原著保护已锁定</span>，AI 不会改写正文</div>
+  
+  <div class="panel">
+    <div class="panel-title">原著保护（灵境核心机制）</div>
+    <div class="protect-box">
+      <div class="protect-title">🔒 原著保护已开启</div>
+      <div class="protect-list">
+        <span class="no">× AI不会：删除原著 · 修改正文 · 改写主线 · 改章节顺序 · 改人物设定 · 改原著结局</span><br><br>
+        <span class="yes">✓ AI只负责：场景演出 · 人物动作 · 镜头 · 环境 · 世界互动 · 非正典探索 · 支线</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="panel">
+    <div class="panel-title">小说读取结果</div>
+    <div class="gen-stats">
+      <div class="gen-stat"><div class="gen-stat-num">56</div><div class="gen-stat-label">章节</div></div>
+      <div class="gen-stat"><div class="gen-stat-num">32.8w</div><div class="gen-stat-label">字数</div></div>
+      <div class="gen-stat"><div class="gen-stat-num">37</div><div class="gen-stat-label">人物</div></div>
+      <div class="gen-stat"><div class="gen-stat-num">24</div><div class="gen-stat-label">地点</div></div>
+      <div class="gen-stat"><div class="gen-stat-num">86</div><div class="gen-stat-label">道具</div></div>
+      <div class="gen-stat"><div class="gen-stat-num">142</div><div class="gen-stat-label">剧情事件</div></div>
+    </div>
+  </div>
+  
+  <div class="panel">
+    <div class="panel-title">世界形式</div>
+    <div class="radio-row">
+      <div class="radio-item on" onclick="togRadio(this)">互动小说世界</div>
+      <div class="radio-item" onclick="togRadio(this)">2D 沉浸式</div>
+      <div class="radio-item" onclick="togRadio(this)">2.5D 探索</div>
+      <div class="radio-item" onclick="togRadio(this)">3D 世界</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Step 6: 生成进度 ============ -->
+<div class="step" data-step="6">
+  <div class="gen-progress" id="genProgress">
+    <div class="cover">🏯</div>
+    <div style="font-size:16px;font-weight:600;margin-bottom:4px">《锦绣未央》</div>
+    <div style="font-size:12px;color:var(--sub);margin-bottom:20px">AI 正在生成小说世界…</div>
+    
+    <div id="genSteps"></div>
+    
+    <div class="gen-bar"><div class="gen-bar-fill" id="genBarFill"></div></div>
+    <div class="gen-percent" id="genPercent">0%</div>
+  </div>
+  
+  <div class="step" data-step="7" id="genComplete" style="display:none">
+    <div class="gen-complete">
+      <div class="icon">🎉</div>
+      <h3>世界生成完成</h3>
+      <p>AI 已为《锦绣未央》生成可玩的小说世界。<br>原著保护已验证通过。</p>
+      
+      <div class="gen-stats" style="margin-bottom:20px">
+        <div class="gen-stat"><div class="gen-stat-num">56</div><div class="gen-stat-label">章节</div></div>
+        <div class="gen-stat"><div class="gen-stat-num">37</div><div class="gen-stat-label">人物</div></div>
+        <div class="gen-stat"><div class="gen-stat-num">24</div><div class="gen-stat-label">场景</div></div>
+        <div class="gen-stat"><div class="gen-stat-num">86</div><div class="gen-stat-label">道具</div></div>
+        <div class="gen-stat"><div class="gen-stat-num">213</div><div class="gen-stat-label">互动</div></div>
+        <div class="gen-stat"><div class="gen-stat-num">12</div><div class="gen-stat-label">支线</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 底部按钮 -->
+<div class="bottom-btns" id="bottomBtns">
+  <button class="btn btn-ghost" id="btnPrev" onclick="prevStep()">上一步</button>
+  <button class="btn btn-primary" id="btnNext" onclick="nextStep()">保存并继续</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- 隐藏的 file input 模板 -->
+<input type="file" id="assetInput" accept="image/*" style="display:none" />
+
+</div>
+
+<script data-bundled-source="js/tabbar.js"></script>
+<script>
+/* ===== Publish Wizard 7-step workflow ===== */
+var STEPS = [
+  {num:1, name:'作品信息', func: function(){ renderGen(); }},
+  {num:2, name:'章节收费', func: renderChapList},
+  {num:3, name:'收费商品', func: renderProdList},
+  {num:4, name:'视觉资产', func: function(){}},
+  {num:5, name:'世界生成', func: function(){}},
+  {num:6, name:'生成进度', func: startGen},
+];
+
+var curStep = 1;
+var form = { genres:[], style:'互动小说', worldType:'互动小说' };
+
+/* ===== 进度条渲染 ===== */
+function renderProgress(){
+  var bar = document.getElementById('progressBar');
+  var labels = document.getElementById('progressLabels');
+  bar.innerHTML = '';
+  labels.innerHTML = '';
+  STEPS.forEach(function(s,i){
+    var cls = s.num < curStep ? 'done' : (s.num === curStep ? 'on' : '');
+    bar.innerHTML += '<div class="pb-step ' + cls + '"></div>';
+    labels.innerHTML += '<span>' + s.num + '.' + s.name + '</span>';
+  });
+  document.getElementById('tbTitle').textContent = curStep <= 5 ? ('上架设置 · ' + STEPS[curStep-1].name) : '生成世界中';
+  // 底部按钮
+  var btns = document.getElementById('bottomBtns');
+  var next = document.getElementById('btnNext');
+  var prev = document.getElementById('btnPrev');
+  if(curStep >= 6){ btns.style.display='none'; return; }
+  btns.style.display='flex';
+  prev.style.display = curStep > 1 ? '' : 'none';
+  if(curStep === 5){
+    next.className = 'btn btn-start-gen';
+    next.textContent = '✨ 开始生成小说世界';
+  } else {
+    next.className = 'btn btn-primary';
+    next.textContent = '保存并继续';
+  }
+}
+
+/* ===== step 切换 ===== */
+function goStep(n){
+  if(n < 1 || n > STEPS.length) return;
+  curStep = n;
+  document.querySelectorAll('.step').forEach(function(s){
+    s.classList.toggle('active', s.dataset.step == n);
+  });
+  STEPS[n-1].func();
+  renderProgress();
+  window.scrollTo(0,0);
+}
+function nextStep(){ if(curStep < STEPS.length) goStep(curStep+1); }
+function prevStep(){ if(curStep > 1) goStep(curStep-1); }
+
+/* ===== 章节列表 ===== */
+function renderChapList(){
+  var chaps = [
+    '第1章 初见','第2章 入府','第3章 雨夜','第4章 秘密',
+    '第5章 真相','第6章 抉择','第7章 离府','第8章 相遇',
+    '第9章 试探','第10章 心动','第11章 危机','第12章 终章'
+  ];
+  var el = document.getElementById('chapList');
+  el.innerHTML = '';
+  chaps.forEach(function(t,i){
+    var isFree = i < 3;
+    var price = [5,5,5,6,6,8,8,8,10,10,10,0][i] || 5;
+    el.innerHTML +=
+      '<div class="chap">' +
+        '<div class="chap-num">' + (i+1) + '回</div>' +
+        '<div class="chap-info"><div class="chap-title">' + t + '</div>' +
+        '<div class="chap-status">' + (isFree ? '免费 · 前3章建议免费' : '🔒 收费 · AI推荐收费节点') + '</div></div>' +
+        '<div class="chap-price ' + (isFree?'free':'') + '" onclick="editChapPrice(this,' + price + ')">' + (isFree?'免费':price+' 灵晶') + '</div>' +
+        '<div class="switch ' + (isFree?'':'on') + '" onclick="this.classList.toggle(\'on\');toggleChap(' + i + ')"></div>' +
+      '</div>';
+  });
+}
+function toggleChap(i){ /* 标记 */ }
+function editChapPrice(el, def){
+  var v = prompt('章节价格（灵晶）', def);
+  if(v && !isNaN(v)){ el.textContent = v + ' 灵晶'; el.classList.remove('free'); }
+}
+
+/* ===== 商品列表 ===== */
+function renderProdList(){
+  var prods = [
+    {ico:'🗡️', name:'提灯·照亮场景', desc:'解锁隐藏描写，影响剧情分支', price:10},
+    {ico:'🗝️', name:'夜门钥匙', desc:'解锁地下世界支线剧情', price:20},
+    {ico:'📿', name:'守夜人吊坠', desc:'解锁酒馆女子 backstory', price:15},
+  ];
+  var el = document.getElementById('prodList');
+  el.innerHTML = '';
+  prods.forEach(function(p){
+    el.innerHTML +=
+      '<div class="prod-item">' +
+        '<div class="prod-ico">' + p.ico + '</div>' +
+        '<div class="prod-info"><div class="prod-name">' + p.name + '</div>' +
+        '<div class="prod-desc">' + p.desc + '</div></div>' +
+        '<div class="prod-price">' + p.price + ' 灵晶</div>' +
+      '</div>';
+  });
+}
+function addProduct(){
+  var name = prompt('道具名称（如：玉佩）');
+  if(!name) return;
+  var price = parseInt(prompt('灵晶价格','8')) || 8;
+  var ico = ['🗡️','🗝️','📿','💎','🪭','📜','🏮','🪷'][Math.floor(Math.random()*8)];
+  var el = document.getElementById('prodList');
+  el.innerHTML +=
+    '<div class="prod-item">' +
+      '<div class="prod-ico">' + ico + '</div>' +
+      '<div class="prod-info"><div class="prod-name">' + name + '</div><div class="prod-desc">新添加的收费道具</div></div>' +
+      '<div class="prod-price">' + price + ' 灵晶</div>' +
+    '</div>';
+  toast('ok','已添加', name + ' · ' + price + ' 灵晶');
+}
+
+/* ===== 标签/单选 ===== */
+function togTag(el, val){
+  el.classList.toggle('on');
+  if(el.classList.contains('on') && form.genres.indexOf(val)<0) form.genres.push(val);
+  else form.genres = form.genres.filter(function(x){return x!==val});
+}
+function togRadio(el){
+  var parent = el.parentElement;
+  parent.querySelectorAll('.radio-item').forEach(function(x){x.classList.remove('on')});
+  el.classList.add('on');
+}
+function togProdType(el){
+  document.querySelectorAll('#prodType .tag').forEach(function(x){x.classList.remove('on')});
+  el.classList.add('on');
+}
+
+/* ===== 上传 ===== */
+function onCoverUpload(ev){
+  var f = ev.target.files[0]; if(!f) return;
+  var r = new FileReader();
+  r.onload = function(e){
+    var t = ev.target.previousElementSibling;
+    t.style.backgroundImage = 'url(' + e.target.result + ')';
+    t.style.backgroundSize = 'cover';
+    document.getElementById('coverEmoji').style.display='none';
+    showToast('ok','封面已上传','');
+  };
+  r.readAsDataURL(f);
+}
+function uploadAsset(card, type, name){
+  document.getElementById('assetInput').onchange = function(ev){
+    var f = ev.target.files[0]; if(!f) return;
+    var r = new FileReader();
+    r.onload = function(e){
+      var th = card.querySelector('.asset-thumb');
+      th.style.backgroundImage = 'url(' + e.target.result + ')';
+      th.style.backgroundSize = 'cover';
+      th.classList.add('has-img');
+      card.querySelector('.upload-hint').style.display='none';
+      showToast('ok','已上传', type + ' · ' + name);
+    };
+    r.readAsDataURL(f);
+  };
+  document.getElementById('assetInput').click();
+}
+function addAsset(type){ toast('info','添加' + ({character:'人物',scene:'场景',item:'道具',cg:'CG'}[type]||type),'填写信息或从小说自动提取'); }
+
+/* ===== 生成进度动画 ===== */
+function startGen(){
+  document.getElementById('genComplete').style.display='none';
+  document.getElementById('genProgress').style.display='block';
+  var steps = [
+    '正在读取原著…','✓ 原著读取完成',
+    '正在解析章节…','✓ 56 章解析完成',
+    '正在解析人物…','✓ 37 个人物已提取',
+    '正在解析场景…','✓ 24 个场景已建立',
+    '正在生成道具…','✓ 86 件道具已生成',
+    '正在建立互动…','✓ 213 个互动点',
+    'AI QA · 原著完整性检查…','✓ 原著保护已验证通过'
+  ];
+  var box = document.getElementById('genSteps');
+  box.innerHTML = '';
+  var barFill = document.getElementById('genBarFill');
+  var pct = document.getElementById('genPercent');
+  var i = 0;
+  function next(){
+    if(i >= steps.length){
+      setTimeout(completeGen, 600);
+      return;
+    }
+    var isDone = steps[i].startsWith('✓');
+    var cls = isDone ? 'done' : (i === steps.length-1 ? 'active' : 'active');
+    if(isDone){ cls = 'done'; }
+    var active = !isDone && i > 0; // 下一条还没开始
+    // 简化：交替 done/active
+    cls = isDone ? 'done' : 'active';
+    
+    box.innerHTML += '<div class="gen-step ' + cls + '"><div class="dot">' + (isDone?'✓':'◔') + '</div><div>' + steps[i] + '</div></div>';
+    box.parentElement.scrollTop = box.parentElement.scrollHeight;
+    // 进度
+    var p = Math.round(((i+1)/steps.length)*100);
+    barFill.style.width = p + '%';
+    pct.textContent = p + '%';
+    i++;
+    setTimeout(next, 500);
+  }
+  next();
+}
+
+/* ===== 生成完成 → 试玩 ===== */
+function completeGen(){
+  document.getElementById('genProgress').style.display='none';
+  var completeStep = document.getElementById('genComplete');
+  completeStep.style.display='block';
+  curStep = 7;
+  document.getElementById('progressBox').style.display='none';
+  
+  // 更新底部按钮：进入试玩 / 返回检查
+  document.getElementById('bottomBtns').style.display='flex';
+  document.getElementById('btnPrev').style.display = '';
+  document.getElementById('btnPrev').textContent = '返回修改';
+  document.getElementById('btnPrev').onclick = function(){ curStep=5; goStep(5); document.getElementById('progressBox').style.display='flex'; };
+  document.getElementById('btnNext').textContent = '🎮 进入世界试玩';
+  document.getElementById('btnNext').className = 'btn btn-start-gen';
+  document.getElementById('btnNext').onclick = function(){
+    showToast('ok','进入小说世界','world-view.html?book=changye');
+    setTimeout(function(){ LJNav('world-view.html?book=changye'); }, 400);
+  };
+}
+
+/* ===== Toast ===== */
+function showToast(kind, title, msg){
+  var t = document.getElementById('toast');
+  t.textContent = title + (msg ? ' · ' + msg : '');
+  t.classList.add('show');
+  clearTimeout(showToast._tid);
+  showToast._tid = setTimeout(function(){ t.classList.remove('show'); }, 2000);
+}
+function toast(k,t,m){ showToast(k,t,m); }
+
+/* ===== 启动 ===== */
+function renderGen(){ /* 进度条初始 */ }
+goStep(1);
+</script>
+</body>
+</html>

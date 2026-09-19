@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>公版名著库 · 灵境 · 双生</title>
+<meta name="description" content="V20.0 · 公版小说库 · 40 本（25 中文 + 15 外文）· 完整性 100% 校验 + 自动收费点" />
+<meta name="theme-color" content="#1A1A2E" />
+<link rel="stylesheet" href="css/shell-v64.css" />
+<style>
+/* =================================================================
+ * public-domain 详情页专属样式（page-level override ≤ 30 行）
+ * ================================================================= */
+.pd-tabs{display:flex;gap:8px;padding:12px var(--margin);border-bottom:1px solid var(--line)}
+.pd-tab{padding:8px 16px;font-size:14px;color:var(--sub);border-radius:8px;cursor:pointer}
+.pd-tab.active{color:#fff;background:var(--accent)}
+.pd-empty{text-align:center;color:var(--sub);padding:40px 0;font-size:13px}
+.pd-detail-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}
+.pd-detail-modal.open{display:flex;animation:fadeIn .25s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.pd-detail-actions{display:flex;gap:10px;margin-top:18px}
+.pd-detail-action-secondary,.pd-detail-action-primary{flex:1;padding:12px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;border:none}
+.pd-detail-action-secondary{background:rgba(255,255,255,.1);color:#fff}
+.pd-detail-action-primary{background:linear-gradient(135deg,#FFD700,#FFA500);color:#fff}
+.pd-card-detail{margin-top:8px;padding:6px;background:rgba(233,69,96,.15);border:1px solid rgba(233,69,96,.4);color:#E94560;border-radius:6px;font-size:11px;cursor:pointer;width:100%}
+.pd-card-detail:hover{background:rgba(233,69,96,.25)}
+.pd-i-row.pd-i-pass .pd-i-ico{color:#4ECCA3}
+.pd-i-row.pd-i-warn .pd-i-ico{color:#FFB347}
+.pd-i-row.pd-i-fail .pd-i-ico{color:#E94560}
+</style>
+<style>
+/* 概览卡 */
+.pd-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:12px var(--margin)}
+.pd-stat-item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+.pd-stat-label{font-size:11px;color:var(--sub);letter-spacing:1px;margin-bottom:4px}
+.pd-stat-val{font-size:20px;font-weight:700;color:var(--accent)}
+.pd-stat-sub{font-size:10px;color:var(--sub);margin-top:2px}
+/* 排序栏 */
+.pd-sort-bar{display:flex;gap:6px;padding:0 var(--margin) 12px;align-items:center}
+.pd-sort-label{font-size:11px;color:var(--sub);margin-right:4px}
+.pd-sort-btn{padding:4px 10px;font-size:11px;color:var(--sub);border-radius:6px;cursor:pointer;border:1px solid var(--line);background:none}
+.pd-sort-btn.active{color:var(--accent);border-color:var(--accent);background:rgba(233,69,96,.1)}
+/* 双列瀑布流 */
+.pd-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 var(--margin) 80px}
+.pd-card{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer;transition:transform .2s}
+.pd-card:hover{transform:translateY(-2px)}
+.pd-card-cover{position:relative;padding-top:140%;display:flex;align-items:center;justify-content:center}
+.pd-card-emoji{position:absolute;inset:0;display:grid;place-items:center;font-size:64px;text-shadow:0 4px 12px rgba(0,0,0,.4)}
+.pd-card-badge{position:absolute;top:6px;right:6px;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:700}
+.pd-badge-pass{background:rgba(78,204,163,.95);color:#000}
+.pd-badge-warn{background:rgba(255,179,71,.95);color:#000}
+.pd-badge-fail{background:rgba(233,69,96,.95);color:#fff}
+.pd-card-body{padding:8px 10px 10px}
+.pd-card-title{font-size:13px;font-weight:700;line-height:1.3;margin-bottom:4px}
+.pd-card-author{font-size:10px;color:var(--sub);margin-bottom:6px}
+.pd-card-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.pd-card-meta span{font-size:9px;color:var(--sub);background:rgba(255,255,255,.05);padding:2px 5px;border-radius:3px}
+.pd-card-mon{display:flex;align-items:center;gap:4px;font-size:10px;margin-bottom:6px}
+.pd-mon-badge{background:rgba(255,215,0,.2);color:#FFD700;padding:1px 6px;border-radius:3px;font-weight:700}
+.pd-mon-info{color:var(--sub)}
+
+/* 详情 modal */
+.pd-detail-card{background:var(--card);border:1px solid var(--line);border-radius:14px;width:90%;max-width:420px;max-height:90vh;overflow-y:auto;position:relative}
+.pd-detail-cover{position:relative;height:120px;display:flex;align-items:center;justify-content:center}
+.pd-detail-emoji{font-size:64px;text-shadow:0 4px 12px rgba(0,0,0,.5)}
+.pd-detail-close{position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.4);color:#fff;border:none;font-size:14px;cursor:pointer}
+.pd-detail-body{padding:16px 18px 20px}
+.pd-detail-body h3{font-size:18px;font-weight:700;margin-bottom:4px}
+.pd-detail-author{font-size:11px;color:var(--sub);margin-bottom:14px}
+.pd-detail-section-title{font-size:13px;font-weight:700;color:var(--accent);margin:14px 0 8px;padding-top:10px;border-top:1px solid var(--line)}
+.pd-detail-integrity{display:flex;flex-direction:column;gap:6px;background:rgba(255,255,255,.03);padding:10px;border-radius:8px}
+.pd-i-row{display:flex;align-items:center;gap:8px;font-size:12px;padding:4px 0}
+.pd-i-ico{font-size:14px;width:18px;text-align:center}
+.pd-i-label{flex:1;color:var(--sub)}
+.pd-i-val{color:#fff;font-weight:700}
+.pd-detail-mon{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pd-mon-stat{background:rgba(255,255,255,.03);padding:8px 10px;border-radius:6px;font-size:11px}
+.pd-mon-stat span{color:var(--sub);display:block}
+.pd-mon-stat b{color:var(--accent);font-size:16px;font-weight:700}
+</style>
+<link rel="stylesheet" href="css/mobile-lock.css" />
+</head>
+<body>
+<!-- 顶栏 -->
+<header class="topbar">
+  <button class="topbar-back" onclick="history.back()">‹</button>
+  <div class="topbar-title">
+    <span>公版名著库</span>
+  </div>
+  <button class="topbar-menu">⋯</button>
+</header>
+
+<!-- 3 Tab -->
+<nav class="pd-tabs">
+  <div class="pd-tab active" data-tab="zh">中国古典（25）</div>
+  <div class="pd-tab" data-tab="en">外国经典（15）</div>
+  <div class="pd-tab" data-tab="all">下载管理</div>
+</nav>
+
+<!-- 概览卡 -->
+<section class="pd-stats" id="pd-stats"></section>
+
+<!-- 排序栏 -->
+<div class="pd-sort-bar">
+  <span class="pd-sort-label">排序：</span>
+  <button class="pd-sort-btn active" data-sort="integrity">完整性</button>
+  <button class="pd-sort-btn" data-sort="words">字数</button>
+  <button class="pd-sort-btn" data-sort="chapters">章节数</button>
+  <button class="pd-sort-btn" data-sort="price">价格↑</button>
+</div>
+
+<!-- 瀑布流 -->
+<main>
+  <div class="pd-grid" id="pd-grid"></div>
+</main>
+
+<div id="plot-stage-mount" style="height:60px"></div>
+
+<!-- 详情 modal -->
+<div class="pd-detail-modal" id="pd-detail-modal"></div>
+
+<script src="js/tabbar.js"></script>
+<script src="js/public-domain-data.js"></script>
+<script src="js/public-domain.js"></script>
+</body>
+</html>

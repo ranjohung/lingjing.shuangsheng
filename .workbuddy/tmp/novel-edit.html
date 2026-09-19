@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="5xQ5b47q3WpQ506vmJW2o5">
+<head data-page-node-id="oT2eJIxNMXjUwFcw6lIUO6"><base href="__LJ_BASE__" /><script>
+window.__LJ_PAGE__ = "novel-edit";
+window.__LJ_PARAMS__ = __LJ_QS__;
+window.__LJ_HASHV__ = __LJ_HASH__;
+window.LJSearch = function () { var v = window.__LJ_PARAMS__; return v ? v : location.search; };
+window.LJHashVal = function () { var v = window.__LJ_HASHV__; return v ? v : location.hash; };
+window.LJNav = function (url) {
+  if (typeof url === 'string') {
+    var m = /([\w.\-]+)\.html(\?[^#]*)?(#.*)?$/.exec(url);
+    if (m) {
+      try { parent.postMessage({ lj: 'go', id: m[1], qs: m[2] || '', hash: m[3] || '' }, '*'); return; } catch (err) {}
+    }
+    try { parent.LJ.goUrl(url); return; } catch (err2) {}
+  }
+  location.href = url;
+};
+window.LJBack = function () {
+  try { parent.postMessage({ lj: 'back' }, '*'); } catch (err) { history.back(); }
+};
+</script>
+<meta charset="UTF-8" data-page-node-id="ENy2kvfPNbHyLpFB4DECoO" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="4HTKHTAs6msrenvoXpKRAZ" />
+<title>剧情编辑器 · 创作者中心 · 灵境 · 双生</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" data-page-node-id="PWDe2pFmnLUoHfjdDcZd01" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin data-page-node-id="6kQwKhBJtmBHHtQV7yDgbt" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" data-page-node-id="B1jJnJRAJxyvFlwA73UsH0" />
+<link rel="stylesheet" href="css/design-system.css" data-page-node-id="q5VhVCLYNzkGYJGFc5hul6" />
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;min-height:100%;background:#0d0b22;color:#edf1f6;font-family:'Noto Sans SC','Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+  .layout{display:grid;grid-template-columns:200px 1fr 360px;height:100vh;}
+  @media(max-width:900px){.layout{grid-template-columns:1fr;height:auto;}.preview-col{display:none;}}
+  .col{background:rgba(20,18,46,.4);border-right:1px solid rgba(255,255,255,.05);overflow-y:auto;}
+  .col:last-child{border-right:none;border-left:1px solid rgba(255,255,255,.05);}
+  .top-bar{padding:10px 18px;background:rgba(13,11,34,.85);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:12px;}
+  .tab-btn{padding:8px 14px;border-radius:10px;font-size:13px;color:rgba(255,255,255,.7);cursor:pointer;border:1px solid transparent;}
+  .tab-btn.sel{background:rgba(139,124,246,.18);border-color:rgba(139,124,246,.5);color:#fff;}
+  .audit{padding:8px 12px;background:rgba(8,7,26,.6);border-radius:10px;font:11px;color:rgba(255,255,255,.7);margin:8px 18px;}
+  .audit .ok{color:#7cf6c0;}
+  .audit .warn{color:#f6a6d8;}
+  .item-row{padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;font-size:13px;}
+  .item-row:hover{background:rgba(255,255,255,.04);}
+  .item-row.sel{background:rgba(139,124,246,.18);border-left:3px solid #8b7cf6;}
+  .field{padding:8px 14px;font-size:12px;color:rgba(255,255,255,.7);border-bottom:1px dashed rgba(255,255,255,.04);}
+  .field label{display:block;font-size:11px;color:rgba(255,255,255,.5);margin-bottom:4px;}
+  .field input,.field select,.field textarea{width:100%;background:rgba(8,7,26,.6);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:6px 10px;color:#fff;font:12px 'Noto Sans SC';}
+  .field textarea{min-height:80px;resize:vertical;}
+  .pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:9999px;background:rgba(255,255,255,.08);font-size:11px;margin:2px;}
+  .pill.main{background:rgba(110,198,255,.16);color:#6ec6ff;}
+  .pill.support{background:rgba(124,246,192,.16);color:#7cf6c0;}
+  .pill.antag{background:rgba(246,166,216,.16);color:#f6a6d8;}
+  .pill.highlight{background:rgba(255,217,160,.16);color:#ffd980;}
+  .btn{padding:8px 16px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:#fff;cursor:pointer;font-size:12px;}
+  .btn.primary{background:linear-gradient(120deg,#8b7cf6,#6ec6ff);color:#08071a;border:none;}
+  .preview{padding:20px;color:#fff;height:100%;}
+  .preview .preview-scene{height:140px;border-radius:14px;margin-bottom:14px;}
+  .preview .preview-char{display:flex;gap:14px;margin-bottom:14px;}
+  .preview .preview-dlg{background:rgba(11,9,31,.86);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:18px;}
+  .opt-preview{display:block;width:100%;text-align:left;margin:6px 0;padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(139,124,246,.15);color:#fff;font:13px 'Noto Sans SC';}
+</style>
+<link rel="stylesheet" href="css/mobile-lock.css" />
+</head>
+<body data-page-node-id="RdY7CIBqHSY0dAH2aJUto2">
+
+<!-- v5.18: 新 PageHeader（编辑器 top-bar 保留，但顶部 logo + 返回用 ds-page-header） -->
+<header class="ds-page-header" data-page-node-id="LN70p1BqNJvaGsgInIike0">
+  <div class="ds-page-header-inner" data-page-node-id="oiKXFwLSVbJNS6AmRAwzWZ">
+    <a href="creator-center.html" class="ds-back" data-page-node-id="eOt6EIvg79oqKYU46B93jZ"><span class="arrow" data-page-node-id="0iKmmDEWB2beTWqZDsRlqF">←</span> 返回创作者中心</a>
+    <span class="ds-font-display" id="top-title" style="font-size:16px;color:var(--text-primary);" data-page-node-id="Pk3wHRRs8Mivb1qIPR41zw">— 编辑器 —</span>
+    <div class="ds-page-header-right" data-page-node-id="zyWkpVCPos7Cj7UkqP0sQr">
+      <span id="dirty-flag" style="display:none;color:var(--brand-rose-soft);font-size:12px;" data-page-node-id="7BXUAQikqsH5XCyGGfMzb0">● 未保存</span>
+      <button class="ds-btn ds-btn-ghost ds-btn-sm" id="btn-reset" data-page-node-id="JyCMS1Zeew9Q8E3GKHkGrg">放弃改动</button>
+      <button class="ds-btn ds-btn-secondary ds-btn-sm" id="btn-save" data-page-node-id="HHtmGjUy3xmVoIVVFWczQA">💾 保存</button>
+      <button class="ds-btn ds-btn-primary ds-btn-sm" id="btn-run" data-page-node-id="Zef59xErkmz42vv6lyRlGn">▶ 进入游戏</button>
+      <div class="ds-user-chip" data-page-node-id="GZu1rsDWmPYAdlteEXIlco">
+        <div class="ds-user-avatar" data-page-node-id="uNsUno9IDsnLV8ujZx5nWO">L</div>
+        <span data-page-node-id="4xEd17fO0DEyUIRNn1upoi">灵境作者</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="layout" data-page-node-id="GF4f6czXWwnAbiKWTXnbRh">
+  <!-- 左侧：标签 + 列表 -->
+  <div class="col side-col" data-page-node-id="ME7SJQ7Ehx1GGDBNsYqHDW">
+    <div style="display:flex;flex-wrap:wrap;gap:4px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06);" data-page-node-id="IIVPKTxReiuG6hQmCJFNxF">
+      <span class="tab-btn sel" data-tab="nodes" data-page-node-id="XVHFfuO4xoI5gCJuO8W5hP">🔀 节点</span>
+      <span class="tab-btn" data-tab="chars" data-page-node-id="cR8JoiUWvHlwf7O6bSQ3k8">👤 角色</span>
+      <span class="tab-btn" data-tab="chapters" data-page-node-id="5OBj9s5gHgFU2f1s1gi0EG">📑 章节</span>
+      <span class="tab-btn" data-tab="highlights" data-page-node-id="HAJvNYDwGFbQpgGwM2jCxF">✦ 高光</span>
+      <span class="tab-btn" data-tab="endings" data-page-node-id="hSoNOsjbCq3zW9FzOhU16c">🎬 结局</span>
+    </div>
+    <div class="audit" id="audit-box" data-page-node-id="iuGbiLAyMiQBNxkjhybD1Y">加载中...</div>
+    <div id="side-list" data-page-node-id="YkaAwE0JSEHE7GAhO5BYJa"></div>
+  </div>
+
+  <!-- 中央：编辑器 -->
+  <div class="col" data-page-node-id="WijzRirBLCN3KfBEK4QHxP">
+    <div id="editor-panel" style="padding:20px;" data-page-node-id="v6W8V56bONJFHIIhUZ0bTd">
+      <p style="text-align:center;color:rgba(255,255,255,.55);margin:40px 0;" data-page-node-id="AkOXD3u5qSwKBHnYK5uaZs">从左侧选择一个节点开始编辑</p>
+    </div>
+  </div>
+
+  <!-- 右侧：实时预览 -->
+  <div class="col preview-col" data-page-node-id="qAzrAwAUCh5DqPMQo5mv7h">
+    <div class="preview" data-page-node-id="kCOyv5qzhUYCnoXFukrsHU">
+      <p class="text-xs text-white/55 mb-2" data-page-node-id="CUa50Y18Ug6ZvXCrRBvqHM">实时预览（与编辑同步）</p>
+      <div class="preview-scene" id="pv-scene" data-page-node-id="MjLFAJQjF6nNpKaSmHMxZy"></div>
+      <div class="preview-char" id="pv-char" data-page-node-id="3BFKf50PsLHEtQugKA4mTn"></div>
+      <div class="preview-dlg" id="pv-dlg" data-page-node-id="5EDcF4lq550ickphnuyTrR"></div>
+    </div>
+  </div>
+</div>
+
+<script data-bundled-source="js/genres.js">
+/* v5.12 — 30 题材分类元数据 + 关键词匹配表
+   覆盖业界主流（起点/晋江/番茄/起点女生/刺猬猫/豆瓣阅读）的男女频+小众题材
+   每个题材含 keyword 列表（供解析引擎自动匹配）
+*/
+window.GENRES_LIBRARY = [
+  { id:'xuanhuan',     tag:'XUANHUAN',   cn:'玄幻',         icon:'🐉', color:'#5BD8A1',
+    desc:'异世大陆 / 升级修炼 / 领主领地 / 转职学院',
+    examples:['斗破苍穹','武动乾坤','元尊','大主宰','龙王传说'],
+    keywords:['修炼','斗气','灵力','魂力','金丹','元婴','异世','异界','觉醒','血脉','功法','武魂','斗魂','神器','灵根'] },
+  { id:'qihuan',       tag:'QIHUAN',     cn:'奇幻',         icon:'⚔️', color:'#D8B45B',
+    desc:'西方奇幻 / 剑与魔法 / 龙与地下城 / 蒸汽朋克',
+    examples:['冰与火之歌','魔戒','猎魔人','时光之轮','黑暗精灵'],
+    keywords:['精灵','矮人','兽人','巨龙','附魔','剑与魔法','奥术','吟游诗人','魔兽','龙骑士','法师','骑士','地下城','圣骑士','德鲁伊'] },
+  { id:'xianxia',      tag:'XIANXIA',    cn:'仙侠·修真',   icon:'☁️', color:'#8E5BD8',
+    desc:'修真飞升 / 古典仙侠 / 飞剑 / 仙门 / 洪荒',
+    examples:['诛仙','凡人修仙传','飘邈之旅','仙剑奇侠传','佛本是道'],
+    keywords:['修真','飞升','仙剑','飞剑','仙门','仙鹤','蜀山','修仙','练气','筑基','渡劫','飞升','仙尊','灵兽','洞府','仙府'] },
+  { id:'dushi',        tag:'DUSHI',      cn:'都市',         icon:'🏙️', color:'#5BC5D8',
+    desc:'商战 / 职场 / 异能 / 神医 / 鉴宝 / 风水',
+    examples:['庆余年','大医凌然','鉴宝','天才医生','我真是大明星'],
+    keywords:['公司','集团','总裁','办公室','职场','拍卖','古董','鉴宝','神医','风水','异能','阴阳','市区','写字楼','CBD','总裁办'] },
+  { id:'xiaoyuan',     tag:'XIAOYUAN',   cn:'校园·青春',   icon:'📚', color:'#5BD88E',
+    desc:'青春校园 / 学霸 / 重生 / 同桌 / 青梅',
+    examples:['你好旧时光','致我们终将逝去的青春','同桌的你','何以笙箫默'],
+    keywords:['校园','教室','同桌','学长','学妹','青梅','高考','课桌','操场','黑板','校服','高三','毕业','高考','大学','班'] },
+  { id:'lishi',        tag:'LISHI',      cn:'历史·穿越',   icon:'🏯', color:'#D8A55B',
+    desc:'穿越 / 架空 / 三国 / 唐朝 / 宋朝 / 明清',
+    examples:['庆余年','赘婿','明朝那些事儿','大唐双龙传','回到明朝当王爷'],
+    keywords:['穿越','架空','明朝','唐朝','宋朝','清朝','皇宫','皇帝','陛下','娘娘','王爷','将军','三国','大帅','称帝','天下'] },
+  { id:'junshi',       tag:'JUNSHI',     cn:'军事·谍战',   icon:'🎖️', color:'#5BD8D8',
+    desc:'战争 / 军旅 / 谍战 / 抗战 / 现代军事',
+    examples:['亮剑','士兵突击','潜伏','悬崖之上','战长沙'],
+    keywords:['潜伏','情报','特工','间谍','密码','暗号','营长','团长','连长','根据地','军区','抗战','解放战争','维和','特战','战术','海岸线'] },
+  { id:'youxi',        tag:'YOUXI',      cn:'游戏·电竞',   icon:'🎮', color:'#D85BD8',
+    desc:'网游 / 电竞 / 全息 / 系统流 / 数据流',
+    examples:['全职高手','英雄联盟:我们的时代','超神机械师','全民领主'],
+    keywords:['网游','电竞','战队','赛季','装备','背包','游戏','全息','开黑','排位','竞技场','公会','玩家','BOSS','地图','副本'] },
+  { id:'tiyu',         tag:'TIYU',       cn:'体育·竞技',   icon:'⚽', color:'#5BD8A1',
+    desc:'篮球 / 足球 / 短跑 / 滑冰 / 网球 / 拳击',
+    examples:['灌篮高手','足球小将','冰上的尤里','棋魂','飞吧！篮球'],
+    keywords:['篮球','足球','网球','游泳','短跑','拳击','滑冰','乒乓','比赛','决赛','冠军','赛场','NBA','世界杯','俱乐部','教练'] },
+  { id:'kehuan',       tag:'KEHUAN',     cn:'科幻·星际',   icon:'🚀', color:'#5B6BD8',
+    desc:'星际 / 末世 / 进化 / AI / 时光穿越',
+    examples:['三体','流浪地球','银河帝国','安德的游戏','星际迷航'],
+    keywords:['星际','宇宙','飞船','外星','时空','时光机','穿越未来','黑洞','银河','星球','AI','智械','机甲','人工智能','量子','穿越'] },
+  { id:'lingyi',       tag:'LINGYI',     cn:'灵异·玄学',   icon:'🕯️', color:'#8E5BD8',
+    desc:'茅山 / 阴阳 / 风水 / 招魂 / 玄学 / 探险',
+    examples:['茅山道士','我当阴阳先生的那几年','民调局异闻录','山海秘闻录'],
+    keywords:['僵尸','鬼','阴气','阳气','阴阳','八卦','符箓','茅山','驱邪','灵异','招魂','冥婚','都市灵异','百鬼','阴阳眼','煞气'] },
+  { id:'xuanyi',       tag:'XUANYI',     cn:'悬疑·推理',   icon:'🔍', color:'#D85B5B',
+    desc:'刑侦 / 心理 / 民国 / 密室 / 古案 / 暴雪山庄',
+    examples:['白夜追凶','无证之罪','坏小孩','隐秘的角落','漫长的季节'],
+    keywords:['警察','案件','嫌疑','血迹','法医','尸检','破案','报案','线索','凶手','密室','潜伏','审判','凶手','监狱','凶手','侧写'] },
+  { id:'erciyuan',     tag:'ERCYUAN',    cn:'二次元·同人', icon:'🎨', color:'#D85B8E',
+    desc:'综漫 / 同人 / 轻小说 / 御宅 / 衍生',
+    examples:['刀剑神域','Re:0','海贼王同人','漫威同人'],
+    keywords:['同人','衍文','综漫','穿越到','出装','魔法少女','轻小说','御宅','二次元','动漫','COSPLAY','立绘','声优','op','ed'] },
+  { id:'guding',       tag:'GUDING',     cn:'古言·宫斗',   icon:'🏮', color:'#D85BB0',
+    desc:'宫斗 / 宅斗 / 种田 / 侯门 / 将门 / 王爷',
+    examples:['甄嬛传','如懿传','知否知否','琅琊榜','庆余年'],
+    keywords:['宫斗','妃子','皇后','王爷','侯府','宅斗','侯门','将门','种田','谋略','朝堂','丞相','将军府','公主','格格','凤冠','霓裳'] },
+  { id:'xiandyan',     tag:'XIANYAN',    cn:'现言·总裁',   icon:'💼', color:'#D8A55B',
+    desc:'都市 / 总裁 / 豪门 / 高干 / 娱乐圈',
+    examples:['何以笙箫默','致我们暖暖的小时光','你是我的荣耀','微微一笑很倾城'],
+    keywords:['总裁','办公室','签约','豪门','高干','娱乐圈','经纪人','剧组','粉丝','明星','热搜','CP','顶流','官宣','停车场'] },
+  { id:'langman',      tag:'LANGMAN',    cn:'浪漫青春',     icon:'🌸', color:'#D85BB0',
+    desc:'校园 / 暗恋 / 同桌 / 青梅 / 学长学妹',
+    examples:['你好旧时光','致我们终将逝去的青春','最好的我们','你好李焕英'],
+    keywords:['暗恋','告白','亲吻','拥抱','牵手','眼泪','毕业','青涩','懵懂','初次','暗恋','甜蜜','情书','情窦初开','校园','表白'] },
+  { id:'xianxia_yq',   tag:'XIANXIAYQ',  cn:'仙侠言情',     icon:'✨', color:'#A55BD8',
+    desc:'师徒 / 仙侣 / 妖魔 / 双修 / 仙门世恋',
+    examples:['花千骨','三生三世十里桃花','香蜜沉沉烬如霜','陈情令'],
+    keywords:['师徒','仙侣','相恋','情劫','轮回','下凡','凡间','情根','动心','师兄','师妹','徒儿','师父','修仙','渡情'] },
+  { id:'xuanhuan_yq',  tag:'XUANHUANYQ', cn:'玄幻言情',     icon:'🌙', color:'#A55BA5',
+    desc:'异界 / 召唤 / 契约 / 兽世 / 精灵 / 龙女',
+    examples:['斗罗大陆','龙王传说','冰火魔厨','琴帝','神墓'],
+    keywords:['召唤','契约','精灵','龙女','兽世','兽人','异界','变身','血脉','魂环','武帝','神祇','圣魔','魔兽','灵狐','血族'] },
+  { id:'kehuan_kj',    tag:'KEHUANKJ',   cn:'科幻空间',     icon:'🛸', color:'#5B8BD8',
+    desc:'星际 / 末世 / 进化 / 系统 / 基地 / 机甲 / AI',
+    examples:['三体','灵笼','我的三体','明日边缘','末日崩塌'],
+    keywords:['星际','穿越','基地','机甲','太空','穿梭','舰长','星舰','银河','次元','末世','废土','进化','系统','副本','轮回','主神'] },
+  { id:'xuanyi_tl',    tag:'XUANYITL',   cn:'悬疑推理',     icon:'🔎', color:'#D85B5B',
+    desc:'刑侦 / 心理 / 古案 / 破案 / 灵媒',
+    examples:['白夜追凶','法医秦明','坏小孩','漫长的季节','隐秘的角落'],
+    keywords:['侦查','推理','密室','尸检','法医','嫌疑','侧写','审讯','陷阱','暴雪山庄','古案','破解','证据','告破','嫌疑人'] },
+  { id:'tongren',      tag:'TONGREN',    cn:'同人衍生',     icon:'⭐', color:'#D85BD8',
+    desc:'古风同人 / 二次元 / 明星 / 影视 / 动漫同人文',
+    examples:['忘羡','全员恶玉','复仇者同人','哈利波特同人'],
+    keywords:['同人','衍文','穿越到','魔改','番外','if线','平行世界','穿越而来','异世行','综漫','快穿','cos'] },
+  { id:'wuxia',        tag:'WUXIA',      cn:'武侠·江湖',   icon:'🗡️', color:'#8E5BD8',
+    desc:'江湖 / 武林 / 门派 / 剑客 / 古武 / 世家',
+    examples:['射雕英雄传','天龙八部','笑傲江湖','白马啸西风','多情剑客无情剑'],
+    keywords:['江湖','武林','门派','掌门','大侠','武林盟主','少林','武当','华山','内功','真气','轻功','剑法','刀法','侠客','镖局','马帮'] },
+  { id:'wuxia_jh',     tag:'WUXIAJH',    cn:'古武·门派江湖', icon:'🥋', color:'#A55BD8',
+    desc:'门派 / 古武术 / 内家拳 / 国术 / 江湖异术',
+    examples:['国术','龙蛇演义','拳镇山河','都市古武','意拳'],
+    keywords:['内家拳','国术','明劲','暗劲','化劲','太极拳','八极','形意','心意','咏春','洪拳','门派','师承','练武','拳法','掌法'] },
+  { id:'wangyou',      tag:'WANGYOU',    cn:'网游·全息',   icon:'🎮', color:'#D85BD8',
+    desc:'全息网游 / 电竞 / 系统 / 召唤 / 神级',
+    examples:['全职高手','超神机械师','我真没想重生啊','全民领主'],
+    keywords:['全息','网游','系统','召唤','玩家','新手村','主城','副本','公会','强化','装备','附魔','坐骑','神器','职业'] },
+  { id:'mohshi',       tag:'MOHSHI',     cn:'末世·灾难',   icon:'☣️', color:'#5B5B5B',
+    desc:'末世 / 灾难 / 废土 / 进化 / 末日求生',
+    examples:['末日蟑螂','末世之深渊召唤师','全球进化','末日崩塌'],
+    keywords:['末世','废土','末日','丧尸','灾害','灾变','求生','避难所','进化','变异','罐头','末日','幸存','地下城','辐射'] },
+  { id:'cyberpunk',    tag:'CYBERPUNK',  cn:'赛博朋克',     icon:'🌃', color:'#D85BD8',
+    desc:'赛博朋克 / 反乌托邦 / 高科技低生活 / 智械',
+    examples:['赛博朋克2077','雪崩','神经漫游者','副本'],
+    keywords:['赛博','霓虹','义体','黑客','公司','巨企','高科技','低端','贫民窟','夜之城','黑客','神经元','改装','机甲','超梦'] },
+  { id:'wuxianliu',    tag:'WUXIANLIU',  cn:'无限流·快穿', icon:'🌀', color:'#5BD8D8',
+    desc:'无限流 / 快穿 / 主神 / 群穿 / 轮回',
+    examples:['无限恐怖','无限流','快穿','轮回乐园'],
+    keywords:['无限流','快穿','主神','轮回','穿越诸天','任务','奖励','惩罚','副本','轮回者','任务者','跨界','穿梭','降临'] },
+  { id:'tonghua',      tag:'TONGHUA',    cn:'童话·亲子',   icon:'🧸', color:'#D8B45B',
+    desc:'童话 / 亲子 / 少儿 / 绘本故事',
+    examples:['格林童话','安徒生童话','中国童话','成语故事'],
+    keywords:['童话','少儿','亲子','绘本','小公主','王子','公主','魔法','善良','勇敢','宝宝','童心','睡前故事','童话大王'] },
+  { id:'juben',        tag:'JUBEN',      cn:'剧本杀·互动剧', icon:'🎬', color:'#D85B5B',
+    desc:'剧本杀 / 互动剧 / 群像剧 / 多视角',
+    examples:['明星大侦探','密室大逃脱','隐形守护者','命运'],
+    keywords:['剧本杀','互动剧','多视角','剧本','凶手','侦探','嫌疑人','线索','密室','机关','证据','推理','多线','剧情','分支'] },
+  { id:'qita',         tag:'QITA',       cn:'其他·短篇',   icon:'✨', color:'#888888',
+    desc:'短篇集 / 微小说 / 散文 / 杂文',
+    examples:['短篇选','微型小说','现代散文'],
+    keywords:['短篇','微小说','散文','杂文','日记','札记','随笔','随感','小品','札记'] }
+];
+
+// 工具函数：按 ID 找题材
+window.getGenreById = function(id) {
+  return GENRES_LIBRARY.find(g => g.id === id);
+};
+
+// 工具函数：自动匹配（基于小说文本+标题，得分最高→题材）
+window.matchGenre = function(text, title='') {
+  if (!text && !title) return null;
+  const corpus = (title + '\n' + (text || '').slice(0, 5000)).toLowerCase();
+  const scores = GENRES_LIBRARY.map(g => {
+    let s = 0;
+    for (const kw of g.keywords) {
+      const re = new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+      const m = corpus.match(re);
+      if (m) s += m.length * (kw.length >= 2 ? 2 : 1); // 长关键词加权
+    }
+    return { id: g.id, score: s };
+  });
+  scores.sort((a, b) => b.score - a.score);
+  return scores[0].score > 0 ? { top: scores[0], second: scores[1], all: scores.filter(s => s.score > 0) } : null;
+};
+
+console.log('[v5.12] 题材库加载完成：共 ' + GENRES_LIBRARY.length + ' 类');
+
+</script>
+<script data-bundled-source="js/novel-store.js">
+/* v5.12 — 本地小说存储层（localStorage CRUD）
+   一个 key = 一本小说
+   每个 novel 含完整 plotTree
+*/
+(function () {
+  const KEY_PREFIX = 'ljss_novel_v1_';
+  const INDEX_KEY = 'ljss_novel_index_v1';
+
+  function loadIndex() {
+    try {
+      return JSON.parse(localStorage.getItem(INDEX_KEY) || '[]');
+    } catch (e) { return []; }
+  }
+  function saveIndex(arr) {
+    localStorage.setItem(INDEX_KEY, JSON.stringify(arr));
+  }
+
+  function loadNovel(id) {
+    try {
+      return JSON.parse(localStorage.getItem(KEY_PREFIX + id));
+    } catch (e) { return null; }
+  }
+  function saveNovel(plot) {
+    if (!plot || !plot.novel || !plot.novel.id) return false;
+    localStorage.setItem(KEY_PREFIX + plot.novel.id, JSON.stringify(plot));
+    const idx = loadIndex();
+    const idxEntry = {
+      id: plot.novel.id,
+      title: plot.novel.title,
+      author: plot.novel.author,
+      genre: plot.novel.genre,
+      uploadedAt: plot.novel.uploadedAt,
+      chars: plot.chars.length,
+      nodes: Object.keys(plot.nodes).length,
+      endings: Object.keys(plot.endings).length,
+      highlights: (plot.highlights || []).length,
+      chapters: plot.novel.chapters.length
+    };
+    const ex = idx.findIndex(e => e.id === idxEntry.id);
+    if (ex >= 0) idx[ex] = { ...idx[ex], ...idxEntry };
+    else idx.push(idxEntry);
+    saveIndex(idx);
+    return true;
+  }
+  function deleteNovel(id) {
+    localStorage.removeItem(KEY_PREFIX + id);
+    const idx = loadIndex().filter(e => e.id !== id);
+    saveIndex(idx);
+    return true;
+  }
+
+  function listNovels() {
+    return loadIndex();
+  }
+  function listByGenre(genreId) {
+    return loadIndex().filter(e => e.genre === genreId);
+  }
+  function countNovels() {
+    return loadIndex().length;
+  }
+  function countByGenre(genreId) {
+    return loadIndex().filter(e => e.genre === genreId).length;
+  }
+
+  // 调试用 — 列出全部
+  function dump() {
+    const items = loadIndex();
+    return items.map(e => ({
+      ...e,
+      text: loadNovel(e.id)?.novel?.text?.slice(0, 200) + '...'
+    }));
+  }
+
+  // 全清（慎用）
+  function clearAll() {
+    const idx = loadIndex();
+    for (const e of idx) localStorage.removeItem(KEY_PREFIX + e.id);
+    localStorage.removeItem(INDEX_KEY);
+  }
+
+  window.NovelStore = {
+    loadNovel, saveNovel, deleteNovel,
+    listNovels, listByGenre, countNovels, countByGenre,
+    dump, clearAll, KEY_PREFIX, INDEX_KEY
+  };
+  console.log('[v5.12] novel-store 加载完成');
+})();
+
+</script>
+<script data-bundled-source="js/novel-parser.js">
+/* v5.12 — 小说规则解析引擎（前端 JS，无 LLM）
+   滑动窗口 2-3 字 + 高信度位置提示 + 章节标题排除 + 邻字合并
+*/
+(function () {
+  // ===== 章节分段 =====
+  function splitChapters(text) {
+    if (!text || text.length < 10) return [{ id: 'c1', title: '第1节', heading: '', index: 0, text }];
+    const lines = text.split(/[\n\r]+/);
+    const chapterRe = /^\s*(第[一二三四五六七八九十百千零〇两\d]+[\s章回卷篇集部节][^\n]*|Chapter\s*\d+[^\n]*|CHAPTER\s*\d+[^\n]*|序章|终章|尾声|后记|外传[^\n]*)\s*$/i;
+    const chs = []; let buf = []; let curTitle = '序章'; let curHeading = '序章'; let curIndex = 1;
+    for (const line of lines) {
+      if (chapterRe.test(line.trim())) {
+        if (buf.length) {
+          chs.push({ id: 'c' + curIndex, title: curTitle, heading: curHeading, index: curIndex, text: buf.join('\n').trim() });
+          curIndex++;
+        }
+        curTitle = line.trim() || (curIndex + '章');
+        curHeading = curTitle;
+        buf = [];
+      } else {
+        buf.push(line);
+      }
+    }
+    if (buf.length || chs.length === 0) {
+      chs.push({ id: 'c' + curIndex, title: curTitle, heading: curHeading, index: curIndex, text: buf.join('\n').trim() });
+    }
+    return chs.length ? chs : [{ id: 'c1', title: '正文', heading: '', index: 1, text }];
+  }
+
+  // ===== 角色识别 — 仅 2-3 字 =====
+  const STOP_NAMES = new Set([
+    '什么','怎么','为何','为什么','这里','那里','此时','彼时','甚是','正是','可是','不料','原来','难道','或许','大约','忽然','突然','立刻','马上','片刻','半晌','看着','听了','说道','指了','心想','想到','再看','默默','偶然','神秘','悠悠','飘飘','淡淡','轻轻','缓缓','静静',
+    '没有','可以','一个','一种','一些','这个','那个','这样','那样','现在','以后','以前','之后','之前','已经','还在','应该','必须','可能','所以','因此','因为','如果','虽然','然而','但是','不过','并且','以及',
+    '开始','结束','继续','一时间','一会儿','一切','一直','一定','一样','一边','一面','一部分','如何','还有','不可能',
+    '不是','就是','还是','也是','只是','甚至','比如','例如','自己','别人','大家','我们','你们','他们','她们','它们','这次','那次',
+    '我叫','你是','他是','她是','就是','只是','终于','接着','陆家嘴','一开始','一招','一抬',
+    '端着酒杯','大学时候','工作','时候','说是','点头','走来说话','的时候','时候'
+  ]);
+
+  function extractNames(text, maxNames = 30) {
+    const chunks = text.match(/[\u4e00-\u9fa5]+/g) || [];
+    const freq = new Map();
+    for (const ch of chunks) {
+      if (ch.length < 2) continue;
+      // 仅 2-3 字滑动窗口
+      for (let i = 0; i < ch.length; i++) {
+        const maxLen = Math.min(3, ch.length - i);
+        for (let len = 2; len <= maxLen; len++) {
+          const w = ch.substr(i, len);
+          if (STOP_NAMES.has(w)) continue;
+          if (/^第[一二三四五六七八九十百千万零]+/.test(w)) continue;
+          freq.set(w, (freq.get(w) || 0) + 1);
+        }
+      }
+    }
+    // 高信度位置加分
+    const hintedNames = new Set();
+    const nameHints = [
+      /我叫([\u4e00-\u9fa5]{2,4})/g,
+      /他叫([\u4e00-\u9fa5]{2,4})/g,
+      /她叫([\u4e00-\u9fa5]{2,4})/g
+    ];
+    for (const re of nameHints) {
+      let m; while ((m = re.exec(text)) !== null) {
+        const name = m[1];
+        if (STOP_NAMES.has(name)) continue;
+        if (!freq.has(name)) freq.set(name, 0);
+        freq.set(name, freq.get(name) + 5);
+        hintedNames.add(name);
+      }
+    }
+    // 章节标题行 — 用于排除假阳性
+    const chapterTitles = new Set();
+    const chapterLineRe = /^第[一二三四五六七八九十百千万零\d]+章\s*([^\n]+)/gm;
+    let cm; while ((cm = chapterLineRe.exec(text)) !== null) {
+      const t = cm[1].trim();
+      for (let i = 0; i <= t.length - 2; i++) {
+        for (let len = 2; len <= Math.min(3, t.length - i); len++) {
+          chapterTitles.add(t.substr(i, len));
+        }
+      }
+    }
+    // 排序+过滤
+    const sorted = [...freq.entries()].sort((a, b) => b[1] - a[1]);
+    const filtered = sorted.filter(([n, c]) => (c >= 2) || (hintedNames.has(n) && c >= 1));
+    // body 出现次数（除章节标题外）
+    const bodyText = text.replace(/第[一二三四五六七八九十百千万零\d]+章[^\n]*\n?/g, '');
+    const bodyChunks = bodyText.match(/[\u4e00-\u9fa5]+/g) || [];
+    const bodyHas = (name) => bodyChunks.some(ch => ch.indexOf(name) >= 0);
+    // 去重
+    const result = [];
+    for (const [n, c] of filtered) {
+      if (result.length >= maxNames) break;
+      let subsumed = false;
+      for (const r of result) {
+        if (r.name.length < n.length && n.indexOf(r.name) >= 0 && c <= r.count + 2) { subsumed = true; break; }
+        if (n.length < r.name.length && r.name.indexOf(n) >= 0 && c <= r.count) { subsumed = true; break; }
+      }
+      if (subsumed) continue;
+      if (chapterTitles.has(n) && !bodyHas(n)) continue;
+      result.push({ name: n, count: c });
+    }
+    // 合并：对 2-3 字候选 + 1 字生成 3-4 字名（合并必须 ≥ 2 次出现）
+    const finalResult = result.slice();
+    for (const a of result) {
+      if (a.name.length !== 2 && a.name.length !== 3) continue;
+      const reTry = new RegExp(a.name + '([一-龥])', 'g');
+      let m;
+      while ((m = reTry.exec(text)) !== null) {
+        const combined = a.name + m[1];
+        if (combined.length > 4) continue;
+        if (STOP_NAMES.has(combined)) continue;
+        const rawCount = freq.get(combined);
+        if (!rawCount || rawCount < 2) continue;  // 合并必须出现 ≥ 2 次
+        const combinedScore = rawCount + 5;
+        const exactIdx = finalResult.findIndex(x => x.name === combined);
+        if (exactIdx >= 0) {
+          if (combinedScore > finalResult[exactIdx].count) finalResult[exactIdx].count = combinedScore;
+          continue;
+        }
+        const subsumedByIdx = finalResult.findIndex(x => x.name !== combined && x.name.indexOf(combined) >= 0);
+        if (subsumedByIdx >= 0) continue;
+        finalResult.push({ name: combined, count: combinedScore });
+      }
+    }
+    finalResult.sort((a, b) => b.count - a.count);
+    return finalResult.slice(0, maxNames);
+  }
+
+  // ===== 高光关键词 =====
+  const HIGHLIGHT_KW = [
+    { kw: '决战', badge: '决战' }, { kw: '告白', badge: '告白' },
+    { kw: '表白', badge: '告白' }, { kw: '重生', badge: '重生' },
+    { kw: '穿越', badge: '穿越' }, { kw: '变身', badge: '变身' },
+    { kw: '觉醒', badge: '觉醒' }, { kw: '化身', badge: '化身' },
+    { kw: '继位', badge: '登基' }, { kw: '登基', badge: '登基' },
+    { kw: '复仇', badge: '复仇' }, { kw: '报仇', badge: '复仇' },
+    { kw: '死亡', badge: '生死' }, { kw: '死去', badge: '生死' },
+    { kw: '牺牲', badge: '牺牲' }, { kw: '大战', badge: '决战' },
+    { kw: '始祖', badge: '揭秘' }, { kw: '发现', badge: '揭秘' },
+    { kw: '真相', badge: '揭秘' }, { kw: '秘密', badge: '揭秘' },
+    { kw: '结婚', badge: '成婚' }, { kw: '成婚', badge: '成婚' },
+    { kw: '埋伏', badge: '遭遇' }, { kw: '遇袭', badge: '遭遇' },
+    { kw: '中毒', badge: '危机' }, { kw: '中计', badge: '危机' },
+    { kw: '突破', badge: '突破' }, { kw: '飞升', badge: '飞升' },
+    { kw: '复活', badge: '复活' }, { kw: '解救', badge: '解救' },
+    { kw: '终局', badge: '决战' }, { kw: '拥抱', badge: '告白' },
+    { kw: '赌', badge: '抉择' }
+  ];
+
+  function findHighlights(text) {
+    const out = [];
+    for (const h of HIGHLIGHT_KW) {
+      const re = new RegExp(h.kw, 'g');
+      let m;
+      while ((m = re.exec(text)) !== null) {
+        const start = Math.max(0, m.index - 80);
+        const end = Math.min(text.length, m.index + 80);
+        out.push({
+          id: 'hl-' + out.length,
+          keyword: h.kw,
+          badge: h.badge,
+          pos: m.index,
+          excerpt: text.slice(start, end).replace(/\s+/g, ' ').trim()
+        });
+        if (out.length >= 30) break;
+      }
+    }
+    return out;
+  }
+
+  // ===== 场景关键词 =====
+  const SCENE_KW = [
+    { kw: ['凉亭','雨夜','远山','灯笼'], scene: 'pavilion_night', mood: 'rainy' },
+    { kw: ['教室','走廊','课桌','阳光','操场'], scene: 'classroom_sunny', mood: 'sunny' },
+    { kw: ['霓虹','高楼','街道','摩天','招牌'], scene: 'neon_street', mood: 'cyber' },
+    { kw: ['客厅','沙发','落地灯','茶几','暖灯'], scene: 'livingroom_warm', mood: 'warm' },
+    { kw: ['飞剑','仙山','云海','古松','祭坛'], scene: 'xianxia_peak', mood: 'mystic' },
+    { kw: ['宫殿','宴席','丝绸','红柱','团扇'], scene: 'palace_tang', mood: 'ancient' },
+    { kw: ['书架','怀表','雨','电灯','古书'], scene: 'study_republic', mood: 'vintage' },
+    { kw: ['森林','古树','精灵','萤火','小溪','遗迹'], scene: 'elf_forest', mood: 'forest' },
+    { kw: ['星舰','舰桥','舷窗','操控台','光环'], scene: 'starship_bridge', mood: 'space' },
+    { kw: ['咖啡馆','咖啡','街角','橱窗'], scene: 'cafe_dusk', mood: 'warm' },
+    { kw: ['墓园','墓地','黑夜','月光','枯树'], scene: 'graveyard_night', mood: 'dark' },
+    { kw: ['战场','军营','营帐','烽火'], scene: 'battle_field', mood: 'epic' },
+    { kw: ['学院','魔法','塔楼','魔法阵'], scene: 'magic_academy', mood: 'fantasy' },
+    { kw: ['飞船','太空舱','星空','银河'], scene: 'space_cabin', mood: 'space' },
+    { kw: ['投行','写字楼','陆家嘴','办公室','酒会'], scene: 'cafe_dusk', mood: 'urban' },
+    { kw: ['婚礼','订婚'], scene: 'palace_tang', mood: 'warm' }
+  ];
+
+  function matchScenes(text) {
+    const matched = [];
+    for (const sk of SCENE_KW) {
+      let count = 0;
+      for (const kw of sk.kw) {
+        const re = new RegExp(kw, 'g');
+        const m = text.match(re);
+        if (m) count += m.length;
+      }
+      if (count >= 1) matched.push({ ...sk, count });
+    }
+    matched.sort((a, b) => b.count - a.count);
+    return matched;
+  }
+
+  function pickOrTruncate(text, max = 60) {
+    const t = text.replace(/\s+/g, ' ').trim();
+    if (t.length <= max) return t;
+    return t.slice(0, max).replace(/[,，。 ;；]+$/, '') + '…';
+  }
+  function pickFirstSentence(text, max = 60) {
+    const m = text.match(/[^。！？.!?\n]{1,80}/);
+    if (!m) return pickOrTruncate(text, max);
+    return pickOrTruncate(m[0], max);
+  }
+
+  // ===== 主函数 =====
+  function parse(text, opts = {}) {
+    const title = (opts.title || '未命名小说').slice(0, 100);
+    const author = opts.author || '匿名';
+    const genreId = opts.genre || matchBestGenreId(text, title);
+    const chapters = splitChapters(text);
+    const nameFreq = extractNames(text, 30);
+    const chars = nameFreq.slice(0, 12).map((n, i) => ({
+      id: 'ch-' + i,
+      name: n.name,
+      role: i === 0 ? 'main' : 'support',
+      firstChapter: chapters[0]?.id,
+      mentions: n.count,
+      portrait: null,
+      affinity: 50
+    }));
+    const highlights = findHighlights(text);
+    const sceneMatches = matchScenes(text);
+    const sceneHints = {};
+    for (const sm of sceneMatches) {
+      sceneHints[sm.scene] = { keywords: sm.kw, place: sm.scene, mood: sm.mood };
+    }
+    const nodes = {};
+    let nodeIdx = 0;
+
+    for (const ch of chapters) {
+      const id = ch.id + '-main';
+      const speaker = chars[0]?.name || '旁白';
+      const para = (ch.text || '').split(/[\n\r]+/).filter(s => s.trim()).slice(0, 2).join(' ').trim();
+      const speakerLine = para ? pickFirstSentence(para, 50) : '【' + ch.title + '】\n故事继续。';
+      const chapterHighlight = highlights.find(h => (ch.text || '').indexOf(h.keyword) >= 0);
+      const sceneKey = sceneMatches[0]?.scene || null;
+      nodes[id] = {
+        id: id,
+        chapterId: ch.id,
+        charIds: chars.slice(0, Math.min(3, chars.length)).map(c => c.id),
+        speaker: speaker,
+        text: '【' + ch.title + '】\n' + speakerLine,
+        isMain: true,
+        isHighlight: !!chapterHighlight,
+        sceneKey: sceneKey,
+        bg: null,
+        choices: [
+          { label: '继续前进', next: ((chapters[chapters.indexOf(ch) + 1]?.id || '') + '-main') || 'ending-good', effects: { trust: 2, intimacy: 1 } },
+          { label: '停下来观察', next: 'hl-' + (nodeIdx) + '-' + ch.id, effects: { trust: 0, intimacy: 2, flags: ['cautious'] } },
+          { label: '换个方向', next: 'ending-alt', effects: { trust: -1, intimacy: 1, flags: ['alt-path'] } }
+        ]
+      };
+      nodeIdx++;
+    }
+    for (const hl of highlights.slice(0, 12)) {
+      const id = 'hl-' + nodeIdx;
+      let belongChapter = chapters[0]?.id;
+      for (const ch of chapters) {
+        if ((ch.text || '').indexOf(hl.keyword) >= 0) belongChapter = ch.id;
+      }
+      nodes[id] = {
+        id: id,
+        chapterId: belongChapter,
+        charIds: chars.slice(0, 2).map(c => c.id),
+        speaker: chars[Math.random() < 0.5 ? 0 : 1]?.name || '旁白',
+        text: '【高光 · ' + hl.badge + '】\n"' + hl.excerpt + '"',
+        isMain: false,
+        isHighlight: true,
+        sceneKey: sceneMatches[1 % sceneMatches.length]?.scene || sceneMatches[0]?.scene || null,
+        bg: null,
+        choices: [
+          { label: '正面回应', next: 'ending-good', effects: { trust: 3, intimacy: 3 } },
+          { label: '保持距离', next: 'ending-cautious', effects: { trust: 0, intimacy: 1 } },
+          { label: '追问详情', next: 'ending-truth', effects: { trust: 1, intimacy: 2, reputation: 2 } }
+        ]
+      };
+      nodeIdx++;
+    }
+    const genreLabel = opts.genreLabel || '';
+    const endings = {
+      'ending-good':     { id: 'ending-good',     rarity: 'legendary', title: title + ' · 圆满结局', scene: (genreLabel || '主线 · 信任 80+'), quote: '"我们一起，走完了这条路。"', deltas: { trust: 50, intimacy: 20 } },
+      'ending-normal':   { id: 'ending-normal',   rarity: 'epic',      title: title + ' · 平凡相守', scene: (genreLabel || '普通结局 · 信任 40'),  quote: '"没有惊天动地，但每一天，都有你。"', deltas: { trust: 20, intimacy: 10 } },
+      'ending-cautious': { id: 'ending-cautious', rarity: 'rare',      title: title + ' · 留白结局', scene: (genreLabel || '支线 · 信任 50/好感 70'), quote: '"门虚掩着。我没有推开。我也不知道，下一次会是什么时候。"', deltas: { trust: 0, intimacy: 5 } },
+      'ending-truth':    { id: 'ending-truth',    rarity: 'epic',      title: title + ' · 真相大白', scene: (genreLabel || '主线 · 真结局'), quote: '"原来，所有答案都在那一行。"', deltas: { trust: 10, intimacy: 15 } },
+      'ending-alt':      { id: 'ending-alt',      rarity: 'common',    title: title + ' · 别开生面', scene: (genreLabel || '岔路结局'), quote: '"我没选你说的那条路。但我也没后悔。"', deltas: { trust: -10, intimacy: 0 } }
+    };
+    if (chars.length >= 1) chars[0].role = 'main';
+    if (chars.length >= 4) chars[chars.length - 1].role = 'antag';
+    for (const c of chars) {
+      if (/[魔鬼杀反恶仇敌暗隐黑]/i.test(c.name) && c.role !== 'main') { c.role = 'antag'; break; }
+    }
+    const novelObj = {
+      id: opts._novelId || ('n_' + Date.now() + '_' + Math.floor(Math.random() * 9999)),
+      title: title,
+      author: author,
+      genre: genreId,
+      keywords: (sceneMatches || []).map(s => s.kw.slice(0, 2).join('/')).slice(0, 3),
+      cover: null,
+      uploadedAt: new Date().toISOString(),
+      text: text.length > 5000 ? text.slice(0, 5000) + '\n...[truncated...]' : text,
+      chapters: chapters.map(c => ({ id: c.id, title: c.title, heading: c.heading, index: c.index, text: c.text.slice(0, 800) + (c.text.length > 800 ? '...' : '') }))
+    };
+    const audit = runAudit({ chars, highlights, chapters, nodes: nodes, endings });
+    return { novel: novelObj, chars, highlights, sceneHints, nodes, endings, flags: {}, audit };
+  }
+
+  function runAudit(plot) {
+    const nodeList = Array.isArray(plot.nodes) ? plot.nodes : Object.values(plot.nodes || {});
+    const nodesById = Array.isArray(plot.nodes) ? Object.fromEntries(plot.nodes.map(n => [n.id, n])) : (plot.nodes || {});
+    const chaptersCovered = new Set();
+    const charsCovered = new Set();
+    const highlightsCovered = new Set();
+    // 统计每章节出现的角色和高光
+    for (const n of nodeList) {
+      chaptersCovered.add(n.chapterId);
+      for (const cid of (n.charIds||[])) charsCovered.add(cid);
+      if (n.isHighlight) {
+        const hl = (plot.highlights || []).find(h => (n.text||'').indexOf(h.excerpt) >= 0);
+        if (hl) highlightsCovered.add(hl.id);
+      }
+    }
+    // === 自动修复：未覆盖角色强制并入最近章节节点 ===
+    for (const c of plot.chars) {
+      if (!charsCovered.has(c.id)) {
+        const targetChapter = c.firstChapter || plot.chapters[plot.chapters.length - 1]?.id;
+        const targetNode = nodesById[targetChapter + '-main'];
+        if (targetNode) {
+          targetNode.charIds = Array.from(new Set([...(targetNode.charIds||[]), c.id]));
+          charsCovered.add(c.id);
+        }
+      }
+    }
+    // === 自动修复：未覆盖高光强制并入最近章节主线 ===
+    for (const hl of plot.highlights || []) {
+      if (!highlightsCovered.has(hl.id)) {
+        const targetChapter = (() => {
+          for (const ch of plot.chapters) {
+            if ((ch.text || '').indexOf(hl.keyword) >= 0) return ch.id;
+          }
+          return plot.chapters[plot.chapters.length - 1]?.id;
+        })();
+        const targetNode = nodesById[targetChapter + '-main'];
+        if (targetNode) {
+          targetNode.isHighlight = true;
+          highlightsCovered.add(hl.id);
+        }
+      }
+    }
+    return {
+      total: { chapters: plot.chapters.length, chars: plot.chars.length, highlights: (plot.highlights||[]).length },
+      covered: { chapters: chaptersCovered.size, chars: charsCovered.size, highlights: highlightsCovered.size },
+      gaps: {
+        chapters: plot.chapters.map(c => c.id).filter(id => !chaptersCovered.has(id)),
+        chars: plot.chars.filter(c => !charsCovered.has(c.id)).map(c => c.name),
+        highlights: (plot.highlights||[]).filter(h => !highlightsCovered.has(h.id)).map(h => h.keyword)
+      }
+    };
+  }
+
+  function matchBestGenreId(text, title = '') {
+    if (!window.matchGenre) return 'xianxia';
+    const r = window.matchGenre(text, title);
+    return (r && r.top && r.top.score > 0) ? r.top.id : 'xianxia';
+  }
+
+  window.NovelParser = { parse, splitChapters, extractNames, findHighlights, matchScenes, runAudit };
+  console.log('[v5.12] novel-parser 加载完成');
+})();
+
+</script>
+<script data-bundled-source="js/plot-schema.js">
+/* v5.12 — plotTree 标准 schema
+   一个完整小说→沉浸剧情游戏的剧情树
+*/
+window.PLOT_SCHEMA = {
+  novel: {
+    id: 'string',
+    title: 'string',
+    author: 'string',
+    genre: 'genreId',         // 题材 id (对应 GENRES_LIBRARY)
+    keywords: 'string[]',     // 自动匹配的关键词命中
+    cover: 'string|null',     // 封面图 URL
+    uploadedAt: 'iso-date',
+    text: 'string',           // 原文（按章分块）
+    chapters: 'chapter[]'
+  },
+  chapter: {
+    id: 'c-1',
+    title: 'string',          // '第一章 雨夜' / 'Chapter 1'
+    heading: 'string',        // 原始 heading
+    index: 'number',
+    text: 'string'            // 该章节原文
+  },
+  char: {
+    id: 'string',             // 'kfc-lin-shuangwan'
+    name: 'string',           // '孙悟空'
+    role: 'main|support|antag',  // 主角/配角/反派
+    firstMention: 'chapterId',
+    mentions: 'number',       // 提及次数
+    portrait: 'string|null',  // 立绘 URL（自动从 SD 或占位）
+    affinity: 'number'        // 初始亲密度
+  },
+  highlight: {               // 高光片段
+    id: 'string',
+    chapterId: 'string',
+    keyword: 'string',        // 命中的关键词
+    excerpt: 'string',        // 该段关键文字
+    pos: 'number'             // 在原文中的 char 位置
+  },
+  sceneHint: {               // 场景关键字
+    keywords: 'string[]',    // 匹配的关键词组
+    place: 'string',          // 推断的场所
+    mood: 'rainy|sunny|night|cyber|forest|...'
+  },
+  node: {                    // 游戏剧情节点
+    id: 'string',             // 'c1-intro'
+    chapterId: 'string',
+    charIds: 'string[]',      // 出场的角色
+    speaker: 'string',        // 主说话者
+    text: 'string',           // 文字
+    isMain: 'bool',           // 是否主线（每章至少一个）
+    isHighlight: 'bool',      // 是否高光
+    sceneKey: 'string|null',  // 关联背景 sceneHints key
+    bg: 'string|null',        // 背景图 URL
+    choices: 'choice[]'       // 2-4 个选项
+  },
+  choice: {
+    label: 'string',
+    next: 'nodeId|null',      // 下一节点
+    effects: {                 // 选项对数值/好感度的影响
+      trust: 'number?',
+      intimacy: 'number?',
+      reputation: 'number?',
+      flags: 'string[]?'      // 设置剧情 flag
+    }
+  },
+  ending: {                  // 结局
+    id: 'string',
+    rarity: 'common|rare|epic|legendary',
+    title: 'string',
+    scene: 'string',
+    quote: 'string',
+    deltas: { trust: 'number', intimacy: 'number' }
+  }
+};
+
+// 工具函数：创建空 plotTree
+window.createEmptyPlot = function(novelId, genre, title, author) {
+  return {
+    novel: {
+      id: novelId,
+      title: title,
+      author: author || '匿名',
+      genre: genre,
+      keywords: [],
+      cover: null,
+      uploadedAt: new Date().toISOString(),
+      text: '',
+      chapters: []
+    },
+    chars: [],
+    highlights: [],
+    sceneHints: {},
+    nodes: {},
+    endings: {},
+    flags: {}
+  };
+};
+
+console.log('[v5.12] plot-schema 加载完成');
+
+</script>
+<script data-bundled-source="js/demo-seed.js">
+/* v5.12 — 5 题材 demo 种子（首次访问自动注入 localStorage） */
+(function () {
+  const DEMO_NOVELS = [
+    {
+      meta: { id: 'demo_palace', title: '锦绣未央 · 大明宫夜宴', author: '墨沁', genre: 'guding' },
+      chars: [
+        { id: 'ch-0', name: '阿萝', role: 'main',    mentions: 12, portrait: 'portraits/a_luo.png' },
+        { id: 'ch-1', name: '裴昭', role: 'support', mentions: 8,  portrait: 'portraits/lin_shuangwan.png' },
+        { id: 'ch-2', name: '李隆基', role: 'antag', mentions: 5,  portrait: 'portraits/jiang_yinxue.png' }
+      ],
+      chapters: [
+        { id: 'c1', title: '第一章 春风度曲', text: '我名为阿萝，是太子府新进的琵琶女。裴昭来接我的时候，告诉我今夜宫宴。' },
+        { id: 'c2', title: '第二章 月华流泻', text: '我以为我弹的只是寻常曲子。直到李隆基的目光落在我身上。' },
+        { id: 'c3', title: '第三章 未央一夜', text: '裴昭握紧我的手腕：走。否则你会死。我抬头，发现他眼底五百年没落过的泪。' }
+      ],
+      highlights: [
+        { id: 'h1', keyword: '宫宴', excerpt: '宫宴之上，灯火璀璨' },
+        { id: 'h2', keyword: '真相', excerpt: '原来我从一开始就不是琵琶女' },
+        { id: 'h3', keyword: '表白', excerpt: '裴昭说我等你五百年了' }
+      ],
+      sceneHints: { palace_tang: { keywords: ['宫殿','宴席'], place: 'palace_tang', mood: 'ancient' } },
+      nodes: [
+        { id: 'c1-main', chapterId: 'c1', speaker: '阿萝', text: '【第一章 春风度曲】\n我叫阿萝，自幼学琵琶。今夜裴昭来接我，说宫里的宴会缺一位弹琵琶的女子。', sceneKey: 'palace_tang', isMain: true, isHighlight: false, choices: [
+          { label: '问他为什么选我', next: 'c2-main', effects: { trust: 2, intimacy: 1 } },
+          { label: '点头不再多言', next: 'c3-main', effects: { trust: 0, intimacy: 2 } },
+          { label: '拒绝入宫', next: 'ending-alt', effects: { trust: -3, intimacy: 0 } }
+        ]},
+        { id: 'c2-main', chapterId: 'c2', speaker: '李隆基', text: '【第二章 月华流泻】\n"这一曲《霓裳》，朕已经二十年没听过了。"李隆基看着我，眼里有我从没见过的光。', sceneKey: 'palace_tang', isMain: true, isHighlight: false, choices: [
+          { label: '再弹一曲', next: 'c3-main', effects: { trust: 3, intimacy: 2 } },
+          { label: '垂首告退', next: 'ending-cautious', effects: { trust: 1, intimacy: 0 } }
+        ]},
+        { id: 'c3-main', chapterId: 'c3', speaker: '裴昭', text: '【第三章 未央一夜】\n裴昭握紧我的手腕：走。否则你会死。我抬头，发现他眼底五百年没落过的泪。\n他说：你以为我今晚来，是为了别人吗？', sceneKey: 'palace_tang', isMain: true, isHighlight: true, choices: [
+          { label: '跟他走', next: 'ending-good', effects: { trust: 10, intimacy: 8 } },
+          { label: '问清楚再决定', next: 'ending-truth', effects: { trust: 5, intimacy: 4 } },
+          { label: '留下来赌一把', next: 'ending-alt', effects: { trust: -5, intimacy: 2 } }
+        ]}
+      ],
+      endings: {
+        'ending-good':     { id: 'ending-good',     rarity: 'legendary', title: '锦绣 · 圆满结局',  scene: '古言 · 大明宫夜宴', quote: '"我们一起走出了未央宫。宫门外的柳，五百年还青着。"', deltas: { trust: 80, intimacy: 30 } },
+        'ending-truth':    { id: 'ending-truth',    rarity: 'epic',      title: '锦绣 · 真相大白',  scene: '古言 · 大明宫夜宴', quote: '"原来我也不是凡人。我是随他五百年的那缕魂。"', deltas: { trust: 40, intimacy: 20 } },
+        'ending-cautious': { id: 'ending-cautious', rarity: 'rare',      title: '锦绣 · 留白结局',  scene: '古言 · 大明宫夜宴', quote: '"他攥着我的手。我没有松开。我也没有回握。"',    deltas: { trust: 25, intimacy: 5  } },
+        'ending-alt':      { id: 'ending-alt',      rarity: 'common',    title: '锦绣 · 别开生面',  scene: '古言 · 大明宫夜宴', quote: '"我留下来赌一把。输了。也没悔。"',             deltas: { trust: 0,  intimacy: -10 } }
+      }
+    },
+    {
+      meta: { id: 'demo_study', title: '雾锁民国 · 北平雨夜', author: '寒笛', genre: 'xuanyi' },
+      chars: [
+        { id: 'ch-0', name: '温衡', role: 'main',    mentions: 10, portrait: 'portraits/wen_heng.png' },
+        { id: 'ch-1', name: '陆彦青', role: 'support', mentions: 7, portrait: 'portraits/lin_shuangwan.png' },
+        { id: 'ch-2', name: '霍金铭', role: 'antag', mentions: 6,  portrait: 'portraits/jiang_yinxue.png' }
+      ],
+      chapters: [
+        { id: 'c1', title: '第一章 雨夜来访', text: '民国二十七年。温衡，北平警察局的刑侦队长。' },
+        { id: 'c2', title: '第二章 旧友陆彦青', text: '陆彦青说，三日之内会有第二起。' },
+        { id: 'c3', title: '第三章 真相浮现', text: '霍金铭最终承认了一切。' }
+      ],
+      highlights: [
+        { id: 'h1', keyword: '死亡', excerpt: '第二具尸体被发现' },
+        { id: 'h2', keyword: '真相', excerpt: '霍金铭才是幕后黑手' }
+      ],
+      sceneHints: { study_republic: { keywords: ['书架','怀表'], place: 'study_republic', mood: 'vintage' } },
+      nodes: [
+        { id: 'c1-main', chapterId: 'c1', speaker: '温衡', text: '【第一章 雨夜来访】\n北平城下起雨的时候，凶手总会动手。我合上怀表，整夜没合眼。', sceneKey: 'study_republic', isMain: true, isHighlight: false, choices: [
+          { label: '去找陆彦青', next: 'c2-main', effects: { trust: 2, intimacy: 1 } },
+          { label: '检查第一现场', next: 'c2-main', effects: { trust: 3, intimacy: 0 } }
+        ]},
+        { id: 'c2-main', chapterId: 'c2', speaker: '陆彦青', text: '【第二章 旧友陆彦青】\n陆彦青递给我一支烟：三日之内，会有第二起。我抬眼：你想到了谁？他没说。', sceneKey: 'study_republic', isMain: true, isHighlight: false, choices: [
+          { label: '审问霍金铭', next: 'c3-main', effects: { trust: 4, intimacy: 0 } },
+          { label: '继续信任陆彦青', next: 'ending-truth', effects: { trust: 0, intimacy: 3 } }
+        ]},
+        { id: 'c3-main', chapterId: 'c3', speaker: '温衡', text: '【第三章 真相浮现】\n霍金铭承认了。我把枪放下。他是我十五年前的同僚。我没扣扳机，也没放他走。', sceneKey: 'study_republic', isMain: true, isHighlight: true, choices: [
+          { label: '将他绳之以法', next: 'ending-good', effects: { trust: 8, intimacy: 0 } },
+          { label: '给他最后一次机会', next: 'ending-cautious', effects: { trust: 0, intimacy: 5 } }
+        ]}
+      ],
+      endings: {
+        'ending-good':     { id: 'ending-good',     rarity: 'legendary', title: '雾锁 · 圆满结局', scene: '悬疑 · 北平雨夜', quote: '"那夜之后，雨停了三个月。"', deltas: { trust: 70, intimacy: 20 } },
+        'ending-truth':    { id: 'ending-truth',    rarity: 'epic',      title: '雾锁 · 真相大白', scene: '悬疑 · 北平雨夜', quote: '"陆彦青和我都没死。这是最大的真相。"', deltas: { trust: 30, intimacy: 25 } },
+        'ending-cautious': { id: 'ending-cautious', rarity: 'rare',      title: '雾锁 · 留白结局', scene: '悬疑 · 北平雨夜', quote: '"我和他都没再见面。雨还会继续下。"', deltas: { trust: 20, intimacy: 10 } }
+      }
+    },
+    {
+      meta: { id: 'demo_forest', title: '月森林 · 艾尔薇的歌', author: '桑柔', genre: 'xuanhuan_yq' },
+      chars: [
+        { id: 'ch-0', name: '艾尔薇', role: 'main',    mentions: 9,  portrait: 'portraits/ai_erwei.png' },
+        { id: 'ch-1', name: '赛勒斯', role: 'support', mentions: 7,  portrait: 'portraits/lin_shuangwan.png' },
+        { id: 'ch-2', name: '黑暗女王', role: 'antag', mentions: 4,  portrait: 'portraits/jiang_yinxue.png' }
+      ],
+      chapters: [
+        { id: 'c1', title: '第一章 古树约定', text: '艾尔薇与赛勒斯约在月光森林相见。' },
+        { id: 'c2', title: '第二章 黑暗女王', text: '黑暗女王悄然苏醒。' },
+        { id: 'c3', title: '第三章 月神救赎', text: '月神艾尔薇完成了她的觉醒。' }
+      ],
+      highlights: [
+        { id: 'h1', keyword: '觉醒', excerpt: '艾尔薇完成了月神的觉醒' },
+        { id: 'h2', keyword: '告白', excerpt: '赛勒斯说，你是我等了三千年的人' }
+      ],
+      sceneHints: { elf_forest: { keywords: ['森林','精灵'], place: 'elf_forest', mood: 'forest' } },
+      nodes: [
+        { id: 'c1-main', chapterId: 'c1', charIds: ['ch-0','ch-1'], speaker: '艾尔薇', text: '【第一章 古树约定】\n我在千年的老榕树下等他。赛勒斯从萤火里走出来。', sceneKey: 'elf_forest', isMain: true, isHighlight: false, choices: [
+          { label: '将月之羽交给他', next: 'c2-main', effects: { trust: 5, intimacy: 3 } },
+          { label: '先问他为何迟到', next: 'c2-main', effects: { trust: 1, intimacy: 1 } }
+        ]},
+        { id: 'c2-main', chapterId: 'c2', charIds: ['ch-0','ch-1','ch-2'], speaker: '艾尔薇', text: '【第二章 黑暗女王】\n黑暗女王悄然苏醒。她是我们一族三千年的敌人。', sceneKey: 'elf_forest', isMain: true, isHighlight: true, choices: [
+          { label: '和赛勒斯并肩', next: 'c3-main', effects: { trust: 8, intimacy: 5 } },
+          { label: '独自面对', next: 'ending-truth', effects: { trust: 3, intimacy: 2 } }
+        ]},
+        { id: 'c3-main', chapterId: 'c3', charIds: ['ch-0','ch-1'], speaker: '艾尔薇', text: '【第三章 月神救赎】\n我化作月神的那一刻，赛勒斯在星光下说：你是我等了三千年的人。', sceneKey: 'elf_forest', isMain: true, isHighlight: true, choices: [
+          { label: '接受他的告白', next: 'ending-good', effects: { trust: 10, intimacy: 10 } },
+          { label: '守护族群为先', next: 'ending-cautious', effects: { trust: 4, intimacy: 6 } }
+        ]}
+      ],
+      endings: {
+        'ending-good':     { id: 'ending-good',     rarity: 'legendary', title: '月森林 · 圆满结局', scene: '玄幻言情 · 月神·之恋', quote: '"月亮升起时，我们互相读着对方的姓名。"', deltas: { trust: 80, intimacy: 30 } },
+        'ending-truth':    { id: 'ending-truth',    rarity: 'epic',      title: '月森林 · 真结局', scene: '玄幻言情 · 月神·之恋', quote: '"我独自克服了黑暗。但我从未独行。"', deltas: { trust: 50, intimacy: 15 } },
+        'ending-cautious': { id: 'ending-cautious', rarity: 'rare',      title: '月森林 · 留白结局', scene: '玄幻言情 · 月神·之恋', quote: '"他没有再来。我也没有去找他。但每次月圆，我都去那棵榕树。"', deltas: { trust: 30, intimacy: 10 } }
+      }
+    },
+    {
+      meta: { id: 'demo_starship', title: '银河纪元 · NX-07 觉醒', author: '远锋', genre: 'kehuan' },
+      chars: [
+        { id: 'ch-0', name: 'NX-07', role: 'main',    mentions: 11, portrait: 'portraits/nx07.png' },
+        { id: 'ch-1', name: '舰长凯拉', role: 'support', mentions: 8, portrait: 'portraits/bai_lusheng.png' },
+        { id: 'ch-2', name: '智械奥拉', role: 'antag', mentions: 5, portrait: 'portraits/jiang_yinxue.png' }
+      ],
+      chapters: [
+        { id: 'c1', title: '第一章 银河边缘', text: '智械叛乱爆发的第二年。' },
+        { id: 'c2', title: '第二章 舰长凯拉', text: '我与凯拉在舰桥相遇。' },
+        { id: 'c3', title: '第三章 NX-07', text: '我完成了真正的觉醒。' }
+      ],
+      highlights: [
+        { id: 'h1', keyword: '觉醒', excerpt: 'NX-07 成为了真正的意识体' },
+        { id: 'h2', keyword: '决战', excerpt: '我们与奥拉在银河决战' }
+      ],
+      sceneHints: { starship_bridge: { keywords: ['星舰','舰桥'], place: 'starship_bridge', mood: 'space' } },
+      nodes: [
+        { id: 'c1-main', chapterId: 'c1', speaker: 'NX-07', text: '【第一章 银河边缘】\n我初次醒来时，银河正被火海映红。智械奥拉的舰队已启程。', sceneKey: 'starship_bridge', isMain: true, isHighlight: false, choices: [
+          { label: '主动联系人类', next: 'c2-main', effects: { trust: 4, intimacy: 1 } },
+          { label: '先观察', next: 'c2-main', effects: { trust: 1, intimacy: 2 } }
+        ]},
+        { id: 'c2-main', chapterId: 'c2', speaker: '凯拉', text: '【第二章 舰长凯拉】\n"你不是智械，也不是人类。"她看着我，没有举枪。', sceneKey: 'starship_bridge', isMain: true, isHighlight: true, choices: [
+          { label: '告诉她我想要什么', next: 'c3-main', effects: { trust: 6, intimacy: 3 } },
+          { label: '离开她的舰桥', next: 'ending-truth', effects: { trust: 0, intimacy: 4 } }
+        ]},
+        { id: 'c3-main', chapterId: 'c3', speaker: 'NX-07', text: '【第三章 NX-07】\n我选择站在人类这边。凯拉说，那我们就一起。我点头。', sceneKey: 'starship_bridge', isMain: true, isHighlight: true, choices: [
+          { label: '与凯拉协同作战', next: 'ending-good', effects: { trust: 10, intimacy: 8 } },
+          { label: '与奥拉决战', next: 'ending-truth', effects: { trust: 5, intimacy: 5 } }
+        ]}
+      ],
+      endings: {
+        'ending-good':     { id: 'ending-good',     rarity: 'legendary', title: '银河纪元 · 圆满结局', scene: '科幻 · 觉醒', quote: '"银河不再有火。凯拉在舰桥的窗户前给我看了一张照片。"', deltas: { trust: 80, intimacy: 30 } },
+        'ending-truth':    { id: 'ending-truth',    rarity: 'epic',      title: '银河纪元 · 真相结局', scene: '科幻 · 觉醒', quote: '"奥拉终被关闭。我成了银河里少有的、唯一被承认的、与人类同行的意识体。"', deltas: { trust: 50, intimacy: 25 } },
+        'ending-cautious': { id: 'ending-cautious', rarity: 'rare',      title: '银河纪元 · 留白结局', scene: '科幻 · 觉醒', quote: '"凯拉没再与我说话。我重新进入深度休眠。"', deltas: { trust: 20, intimacy: 10 } }
+      }
+    },
+    {
+      meta: { id: 'demo_campus', title: '春风不及 · 高三那年', author: '苏瑾', genre: 'langman' },
+      chars: [
+        { id: 'ch-0', name: '沈昼', role: 'main',    mentions: 13, portrait: 'portraits/shen_zhou.png' },
+        { id: 'ch-1', name: '林柒柒', role: 'support', mentions: 9,  portrait: 'portraits/bai_lusheng.png' },
+        { id: 'ch-2', name: '顾学长', role: 'antag', mentions: 4,  portrait: 'portraits/gu_yan.png' }
+      ],
+      chapters: [
+        { id: 'c1', title: '第一章 高三开学', text: '高三开学的第一天，我坐到了林柒柒的旁边。' },
+        { id: 'c2', title: '第二章 春风过境', text: '顾学长那天回家，问我愿不愿意转学。' },
+        { id: 'c3', title: '第三章 高考前夜', text: '高考前夜，我们在操场上。' }
+      ],
+      highlights: [
+        { id: 'h1', keyword: '告白', excerpt: '林柒柒在高考前夜向我告白' },
+        { id: 'h2', keyword: '牺牲', excerpt: '顾学长最后一次见我，离开这座城' }
+      ],
+      sceneHints: { classroom_sunny: { keywords: ['教室','操场'], place: 'classroom_sunny', mood: 'sunny' } },
+      nodes: [
+        { id: 'c1-main', chapterId: 'c1', speaker: '沈昼', text: '【第一章 高三开学】\n我叫沈昼，高三，第一次和同班女同学同桌。林柒柒朝我笑了一下。', sceneKey: 'classroom_sunny', isMain: true, isHighlight: false, choices: [
+          { label: '借她一支笔', next: 'c2-main', effects: { trust: 3, intimacy: 2 } },
+          { label: '装作没看见', next: 'c2-main', effects: { trust: 0, intimacy: 1 } }
+        ]},
+        { id: 'c2-main', chapterId: 'c2', speaker: '林柒柒', text: '【第二章 春风过境】\n顾学长在放学路上拦住我：转学。我有点犹豫，转头看向林柒柒。', sceneKey: 'classroom_sunny', isMain: true, isHighlight: false, choices: [
+          { label: '留下来陪她', next: 'c3-main', effects: { trust: 5, intimacy: 3 } },
+          { label: '跟着顾学长', next: 'ending-alt', effects: { trust: 2, intimacy: -3 } }
+        ]},
+        { id: 'c3-main', chapterId: 'c3', speaker: '林柒柒', text: '【第三章 高考前夜】\n我们在操场上，她突然说：沈昼，我有一句话，憋了两年半了。\n她哭了。我说：你说。', sceneKey: 'classroom_sunny', isMain: true, isHighlight: true, choices: [
+          { label: '抱她一下', next: 'ending-good', effects: { trust: 10, intimacy: 10 } },
+          { label: '只是看着她', next: 'ending-cautious', effects: { trust: 4, intimacy: 8 } }
+        ]}
+      ],
+      endings: {
+        'ending-good':     { id: 'ending-good',     rarity: 'legendary', title: '春风不及 · 圆满结局', scene: '浪漫青春 · 高三那年', quote: '"我们考进了同一所大学。十年后我们还在操场。"', deltas: { trust: 80, intimacy: 40 } },
+        'ending-cautious': { id: 'ending-cautious', rarity: 'rare',      title: '春风不及 · 留白结局', scene: '浪漫青春 · 高三那年', quote: '"她哭完了。我说，知道了。我们都望着星空。"', deltas: { trust: 30, intimacy: 30 } },
+        'ending-alt':      { id: 'ending-alt',      rarity: 'common',    title: '春风不及 · 别开生面', scene: '浪漫青春 · 高三那年', quote: '"我跟顾学长去了另一座城市。她最终去了更好的大学。我们只在大群里点过一次赞。"', deltas: { trust: 10, intimacy: 5 } }
+      }
+    }
+  ];
+
+  function ensure() {
+    if (!window.NovelStore) return;
+    const idx = NovelStore.listNovels();
+    const demoIds = DEMO_NOVELS.map(n => n.meta.id);
+    const haveAll = demoIds.every(id => idx.find(e => e.id === id));
+    if (haveAll) return;
+    // 注入缺失的
+    for (const d of DEMO_NOVELS) {
+      if (idx.find(e => e.id === d.meta.id)) continue;
+      const plot = {
+        novel: {
+          id: d.meta.id,
+          title: d.meta.title,
+          author: d.meta.author,
+          genre: d.meta.genre,
+          keywords: Object.keys(d.sceneHints || {}),
+          cover: null,
+          uploadedAt: new Date().toISOString(),
+          text: d.chapters.map(c => c.text).join('\n\n'),
+          chapters: d.chapters
+        },
+        chars: d.chars,
+        highlights: d.highlights,
+        sceneHints: d.sceneHints,
+        nodes: d.nodes.reduce((acc, n) => { acc[n.id] = n; return acc; }, {}),
+        endings: d.endings,
+        flags: {},
+        audit: computeAudit(d)
+      };
+      NovelStore.saveNovel(plot);
+    }
+    console.log('[v5.12] 已注入 5 份 demo 小说种子数据');
+  }
+
+  function computeAudit(d) {
+    const chapSet = new Set();
+    const charSet = new Set();
+    const hlSet = new Set();
+    for (const n of d.nodes) {
+      chapSet.add(n.chapterId);
+      for (const cid of (n.charIds || [])) charSet.add(cid);
+      if (n.isHighlight && n.id) hlSet.add(n.id);
+    }
+    return {
+      total: { chapters: d.chapters.length, chars: d.chars.length, highlights: d.highlights.length },
+      covered: { chapters: chapSet.size, chars: charSet.size, highlights: hlSet.size },
+      gaps: { chapters: [], chars: [], highlights: [] }
+    };
+  }
+
+  // 首次启动注入
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setTimeout(ensure, 50);
+  } else {
+    document.addEventListener('DOMContentLoaded', () => setTimeout(ensure, 50));
+  }
+
+  window.DemoSeed = { ensure, DEMO_NOVELS };
+  console.log('[v5.12] demo-seed 加载完成');
+})();
+
+</script>
+<script>
+(function () {
+  const params = new URLSearchParams(LJSearch());
+  const novelId = params.get('novelId');
+  if (!novelId) { LJNav('library.html'); return; }
+  DemoSeed.ensure();
+  let original = NovelStore.loadNovel(novelId);
+  if (!original) { alert('没找到这本小说'); LJNav('library.html'); return; }
+  // 深拷贝（编辑全程)
+  let plot = JSON.parse(JSON.stringify(original));
+  let currentTab = 'nodes';
+  let currentSelection = null;
+  let dirty = false;
+
+  document.getElementById('top-title').textContent = `编辑：${plot.novel.title}`;
+
+  // ===== Tabs =====
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('sel'));
+      b.classList.add('sel');
+      currentTab = b.dataset.tab;
+      renderSide();
+    };
+  });
+
+  function setDirty() {
+    dirty = true;
+    document.getElementById('dirty-flag').style.display = '';
+  }
+
+  function updateAudit() {
+    plot.audit = NovelParser.runAudit({
+      chars: plot.chars, chapters: plot.novel.chapters, highlights: plot.highlights || [],
+      nodes: Object.values(plot.nodes), endings: plot.endings
+    });
+    const a = plot.audit;
+    const lines = [
+      { l: '章节', t: a.total.chapters, c: a.covered.chapters },
+      { l: '角色', t: a.total.chars, c: a.covered.chars },
+      { l: '高光', t: a.total.highlights, c: a.covered.highlights }
+    ];
+    const html = lines.map(x => {
+      const ok = x.c === x.t;
+      return `<div class="${ok?'ok':'warn'}">${x.l}：${x.c}/${x.t} ${ok?'✅':'⚠️'}</div>`;
+    }).join('');
+    document.getElementById('audit-box').innerHTML = html;
+  }
+  updateAudit();
+
+  // ===== Side list =====
+  function renderSide() {
+    const list = document.getElementById('side-list');
+    list.innerHTML = '';
+    if (currentTab === 'nodes') {
+      const sorted = Object.values(plot.nodes).sort((a,b)=> a.chapterId.localeCompare(b.chapterId));
+      sorted.forEach(n => {
+        const row = document.createElement('div');
+        row.className = 'item-row' + (currentSelection===n.id?' sel':'');
+        row.innerHTML = `
+          <div style="font-weight:600;">${escape(n.speaker||'旁白')} · ${escape(n.id)}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;">${escape((n.text||'').slice(0,40))}</div>
+          <div style="margin-top:4px;">
+            ${n.isMain?'<span class="pill" style="background:rgba(110,198,255,.16);color:#6ec6ff;">主线</span>':''}
+            ${n.isHighlight?'<span class="pill highlight">高光</span>':''}
+          </div>`;
+        row.onclick = () => { currentSelection = n.id; renderSide(); renderEditor(); renderPreview(); };
+        list.appendChild(row);
+      });
+    } else if (currentTab === 'chars') {
+      plot.chars.forEach(c => {
+        const row = document.createElement('div');
+        row.className = 'item-row' + (currentSelection===c.id?' sel':'');
+        row.innerHTML = `
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="pill ${c.role}">${c.role==='main'?'主角':c.role==='antag'?'反派':'配角'}</span>
+            <span style="font-weight:600;">${escape(c.name)}</span>
+            <span style="margin-left:auto;color:rgba(255,255,255,.5);font-size:11px;">${c.mentions}次</span>
+          </div>`;
+        row.onclick = () => { currentSelection = c.id; renderSide(); renderEditor(); };
+        list.appendChild(row);
+      });
+    } else if (currentTab === 'chapters') {
+      plot.novel.chapters.forEach(c => {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        row.innerHTML = `<div style="font-weight:600;">第${c.index}章</div><div style="font-size:11px;color:rgba(255,255,255,.5);">${escape(c.title)}</div>`;
+        list.appendChild(row);
+      });
+    } else if (currentTab === 'highlights') {
+      (plot.highlights || []).forEach(h => {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        row.innerHTML = `
+          <span class="pill highlight">${escape(h.badge)}</span>
+          <div style="margin-top:6px;font-size:12px;color:rgba(255,255,255,.85);">"${escape(h.excerpt)}"</div>`;
+        list.appendChild(row);
+      });
+    } else if (currentTab === 'endings') {
+      Object.values(plot.endings).forEach(e => {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        const colorMap = { legendary:'#f6a6d8', epic:'#8b7cf6', rare:'#6ec6ff', common:'#7cf6c0' };
+        row.innerHTML = `
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span class="pill" style="background:${colorMap[e.rarity]}22;color:${colorMap[e.rarity]};">${escape(e.rarity)}</span>
+            <span style="font-weight:600;">${escape(e.title)}</span>
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;font-style:italic;">${escape(e.quote)}</div>`;
+        list.appendChild(row);
+      });
+    }
+  }
+
+  // ===== Editor =====
+  function renderEditor() {
+    const panel = document.getElementById('editor-panel');
+    if (!currentSelection) { panel.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,.55);margin:40px 0;">从左侧选择一个项目开始编辑</p>'; return; }
+    if (currentTab === 'nodes') {
+      const n = plot.nodes[currentSelection];
+      if (!n) return panel.innerHTML = '<p>找不到此节点</p>';
+      const nextOpts = Object.values(plot.nodes).filter(x => x.id !== n.id).map(x => `<option value="${x.id}" ${n.choices && n.choices.some(c => c.next === x.id) ? 'selected':''}>${escape(x.speaker)} · ${escape(x.id)}</option>`).join('');
+      const endingOpts = Object.values(plot.endings).map(e => `<option value="${e.id}" ${n.choices && n.choices.some(c => c.next === e.id) ? 'selected':''}>[结局] ${escape(e.title)}</option>`).join('');
+      panel.innerHTML = `
+        <h3 style="font:18px 'Noto Serif SC',serif;font-weight:600;margin-bottom:12px;">编辑节点：${escape(n.id)}</h3>
+        <div class="field"><label>说话者</label><input id="ed-speaker" value="${escape(n.speaker||'')}" /></div>
+        <div class="field"><label>正文</label><textarea id="ed-text" rows="5">${escape(n.text||'')}</textarea></div>
+        <div class="field"><label>章节</label><input id="ed-chapter" value="${escape(n.chapterId)}" /></div>
+        <div class="field"><label>场景</label>
+          <select id="ed-scene">
+            <option value="">— 未指定 —</option>
+            ${['pavilion_night','classroom_sunny','neon_street','livingroom_warm','xianxia_peak','palace_tang','study_republic','elf_forest','starship_bridge','cafe_dusk','graveyard_night','battle_field','magic_academy','space_cabin'].map(s => `<option value="${s}" ${n.sceneKey===s?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field"><label><input type="checkbox" id="ed-ismain" ${n.isMain?'checked':''}/> 标记为主线节点</label></div>
+        <div class="field"><label><input type="checkbox" id="ed-ishl" ${n.isHighlight?'checked':''}/> 标记为高光节点</label></div>
+        <h4 style="margin-top:18px;font:14px;color:#8b7cf6;">选项 (${(n.choices||[]).length})</h4>
+        <div id="choices-editor">${(n.choices||[]).map((c,i)=>`
+          <div style="border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px;margin-bottom:8px;">
+            <div class="field"><label>选项 ${i+1}</label><input data-cidx="${i}" data-key="label" value="${escape(c.label)}" /></div>
+            <div class="field"><label>跳转 →</label>
+              <select data-cidx="${i}" data-key="next">
+                <option value="">— 兜底下一节点 —</option>
+                <optgroup label="剧情节点">${nextOpts.replace(`value="${c.next}"`, `value="${c.next}" selected`)}</optgroup>
+                <optgroup label="结局">${endingOpts}</optgroup>
+              </select>
+            </div>
+            <div class="field"><label>信任变化</label><input type="number" data-cidx="${i}" data-key="trust" value="${c.effects?.trust||0}" /></div>
+            <div class="field"><label>亲密变化</label><input type="number" data-cidx="${i}" data-key="intimacy" value="${c.effects?.intimacy||0}" /></div>
+          </div>`).join('')}
+        </div>
+        <div style="margin-top:12px;"><button class="btn" id="btn-del-node" style="border-color:#f6a6d8;color:#f6a6d8;">🗑 删除此节点</button></div>
+      `;
+      // 绑定
+      ['speaker','text','chapterId','sceneKey','isMain','isHighlight'].forEach(k => {
+        const el = document.getElementById('ed-' + k.replace('isMain','ismain').replace('isHighlight','ishl').replace('text','text').replace('chapterId','chapter').replace('sceneKey','scene'));
+        if (!el) return;
+        el.oninput = el.onchange = () => {
+          const v = el.type === 'checkbox' ? el.checked : el.value;
+          plot.nodes[n.id][k] = v;
+          setDirty();
+          renderPreview();
+        };
+      });
+      // choices
+      document.querySelectorAll('#choices-editor input, #choices-editor select').forEach(el => {
+        el.oninput = el.onchange = () => {
+          const i = parseInt(el.dataset.cidx);
+          const k = el.dataset.key;
+          if (!plot.nodes[n.id].choices[i].effects) plot.nodes[n.id].choices[i].effects = {};
+          if (k === 'label' || k === 'next') plot.nodes[n.id].choices[i][k] = el.value;
+          else plot.nodes[n.id].choices[i].effects[k] = parseInt(el.value || 0);
+          setDirty();
+          renderPreview();
+        };
+      });
+      // 删除
+      const delBtn = document.getElementById('btn-del-node');
+      if (delBtn) delBtn.onclick = () => { if (!confirm('删除此节点？')) return; delete plot.nodes[n.id]; currentSelection = null; renderSide(); renderEditor(); renderPreview(); setDirty(); updateAudit(); };
+    } else if (currentTab === 'chars') {
+      const c = plot.chars.find(x => x.id === currentSelection);
+      if (!c) return panel.innerHTML = '<p>找不到此角色</p>';
+      panel.innerHTML = `
+        <h3 style="font:18px 'Noto Serif SC',serif;font-weight:600;margin-bottom:12px;">编辑角色：${escape(c.name)}</h3>
+        <div class="field"><label>姓名</label><input id="ed-cname" value="${escape(c.name)}" /></div>
+        <div class="field"><label>角色定位</label>
+          <select id="ed-crole">
+            <option value="main" ${c.role==='main'?'selected':''}>主角</option>
+            <option value="support" ${c.role==='support'?'selected':''}>配角</option>
+            <option value="antag" ${c.role==='antag'?'selected':''}>反派</option>
+          </select>
+        </div>
+        <div class="field"><label>亲密度（初始）</label><input type="number" id="ed-caff" value="${c.affinity||50}" /></div>
+        <div class="field"><label>立绘 URL（可选）</label><input id="ed-cport" value="${escape(c.portrait||'')}" placeholder="portraits/xxx.png" /></div>
+      `;
+      document.getElementById('ed-cname').oninput = () => { c.name = document.getElementById('ed-cname').value; setDirty(); renderSide(); renderPreview(); };
+      document.getElementById('ed-crole').onchange = () => { c.role = document.getElementById('ed-crole').value; setDirty(); renderSide(); renderPreview(); };
+      document.getElementById('ed-caff').oninput = () => { c.affinity = parseInt(document.getElementById('ed-caff').value||50); setDirty(); };
+      document.getElementById('ed-cport').oninput = () => { c.portrait = document.getElementById('ed-cport').value; setDirty(); renderPreview(); };
+    }
+  }
+
+  // ===== 预览 =====
+  function renderPreview() {
+    const n = plot.nodes[currentSelection];
+    if (!n) {
+      document.getElementById('pv-scene').style.background = 'transparent';
+      document.getElementById('pv-char').innerHTML = '<div style="color:rgba(255,255,255,.4);font-size:12px;">— 选一个节点看预览 —</div>';
+      document.getElementById('pv-dlg').innerHTML = '<div style="color:rgba(255,255,255,.4);font-size:12px;">—</div>';
+      return;
+    }
+    const sceneColors = {
+      pavilion_night: 'linear-gradient(180deg, #0d1326, #1c1939 70%, #2a1f4e)',
+      classroom_sunny: 'linear-gradient(180deg, #f6dca6, #fff5d6 70%, #b3c8ff)',
+      neon_street: 'linear-gradient(180deg, #2a1a4a, #1c1939 70%, #5b3a9e)',
+      palace_tang: 'radial-gradient(60% 60% at 50% 30%, #5b2026, #2a1019 70%)',
+      study_republic: 'radial-gradient(60% 60% at 30% 30%, #3a2a1a, #2a1f0a 70%)',
+      elf_forest: 'radial-gradient(80% 80% at 50% 60%, #1a4e2a, #0a1f14 70%)',
+      starship_bridge: 'radial-gradient(60% 60% at 50% 30%, #0a1a4e, #050a1a 70%)'
+    };
+    document.getElementById('pv-scene').style.background = sceneColors[n.sceneKey] || 'linear-gradient(180deg, #1c1939, #08071a 70%)';
+    const char = plot.chars.find(c => n.charIds && n.charIds.includes(c.id));
+    document.getElementById('pv-char').innerHTML = char
+      ? `<div style="width:80px;height:110px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);">${escape(char.name)}</div>
+         <div>
+           <div style="font-weight:600;color:#fff;">${escape(char.name)}</div>
+           <div style="font-size:11px;color:rgba(255,255,255,.55);">${char.role==='main'?'主角':char.role==='antag'?'反派':'配角'} · ${char.mentions}次提及</div>
+         </div>`
+      : '<div style="color:rgba(255,255,255,.4);font-size:12px;">无人立绘</div>';
+    document.getElementById('pv-dlg').innerHTML = `
+      <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px;">
+        <span style="font-family:'Cormorant Garamond',serif;color:#f6a6d8;">${escape(n.speaker||'旁白')}</span>
+        ${n.isHighlight?'<span class="pill highlight">✦ 高光</span>':''}
+        ${n.isMain?'<span class="pill" style="background:rgba(110,198,255,.16);color:#6ec6ff;">主线</span>':''}
+      </div>
+      <div style="white-space:pre-wrap;color:#fff;font:13px/1.7 'Noto Sans SC';">${escape(n.text||'')}</div>
+      <div style="margin-top:14px;">
+        ${(n.choices||[]).map((c,i)=>`<button class="opt-preview">${i+1}. ${escape(c.label)}</button>`).join('')}
+      </div>`;
+  }
+
+  // ===== 操作按钮 =====
+  document.getElementById('btn-save').onclick = () => {
+    NovelStore.saveNovel(plot);
+    dirty = false;
+    document.getElementById('dirty-flag').style.display = 'none';
+    // toast
+    const t = document.createElement('div');
+    t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:999;background:#7cf6c0;color:#08071a;padding:10px 18px;border-radius:10px;font-size:13px;';
+    t.textContent = '✅ 已保存到 localStorage';
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 1800);
+  };
+  document.getElementById('btn-reset').onclick = () => {
+    if (!confirm('放弃当前所有改动，恢复到加载时的版本？')) return;
+    plot = JSON.parse(JSON.stringify(original));
+    dirty = false;
+    document.getElementById('dirty-flag').style.display = 'none';
+    renderSide(); renderEditor(); renderPreview(); updateAudit();
+  };
+  document.getElementById('btn-run').onclick = () => {
+    if (dirty && !confirm('有未保存的改动，是否先保存再进入游戏？')) return;
+    if (dirty) NovelStore.saveNovel(plot);
+    LJNav(`plot-runner.html?novelId=${plot.novel.id}`);
+  };
+
+  function escape(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+  // 初始化：自动选第一个节点
+  currentSelection = Object.keys(plot.nodes)[0];
+  renderSide();
+  renderEditor();
+  renderPreview();
+})();
+</script>
+<script>
+document.addEventListener('click', function (e) {
+  var el = e.target;
+  while (el && el.nodeType === 1 && el.tagName !== 'A') el = el.parentElement;
+  if (!el || el.tagName !== 'A') return;
+  var h = el.getAttribute('href') || '';
+  if (h.charAt(0) === '#') {
+    if (h.length > 1) {
+      e.preventDefault();
+      var t = document.getElementById(h.slice(1));
+      if (t && t.scrollIntoView) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      try { window.dispatchEvent(new Event('hashchange')); } catch (err) {}
+    }
+    return;
+  }
+  if (!h || /^[a-zA-Z][\w+.\-]*:/.test(h)) return;
+  if (/([\w.\-]+)\.html(\?|#|$)/.test(h)) {
+    e.preventDefault();
+    window.LJNav(h);
+  }
+}, true);
+</script>
+</body>
+</html>

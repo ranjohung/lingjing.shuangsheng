@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>创建图片 · 灵境</title>
+<link rel="stylesheet" href="css/shell-v64.css">
+<link rel="stylesheet" href="css/mobile-lock.css">
+<style>
+:root{--bg:#1A1A2E;--card:#16213E;--accent:#E94560;--xinyu:#6C5CE7;--ok:#4ECCA3;--warn:#FFB347;--text:#EAEAEA;--sub:#8A8A9A;--border:#2A2A4A}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:100px}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10}
+.topbar .back{font-size:18px;cursor:pointer;color:var(--accent)}
+.topbar h1{font-size:17px;font-weight:600}
+.topbar .quota{font-size:12px;color:var(--ok);background:rgba(78,202,163,.1);padding:4px 10px;border-radius:12px}
+.container{padding:16px}
+.section{margin-bottom:24px}
+.section-title{font-size:14px;font-weight:600;color:var(--sub);margin-bottom:12px;letter-spacing:1px}
+.type-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.type-card{background:var(--card);border-radius:16px;padding:20px 16px;text-align:center;cursor:pointer;border:2px solid transparent;transition:all .2s}
+.type-card:active,.type-card.selected{border-color:var(--accent);background:rgba(233,69,96,.05)}
+.type-card .icon{font-size:32px;margin-bottom:8px}
+.type-card .name{font-size:14px;font-weight:500;margin-bottom:4px}
+.type-card .desc{font-size:11px;color:var(--sub)}
+.form-group{margin-bottom:16px}
+.form-label{font-size:13px;font-weight:500;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.form-label .ai-btn{font-size:11px;color:var(--xinyu);cursor:pointer;display:flex;align-items:center;gap:4px}
+.form-textarea{width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:14px;outline:none;min-height:100px;resize:vertical;font-family:inherit}
+.form-textarea:focus{border-color:var(--accent)}
+.style-tags{display:flex;flex-wrap:wrap;gap:8px}
+.style-tag{padding:8px 14px;background:var(--card);border-radius:20px;font-size:12px;cursor:pointer;border:1px solid var(--border);transition:all .2s}
+.style-tag.selected{background:var(--accent);border-color:var(--accent);color:#fff}
+.ratio-options{display:flex;gap:12px}
+.ratio-btn{flex:1;padding:12px;background:var(--card);border-radius:12px;text-align:center;cursor:pointer;border:2px solid transparent;font-size:13px}
+.ratio-btn.selected{border-color:var(--accent)}
+.ratio-btn .rl{font-size:14px;font-weight:600;margin-bottom:2px}
+.ratio-btn .rs{font-size:11px;color:var(--sub)}
+.candidates{margin-top:12px}
+.candidate-item{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent;transition:all .2s}
+.candidate-item:active,.candidate-item.selected{border-color:var(--ok)}
+.candidate-item .ci{width:60px;height:60px;background:linear-gradient(135deg,var(--xinyu),var(--accent));border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px}
+.candidate-item .cf{flex:1;min-width:0}
+.candidate-item .cn{font-size:13px;font-weight:500;margin-bottom:2px}
+.candidate-item .cd{font-size:11px;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.generate-bar{position:fixed;bottom:0;left:0;right:0;padding:16px;background:var(--bg);border-top:1px solid var(--border);display:flex;gap:12px;align-items:center}
+.cost-info{font-size:12px;color:var(--warn)}
+.cost-info .free{color:var(--ok)}
+.btn-gen{flex:1;padding:14px;background:linear-gradient(135deg,var(--accent),var(--xinyu));border:none;border-radius:12px;color:#fff;font-size:15px;font-weight:600;cursor:pointer}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-sheet{width:100%;max-width:480px;background:var(--bg);border-radius:20px 20px 0 0;padding:24px;max-height:80vh;overflow-y:auto}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:16px;text-align:center}
+.result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.result-card{aspect-ratio:1;background:var(--card);border-radius:16px;overflow:hidden;position:relative;cursor:pointer;border:3px solid transparent;transition:all .2s}
+.result-card:active,.result-card.selected{border-color:var(--ok)}
+.result-card .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:12px;color:var(--sub)}
+.result-card .ph .gi{font-size:40px;opacity:.6}
+.result-card .ck{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:var(--ok);display:none;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:bold}
+.result-card.selected .ck{display:flex}
+.ai-loading{text-align:center;padding:20px;color:var(--xinyu);font-size:13px;grid-column:span 2}
+.dots{display:inline-flex;gap:4px}
+.dots span{width:6px;height:6px;border-radius:50%;background:var(--xinyu);animation:bounce .6s infinite alternate}
+.dots span:nth-child(2){animation-delay:.2s}
+.dots span:nth-child(3){animation-delay:.4s}
+@keyframes bounce{to{opacity:.3;transform:translateY(-4px)}}
+</style>
+<link rel="stylesheet" href="css/tabbar-embed.css">
+</head>
+<body>
+<div class="topbar">
+  <span class="back" onclick="history.back()">‹ 返回</span>
+  <h1>🖼️ 创建图片</h1>
+  <span class="quota">今日 3/3 免费</span>
+</div>
+<div class="container">
+  <div class="section">
+    <div class="section-title">图片类型</div>
+    <div class="type-grid">
+      <div class="type-card selected" onclick="sel(this)"><div class="icon">🧑‍🎨</div><div class="name">角色立绘</div><div class="desc">角色全身/半身像</div></div>
+      <div class="type-card" onclick="sel(this)"><div class="icon">🏞️</div><div class="name">场景背景</div><div class="desc">世界观场景图</div></div>
+      <div class="type-card" onclick="sel(this)"><div class="icon">📚</div><div class="name">小说封面</div><div class="desc">作品封面图</div></div>
+      <div class="type-card" onclick="sel(this)"><div class="icon">⚔️</div><div class="name">道具图标</div><div class="desc">武器/道具/饰品</div></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">画面描述</div>
+    <div class="form-label"><span>描述你想要的画面</span><span class="ai-btn" onclick="aiHelp()">✨ AI帮我描述</span></div>
+    <textarea class="form-textarea" id="prompt" placeholder="描述你想要生成的图片，例如：一位银发红瞳的少女站在月光下的古堡废墟中..."></textarea>
+    <div id="ai-cands" class="candidates"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">画风选择</div>
+    <div class="style-tags">
+      <div class="style-tag selected" onclick="stag(this)">二次元</div>
+      <div class="style-tag" onclick="stag(this)">写实</div>
+      <div class="style-tag" onclick="stag(this)">赛博朋克</div>
+      <div class="style-tag" onclick="stag(this)">水墨国风</div>
+      <div class="style-tag" onclick="stag(this)">油画质感</div>
+      <div class="style-tag" onclick="stag(this)">像素风</div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">画面比例</div>
+    <div class="ratio-options">
+      <div class="ratio-btn selected" onclick="rbtn(this)"><div class="rl">1:1</div><div class="rs">1024×1024</div></div>
+      <div class="ratio-btn" onclick="rbtn(this)"><div class="rl">3:4</div><div class="rs">768×1024</div></div>
+      <div class="ratio-btn" onclick="rbtn(this)"><div class="rl">16:9</div><div class="rs">1920×1080</div></div>
+    </div>
+  </div>
+</div>
+<div class="generate-bar">
+  <div class="cost-info"><span class="free">免费额度内</span> · 今日剩余 3 张</div>
+  <button class="btn-gen" onclick="gen()">✨ 生成候选图</button>
+</div>
+<div class="modal-overlay" id="resultModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">选择你喜欢的候选图（共4张）</div>
+    <div class="result-grid" id="resultGrid">
+      <div class="result-card selected" onclick="selR(this)"><div class="ph"><span class="gi">🎨</span>候选图1</div><div class="ck">✓</div></div>
+      <div class="result-card" onclick="selR(this)"><div class="ph"><span class="gi">🎨</span>候选图2</div><div class="ck">✓</div></div>
+      <div class="result-card" onclick="selR(this)"><div class="ph"><span class="gi">🎨</span>候选图3</div><div class="ck">✓</div></div>
+      <div class="result-card" onclick="selR(this)"><div class="ph"><span class="gi">🎨</span>候选图4</div><div class="ck">✓</div></div>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:12px">
+      <button style="flex:1;padding:12px;background:var(--card);border:1px solid var(--border);border-radius:12px;color:var(--text);cursor:pointer" onclick="regen()">🔄 换一批</button>
+      <button style="flex:1;padding:12px;background:var(--ok);border:none;border-radius:12px;color:#fff;font-weight:600;cursor:pointer" onclick="confirm()">✅ 确认使用</button>
+    </div>
+  </div>
+</div>
+<script>
+function sel(e){document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));e.classList.add('selected')}
+function stag(e){document.querySelectorAll('.style-tag').forEach(c=>c.classList.remove('selected'));e.classList.add('selected')}
+function rbtn(e){document.querySelectorAll('.ratio-btn').forEach(c=>c.classList.remove('selected'));e.classList.add('selected')}
+function selR(e){document.querySelectorAll('.result-card').forEach(c=>c.classList.remove('selected'));e.classList.add('selected')}
+function aiHelp(){
+  const c=document.getElementById('ai-cands');
+  c.innerHTML='<div class="ai-loading">AI正在构思画面描述<div class="dots"><span></span><span></span><span></span></div></div>';
+  setTimeout(()=>{
+    const d=[
+      {n:'月下剑客',d:'白衣少年持剑立于古寺残垣之上，月光如水银般洒落，樱花随风飘零'},
+      {n:'赛博少女',d:'霓虹灯映照的全息投影中，蓝发少女伸出手指触碰虚拟蝴蝶，数据流环绕'},
+      {n:'龙骑士',d:'着黑色铠甲的骑士骑乘巨龙穿越雷云，远方是燃烧的城池，史诗感构图'},
+      {n:'仙侠意境',d:'水墨风格白衣仙人独坐孤峰，云海翻涌远处瀑布如练，留白构图'}
+    ];
+    c.innerHTML=d.map((x,i)=>'<div class="candidate-item" onclick="useC(this,\''+x.d.replace(/'/g,"\\'")+'\')"><div class="ci">'+['🌙','💜','🐉','🏔️'][i]+'</div><div class="cf"><div class="cn">'+x.n+'</div><div class="cd">'+x.d+'</div></div></div>').join('')+'<div style="text-align:center;margin-top:8px"><span style="font-size:12px;color:var(--xinyu);cursor:pointer" onclick="aiHelp()">🔄 换一批</span></div>';
+  },1200);
+}
+function useC(e,d){document.querySelectorAll('.candidate-item').forEach(c=>c.classList.remove('selected'));e.classList.add('selected');document.getElementById('prompt').value=d}
+function gen(){document.getElementById('resultModal').classList.add('show')}
+function regen(){
+  const g=document.getElementById('resultGrid');
+  g.innerHTML='<div class="ai-loading">AI正在重新生成<div class="dots"><span></span><span></span><span></span></div></div>';
+  setTimeout(()=>{g.innerHTML='<div class="result-card selected" onclick="selR(this)"><div class="ph"><span class="gi">🎨</span>新候选1</div><div class="ck">✓</div></div><div class="result-card" onclick="selR(this)"><div class="ph"><span class="gi">🎨</span>新候选2</div><div class="ck">✓</div></div><div class="result-card" onclick="selR(this)"><div class="ph"><span class="gi">🎨</span>新候选3</div><div class="ck">✓</div></div><div class="result-card" onclick="selR(this)"><div class="ph"><span class="gi">🎨</span>新候选4</div><div class="ck">✓</div></div>'},1500);
+}
+function confirm(){document.getElementById('resultModal').classList.remove('show');alert('图片已保存到你的灵境素材库！')}
+</script>
+<script src="js/creator-store.js"></script>
+<script src="js/creator-ai.js"></script>
+<script src="js/creator-pages.js"></script>
+<script src="js/tabbar.js"></script>
+</body>
+</html>

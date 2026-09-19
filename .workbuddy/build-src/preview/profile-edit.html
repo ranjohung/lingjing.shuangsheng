@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>编辑资料 · 灵境 · 双生</title>
+<meta name="description" content="V20-M · 编辑资料 · 头像 / 用户名 / 签名 / 性别 / 生日 / 所在地 / 手机 / 邮箱 / 实名认证" />
+<meta name="theme-color" content="#0d0b22" />
+<link rel="stylesheet" href="css/shell-v64.css" />
+<style>
+.pe-page{padding-bottom:32px}
+.pe-sec{margin:14px var(--margin) 0;padding:0 16px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line)}
+.pe-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.pe-row:last-child{border-bottom:0}
+.pe-row .k{width:88px;font-size:13px;color:var(--sub);flex-shrink:0}
+.pe-row .v{flex:1;font-size:14px;color:var(--text);min-width:0}
+.pe-row input[type=text],.pe-row input[type=tel],.pe-row input[type=email],.pe-row input[type=date]{
+  width:100%;padding:8px 10px;border-radius:8px;font-size:14px;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--text);outline:none;
+}
+.pe-row input:focus{border-color:var(--xinyu)}
+.pe-avatar{
+  width:56px;height:56px;border-radius:50%;flex-shrink:0;cursor:pointer;
+  background:linear-gradient(135deg,var(--xinyu),#A29BFE);
+  display:grid;place-items:center;font-size:24px;font-weight:600;color:#1A1A2E;
+  position:relative;
+}
+.pe-avatar::after{content:'✎';position:absolute;right:-4px;bottom:-2px;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;display:grid;place-items:center;border:2px solid var(--bg)}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{
+  padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--text);
+}
+.seg button.on{background:linear-gradient(135deg,var(--xinyu),#9b5be0);color:#fff;border-color:transparent}
+.pe-emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;padding:6px 0 12px}
+.pe-emoji-grid button{
+  aspect-ratio:1;border-radius:10px;font-size:20px;cursor:pointer;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);
+}
+.pe-emoji-grid button.on{border-color:var(--accent);background:rgba(233,69,96,.15)}
+.pe-save{
+  display:block;margin:18px var(--margin) 0;padding:13px 0;border-radius:12px;width:calc(100% - 2*var(--margin));
+  border:0;background:linear-gradient(135deg,var(--accent),#C73652);color:#fff;font-size:15px;font-weight:600;cursor:pointer;
+}
+.pe-tip{font-size:11px;color:var(--sub);text-align:center;margin-top:10px;line-height:1.6}
+.back-link{display:inline-block;margin:14px var(--margin) 0;font-size:13px;color:var(--sub);text-decoration:none}
+</style>
+<link rel="stylesheet" href="css/mobile-lock.css" />
+</head>
+<body>
+<div id="app" class="pe-page">
+  <header class="topbar">
+    <a class="icon-btn" href="me.html" title="返回">‹</a>
+    <div class="topbar-title"><span class="dot"></span>编辑资料</div>
+    <div class="topbar-acts"></div>
+  </header>
+
+  <main>
+    <a class="back-link" href="me.html">‹ 返回我的</a>
+
+    <!-- 头像 -->
+    <div class="pe-sec" style="padding:16px">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div class="pe-avatar" id="pe-avatar" title="点击更换头像">旅</div>
+        <div>
+          <div style="font-size:14px;font-weight:600">修改头像</div>
+          <div style="font-size:11px;color:var(--sub);margin-top:3px">点击左侧头像，从灵境头像库选择</div>
+        </div>
+      </div>
+      <div class="pe-emoji-grid" id="pe-emoji-grid" style="display:none">
+        <!-- JS 填充 24 个 emoji 头像 -->
+      </div>
+    </div>
+
+    <!-- 基础资料 -->
+    <div class="pe-sec">
+      <div class="pe-row">
+        <span class="k">用户名</span>
+        <span class="v"><input type="text" id="pe-name" maxlength="16" placeholder="输入用户名（2-16 字）" /></span>
+      </div>
+      <div class="pe-row" style="align-items:flex-start;flex-direction:column;gap:8px;padding-top:14px">
+        <span class="k" style="width:auto">个性签名</span>
+        <input type="text" id="pe-sign" maxlength="40" placeholder="写一句介绍自己（最多 40 字）" style="width:100%" />
+      </div>
+      <div class="pe-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+        <span class="k" style="width:auto">性别</span>
+        <div class="seg" id="pe-gender">
+          <button data-v="secret">保密</button><button data-v="female">女</button><button data-v="male">男</button>
+        </div>
+      </div>
+      <div class="pe-row">
+        <span class="k">生日</span>
+        <span class="v"><input type="date" id="pe-birthday" value="2001-08-17" /></span>
+      </div>
+      <div class="pe-row">
+        <span class="k">所在地</span>
+        <span class="v"><input type="text" id="pe-location" placeholder="如：上海" value="灵境 · 西游记" /></span>
+      </div>
+    </div>
+
+    <!-- 账号绑定 -->
+    <div class="pe-sec">
+      <div class="pe-row">
+        <span class="k">手机号</span>
+        <span class="v" id="pe-phone">未绑定</span>
+        <button class="seg-b" id="pe-phone-btn" style="padding:7px 14px;border-radius:8px;font-size:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text);cursor:pointer">绑定</button>
+      </div>
+      <div class="pe-row">
+        <span class="k">邮箱</span>
+        <span class="v" id="pe-email">user@lingjing.example</span>
+        <button class="seg-b" id="pe-email-btn" style="padding:7px 14px;border-radius:8px;font-size:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text);cursor:pointer">换绑</button>
+      </div>
+      <div class="pe-row">
+        <span class="k">实名认证</span>
+        <span class="v" id="pe-realname">已认证</span>
+        <a href="plot-runner.html?novel=xiyouji" id="pe-realname-link" style="font-size:12px;color:var(--xinyu);text-decoration:none">查看</a>
+      </div>
+    </div>
+
+    <button class="pe-save" id="pe-save">保存资料</button>
+    <p class="pe-tip">用户名每 30 天可修改一次 · 签名随时可改<br/>资料仅保存在本地演示环境（localStorage）</p>
+  </main>
+</div>
+
+<div id="toast"></div>
+<!-- 输入弹窗（替代 prompt · 铁律 #10） -->
+<dialog id="pe-input-dialog" style="background:none;border:0;padding:0;max-width:320px;width:86%">
+  <div style="background:#16213E;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:20px 18px">
+    <div style="font:600 16px 'Noto Serif SC';color:#fff;margin-bottom:6px" id="pe-input-title">输入</div>
+    <div style="font-size:12px;color:rgba(255,255,255,.55);margin-bottom:12px" id="pe-input-sub"></div>
+    <input type="text" id="pe-input-field" style="width:100%;padding:11px 12px;border-radius:10px;font-size:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);color:#fff;outline:none;box-sizing:border-box" />
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button id="pe-input-cancel" style="flex:1;padding:11px 0;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:none;color:rgba(255,255,255,.75);font-size:14px;cursor:pointer">取消</button>
+      <button id="pe-input-ok" style="flex:1;padding:11px 0;border-radius:10px;border:0;background:linear-gradient(135deg,#6C5CE7,#9b5be0);color:#fff;font-size:14px;font-weight:600;cursor:pointer">确定</button>
+    </div>
+  </div>
+</dialog>
+<script>
+var peInputCb = null;
+function openInputDialog(title, sub, placeholder, cb) {
+  peInputCb = cb;
+  document.getElementById('pe-input-title').textContent = title;
+  document.getElementById('pe-input-sub').textContent = sub;
+  var f = document.getElementById('pe-input-field');
+  f.value = ''; f.placeholder = placeholder || '';
+  document.getElementById('pe-input-dialog').showModal();
+  setTimeout(function(){ f.focus(); }, 100);
+}
+</script>
+<script>
+function showToast(kind, title, msg){
+  var c = document.getElementById('toast');
+  var t = document.createElement('div');
+  t.className = 'toast-item ' + (kind || 'ok');
+  t.innerHTML = '<span class="ti"></span><span><b>' + title + '</b>' + (msg ? '<span style="opacity:.65"> · ' + msg + '</span>' : '') + '</span>';
+  c.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 3000);
+}
+var EMOJIS = ['旅','🌙','🌸','🏮','🦊','🎵','📖','🔮','🌌','🦌','🗡️','🍵','🎻','🪐','🐾','🕯️','🎭','🪞','🧭','🕊️','🍒','🌊','⚡','🌺'];
+var state = { name:'', sign:'', gender:'secret', birthday:'2001-08-17', location:'灵境 · 西游记', avatar:'旅', phone:'', email:'user@lingjing.example', realname:true };
+
+function loadState(){
+  try {
+    var p = JSON.parse(localStorage.getItem('lingjing_user_profile') || 'null') || {};
+    state.name = p.name || '旅人 · 0817';
+    state.sign = p.sign || '在灵境，与每个角色共赴一场双生之约';
+    state.gender = p.gender || 'secret';
+    state.birthday = p.birthday || '2001-08-17';
+    state.location = p.location || '灵境 · 西游记';
+    state.avatar = p.avatar || (p.name ? p.name.charAt(0) : '旅');
+    state.phone = p.phone || '';
+    state.email = p.email || 'user@lingjing.example';
+    state.realname = (localStorage.getItem('lingjing_v519_realname_done') === 'true') || p.realname === true;
+  } catch (e) {}
+  document.getElementById('pe-name').value = state.name;
+  document.getElementById('pe-sign').value = state.sign;
+  document.getElementById('pe-birthday').value = state.birthday;
+  document.getElementById('pe-location').value = state.location;
+  document.getElementById('pe-avatar').textContent = state.avatar;
+  document.getElementById('pe-phone').textContent = state.phone ? ('已绑定 ' + state.phone) : '未绑定';
+  document.getElementById('pe-phone-btn').textContent = state.phone ? '换绑' : '绑定';
+  document.getElementById('pe-email').textContent = state.email || '未绑定';
+  document.getElementById('pe-realname').textContent = state.realname ? '✓ 已认证' : '未认证';
+  document.getElementById('pe-realname-link').textContent = state.realname ? '查看' : '去认证';
+  // 性别选中
+  var g = document.getElementById('pe-gender');
+  g.querySelectorAll('button').forEach(function(b){ b.classList.toggle('on', b.dataset.v === state.gender); });
+}
+
+function buildEmojiGrid(){
+  var grid = document.getElementById('pe-emoji-grid');
+  EMOJIS.forEach(function(e){
+    var b = document.createElement('button');
+    b.textContent = e;
+    b.className = (e === state.avatar) ? 'on' : '';
+    b.addEventListener('click', function(){
+      state.avatar = e;
+      grid.querySelectorAll('button').forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      document.getElementById('pe-avatar').textContent = e;
+    });
+    grid.appendChild(b);
+  });
+}
+
+function save(){
+  var name = document.getElementById('pe-name').value.trim();
+  if (name.length < 2) { showToast('warn', '用户名太短', '至少 2 个字'); return; }
+  state.name = name;
+  state.sign = document.getElementById('pe-sign').value.trim();
+  state.birthday = document.getElementById('pe-birthday').value;
+  state.location = document.getElementById('pe-location').value.trim();
+  try {
+    var p = JSON.parse(localStorage.getItem('lingjing_user_profile') || 'null') || {};
+    p.name = state.name; p.sign = state.sign; p.gender = state.gender;
+    p.birthday = state.birthday; p.location = state.location;
+    p.avatar = state.avatar; p.phone = state.phone; p.email = state.email;
+    p.realname = state.realname;
+    localStorage.setItem('lingjing_user_profile', JSON.stringify(p));
+  } catch (e) {}
+  showToast('ok', '资料已保存', '返回「我的」即可看到新资料');
+  setTimeout(function(){ LJNav('me.html'); }, 900);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  loadState();
+  buildEmojiGrid();
+  document.getElementById('pe-avatar').addEventListener('click', function(){
+    var g = document.getElementById('pe-emoji-grid');
+    g.style.display = (g.style.display === 'none') ? 'grid' : 'none';
+  });
+  document.getElementById('pe-gender').addEventListener('click', function(ev){
+    var b = ev.target.closest('button[data-v]');
+    if (!b) return;
+    state.gender = b.dataset.v;
+    this.querySelectorAll('button').forEach(function(x){ x.classList.remove('on'); });
+    b.classList.add('on');
+  });
+  document.getElementById('pe-phone-btn').addEventListener('click', function(){
+    openInputDialog('绑定手机号', '请输入 11 位手机号（演示环境不发送验证码）', '138****0000', function(v){
+      if (/^1\d{10}$/.test(v)) {
+        state.phone = v;
+        document.getElementById('pe-phone').textContent = '已绑定 ' + v;
+        document.getElementById('pe-phone-btn').textContent = '换绑';
+        showToast('ok', '手机号已绑定', '演示环境 · 不发送真实验证码');
+      } else showToast('warn', '手机号格式有误', '请输入 11 位手机号');
+    });
+  });
+  document.getElementById('pe-email-btn').addEventListener('click', function(){
+    openInputDialog('换绑邮箱', '请输入新邮箱地址', 'name@mail.com', function(v){
+      if (/.+@.+\..+/.test(v)) {
+        state.email = v;
+        document.getElementById('pe-email').textContent = v;
+        showToast('ok', '邮箱已换绑', v);
+      } else showToast('warn', '邮箱格式有误', '例如 name@mail.com');
+    });
+  });
+  document.getElementById('pe-save').addEventListener('click', save);
+  document.getElementById('pe-input-cancel').addEventListener('click', function(){ document.getElementById('pe-input-dialog').close(); });
+  document.getElementById('pe-input-ok').addEventListener('click', function(){
+    var v = document.getElementById('pe-input-field').value.trim();
+    document.getElementById('pe-input-dialog').close();
+    if (v && peInputCb) peInputCb(v);
+  });
+});
+</script>
+<script src="js/tabbar.js"></script>
+</body>
+</html>

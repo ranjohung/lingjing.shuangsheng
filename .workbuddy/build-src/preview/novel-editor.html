@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>小说辅助模拟器 · 灵境 · 双生</title>
+<link rel="stylesheet" href="css/shell-v64.css">
+<link rel="stylesheet" href="css/mobile-lock.css">
+<style>
+:root{--bg:#1A1A2E;--card:#16213E;--accent:#E94560;--xinyu:#6C5CE7;--ok:#4ECCA3;--warn:#FFB347;--world:#00B894;--text:#EAEAEA;--sub:#8A8A9A;--border:#2A2A4A;--margin:16px;--radius:14px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;min-height:100vh;max-width:480px;margin:0 auto;overflow-x:hidden}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;position:sticky;top:0;background:var(--bg);z-index:10}
+.top-bar h1{font-size:17px;font-weight:700}
+.top-bar .back{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--card);cursor:pointer;font-size:18px;border:1px solid var(--border);color:var(--text)}
+.ws{padding:0 20px 100px}
+
+/* 进度条 */
+.progress-bar{display:flex;align-items:center;gap:0;margin-bottom:20px;padding:0 4px}
+.progress-step{flex:1;text-align:center;position:relative}
+.progress-step .dot{width:28px;height:28px;border-radius:50%;background:var(--card);border:2px solid var(--border);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--sub);position:relative;z-index:2}
+.progress-step.active .dot{background:var(--accent);border-color:var(--accent);color:#fff}
+.progress-step.done .dot{background:var(--ok);border-color:var(--ok);color:#fff}
+.progress-step .label{font-size:10px;color:var(--sub);margin-top:4px}
+.progress-step.active .label{color:var(--accent);font-weight:600}
+.progress-line{position:absolute;top:14px;left:50%;width:100%;height:2px;background:var(--border);z-index:1}
+.progress-step:last-child .progress-line{display:none}
+.progress-step.done .progress-line{background:var(--ok)}
+
+/* 步骤卡片 */
+.step-card{background:var(--card);border-radius:var(--radius);padding:20px;border:1px solid var(--border);margin-bottom:16px}
+.step-card h2{font-size:16px;font-weight:700;margin-bottom:6px}
+.step-card .subtitle{font-size:12px;color:var(--sub);margin-bottom:16px}
+
+/* 表单 */
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--sub);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;border-radius:10px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:14px;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent)}
+.form-group textarea{min-height:80px;resize:vertical}
+
+/* 标签选择 */
+.tag-select{display:flex;flex-wrap:wrap;gap:8px}
+.tag-opt{padding:8px 14px;border-radius:20px;background:var(--bg);border:1px solid var(--border);font-size:12px;cursor:pointer;color:var(--text);transition:all .2s}
+.tag-opt:active{transform:scale(.95)}
+.tag-opt.selected{background:rgba(233,69,96,.15);border-color:var(--accent);color:var(--accent)}
+
+/* 卡片选项 */
+.card-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card-opt{padding:16px 12px;border-radius:var(--radius);background:var(--bg);border:2px solid var(--border);text-align:center;cursor:pointer;transition:all .2s}
+.card-opt:active{transform:scale(.97)}
+.card-opt.selected{border-color:var(--accent);background:rgba(233,69,96,.08)}
+.card-opt .co-icon{font-size:28px;margin-bottom:8px}
+.card-opt .co-title{font-size:13px;font-weight:600;margin-bottom:4px}
+.card-opt .co-desc{font-size:10px;color:var(--sub);line-height:1.4}
+
+/* 预览卡片 */
+.preview-card{background:linear-gradient(135deg,rgba(233,69,96,.12),rgba(108,92,231,.08));border-radius:var(--radius);padding:16px;border:1px solid rgba(233,69,96,.25);margin-bottom:16px}
+.preview-card .pc-label{font-size:11px;color:var(--sub);margin-bottom:8px;font-weight:600}
+.preview-card .pc-title{font-size:18px;font-weight:700;margin-bottom:6px}
+.preview-card .pc-meta{font-size:11px;color:var(--sub);line-height:1.6}
+.preview-card .pc-meta span{display:inline-block;margin-right:8px}
+
+/* 角色快速添加 */
+.char-quick{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.char-chip{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;background:var(--bg);border:1px solid var(--border);font-size:11px}
+.char-chip .char-icon{font-size:14px}
+.char-chip .char-role{color:var(--sub)}
+.char-chip .remove{color:var(--accent);cursor:pointer;font-size:14px;margin-left:4px}
+
+/* 底部按钮 */
+.bottom-actions{display:flex;gap:10px;margin-top:20px;padding-bottom:20px}
+.btn{flex:1;padding:12px;border-radius:12px;font-size:14px;font-weight:600;text-align:center;cursor:pointer;border:none;font-family:inherit}
+.btn.primary{background:linear-gradient(135deg,var(--accent),#C73652);color:#fff}
+.btn.secondary{background:var(--card);border:1px solid var(--border);color:var(--text)}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.4;pointer-events:none}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="back" onclick="history.back()">←</div>
+  <h1>📝 小说辅助模拟器</h1>
+  <div></div>
+</div>
+
+<div class="ws">
+  <!-- 进度条 -->
+  <div class="progress-bar">
+    <div class="progress-step done" data-step="1"><span class="dot">✓</span><span class="label">基础</span><div class="progress-line"></div></div>
+    <div class="progress-step active" data-step="2"><span class="dot">2</span><span class="label">世界观</span><div class="progress-line"></div></div>
+    <div class="progress-step" data-step="3"><span class="dot">3</span><span class="label">人物</span><div class="progress-line"></div></div>
+    <div class="progress-step" data-step="4"><span class="dot">4</span><span class="label">大纲</span><div class="progress-line"></div></div>
+    <div class="progress-step" data-step="5"><span class="dot">5</span><span class="label">创作</span></div>
+  </div>
+
+  <!-- 步骤1：基础信息 -->
+  <div class="step-panel" id="panel-1" style="display:none">
+    <div class="step-card">
+      <h2>📖 作品基础信息</h2>
+      <div class="subtitle">告诉我们你的新小说叫什么</div>
+      <div class="form-group">
+        <label>作品名称</label>
+        <input type="text" id="novelTitle" placeholder="例如：西游记" value="西游记">
+      </div>
+      <div class="form-group">
+        <label>一句话简介</label>
+        <input type="text" id="novelTagline" placeholder="用一句话描述你的故事" value="在三百年不见天日的城市里，一个陌生人推开了酒馆的门">
+      </div>
+      <div class="form-group">
+        <label>作品类型</label>
+        <div class="tag-select" id="genreSelect">
+          <div class="tag-opt selected" data-v="fantasy"> 奇幻</div>
+          <div class="tag-opt" data-v="scifi"> 科幻</div>
+          <div class="tag-opt" data-v="romance"> 言情</div>
+          <div class="tag-opt" data-v="mystery"> 悬疑</div>
+          <div class="tag-opt" data-v="horror"> 恐怖</div>
+          <div class="tag-opt" data-v="wuxia">️ 武侠</div>
+          <div class="tag-opt" data-v="urban"> 都市</div>
+          <div class="tag-opt" data-v="history">📜 历史</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>目标字数</label>
+        <select id="targetWords">
+          <option>短篇（1-5万字）</option>
+          <option selected>中篇（5-20万字）</option>
+          <option>长篇（20-50万字）</option>
+          <option>超长篇（50万字+）</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- 步骤2：世界观 -->
+  <div class="step-panel" id="panel-2">
+    <div class="step-card">
+      <h2>🌍 世界观设定</h2>
+      <div class="subtitle">构建你的故事世界</div>
+      <div class="form-group">
+        <label>时代背景</label>
+        <select id="era">
+          <option>古代</option>
+          <option>近代</option>
+          <option selected>现代</option>
+          <option>未来</option>
+          <option>架空</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>世界描述</label>
+        <textarea id="worldDesc" placeholder="描述你的故事发生的世界...">一座三百年不见天日的城市。永远阴沉的天空，永远亮着的霓虹灯。人们在这里生存、交易、遗忘。城市的地下藏着通往另一个世界的入口。</textarea>
+      </div>
+      <div class="form-group">
+        <label>核心规则</label>
+        <textarea id="worldRules" placeholder="这个世界有什么特殊规则？">1. 城市没有自然光源，所有人造光都有配额
+2. 每月的"黑日"期间，城市会陷入完全黑暗
+3. 地下世界与地上世界通过"夜门"相连</textarea>
+      </div>
+      <div class="form-group">
+        <label>氛围关键词</label>
+        <div class="tag-select" id="moodSelect">
+          <div class="tag-opt selected" data-v="dark"> 暗黑</div>
+          <div class="tag-opt selected" data-v="mystery"> 神秘</div>
+          <div class="tag-opt" data-v="warm">🔥 温暖</div>
+          <div class="tag-opt selected" data-v="tense">⚡ 紧张</div>
+          <div class="tag-opt" data-v="humor">😄 幽默</div>
+          <div class="tag-opt" data-v="sad">💧 悲伤</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 步骤3：人物 -->
+  <div class="step-panel" id="panel-3" style="display:none">
+    <div class="step-card">
+      <h2>👤 主要人物</h2>
+      <div class="subtitle">添加故事的核心角色</div>
+
+      <div class="char-quick" id="charList">
+        <div class="char-chip"><span class="char-icon">🧑</span><span>李玄</span><span class="char-role">· 主角</span><span class="remove" onclick="removeChar(this)">×</span></div>
+        <div class="char-chip"><span class="char-icon">👩</span><span>酒馆女人</span><span class="char-role">· 关键NPC</span><span class="remove" onclick="removeChar(this)">×</span></div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <input type="text" id="newCharName" placeholder="角色名" style="flex:1;padding:8px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:13px">
+        <select id="newCharRole" style="padding:8px;border-radius:8px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:12px">
+          <option>主角</option>
+          <option>配角</option>
+          <option>反派</option>
+          <option>关键NPC</option>
+          <option>路人</option>
+        </select>
+        <button onclick="addChar()" style="padding:8px 14px;border-radius:8px;background:var(--accent);border:none;color:#fff;font-size:13px;cursor:pointer">+</button>
+      </div>
+
+      <div class="form-group">
+        <label>主角人物小传</label>
+        <textarea id="protagonist" placeholder="描述主角的背景、性格、动机...">李玄，28岁，前城市守卫。因一次任务失误被革职，独自来到西游记寻找真相。沉默寡言，观察力极强，左手有一道旧伤疤。</textarea>
+      </div>
+      <div class="form-group">
+        <label>人物关系</label>
+        <textarea id="relations" placeholder="角色之间有什么关系？">李玄 → 酒馆女人：初遇，对方似乎认识他
+李玄 → 角落密语者：被监视的对象
+酒馆女人 → 城市管理者：暗中对抗</textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- 步骤4：大纲 -->
+  <div class="step-panel" id="panel-4" style="display:none">
+    <div class="step-card">
+      <h2> 故事大纲</h2>
+      <div class="subtitle">规划你的故事走向</div>
+
+      <div class="form-group">
+        <label>故事核心冲突</label>
+        <textarea id="conflict" placeholder="故事的主要矛盾是什么？">主角发现西游记的黑暗并非自然现象，而是被人为制造的。他必须在揭开真相和保护城市之间做出选择。</textarea>
+      </div>
+
+      <div class="form-group">
+        <label>分卷规划</label>
+        <div id="volList">
+          <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
+            <span style="font-size:12px;color:var(--warn);font-weight:600;min-width:40px">卷一</span>
+            <input type="text" value="初入长夜" placeholder="卷名" style="flex:1;padding:8px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:13px">
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
+            <span style="font-size:12px;color:var(--xinyu);font-weight:600;min-width:40px">卷二</span>
+            <input type="text" value="暗流涌动" placeholder="卷名" style="flex:1;padding:8px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:13px">
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
+            <span style="font-size:12px;color:var(--ok);font-weight:600;min-width:40px">卷三</span>
+            <input type="text" value="破晓之战" placeholder="卷名" style="flex:1;padding:8px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:13px">
+          </div>
+        </div>
+        <button onclick="addVolume()" style="margin-top:6px;padding:6px 12px;border-radius:6px;background:transparent;border:1px dashed var(--border);color:var(--sub);font-size:12px;cursor:pointer">+ 添加卷</button>
+      </div>
+
+      <div class="form-group">
+        <label>第一章概要</label>
+        <textarea id="ch1Outline" placeholder="第一章要发生什么？">李玄抵达西游记，在酒馆偶遇神秘女人。注意到城市异常的照明系统和人们的恐惧表情。夜晚听到地下传来的奇怪声响。</textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- 步骤5：创作方式 -->
+  <div class="step-panel" id="panel-5" style="display:none">
+    <div class="step-card">
+      <h2>✨ 选择创作方式</h2>
+      <div class="subtitle">你准备怎么开始写？</div>
+      <div class="card-options">
+        <div class="card-opt selected" onclick="selectMode(this,'wizard')">
+          <div class="co-icon"></div>
+          <div class="co-title">AI 辅助创作</div>
+          <div class="co-desc">AI 根据你的设定逐章生成，你审核修改</div>
+        </div>
+        <div class="card-opt" onclick="selectMode(this,'manual')">
+          <div class="co-icon">✍️</div>
+          <div class="co-title">自己写</div>
+          <div class="co-desc">进入编辑器手动创作，AI 随时辅助</div>
+        </div>
+        <div class="card-opt" onclick="selectMode(this,'upload')">
+          <div class="co-icon"></div>
+          <div class="co-title">上传文稿</div>
+          <div class="co-desc">上传已有文稿，AI 自动分析和分章</div>
+        </div>
+        <div class="card-opt" onclick="selectMode(this,'collab')">
+          <div class="co-icon">🤝</div>
+          <div class="co-title">协作创作</div>
+          <div class="co-desc">邀请其他创作者一起写</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 创作简报预览 -->
+    <div class="preview-card">
+      <div class="pc-label">📋 创作简报预览</div>
+      <div class="pc-title" id="previewTitle">《西游记》</div>
+      <div class="pc-meta">
+        <span>🏰 奇幻</span>
+        <span>📏 中篇 5-20万字</span>
+        <span>🌑 暗黑·神秘·紧张</span>
+        <span>👤 2个角色</span>
+        <span>📚 3卷规划</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部按钮 -->
+  <div class="bottom-actions">
+    <button class="btn secondary" id="btnPrev" onclick="prevStep()">上一步</button>
+    <button class="btn primary" id="btnNext" onclick="nextStep()">下一步</button>
+  </div>
+</div>
+
+<script>
+let currentStep = 2;
+const totalSteps = 5;
+
+function updateProgress(){
+  document.querySelectorAll('.progress-step').forEach((el,i)=>{
+    const step = i+1;
+    el.classList.remove('active','done');
+    if(step < currentStep) el.classList.add('done');
+    else if(step === currentStep) el.classList.add('active');
+    const dot = el.querySelector('.dot');
+    if(step < currentStep) dot.textContent = '✓';
+    else dot.textContent = step;
+  });
+  document.querySelectorAll('.step-panel').forEach((el,i)=>{
+    el.style.display = (i+1 === currentStep) ? 'block' : 'none';
+  });
+  document.getElementById('btnPrev').style.visibility = currentStep > 1 ? 'visible' : 'hidden';
+  const btnNext = document.getElementById('btnNext');
+  btnNext.textContent = currentStep === totalSteps ? '🚀 开始创作' : '下一步';
+}
+
+function nextStep(){
+  if(currentStep < totalSteps){ currentStep++; updateProgress(); }
+  else { startCreating(); }
+}
+function prevStep(){ if(currentStep > 1){ currentStep--; updateProgress(); } }
+
+// 标签选择
+document.querySelectorAll('.tag-select').forEach(container=>{
+  container.querySelectorAll('.tag-opt').forEach(opt=>{
+    opt.addEventListener('click',()=>opt.classList.toggle('selected'));
+  });
+});
+
+// 角色管理
+function addChar(){
+  const name = document.getElementById('newCharName').value.trim();
+  const role = document.getElementById('newCharRole').value;
+  if(!name) return;
+  const icons = {主角:'🧑',配角:'👤',反派:'😈',关键NPC:'',路人:'🚶'};
+  const chip = document.createElement('div');
+  chip.className = 'char-chip';
+  chip.innerHTML = '<span class="char-icon">'+(icons[role]||'👤')+'</span><span>'+name+'</span><span class="char-role">· '+role+'</span><span class="remove" onclick="removeChar(this)">×</span>';
+  document.getElementById('charList').appendChild(chip);
+  document.getElementById('newCharName').value = '';
+  updatePreview();
+}
+function removeChar(el){ el.parentElement.remove(); updatePreview(); }
+
+// 添加卷
+let volCount = 3;
+const volColors = ['var(--warn)','var(--xinyu)','var(--ok)','var(--accent)','#A29BFE','#FD79A8'];
+function addVolume(){
+  volCount++;
+  const color = volColors[(volCount-1) % volColors.length];
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:8px;margin-bottom:8px;align-items:center';
+  div.innerHTML = '<span style="font-size:12px;color:'+color+';font-weight:600;min-width:40px">卷'+['一','二','三','四','五','六'][volCount-1]+'</span><input type="text" placeholder="卷名" style="flex:1;padding:8px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:13px">';
+  document.getElementById('volList').appendChild(div);
+  updatePreview();
+}
+
+// 创作模式选择
+function selectMode(el, mode){
+  document.querySelectorAll('.card-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// 更新预览
+function updatePreview(){
+  const title = document.getElementById('novelTitle').value || '未命名';
+  document.getElementById('previewTitle').textContent = '《'+title+'》';
+  const charCount = document.querySelectorAll('#charList .char-chip').length;
+  const volCount2 = document.querySelectorAll('#volList > div').length;
+  const genres = document.querySelectorAll('#genreSelect .tag-opt.selected');
+  const genreText = genres.length ? genres[0].textContent.trim() : '未选择';
+  const moods = document.querySelectorAll('#moodSelect .tag-opt.selected');
+  const moodText = moods.length ? Array.from(moods).map(m=>m.textContent.trim()).join('·') : '未选择';
+  const words = document.getElementById('targetWords').value;
+  document.querySelector('.pc-meta').innerHTML = '<span>'+genreText+'</span><span>📏 '+words+'</span><span>'+moodText+'</span><span>👤 '+charCount+'个角色</span><span>📚 '+volCount2+'卷规划</span>';
+}
+
+// 开始创作
+function startCreating(){
+  const title = document.getElementById('novelTitle').value || '未命名';
+  const mode = document.querySelector('.card-opt.selected');
+  const modeText = mode ? mode.querySelector('.co-title').textContent : 'AI 辅助创作';
+  // 跳转到编辑器
+  showToast('ok','创作简报已生成','《'+title+'》→ '+modeText);
+  setTimeout(()=>{
+    LJNav('work-editor.html?new=1&title=' + encodeURIComponent(title));
+  }, 1200);
+}
+
+// Toast
+function showToast(kind, title, msg){
+  var c = document.getElementById('toast');
+  if(!c){ c = document.createElement('div'); c.id='toast'; c.style.cssText='position:fixed;top:60px;left:50%;transform:translateX(-50%);z-index:9999'; document.body.appendChild(c); }
+  var t = document.createElement('div');
+  t.style.cssText='padding:10px 16px;border-radius:10px;background:var(--card);border:1px solid var(--border);font-size:13px;margin-bottom:8px;box-shadow:0 4px 20px rgba(0,0,0,.4)';
+  t.innerHTML = '<b style="color:'+(kind==='ok'?'var(--ok)':'var(--accent)')+'">'+title+'</b>' + (msg?' <span style="color:var(--sub)">· '+msg+'</span>':'');
+  c.appendChild(t);
+  setTimeout(()=>t.remove(), 3000);
+}
+
+// 输入联动预览
+['novelTitle','targetWords'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('input', updatePreview);
+  if(el) el.addEventListener('change', updatePreview);
+});
+
+updateProgress();
+updatePreview();
+</script>
+</body>
+</html>

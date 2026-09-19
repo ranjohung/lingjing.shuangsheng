@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="jbn391o0aRnNva1TwBS3Ty">
+<head data-page-node-id="3zwwJDzyETjayhVHjj8ix0">
+<meta charset="UTF-8" data-page-node-id="FUYLeFOxcE88z0D7uftB8a" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" data-page-node-id="lPNFD963uKOsVhfSkoYsFi" />
+<title>世界 · 灵境 · 双生</title>
+<meta name="description" content="v17.0 · 世界功能区 · 7 子导航 + Banner 轮播 + 四大金刚 + 双列瀑布流 + 分类侧边栏 + 筛选结果页 + 同人区 + 搜索" data-page-node-id="vO3IrrUA4mdvLeKbqX28qM" />
+<meta name="theme-color" content="#1A1A2E" data-page-node-id="ZqvfVcrUnqg9oYAiv87pzN" />
+<link rel="stylesheet" href="css/shell-v64.css" data-page-node-id="29Biw51TrSAJ0Edv0RFPjZ" />
+<style>
+/* =================================================================
+ * 灵境 · 双生 V17.0 — 世界功能区样式（V17-B）
+ * 命名：ds-* 全部进 design-system.css 候选；本页内嵌便于单独预览
+ * ================================================================= */
+:root {
+  --world: #00B894;
+  --radius: 12px;
+}
+
+/* ---------- 顶部子导航（7 项） ---------- */
+.ds-sub-nav {
+  position: sticky; top: 56px; z-index: 40;
+  display: flex; gap: 0;
+  margin: 0;
+  background: rgba(26, 26, 46, .88);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.ds-sub-nav::-webkit-scrollbar { display: none; }
+.ds-sub-nav .ds-sn {
+  flex: 1; min-width: 64px;
+  padding: 12px 8px;
+  font-size: 13px; color: var(--sub);
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  transition: color .2s;
+  white-space: nowrap;
+}
+.ds-sub-nav .ds-sn.active { color: var(--world); font-weight: 600; }
+.ds-sub-nav .ds-sn.active::after {
+  content: ''; position: absolute;
+  bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 24px; height: 2px; border-radius: 1px;
+  background: var(--world);
+}
+.ds-sub-nav .ds-sn:active { opacity: .6; }
+
+/* ---------- 搜索框（仅 search 子项显示） ---------- */
+.ds-search-box {
+  display: none;
+  align-items: center; gap: 10px;
+  margin: 14px var(--margin) 0;
+  padding: 12px 16px; border-radius: var(--radius);
+  background: var(--card); border: 1px solid var(--line);
+}
+.ds-search-box input {
+  flex: 1; background: none; border: 0; outline: 0;
+  color: var(--text); font-size: 15px;
+}
+.ds-search-box input::placeholder { color: rgba(160, 160, 176, .55); }
+.ds-search-box .ico { color: var(--sub); }
+
+/* ---------- Banner 轮播 ---------- */
+.ds-banner {
+  position: relative;
+  margin: 10px var(--margin) 0;
+  height: 32vh;
+  max-height: 240px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.ds-banner-track {
+  display: flex; height: 100%;
+  transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+}
+.ds-banner-slide {
+  flex: 0 0 100%; height: 100%;
+  position: relative; display: block;
+}
+.ds-bs-bg { position: absolute; inset: 0; }
+.ds-bs-mask {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, .6) 100%);
+}
+.ds-bs-content {
+  position: absolute; left: 20px; bottom: 22px; right: 20px;
+  color: #fff;
+}
+.ds-bs-emoji { font-size: 28px; margin-bottom: 6px; }
+.ds-bs-title { font-size: 22px; font-weight: 700; line-height: 1.2; margin-bottom: 4px; }
+.ds-bs-sub { font-size: 13px; opacity: .8; }
+.ds-banner-dots {
+  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px;
+}
+.ds-banner-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255, 255, 255, .35);
+  cursor: pointer; transition: all .2s;
+}
+.ds-banner-dot.active { width: 18px; border-radius: 3px; background: #fff; }
+
+/* ---------- 四大金刚 ---------- */
+.ds-quick-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 8px; margin: 14px var(--margin) 0;
+}
+.ds-qg-item {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px; padding: 12px 0;
+  background: linear-gradient(135deg, rgba(108, 92, 231, .12), rgba(233, 69, 96, .08));
+  border: 1px solid var(--line); border-radius: var(--radius);
+  color: var(--text); font-size: 11px;
+  cursor: pointer;
+  transition: transform .15s;
+}
+.ds-qg-item:active { transform: scale(.94); }
+.ds-qg-item .ds-qg-ico { font-size: 22px; line-height: 1; }
+.ds-qg-item .ds-qg-txt { color: var(--sub); }
+
+/* ---------- 板块标题 + 右侧排序 ---------- */
+.ds-board-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin: 22px var(--margin) 12px;
+}
+.ds-board-title {
+  font-size: 16px; font-weight: 600; color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+}
+.ds-board-title::before {
+  content: ''; width: 4px; height: 14px; border-radius: 2px;
+  background: var(--world);
+}
+.ds-board-sort { display: flex; gap: 4px; }
+.ds-sort {
+  font-size: 11px; padding: 4px 8px; border-radius: 6px;
+  color: var(--sub); cursor: pointer;
+}
+.ds-sort.active {
+  color: var(--world);
+  background: rgba(0, 184, 148, .12);
+  font-weight: 600;
+}
+
+/* ---------- 双列瀑布流 ---------- */
+.ds-waterfall {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 0 var(--margin);
+}
+.ds-wf-card {
+  display: flex; flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  color: var(--text);
+  transition: transform .15s;
+}
+.ds-wf-card:active { transform: scale(.97); }
+.ds-wf-cov {
+  position: relative;
+  width: 100%; padding-top: 140%; /* 1.4 倍高 */
+  display: grid; place-items: center;
+}
+.ds-wf-emoji {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  font-size: 36px;
+}
+.ds-corner-tag {
+  position: absolute; top: 6px; left: 6px;
+  padding: 2px 7px; border-radius: 4px;
+  font-size: 10px; font-weight: 700; color: #fff;
+}
+.ds-tag-new { background: rgba(78, 204, 163, .9); }
+.ds-tag-done { background: rgba(0, 184, 148, .9); }
+.ds-tag-pd { background: rgba(255, 179, 71, .9); }
+.ds-wf-body { padding: 10px 12px 12px; }
+.ds-wf-title {
+  font-size: 14px; font-weight: 600; line-height: 1.3;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ds-wf-author {
+  font-size: 11px; color: var(--sub);
+  margin-top: 4px; white-space: nowrap; overflow: hidden;
+}
+.ds-wf-tags { margin-top: 6px; }
+.ds-wf-tag {
+  font-size: 10px; padding: 2px 6px; border-radius: 4px;
+  background: rgba(255, 255, 255, .04);
+}
+/* V20-L 设计文档 §3.4：卡片一句话简介 */
+.ds-wf-desc {
+  font-size: 11px; color: var(--sub); line-height: 1.5;
+  margin-top: 6px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.ds-wf-meta {
+  display: flex; justify-content: space-between;
+  margin-top: 8px; font-size: 11px; color: var(--sub);
+}
+.ds-wf-score { color: var(--warn); }
+
+/* ---------- 分类侧边栏 ---------- */
+.ds-drawer-mask {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, .5);
+  z-index: 70;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s;
+}
+.ds-drawer-mask.open { opacity: 1; pointer-events: auto; }
+
+.ds-drawer {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: 86vw; max-width: 420px;
+  background: var(--bg);
+  border-right: 1px solid var(--line);
+  z-index: 71;
+  transform: translateX(-100%);
+  transition: transform .3s cubic-bezier(.16, 1, .3, 1);
+  display: flex; flex-direction: column;
+}
+.ds-drawer.open { transform: translateX(0); }
+.ds-drawer-head {
+  padding: 14px var(--margin);
+  border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.ds-drawer-head h3 { font-size: 16px; font-weight: 600; }
+.ds-drawer-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid var(--line);
+  font-size: 14px;
+}
+.ds-drawer-body {
+  flex: 1; display: flex;
+  overflow: hidden;
+}
+.ds-drawer-cat-list {
+  width: 30%;
+  background: var(--card-2);
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+}
+.ds-d-cat {
+  padding: 14px 16px;
+  font-size: 14px; color: var(--sub);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all .15s;
+}
+.ds-d-cat.active {
+  background: var(--bg);
+  color: var(--world);
+  border-left-color: var(--world);
+  font-weight: 600;
+}
+.ds-drawer-tag-list {
+  flex: 1;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  align-content: start;
+  overflow-y: auto;
+}
+.ds-d-tag {
+  padding: 10px 12px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 13px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .15s;
+}
+.ds-d-tag:active {
+  background: rgba(0, 184, 148, .15);
+  border-color: var(--world);
+  color: var(--world);
+}
+
+/* ---------- 空状态 ---------- */
+.ds-empty {
+  margin: 40px var(--margin);
+  text-align: center; color: var(--sub); font-size: 13px;
+  padding: 40px 20px;
+  background: var(--card);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+}
+
+/* ---------- 全部分类快捷按钮（顶部悬浮） ---------- */
+.ds-cat-trigger {
+  position: fixed;
+  bottom: 84px; left: 50%; transform: translateX(-50%);
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--world), #00D2A8);
+  color: #fff;
+  display: grid; place-items: center;
+  font-size: 22px;
+  box-shadow: 0 8px 24px rgba(0, 184, 148, .4);
+  z-index: 50;
+  border: 1px solid rgba(255, 255, 255, .2);
+  transition: transform .15s;
+}
+.ds-cat-trigger:active { transform: translateX(-50%) scale(.92); }
+
+@media (max-width: 380px) {
+  .ds-banner { height: 28vh; max-height: 200px; }
+  .ds-bs-title { font-size: 18px; }
+  .ds-waterfall { gap: 8px; }
+  .ds-wf-cov { padding-top: 130%; }
+}
+
+/* ---------- V17.0 §2.6 筛选结果页 ---------- */
+.filter-sort-bar {
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 var(--margin) 14px;
+  padding: 10px 14px;
+  background: rgba(0, 184, 148, .08);
+  border: 1px solid rgba(0, 184, 148, .25);
+  border-radius: 10px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.filter-sort-bar::-webkit-scrollbar { display: none; }
+.filter-sort-item, .filter-back { flex: 0 0 auto; white-space: nowrap; }
+/* V20-K 排行榜榜单 Tab（横向滚动） */
+.rank-tabs {
+  display: flex; gap: 8px;
+  margin: 0 var(--margin) 14px;
+  overflow-x: auto; scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.rank-tabs::-webkit-scrollbar { display: none; }
+.rank-tab {
+  flex: 0 0 auto; font-size: 13px; padding: 7px 14px;
+  border-radius: 999px; color: var(--sub);
+  background: var(--card-2, rgba(255,255,255,.04));
+  border: 1px solid var(--line); cursor: pointer; white-space: nowrap;
+}
+.rank-tab.active { color: #00B894; border-color: #00B894; font-weight: 600; background: rgba(0,184,148,.1); }
+.filter-sort-item {
+  font-size: 13px; padding: 6px 12px;
+  border-radius: 6px; color: var(--sub);
+  cursor: pointer; transition: all .15s;
+}
+.filter-sort-item.active {
+  background: var(--world);
+  color: #0d0d1a; font-weight: 600;
+}
+.filter-back {
+  margin-left: auto;
+  font-size: 12px; padding: 5px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .06);
+  color: var(--sub);
+  cursor: pointer;
+  border: 1px solid var(--line);
+}
+.filter-dim-row {
+  display: flex; align-items: center; gap: 10px;
+  margin: 10px var(--margin);
+  font-size: 12px;
+}
+.filter-dim-label {
+  width: 56px; flex-shrink: 0;
+  color: var(--sub); font-size: 11px;
+}
+.filter-dim-chips {
+  flex: 1; display: flex; gap: 6px;
+  flex-wrap: wrap;
+}
+.filter-chip {
+  font-size: 11px; padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .04);
+  color: var(--sub);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.filter-chip.active {
+  background: rgba(0, 184, 148, .18);
+  border-color: var(--world);
+  color: var(--world);
+  font-weight: 600;
+}
+
+/* ---------- V17.0 §2.3 更新日历 ---------- */
+.cal-list {
+  display: flex; flex-direction: column;
+  gap: 10px;
+  margin: 0 var(--margin);
+}
+.cal-item {
+  display: flex; gap: 14px;
+  padding: 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.cal-date {
+  flex-shrink: 0; width: 60px;
+  text-align: center;
+  padding: 6px 0;
+  background: rgba(0, 184, 148, .1);
+  border: 1px solid rgba(0, 184, 148, .25);
+  border-radius: 8px;
+  color: var(--world);
+}
+.cal-date-d { font-size: 16px; font-weight: 700; }
+.cal-date-l { font-size: 10px; margin-top: 2px; opacity: .8; }
+.cal-works { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.cal-work {
+  font-size: 12px; color: var(--text);
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, .04);
+  border-radius: 6px;
+}
+
+/* ---------- V17.0 §2.7 同人区（侧边栏布局）---------- */
+.tr-layout {
+  display: flex;
+  gap: 10px;
+  margin: 0 var(--margin);
+}
+.tr-left-nav {
+  flex-shrink: 0;
+  width: 84px;
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 10px 0;
+  background: var(--card-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+.tr-cat {
+  font-size: 12px; font-weight: 600;
+  color: var(--sub); padding: 8px 10px 4px;
+}
+.tr-sub {
+  font-size: 12px;
+  padding: 7px 10px;
+  color: var(--sub);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+}
+.tr-sub.active,
+.tr-sub:active {
+  background: var(--bg);
+  color: var(--world);
+  border-left-color: var(--world);
+  font-weight: 600;
+}
+.tr-layout .ds-waterfall {
+  flex: 1; margin: 0;
+}
+
+/* ---------- V18-D · 心屿推/创世杯/福利 子区 ---------- */
+.ds-board-sub{font-size:11px;color:var(--sub);font-weight:400}
+
+/* 心屿推 */
+.echo-list{display:flex;flex-direction:column;gap:10px;margin:0 var(--margin)}
+.echo-card{
+  padding:14px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--line);
+}
+.echo-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.echo-avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.echo-user{font-size:13px;font-weight:600;color:var(--text)}
+.echo-tag{font-size:9px;padding:2px 6px;border-radius:4px;background:rgba(255,179,71,.18);color:var(--warn);border:1px solid rgba(255,179,71,.3);margin-left:auto}
+.echo-work{font-size:12px;color:var(--xinyu);font-weight:600;margin-bottom:6px}
+.echo-review{font-size:12px;color:var(--sub);line-height:1.6}
+
+.yl-rank-list{display:flex;flex-direction:column;gap:8px;margin:0 var(--margin)}
+.yl-rank-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--card);border:1px solid var(--line)}
+.yl-rank-num{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.yl-rank-1{background:linear-gradient(135deg,#FFD700,#FFA500)}
+.yl-rank-2{background:linear-gradient(135deg,#C0C0C0,#909090)}
+.yl-rank-3{background:linear-gradient(135deg,#CD7F32,#8B4513)}
+.yl-avatar{font-size:20px;flex-shrink:0}
+.yl-body{flex:1;min-width:0}
+.yl-name{font-size:13px;font-weight:600;color:var(--text)}
+.yl-title{font-size:11px;color:var(--sub)}
+.yl-score{font-size:12px;font-weight:700;color:var(--warn);flex-shrink:0}
+
+/* 排行榜 */
+.rank-list{display:flex;flex-direction:column;gap:8px;margin:0 var(--margin)}
+.rank-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:var(--card);border:1px solid var(--line)}
+.rank-num{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.rank-num-top{background:linear-gradient(135deg,#E94560,#FFB347)}
+.rank-num-normal{background:rgba(255,255,255,.1);color:var(--sub)}
+.rank-cov{width:42px;height:42px;border-radius:8px;display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.rank-body{flex:1;min-width:0}
+.rank-title{font-size:13px;font-weight:600;color:var(--text)}
+.rank-meta{font-size:11px;color:var(--sub);margin-top:3px}
+
+/* 创世杯 */
+.csb-banner{
+  margin:14px var(--margin);padding:18px;border-radius:var(--radius);
+  background:linear-gradient(135deg,#FFB347,#E94560);
+  display:flex;align-items:center;gap:14px;color:#fff;
+}
+.csb-b-emoji{font-size:36px;flex-shrink:0}
+.csb-b-title{font-size:16px;font-weight:700}
+.csb-b-period{font-size:11px;opacity:.85;margin-top:2px}
+.csb-stage{display:flex;gap:8px;margin:0 var(--margin) 12px;padding:6px;background:var(--card-2);border-radius:10px}
+.csb-stage-item{flex:1;text-align:center;padding:6px 0;font-size:12px;color:var(--sub);border-radius:6px;cursor:pointer}
+.csb-stage-item.active{background:#FFB347;color:#1A1A2E;font-weight:600}
+
+.csb-timeline{display:flex;justify-content:space-between;gap:10px;margin:0 var(--margin) 14px;padding:12px;background:var(--card);border-radius:10px;border:1px solid var(--line)}
+.csb-tl-item{display:flex;align-items:center;gap:8px;flex:1;font-size:11px;color:var(--sub)}
+.csb-tl-item.active{color:var(--warn);font-weight:600}
+.csb-tl-dot{font-size:14px}
+.csb-tl-title{font-weight:600}
+.csb-tl-period{font-size:10px;opacity:.8}
+
+.csb-rank-list{display:flex;flex-direction:column;gap:8px;margin:0 var(--margin)}
+.csb-rank-row{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;background:var(--card);border:1px solid var(--line)}
+.csb-rank-num{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.csb-rank-1{background:linear-gradient(135deg,#FFD700,#FFA500)}
+.csb-rank-2{background:linear-gradient(135deg,#C0C0C0,#909090)}
+.csb-rank-3{background:linear-gradient(135deg,#CD7F32,#8B4513)}
+.csb-rank-4{background:rgba(255,255,255,.15);color:var(--text)}
+.csb-rank-cov{width:42px;height:42px;border-radius:8px;display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.csb-rank-body{flex:1;min-width:0}
+.csb-rank-title{font-size:13px;font-weight:600;color:var(--text)}
+.csb-rank-meta{font-size:11px;color:var(--sub);margin-top:3px}
+.csb-cheer-btn{
+  flex-shrink:0;padding:6px 14px;border-radius:8px;
+  background:linear-gradient(135deg,var(--warn),#E94560);color:#fff;
+  font-size:11px;font-weight:600;
+  box-shadow:0 4px 10px rgba(255,179,71,.3);
+}
+.csb-float{display:flex;gap:8px;margin:12px var(--margin)}
+.csb-fb{
+  flex:1;height:36px;border-radius:8px;
+  background:rgba(255,179,71,.1);border:1px solid rgba(255,179,71,.3);
+  color:var(--warn);font-size:11px;font-weight:600;
+}
+
+/* 福利 */
+.wf-sub-nav{display:flex;gap:4px;margin:14px var(--margin);padding:6px;background:var(--card-2);border-radius:10px}
+.wf-sub{flex:1;text-align:center;padding:6px 0;font-size:12px;color:var(--sub);border-radius:6px;cursor:pointer}
+.wf-sub.active{background:#FFB347;color:#1A1A2E;font-weight:600}
+.wf-banner{
+  margin:14px var(--margin);padding:18px;border-radius:var(--radius);
+  background:linear-gradient(135deg,#FFB347,#FF8C42);
+  display:flex;align-items:center;gap:14px;color:#fff;
+}
+.wf-b-emoji{font-size:36px;flex-shrink:0}
+.wf-b-title{font-size:14px;font-weight:700}
+.wf-b-sub{font-size:11px;opacity:.85;margin-top:4px}
+
+.wf-tier-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 var(--margin)}
+.wf-tier-card{
+  padding:14px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--line);
+}
+.wf-tier-popular{border-color:var(--warn);background:linear-gradient(135deg,rgba(255,179,71,.08),rgba(233,69,96,.05))}
+.wf-t-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.wf-t-name{font-size:13px;font-weight:600;color:var(--text)}
+.wf-t-amount{font-size:14px;font-weight:700;color:var(--warn)}
+.wf-t-reward{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--sub);margin-bottom:10px}
+.wf-t-extra{font-size:10px;color:var(--xinyu);margin-top:2px}
+.wf-t-btn{
+  display:block;width:100%;height:32px;border-radius:6px;
+  background:linear-gradient(135deg,var(--warn),#E94560);color:#fff;
+  font-size:12px;font-weight:600;
+}
+.wf-note{
+  margin:16px var(--margin);padding:12px;border-radius:8px;
+  background:rgba(78,204,163,.08);border:1px solid rgba(78,204,163,.25);
+  color:var(--sub);font-size:11px;line-height:1.6;
+}
+@media (max-width:380px){.wf-tier-list{grid-template-columns:1fr}}
+</style>
+<link rel="stylesheet" href="css/mobile-lock.css" />
+</head>
+<body data-page-node-id="hTlW7pLpJWmmgtB8vxY1Hz">
+
+<div id="app" data-page-node-id="U0ZZpRlRrXZNhLsCUreS35">
+
+  <!-- 顶栏（v6.4 共享壳） -->
+  <header class="topbar" data-page-node-id="jEqMkQLFXZUea65ziBNgpk">
+    <div class="topbar-title" data-page-node-id="7X3sCe1iDL5oTuKX3xHsDB"><span class="dot" data-page-node-id="m04PO8VIy5iEROfG5qHiET"></span>世界</div>
+    <div class="topbar-acts" data-page-node-id="1fKYIpqHJaLASuIRN9NDl7">
+      <button class="icon-btn" onclick="window.LJWorld.goSub('search')" title="搜索" data-page-node-id="yanAucVLYLXqphxBFgEV08">🔍</button>
+      <button class="icon-btn" onclick="window.LJWorld.showToast('warn','3 条未读','通知中心即将开放')" title="通知" data-page-node-id="HQp8V0HTUgo1GQQfmKoOvs">🔔<span class="badge" data-page-node-id="DtyXXuJAogUwWssbjH1DEt">3</span></button>
+      <a class="icon-btn" href="me.html" title="我的" data-page-node-id="YtirbHH6UAlfZSws8hxDKu">👤</a>
+    </div>
+  </header>
+
+  <main data-page-node-id="H25skIQehNxQSh4ghCsKB9">
+    <!-- 7 项顶部子导航 -->
+    <nav class="ds-sub-nav" id="ds-sub-nav" data-page-node-id="Y5AfvLqjDTM7DJO9RpClUg">
+      <div class="ds-sn active" data-sn="home" data-page-node-id="dPYNTHAgevCrlqEujexysM">首页</div>
+      <div class="ds-sn" data-sn="rank" data-page-node-id="38fiXj0L78S6JSvjzqu5eb">排行榜</div>
+      <div class="ds-sn" data-sn="xinyu" data-page-node-id="SRi4VG1pUeKpNDFlxbHPF3">心屿推</div>
+      <div class="ds-sn" data-sn="welfare" data-page-node-id="utpnXWZBSFG81fmjiY4zlm">福利</div>
+      <div class="ds-sn" data-sn="chuangshibei" data-page-node-id="6SyyvGwodCQmH83bP7rXMb">创世杯</div>
+      <div class="ds-sn" data-sn="tongren" data-page-node-id="lOXU2TJx4axOhFzRTMEivC">同人区</div>
+      <div class="ds-sn" data-sn="search" data-page-node-id="nVsDIE4SMJ9chvK6XPiXzb">🔍</div>
+    </nav>
+
+    <!-- 搜索框（仅 search 子项可见） -->
+    <div class="ds-search-box" id="ds-search-box" data-page-node-id="8XGLnKvHFiaqCBLL0j3K7Z">
+      <span class="ico" data-page-node-id="EMOXnOnwQ4nEakgDOmIar0">🔍</span>
+      <input type="search" id="ds-search-input" placeholder="搜作品名 / 作者名 / 题材" data-page-node-id="Kivi5EhXhvdEAQXYt7EAOf" />
+    </div>
+
+    <!-- Banner 轮播（首页/其他子项共用） -->
+    <section class="ds-banner" id="ds-banner" style="display:none" data-page-node-id="LybYwtvLOTifLlqDEvE9o6">
+      <div class="ds-banner-track" id="ds-banner-track" data-page-node-id="KpnZDibRIjUIR14w9ef73w"></div>
+      <div class="ds-banner-dots" id="ds-banner-dots" data-page-node-id="FEyeghswzAh1u0Lp6xWBcI"></div>
+    </section>
+
+    <!-- 四大金刚 -->
+    <section class="ds-quick-grid" id="ds-quick-grid" data-page-node-id="w5DhzQe5Ge1mMVqrU6bs42">
+      <div class="ds-qg-item" data-action="cat" data-page-node-id="ymXAFMFfTd67MaORw5RWMU">
+        <span class="ds-qg-ico" data-page-node-id="XBd9rIJDjLyMnTLiul9RAp">⊞</span>
+        <span class="ds-qg-txt" data-page-node-id="QGdXtDA1gsIBVxx5WMlv6p">全部分类</span>
+      </div>
+      <div class="ds-qg-item" data-action="calendar" data-page-node-id="PeGwETQnMPLGBgzsUztKGB">
+        <span class="ds-qg-ico" data-page-node-id="lUcqofKPTBwbI5vgS9W3ZQ">📅</span>
+        <span class="ds-qg-txt" data-page-node-id="sxWlrXziERqem0prBzmr30">更新日历</span>
+      </div>
+      <div class="ds-qg-item" data-action="classic" data-page-node-id="njvUgU98pYfldQ3sorWa44">
+        <span class="ds-qg-ico" data-page-node-id="gFPbSDEsJ9VQBRCbHOz4e8">👑</span>
+        <span class="ds-qg-txt" data-page-node-id="ac8lIL8Z9s86HiRDHDwFWV">经典必看</span>
+      </div>
+      <a class="ds-qg-item" href="world-forge.html" data-page-node-id="PkJpVeStJRelADE4wGDiXc">
+        <span class="ds-qg-ico" data-page-node-id="5rMUJRCxOBiCco2fCEn93g">🌍</span>
+        <span class="ds-qg-txt" data-page-node-id="3Y1f9mqHC4aGrFAB60nyNW">生成世界</span>
+      </a>
+    </section>
+
+    <!-- 主内容容器（动态渲染） -->
+    <div id="ds-main" data-page-node-id="J2M8DCLPC7mhI2GCesEtIo"></div>
+  </main>
+
+  <!-- 全部分类悬浮按钮（仅非同人区显示） -->
+  <button class="ds-cat-trigger" id="ds-cat-trigger" title="全部分类" data-page-node-id="HCrEj3vGOeRbZdud2dPqHZ">⊞</button>
+
+  <!-- 分类侧边栏 -->
+  <div class="ds-drawer-mask" id="ds-drawer-mask" data-page-node-id="OZ2vPjms1qsUUhEwCnA3Sw"></div>
+  <aside class="ds-drawer" id="ds-drawer" data-page-node-id="Y7RrWTocorE7edlL38d7LD">
+    <div class="ds-drawer-head" data-page-node-id="HuPZ2qvJpyImnxztNNvPqj">
+      <h3 data-page-node-id="wWDzZGmFs8QHuFC2DxGyLR">全部分类</h3>
+      <button class="ds-drawer-close" id="ds-drawer-close" data-page-node-id="jVMljOjg51HZM3gi5ZSIXp">✕</button>
+    </div>
+    <div class="ds-drawer-body" data-page-node-id="2Jep4dIYR7uHmeoCUY26a0">
+      <div class="ds-drawer-cat-list" id="ds-drawer-cat-list" data-page-node-id="SFJNs7lHAIIofAR4cLCqVR"></div>
+      <div class="ds-drawer-tag-list" id="ds-drawer-tag-list" data-page-node-id="nqT4xuCTnEy6aLhz9KSfeP"></div>
+    </div>
+  </aside>
+
+  <!-- 5 Tab 底部（世界 active） -->
+  <nav class="tabbar" id="tabbar-mount" data-page-node-id="cPe2ACEjqH505sWxx4xxrj">
+    <a class="tab t-home"  href="../../index.html" data-page-node-id="rzWAgSj5gNaGy9CSidBEiW"><span class="ico" data-page-node-id="LmSn0NcCMDIRCfv3rrjAS7">🏠</span><span data-page-node-id="TMQeXzBACUSF8e9YnDYWeH">首页</span></a>
+    <a class="tab t-world active" href="library.html" data-page-node-id="MNUkzEpvAfz4cmCBUulwTA"><span class="ico" data-page-node-id="o0aFjPcGWkCQ0w6bjHuOZS">📖</span><span data-page-node-id="4dxVQvKcTVNUubDLk867rM">世界</span></a>
+    <a class="tab t-xinyu" href="heart-island.html" data-page-node-id="9tYOzDEsZ16hnQ7eLR3sjg"><span class="ico" data-page-node-id="eDfKG6hOzij9we0m0CE34L">💬</span><span data-page-node-id="yipXlcDVapxGyCj8ZWSrAG">心屿</span></a>
+    <a class="tab t-create" href="creator-center.html" data-page-node-id="ijRkvWIOItKEpTruyXxnXy"><span class="ico" data-page-node-id="7a6n3DP95TRd1J8THHKHKj">✨</span><span data-page-node-id="CBVHNOXu9jjWN5xD61QJ1n">创作</span></a>
+    <a class="tab t-me"    href="me.html" data-page-node-id="gKGAHRGoqWSb5VfuMK5foF"><span class="ico" data-page-node-id="pH6LpITg3dFod9OBkCTQXE">👤</span><span data-page-node-id="i8nOPj1LC0WfkcKVrdFU5u">我的</span></a>
+  </nav>
+</div>
+
+<!-- Toast -->
+<div id="toast" data-page-node-id="jr4G9vTg7aIaDdJs03XIh0"></div>
+
+<script src="js/world-data.js"></script>
+<script src="js/economy.js"></script>
+<script src="js/world.js"></script>
+<script src="js/tabbar.js"></script>
+</body>
+</html>

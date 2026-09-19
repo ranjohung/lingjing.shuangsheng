@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>复刻音色 · 灵境</title>
+<link rel="stylesheet" href="css/shell-v64.css">
+<link rel="stylesheet" href="css/mobile-lock.css">
+<style>
+:root{--bg:#1A1A2E;--card:#16213E;--accent:#E94560;--xinyu:#6C5CE7;--ok:#4ECCA3;--warn:#FFB347;--text:#EAEAEA;--sub:#8A8A9A;--border:#2A2A4A}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:100px}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10}
+.topbar .back{font-size:18px;cursor:pointer;color:var(--accent)}
+.topbar h1{font-size:17px;font-weight:600}
+.topbar .quota{font-size:12px;color:var(--ok);background:rgba(78,202,163,.1);padding:4px 10px;border-radius:12px}
+.container{padding:16px}
+.section{margin-bottom:24px}
+.section-title{font-size:14px;font-weight:600;color:var(--sub);margin-bottom:12px;letter-spacing:1px}
+.upload-area{background:var(--card);border:2px dashed var(--border);border-radius:16px;padding:40px 20px;text-align:center;cursor:pointer;transition:all .2s}
+.upload-area:active{border-color:var(--accent)}
+.upload-area .icon{font-size:48px;margin-bottom:12px;opacity:.7}
+.upload-area .title{font-size:15px;font-weight:500;margin-bottom:6px}
+.upload-area .desc{font-size:12px;color:var(--sub);line-height:1.5}
+.upload-area .formats{font-size:11px;color:var(--xinyu);margin-top:8px}
+.tips{background:rgba(255,179,71,.1);border:1px solid rgba(255,179,71,.3);border-radius:12px;padding:14px;margin-top:16px}
+.tips .tip-title{font-size:13px;font-weight:600;color:var(--warn);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.tips .tip-list{font-size:12px;color:var(--sub);line-height:1.8}
+.tips .tip-list li{margin-left:16px}
+.param-group{margin-bottom:16px}
+.param-label{font-size:13px;color:var(--text);margin-bottom:8px;display:flex;justify-content:space-between}
+.param-label span:last-child{color:var(--xinyu);font-size:12px}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--border);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer}
+.form-textarea{width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:14px;outline:none;min-height:80px;resize:vertical;font-family:inherit}
+.form-textarea:focus{border-color:var(--accent)}
+.legal-check{display:flex;gap:12px;background:var(--card);border-radius:12px;padding:16px;align-items:flex-start;cursor:pointer}
+.legal-check input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent);flex-shrink:0;margin-top:2px}
+.legal-check .legal-text{font-size:13px;line-height:1.5;color:var(--sub)}
+.legal-check .legal-text strong{color:var(--warn)}
+.preview-card{background:var(--card);border-radius:16px;padding:16px;margin-top:12px;display:none}
+.preview-card.show{display:block}
+.preview-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.preview-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--xinyu),var(--accent));display:flex;align-items:center;justify-content:center;font-size:24px}
+.preview-name{font-size:15px;font-weight:600}
+.preview-status{font-size:11px;color:var(--ok);margin-top:2px}
+.waveform{height:40px;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;gap:2px;padding:0 12px}
+.waveform .bar{width:3px;background:var(--xinyu);border-radius:2px}
+.generate-bar{position:fixed;bottom:0;left:0;right:0;padding:16px;background:var(--bg);border-top:1px solid var(--border);display:flex;gap:12px;align-items:center}
+.cost-info{font-size:12px;color:var(--warn)}
+.cost-info .free{color:var(--ok)}
+.btn-gen{flex:1;padding:14px;background:linear-gradient(135deg,var(--accent),var(--xinyu));border:none;border-radius:12px;color:#fff;font-size:15px;font-weight:600;cursor:pointer}
+.btn-gen:disabled{opacity:.5;cursor:not-allowed}
+</style>
+<link rel="stylesheet" href="css/tabbar-embed.css">
+</head>
+<body>
+<div class="topbar">
+  <span class="back" onclick="history.back()">‹ 返回</span>
+  <h1>🎤 复刻音色</h1>
+  <span class="quota">首次免费</span>
+</div>
+<div class="container">
+  <div class="section">
+    <div class="section-title">上传音频素材</div>
+    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+      <div class="icon">🎙️</div>
+      <div class="title">点击上传音频文件</div>
+      <div class="desc">上传目标音色的清晰录音<br>建议时长 30秒 ~ 5分钟</div>
+      <div class="formats">支持 MP3 / WAV / FLAC / M4A</div>
+    </div>
+    <input type="file" id="fileInput" accept="audio/*" style="display:none" onchange="onUpload()">
+    <div class="tips">
+      <div class="tip-title">⚠️ 录音建议</div>
+      <ul class="tip-list">
+        <li>选择安静环境，避免背景噪音</li>
+        <li>保持说话者语调自然、稳定</li>
+        <li>建议包含多种情绪和语调变化</li>
+        <li>时长越长，复刻效果越精准</li>
+      </ul>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">音色参数微调</div>
+    <div class="param-group">
+      <div class="param-label"><span>相似度</span><span id="simVal">85%</span></div>
+      <input type="range" min="50" max="100" value="85" oninput="document.getElementById('simVal').textContent=this.value+'%'">
+    </div>
+    <div class="param-group">
+      <div class="param-label"><span>平滑度</span><span id="smoothVal">70%</span></div>
+      <input type="range" min="0" max="100" value="70" oninput="document.getElementById('smoothVal').textContent=this.value+'%'">
+    </div>
+    <div class="param-group">
+      <div class="param-label"><span>情感保留</span><span id="emoVal">90%</span></div>
+      <input type="range" min="0" max="100" value="90" oninput="document.getElementById('emoVal').textContent=this.value+'%'">
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">测试台词</div>
+    <textarea class="form-textarea" placeholder="输入一段测试台词，用于验证复刻效果...">你好，我是你用灵境复刻的专属音色，听起来像吗？</textarea>
+  </div>
+  <div class="section">
+    <label class="legal-check">
+      <input type="checkbox" id="legalAgree" onchange="checkLegal()">
+      <div class="legal-text">我确认拥有该声音的<strong>合法授权</strong>，包括但不限于本人声音或已获得声音所有者的书面授权。未经授权使用他人声音可能涉及法律风险。</div>
+    </label>
+  </div>
+  <div class="preview-card" id="previewCard">
+    <div class="preview-header">
+      <div class="preview-avatar">🎤</div>
+      <div>
+        <div class="preview-name">复刻音色预览</div>
+        <div class="preview-status">● 已就绪</div>
+      </div>
+    </div>
+    <div class="waveform">
+      <div class="bar" style="height:8px"></div><div class="bar" style="height:16px"></div><div class="bar" style="height:28px"></div>
+      <div class="bar" style="height:12px"></div><div class="bar" style="height:22px"></div><div class="bar" style="height:32px"></div>
+      <div class="bar" style="height:18px"></div><div class="bar" style="height:10px"></div><div class="bar" style="height:26px"></div>
+      <div class="bar" style="height:14px"></div><div class="bar" style="height:20px"></div><div class="bar" style="height:30px"></div>
+      <div class="bar" style="height:8px"></div><div class="bar" style="height:24px"></div><div class="bar" style="height:16px"></div>
+    </div>
+  </div>
+</div>
+<div class="generate-bar">
+  <div class="cost-info"><span class="free">首次免费</span> · 后续 50灵晶/次</div>
+  <button class="btn-gen" id="genBtn" disabled onclick="startClone()">✨ 开始复刻</button>
+</div>
+<script>
+function onUpload(){
+  document.querySelector('.upload-area .title').textContent='✅ 已上传';
+  document.querySelector('.upload-area .desc').textContent='素材准备就绪，请勾选授权协议后开始复刻';
+  checkLegal();
+}
+function checkLegal(){
+  const agreed=document.getElementById('legalAgree').checked;
+  document.getElementById('genBtn').disabled=!agreed;
+}
+function startClone(){
+  const btn=document.getElementById('genBtn');
+  btn.textContent='⏳ AI正在提取音色特征...';btn.disabled=true;
+  setTimeout(()=>{
+    document.getElementById('previewCard').classList.add('show');
+    btn.textContent='✅ 复刻完成！';
+    setTimeout(()=>{btn.textContent='✨ 开始复刻';btn.disabled=false},2000);
+  },3000);
+}
+</script>
+<script src="js/creator-store.js"></script>
+<script src="js/creator-ai.js"></script>
+<script src="js/creator-pages.js"></script>
+<script src="js/tabbar.js"></script>
+</body>
+</html>

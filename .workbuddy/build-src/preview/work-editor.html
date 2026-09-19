@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>编辑作品 · 灵境 · 双生</title>
+<link rel="stylesheet" href="css/shell-v64.css">
+<link rel="stylesheet" href="css/mobile-lock.css">
+<style>
+:root{--bg:#1A1A2E;--card:#16213E;--accent:#E94560;--xinyu:#6C5CE7;--ok:#4ECCA3;--warn:#FFB347;--world:#00B894;--text:#EAEAEA;--sub:#8A8A9A;--border:#2A2A4A}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;min-height:100vh;max-width:480px;margin:0 auto;overflow-x:hidden}
+
+/* 顶栏 */
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;position:sticky;top:0;background:var(--bg);z-index:10}
+.top-bar h1{font-size:17px;font-weight:700}
+.top-bar .back{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--card);cursor:pointer;font-size:18px;border:1px solid var(--border);color:var(--text)}
+.top-bar .actions{display:flex;gap:8px}
+.top-bar .act-btn{padding:6px 12px;border-radius:8px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--text);cursor:pointer}
+
+/* 作品切换器 */
+.work-switcher{margin:0 20px 12px;display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.ws-chip{padding:6px 14px;border-radius:20px;background:var(--card);border:1px solid var(--border);font-size:12px;white-space:nowrap;cursor:pointer;color:var(--sub);flex-shrink:0}
+.ws-chip.active{background:rgba(233,69,96,.15);border-color:var(--accent);color:var(--accent);font-weight:600}
+
+/* Tab 栏 */
+.editor-tabs{display:flex;gap:6px;margin:0 20px 14px;overflow-x:auto;padding-bottom:4px}
+.editor-tabs .et{padding:7px 14px;border-radius:8px;background:var(--card);border:1px solid var(--border);font-size:12px;white-space:nowrap;cursor:pointer;color:var(--sub);flex-shrink:0;display:flex;align-items:center;gap:4px}
+.editor-tabs .et.active{background:rgba(233,69,96,.15);border-color:var(--accent);color:var(--accent)}
+.editor-tabs .et:active{transform:scale(.96)}
+
+/* 章节导航 */
+.chapter-nav{background:var(--card);border-radius:14px;padding:14px;border:1px solid var(--border);margin:0 20px 14px}
+.chapter-nav .cn-title{font-size:13px;font-weight:600;margin-bottom:10px;color:var(--sub)}
+.vol-group{margin-bottom:8px}
+.vol-label{font-size:12px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.vol-label .icon{font-size:14px}
+.ch-list{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+.ch-item{padding:4px 10px;border-radius:6px;background:var(--bg);border:1px solid var(--border);font-size:11px;cursor:pointer}
+.ch-item.done{border-color:var(--ok);color:var(--ok)}
+.ch-item.current{background:var(--accent);border-color:var(--accent);color:#fff}
+.ch-item.locked{opacity:.5;position:relative}
+.ch-item.locked::after{content:'🔒';position:absolute;top:-2px;right:-2px;font-size:8px}
+.ch-item:hover{border-color:var(--accent)}
+.add-ch{padding:4px 10px;border-radius:6px;border:1px dashed var(--border);font-size:11px;color:var(--sub);cursor:pointer;background:transparent}
+
+/* 面板 */
+.panel{margin:0 20px 14px;background:var(--card);border-radius:16px;padding:18px;border:1px solid var(--border)}
+.panel-title{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.panel-title .badge{font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(108,92,231,.15);color:var(--xinyu);font-weight:600}
+
+/* 编辑区 */
+.editor-area .ch-title{font-size:16px;font-weight:700;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.editor-area .content{font-size:14px;line-height:2;color:var(--text);min-height:120px;outline:none}
+.editor-area .content p{margin-bottom:12px}
+.editor-toolbar{display:flex;gap:8px;margin-top:16px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap}
+.editor-toolbar .tb{padding:6px 12px;border-radius:8px;background:rgba(108,92,231,.1);border:1px solid rgba(108,92,231,.3);font-size:11px;color:var(--xinyu);cursor:pointer}
+.editor-toolbar .tb:active{background:rgba(108,92,231,.2)}
+
+/* AI候选 */
+.ai-box{background:rgba(108,92,231,.08);border:1px solid rgba(108,92,231,.2);border-radius:10px;padding:12px;margin-top:12px}
+.ai-box .ai-label{font-size:11px;color:var(--xinyu);font-weight:600;margin-bottom:8px}
+.ai-candidates{display:flex;flex-direction:column;gap:6px}
+.ai-cand{padding:8px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--border);font-size:12px;line-height:1.5;cursor:pointer}
+.ai-cand:active{border-color:var(--xinyu)}
+.ai-cand.selected{border-color:var(--xinyu);background:rgba(108,92,231,.1)}
+
+/* 人物/道具/场景 卡片 */
+.asset-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.asset-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:transform .15s}
+.asset-card:active{transform:scale(.97)}
+.asset-card .ac-img{height:80px;display:grid;place-items:center;font-size:32px}
+.asset-card .ac-info{padding:10px}
+.asset-card .ac-name{font-size:13px;font-weight:600;margin-bottom:2px}
+.asset-card .ac-desc{font-size:10px;color:var(--sub);line-height:1.4}
+.asset-card .ac-actions{display:flex;gap:4px;margin-top:6px}
+.asset-card .ac-btn{font-size:9px;padding:3px 6px;border-radius:4px;background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--sub);cursor:pointer}
+
+/* 收费设置 */
+.pricing-section{margin-bottom:16px}
+.pricing-section h4{font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.pricing-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg);border-radius:10px;border:1px solid var(--border);margin-bottom:8px}
+.pricing-row .pr-info{flex:1}
+.pricing-row .pr-name{font-size:13px;font-weight:500}
+.pricing-row .pr-desc{font-size:10px;color:var(--sub)}
+.pricing-row .pr-price{font-size:14px;font-weight:700;color:var(--warn);margin-right:10px}
+.toggle{width:40px;height:22px;border-radius:11px;background:var(--border);position:relative;cursor:pointer;transition:background .2s}
+.toggle.on{background:var(--ok)}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s}
+.toggle.on::after{transform:translateX(18px)}
+
+/* 章节收费 */
+.ch-pricing{display:flex;flex-direction:column;gap:6px}
+.ch-pricing-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg);border-radius:8px;border:1px solid var(--border)}
+.ch-pricing-item .ch-name{flex:1;font-size:12px}
+.ch-pricing-item .ch-price{font-size:12px;color:var(--warn);font-weight:600}
+
+/* 伏笔 */
+.fs-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.fs-item:last-child{border-bottom:none}
+.fs-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.fs-dot.planted{background:var(--warn)}
+.fs-dot.resolved{background:var(--ok)}
+.fs-dot.overdue{background:var(--accent)}
+.fs-info{flex:1;font-size:12px}
+.fs-info .fs-name{font-weight:600;margin-bottom:2px}
+.fs-info .fs-meta{color:var(--sub);font-size:10px}
+.fs-status{font-size:10px;padding:2px 6px;border-radius:4px}
+.fs-status.planted{background:rgba(255,179,71,.15);color:var(--warn)}
+.fs-status.resolved{background:rgba(78,204,163,.15);color:var(--ok)}
+.fs-status.overdue{background:rgba(233,69,96,.15);color:var(--accent)}
+
+/* 质量检查 */
+.q-item{display:flex;align-items:center;gap:8px;padding:8px 0;font-size:12px}
+.q-icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.q-icon.pass{background:rgba(78,204,163,.15);color:var(--ok)}
+.q-icon.warn{background:rgba(255,179,71,.15);color:var(--warn)}
+.q-icon.error{background:rgba(233,69,96,.15);color:var(--accent)}
+
+/* 底部状态 */
+.status-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;font-size:11px;color:var(--sub);border-top:1px solid var(--border);position:sticky;bottom:0;background:var(--bg);z-index:10}
+.status-bar .score{display:flex;align-items:center;gap:4px}
+.status-bar .score .val{color:var(--warn);font-weight:700;font-size:14px}
+
+/* Toast */
+#toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);z-index:9999}
+.toast-item{padding:10px 16px;border-radius:10px;background:var(--card);border:1px solid var(--border);font-size:13px;margin-bottom:8px;box-shadow:0 4px 20px rgba(0,0,0,.4);animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== 作品选择视图（编辑作品 · 历史作品入口） ===== */
+body.picking .top-bar,
+body.picking .work-switcher,
+body.picking .editor-tabs,
+body.picking .tab-panel,
+body.picking .status-bar{display:none !important}
+.wp-view{display:none;padding:16px}
+body.picking .wp-view{display:block}
+.wp-lead{font-size:12px;color:var(--sub);line-height:1.7;margin-bottom:14px}
+.wp-card{display:flex;gap:12px;padding:12px;border-radius:12px;background:var(--card);border:1px solid var(--border);margin-bottom:10px}
+.wp-cover{width:56px;height:78px;border-radius:8px;display:grid;place-items:center;font-size:24px;flex-shrink:0}
+.wp-body{flex:1;min-width:0}
+.wp-name{font-size:14px;font-weight:600;margin-bottom:4px}
+.wp-meta{font-size:11px;color:var(--sub);line-height:1.6}
+.wp-tags{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.wp-tag{font-size:10px;padding:2px 7px;border-radius:6px;background:rgba(108,92,231,.15);color:#A99BF0}
+.wp-tag.pub{background:rgba(78,204,163,.15);color:var(--ok)}
+.wp-tag.draft{background:rgba(255,179,71,.15);color:var(--warn)}
+.wp-acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.wp-btn{font-size:11px;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-family:inherit}
+.wp-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.wp-btn.ghost{color:var(--sub)}
+/* 图片上传：已换图时用真实图片铺满 */
+.ac-img{background-size:cover;background-position:center}
+.ac-btn input[type=file]{display:none}
+/* 价格就地编辑 */
+.price-edit{outline:none;cursor:text;border-bottom:1px dashed rgba(255,255,255,.28);padding:0 2px;display:inline-block}
+.price-edit:focus{border-bottom-color:var(--accent);color:var(--warn)}
+.back-to-picker{display:none;font-size:12px;color:var(--sub);padding:6px 20px;cursor:pointer}
+body.editing .back-to-picker{display:block}
+</style>
+<link rel="stylesheet" href="css/tabbar-embed.css">
+</head>
+<body>
+
+<!-- 隐藏的图片选择器：更换人物 / 道具 / 场景图片 -->
+<input type="file" id="imgPick" accept="image/*" style="display:none">
+
+<!-- ===== 作品选择视图（编辑作品入口 · 历史作品） ===== -->
+<div class="wp-view" id="wpView">
+  <div class="wp-lead">选择要编辑的历史作品：可继续续写 / 改写，或更换人物、道具、场景图片，重新设置收费章节与收费道具。</div>
+  <div id="wpList"></div>
+</div>
+
+<div class="top-bar">
+  <div class="back" onclick="history.back()">←</div>
+  <h1 id="workTitle">《西游记》</h1>
+  <div class="actions">
+    <button class="act-btn" onclick="saveDraft()">保存</button>
+    <button class="act-btn" style="background:var(--accent);color:#fff;border-color:var(--accent)" onclick="previewWork()">预览</button>
+  </div>
+</div>
+
+<!-- 返回作品选择（编辑态显示） -->
+<div class="back-to-picker" onclick="showPicker()">‹ 返回作品列表</div>
+
+<!-- 作品切换 -->
+<div class="work-switcher">
+  <div class="ws-chip active" onclick="switchWork(this,'changye')">《西游记》</div>
+  <div class="ws-chip" onclick="switchWork(this,'saibo')">《三国演义》</div>
+  <div class="ws-chip" onclick="showToast('info','添加作品','从创作页创建新作品')">+ 新作品</div>
+</div>
+
+<!-- Tab 栏 -->
+<div class="editor-tabs">
+  <div class="et active" data-tab="edit" onclick="switchTab('edit')">📝 编辑</div>
+  <div class="et" data-tab="outline" onclick="switchTab('outline')">📋 大纲</div>
+  <div class="et" data-tab="chars" onclick="switchTab('chars')">👤 人物</div>
+  <div class="et" data-tab="assets" onclick="switchTab('assets')">🎨 素材</div>
+  <div class="et" data-tab="foreshadow" onclick="switchTab('foreshadow')">🧩 伏笔</div>
+  <div class="et" data-tab="pricing" onclick="switchTab('pricing')">💰 收费</div>
+  <div class="et" data-tab="quality" onclick="switchTab('quality')"> 质量</div>
+</div>
+
+<!-- ========== 编辑面板 ========== -->
+<div class="tab-panel" id="panel-edit">
+  <!-- 章节导航 -->
+  <div class="chapter-nav">
+    <div class="cn-title">章节目录</div>
+    <div class="vol-group">
+      <div class="vol-label"><span class="icon"></span> 卷一·初入长夜</div>
+      <div class="ch-list">
+        <div class="ch-item done" onclick="selectChapter(this)">第一章 ✓</div>
+        <div class="ch-item done" onclick="selectChapter(this)">第二章 ✓</div>
+        <div class="ch-item current" onclick="selectChapter(this)">第三章 ✎</div>
+        <div class="ch-item" onclick="selectChapter(this)">第四章</div>
+        <div class="ch-item" onclick="selectChapter(this)">第五章</div>
+        <div class="add-ch" onclick="addChapter()">+ 添加</div>
+      </div>
+    </div>
+    <div class="vol-group">
+      <div class="vol-label"><span class="icon">📚</span> 卷二·暗流涌动</div>
+      <div class="ch-list">
+        <div class="ch-item" onclick="selectChapter(this)">第六章</div>
+        <div class="ch-item" onclick="selectChapter(this)">第七章</div>
+        <div class="ch-item" onclick="selectChapter(this)">第八章</div>
+        <div class="add-ch" onclick="addChapter()">+ 添加</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 编辑区 -->
+  <div class="panel editor-area">
+    <div class="ch-title">第三章：酒馆夜话</div>
+    <div class="content" contenteditable="true" id="editorContent">
+      <p>我推开酒馆的木门，一股暖意扑面而来。柜台后的女人抬起头看了我一眼。</p>
+      <p>「新面孔啊。」她说，声音不高不低，刚好够整个酒馆安静下来。</p>
+      <p>角落里有几个人在窃窃私语，目光闪烁。我找了个靠窗的位置坐下，点了一壶最便宜的清酒。</p>
+      <p>窗外是西游记永远阴沉的天空。这座城市据说已经三百年没有见过太阳了。</p>
+      <p>「你在看什么？」女人端来了酒壶，顺着我的目光望向窗外。</p>
+      <p>「在看那些永远不会散的云。」我说。</p>
+      <p>她笑了一下：「习惯就好了。在西游记，最重要的事情就是习惯。」</p>
+    </div>
+    <div class="editor-toolbar">
+      <div class="tb" onclick="aiAssist('polish')">✨ AI润色</div>
+      <div class="tb" onclick="aiAssist('continue')">📝 AI续写</div>
+      <div class="tb" onclick="aiAssist('rewrite')">🔄 AI重写</div>
+      <div class="tb" onclick="aiAssist('scene')">🏔️ 场景描写</div>
+      <div class="tb" onclick="aiAssist('dialog')">💬 对话优化</div>
+      <div class="tb" onclick="aiAssist('ask')">❓ 向AI提问</div>
+    </div>
+  </div>
+
+  <!-- AI续写候选 -->
+  <div class="panel">
+    <div class="panel-title">🤖 AI 续写候选</div>
+    <div class="ai-box">
+      <div class="ai-label">基于上下文生成 4 个续写方向</div>
+      <div class="ai-candidates">
+        <div class="ai-cand" onclick="selectCand(this)">她说完就转身回了柜台。我注意到她转身时，左手腕上有一道很深的疤痕——那不是普通的伤。</div>
+        <div class="ai-cand selected" onclick="selectCand(this)">她笑了一下：「习惯就好了。在西游记，最重要的事情就是习惯。」窗外忽然传来一阵钟声，沉闷而悠远。</div>
+        <div class="ai-cand" onclick="selectCand(this)">她没有回答，只是把我的酒杯斟满。酒液是深红色的，像凝固的暮色。</div>
+        <div class="ai-cand" onclick="selectCand(this)">「有些人来西游记是为了逃避，有些人是为了寻找。」她擦着杯子，目光若有若无地扫过我。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 大纲面板 ========== -->
+<div class="tab-panel" id="panel-outline" style="display:none">
+  <div class="panel">
+    <div class="panel-title">📋 故事大纲</div>
+    <div class="form-group" style="margin-bottom:14px">
+      <div style="font-size:12px;color:var(--sub);margin-bottom:6px">核心冲突</div>
+      <div style="font-size:13px;line-height:1.6">主角发现西游记的黑暗并非自然现象，而是被人为制造的。他必须在揭开真相和保护城市之间做出选择。</div>
+    </div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:12px;color:var(--sub);margin-bottom:8px">卷一 · 初入长夜</div>
+      <div style="padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);font-size:12px;line-height:1.6">李玄抵达西游记，在酒馆偶遇神秘女人。发现城市照明系统异常。夜晚听到地下传来的奇怪声响。第一次接触到"夜门"的传说。</div>
+    </div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:12px;color:var(--sub);margin-bottom:8px">卷二 · 暗流涌动</div>
+      <div style="padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);font-size:12px;line-height:1.6">李玄深入调查，发现酒馆女人与城市管理者有秘密联系。地下世界浮出水面。"黑日"事件即将降临。</div>
+    </div>
+    <div>
+      <div style="font-size:12px;color:var(--sub);margin-bottom:8px">卷三 · 破晓之战</div>
+      <div style="padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);font-size:12px;line-height:1.6">真相大白。李玄面临最终抉择。西游记的命运悬于一线。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 人物面板 ========== -->
+<div class="tab-panel" id="panel-chars" style="display:none">
+  <div class="panel">
+    <div class="panel-title"> 人物管理 <span class="badge">3 角色</span></div>
+    <div class="asset-grid">
+      <div class="asset-card">
+        <div class="ac-img" style="background:linear-gradient(135deg,#2E3A6E,#4A3A8C)">🧑</div>
+        <div class="ac-info">
+          <div class="ac-name">李玄</div>
+          <div class="ac-desc">主角 · 28岁 · 前城市守卫</div>
+          <div class="ac-actions">
+            <div class="ac-btn" onclick="showToast('info','更换立绘','选择新图片或AI生成')">🖼️ 换图</div>
+            <div class="ac-btn" onclick="showToast('info','编辑人物','修改人物设定')">✏️ 编辑</div>
+          </div>
+        </div>
+      </div>
+      <div class="asset-card">
+        <div class="ac-img" style="background:linear-gradient(135deg,#5E2E3A,#E94560)"></div>
+        <div class="ac-info">
+          <div class="ac-name">酒馆女人</div>
+          <div class="ac-desc">关键NPC · 身份待揭示</div>
+          <div class="ac-actions">
+            <div class="ac-btn" onclick="showToast('info','更换立绘','选择新图片或AI生成')">️ 换图</div>
+            <div class="ac-btn" onclick="showToast('info','编辑人物','修改人物设定')">✏️ 编辑</div>
+          </div>
+        </div>
+      </div>
+      <div class="asset-card">
+        <div class="ac-img" style="background:linear-gradient(135deg,#1A3A2E,#00B894)">🕵️</div>
+        <div class="ac-info">
+          <div class="ac-name">角落密语者</div>
+          <div class="ac-desc">配角 · 身份不明 · 监视者</div>
+          <div class="ac-actions">
+            <div class="ac-btn" onclick="showToast('info','更换立绘','选择新图片或AI生成')">🖼️ 换图</div>
+            <div class="ac-btn" onclick="showToast('info','编辑人物','修改人物设定')">✏️ 编辑</div>
+          </div>
+        </div>
+      </div>
+      <div class="asset-card" onclick="showToast('info','添加人物','填写新角色信息')" style="display:grid;place-items:center;min-height:140px;border-style:dashed">
+        <div style="text-align:center;color:var(--sub)">
+          <div style="font-size:24px;margin-bottom:4px">+</div>
+          <div style="font-size:11px">添加人物</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 素材面板 ========== -->
+<div class="tab-panel" id="panel-assets" style="display:none">
+  <!-- 道具 -->
+  <div class="panel">
+    <div class="panel-title">⚔️ 道具管理 <span class="badge">4 道具</span></div>
+    <div class="asset-grid">
+      <div class="asset-card">
+        <div class="ac-img" style="background:linear-gradient(135deg,#3A2E1A,#FFB347)">🗡️</div>
+        <div class="ac-info">
+          <div class="ac-name">玄铁短刀</div>
+          <div class="ac-desc">主角随身武器 · 第一章获得</div>
+          <div class="ac-actions">
+            <div class="ac-btn" onclick="showToast('info','更换图片','选择新图片或AI生成')">️ 换图</div>
+            <div class="ac-btn">✏️ 编辑</div>
+          </div>
+        </div>
+      </div>
+      <div class="asset-card">
+        <div class="ac-img" style="background:linear-gradient(135deg,#1A2E3A,#6C5CE7)">🔑</div>
+        <div class="ac-info">
+          <div class="ac-name">夜门钥匙</div>
+          <div class="ac-desc">关键道具 · 通往地下世界</div>
+          <div class="ac-actions">
+            <div class="ac-btn" onclick="showToast('info','更换图片','选择新图片或AI生成')">🖼️ 换图</div>
+            <div class="ac-btn">✏️ 编辑</div>
+          </div>
+        </div>
+      </div>
+      <div class="asset-card">
+        <div class="ac-img" style="background:linear-gradient(135deg,#2E1A3A,#E94560)"></div>
+        <div class="ac-info">
+          <div class="ac-name">守夜人吊坠</div>
+          <div class="ac-desc">酒馆女人信物 · 伏笔道具</div>
+          <div class="ac-actions">
+            <div class="ac-btn" onclick="showToast('info','更换图片','选择新图片或AI生成')">🖼️ 换图</div>
+            <div class="ac-btn">✏️ 编辑</div>
+          </div>
+        </div>
+      </div>
+      <div class="asset-card" onclick="showToast('info','添加道具','填写道具信息')" style="display:grid;place-items:center;min-height:140px;border-style:dashed">
+        <div style="text-align:center;color:var(--sub)">
+          <div style="font-size:24px;margin-bottom:4px">+</div>
+          <div style="font-size:11px">添加道具</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 场景 -->
+  <div class="panel">
+    <div class="panel-title">🏔️ 场景管理 <span class="badge">3 场景</span></div>
+    <div class="asset-grid">
+      <div class="asset-card">
+        <div class="ac-img" style="background:linear-gradient(135deg,#0D1B2A,#1B2838)"></div>
+        <div class="ac-info">
+          <div class="ac-name">长夜酒馆</div>
+          <div class="ac-desc">主城 · 第三章核心场景</div>
+          <div class="ac-actions">
+            <div class="ac-btn" onclick="showToast('info','更换场景图','选择新图片或AI生成')">️ 换图</div>
+            <div class="ac-btn">✏️ 编辑</div>
+          </div>
+        </div>
+      </div>
+      <div class="asset-card">
+        <div class="ac-img" style="background:linear-gradient(135deg,#1A0A2E,#2D1B69)">🌃</div>
+        <div class="ac-info">
+          <div class="ac-name">西游记街道</div>
+          <div class="ac-desc">主城 · 霓虹与黑暗交织</div>
+          <div class="ac-actions">
+            <div class="ac-btn" onclick="showToast('info','更换场景图','选择新图片或AI生成')">🖼️ 换图</div>
+            <div class="ac-btn">✏️ 编辑</div>
+          </div>
+        </div>
+      </div>
+      <div class="asset-card">
+        <div class="ac-img" style="background:linear-gradient(135deg,#0A1628,#1A3050)">️</div>
+        <div class="ac-info">
+          <div class="ac-name">地下通道</div>
+          <div class="ac-desc">隐藏区域 · 通往夜门</div>
+          <div class="ac-actions">
+            <div class="ac-btn" onclick="showToast('info','更换场景图','选择新图片或AI生成')">🖼️ 换图</div>
+            <div class="ac-btn">✏️ 编辑</div>
+          </div>
+        </div>
+      </div>
+      <div class="asset-card" onclick="showToast('info','添加场景','填写场景信息')" style="display:grid;place-items:center;min-height:140px;border-style:dashed">
+        <div style="text-align:center;color:var(--sub)">
+          <div style="font-size:24px;margin-bottom:4px">+</div>
+          <div style="font-size:11px">添加场景</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 封面 -->
+  <div class="panel">
+    <div class="panel-title">🖼️ 作品封面</div>
+    <div style="display:flex;gap:12px;align-items:center">
+      <div style="width:80px;height:100px;border-radius:10px;background:linear-gradient(135deg,#2E3A6E,#4A3A8C);display:grid;place-items:center;font-size:36px;flex-shrink:0">🏯</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px">《西游记》封面</div>
+        <div style="font-size:11px;color:var(--sub);margin-bottom:8px">当前使用 AI 生成封面 · 1024×1280</div>
+        <div style="display:flex;gap:6px">
+          <div class="ac-btn" style="font-size:11px;padding:6px 10px" onclick="showToast('info','AI生成封面','输入描述生成新封面')">✨ AI生成</div>
+          <div class="ac-btn" style="font-size:11px;padding:6px 10px" onclick="showToast('info','上传封面','选择本地图片')">📤 上传</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 伏笔面板 ========== -->
+<div class="tab-panel" id="panel-foreshadow" style="display:none">
+  <div class="panel">
+    <div class="panel-title">🧩 伏笔台账 <span class="badge">4 条</span></div>
+    <div class="fs-item">
+      <div class="fs-dot planted"></div>
+      <div class="fs-info"><div class="fs-name">酒馆女人的疤痕</div><div class="fs-meta">埋设：第三章 · 预计回收：第五章</div></div>
+      <div class="fs-status planted">待回收</div>
+    </div>
+    <div class="fs-item">
+      <div class="fs-dot planted"></div>
+      <div class="fs-info"><div class="fs-name">三百年无日的秘密</div><div class="fs-meta">埋设：第三章 · 预计回收：卷二</div></div>
+      <div class="fs-status planted">待回收</div>
+    </div>
+    <div class="fs-item">
+      <div class="fs-dot resolved"></div>
+      <div class="fs-info"><div class="fs-name">主角为何来到西游记</div><div class="fs-meta">埋设：第一章 · 回收：第三章</div></div>
+      <div class="fs-status resolved">已回收</div>
+    </div>
+    <div class="fs-item">
+      <div class="fs-dot overdue"></div>
+      <div class="fs-info"><div class="fs-name">角落密语者的身份</div><div class="fs-meta">埋设：第三章 · 预计回收：第四章 ⚠️ 逾期</div></div>
+      <div class="fs-status overdue">逾期</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 收费面板 ========== -->
+<div class="tab-panel" id="panel-pricing" style="display:none">
+  <!-- 章节收费 -->
+  <div class="panel">
+    <div class="panel-title">📖 章节收费设置</div>
+    <div class="pricing-section">
+      <div style="font-size:11px;color:var(--sub);margin-bottom:10px">设置哪些章节需要付费解锁</div>
+      <div class="ch-pricing">
+        <div class="ch-pricing-item">
+          <span style="font-size:12px;min-width:50px">第一章</span>
+          <span class="ch-name">初入长夜</span>
+          <span style="font-size:10px;color:var(--ok)">免费</span>
+        </div>
+        <div class="ch-pricing-item">
+          <span style="font-size:12px;min-width:50px">第二章</span>
+          <span class="ch-name">暗夜来客</span>
+          <span style="font-size:10px;color:var(--ok)">免费</span>
+        </div>
+        <div class="ch-pricing-item">
+          <span style="font-size:12px;min-width:50px">第三章</span>
+          <span class="ch-name">酒馆夜话</span>
+          <span class="ch-price">5 灵晶</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="ch-pricing-item">
+          <span style="font-size:12px;min-width:50px">第四章</span>
+          <span class="ch-name">地下低语</span>
+          <span class="ch-price">5 灵晶</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="ch-pricing-item">
+          <span style="font-size:12px;min-width:50px">第五章</span>
+          <span class="ch-name">疤痕之谜</span>
+          <span class="ch-price">8 灵晶</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 道具收费 -->
+  <div class="panel">
+    <div class="panel-title">⚔️ 收费道具</div>
+    <div class="pricing-section">
+      <div style="font-size:11px;color:var(--sub);margin-bottom:10px">读者可购买的互动道具</div>
+      <div class="pricing-row">
+        <div class="pr-info">
+          <div class="pr-name">🔦 提灯·照亮场景</div>
+          <div class="pr-desc">解锁隐藏场景描写 · 影响剧情分支</div>
+        </div>
+        <div class="pr-price">10 灵晶</div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="pricing-row">
+        <div class="pr-info">
+          <div class="pr-name">🔑 夜门钥匙</div>
+          <div class="pr-desc">解锁地下世界支线剧情</div>
+        </div>
+        <div class="pr-price">20 灵晶</div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="pricing-row">
+        <div class="pr-info">
+          <div class="pr-name"> 守夜人吊坠</div>
+          <div class="pr-desc">解锁酒馆女人 backstory</div>
+        </div>
+        <div class="pr-price">15 灵晶</div>
+        <div class="toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="pricing-row" onclick="showToast('info','添加道具','设置新的收费道具')" style="cursor:pointer;border-style:dashed">
+        <div class="pr-info">
+          <div class="pr-name" style="color:var(--sub)">+ 添加收费道具</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 定价策略 -->
+  <div class="panel">
+    <div class="panel-title">💡 定价建议</div>
+    <div style="font-size:12px;line-height:1.8;color:var(--sub)">
+      <div>📊 同类作品均价：<span style="color:var(--text)">5-8 灵晶/章</span></div>
+      <div>📈 你的作品评分：<span style="color:var(--warn)">4.8</span> → 可适当溢价</div>
+      <div>👥 粉丝粘性：<span style="color:var(--ok)">高</span> → 建议前2章免费</div>
+      <div>💰 预估月收入：<span style="color:var(--warn)">1,200-1,800 灵晶</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 质量面板 ========== -->
+<div class="tab-panel" id="panel-quality" style="display:none">
+  <div class="panel">
+    <div class="panel-title">🔍 质量检查</div>
+    <div class="q-item"><div class="q-icon pass">✓</div> 大纲一致性：本章内容符合大纲设定</div>
+    <div class="q-item"><div class="q-icon pass">✓</div> 人物一致性：角色性格与设定匹配</div>
+    <div class="q-item"><div class="q-icon pass">✓</div> 时间线：与前章衔接无矛盾</div>
+    <div class="q-item"><div class="q-icon warn">!</div> 伏笔提醒：「角落密语者身份」预计本章回收，尚未处理</div>
+    <div class="q-item"><div class="q-icon error">×</div> 字数不足：当前章 1,247 字，目标 2,000 字</div>
+    <div class="q-item"><div class="q-icon pass">✓</div> 对话自然度：对话流畅，符合角色性格</div>
+    <div class="q-item"><div class="q-icon pass">✓</div> 场景描写：环境描写充分，氛围感强</div>
+  </div>
+</div>
+
+<!-- 底部状态 -->
+<div class="status-bar">
+  <span>已保存 · v0.3</span>
+  <span>字数：1,247</span>
+  <span class="score">质量分：<span class="val">4.2</span>/5.0</span>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// Tab 切换
+function switchTab(name){
+  document.querySelectorAll('.editor-tabs .et').forEach(e=>e.classList.remove('active'));
+  document.querySelector('.editor-tabs .et[data-tab="'+name+'"]').classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p=>p.style.display='none');
+  document.getElementById('panel-'+name).style.display='block';
+}
+
+// 作品切换
+function switchWork(el, id){
+  document.querySelectorAll('.ws-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  const titles = {changye:'《西游记》', saibo:'《三国演义》'};
+  document.getElementById('workTitle').textContent = titles[id] || '未命名作品';
+  showToast('ok','切换作品', titles[id]);
+}
+
+// 章节选择
+function selectChapter(el){
+  document.querySelectorAll('.ch-item').forEach(c=>c.classList.remove('current'));
+  el.classList.add('current');
+}
+
+// 添加章节
+function addChapter(){
+  const vol = event.target.closest('.vol-group');
+  const list = vol.querySelector('.ch-list');
+  const items = list.querySelectorAll('.ch-item');
+  const num = items.length + (vol === document.querySelector('.vol-group') ? 1 : 6);
+  const ch = document.createElement('div');
+  ch.className = 'ch-item';
+  ch.textContent = '第' + ['一','二','三','四','五','六','七','八','九','十'][num-1] + '章';
+  ch.onclick = function(){ selectChapter(this); };
+  list.insertBefore(ch, list.querySelector('.add-ch'));
+}
+
+// AI 辅助
+function aiAssist(type){
+  const labels={polish:'正在润色当前段落…',continue:'正在生成续写候选…',rewrite:'正在重写当前段落…',scene:'正在生成场景描写…',dialog:'正在优化对话…',ask:'请在文本中选中内容后提问'};
+  showToast('info','AI 处理中', labels[type]||'');
+}
+
+// AI候选选择
+function selectCand(el){
+  document.querySelectorAll('.ai-cand').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// 保存
+function saveDraft(){
+  const btn = document.querySelectorAll('.act-btn')[0];
+  btn.textContent = '已保存 ✓';
+  btn.style.color = 'var(--ok)';
+  setTimeout(()=>{btn.textContent='保存'; btn.style.color='';}, 1500);
+}
+
+// 预览
+function previewWork(){
+  showToast('info','预览模式', '正在生成全文预览…');
+}
+
+/* ============ 编辑作品 · 历史作品选择（V23） ============ */
+var WP_KEY = 'lingjing_v23_work_editor';
+var WP_WORKS = [
+  { id:'changye', name:'《西游记》',        emoji:'🏯', cov:'linear-gradient(160deg,#2E3A6E,#4A3A8C)', status:'已发布', words:'12.8 万字', chap:'第 12 章', updated:'2 小时前', score:'4.8' },
+  { id:'saibo',   name:'《三国演义》',      emoji:'🌸', cov:'linear-gradient(160deg,#5E2E3A,#E94560)', status:'草稿',   words:'3.2 万字',  chap:'第 4 章',  updated:'1 小时前', score:'—' },
+  { id:'shenhai', name:'《红楼梦》',      emoji:'🌊', cov:'linear-gradient(160deg,#2E5E56,#00B894)', status:'连载中', words:'18.2 万字', chap:'第 46 章', updated:'3 小时前', score:'4.6' },
+  { id:'taohua',  name:'《桃花源记·同人》', emoji:'📜', cov:'linear-gradient(160deg,#6B2737,#B8863B)', status:'草稿',   words:'0.8 万字',  chap:'第 2 章',  updated:'昨天',     score:'—' }
+];
+
+function wpState(){
+  try { return JSON.parse(localStorage.getItem(WP_KEY) || '{}'); } catch (e) { return {}; }
+}
+function wpSave(s){ try { localStorage.setItem(WP_KEY, JSON.stringify(s)); } catch (e) {} }
+
+function renderPicker(){
+  var host = document.getElementById('wpList');
+  if (!host) return;
+  var st = wpState();
+  var html = '';
+  WP_WORKS.forEach(function (w) {
+    var d = st[w.id] || {};
+    var tagCls = w.status === '草稿' ? 'draft' : 'pub';
+    html += '<div class="wp-card">' +
+      '<div class="wp-cover" style="background:' + (d.cov || w.cov) + '">' + w.emoji + '</div>' +
+      '<div class="wp-body">' +
+        '<div class="wp-name">' + w.name + '</div>' +
+        '<div class="wp-tags"><span class="wp-tag ' + tagCls + '">' + w.status + '</span>' +
+          '<span class="wp-tag">' + w.words + '</span><span class="wp-tag">' + w.chap + '</span></div>' +
+        '<div class="wp-meta">最近编辑 ' + w.updated + (w.score === '—' ? '' : ' · 评分 ' + w.score) + '</div>' +
+        '<div class="wp-acts">' +
+          '<button class="wp-btn primary" onclick="openWork(\'' + w.id + '\',\'edit\')">继续续写</button>' +
+          '<button class="wp-btn" onclick="openWork(\'' + w.id + '\',\'edit\',1)">改写</button>' +
+          '<button class="wp-btn" onclick="openWork(\'' + w.id + '\',\'assets\')">图片管理</button>' +
+          '<button class="wp-btn" onclick="openWork(\'' + w.id + '\',\'pricing\')">收费设置</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  });
+  host.innerHTML = html;
+}
+
+function showPicker(){
+  document.body.classList.add('picking');
+  document.body.classList.remove('editing');
+  renderPicker();
+}
+function showEditor(){
+  document.body.classList.remove('picking');
+  document.body.classList.add('editing');
+}
+function openWork(id, tab, rewrite){
+  var w = null;
+  WP_WORKS.forEach(function (x) { if (x.id === id) { w = x; } });
+  showEditor();
+  document.getElementById('workTitle').textContent = w ? w.name : '未命名作品';
+  document.querySelectorAll('.ws-chip').forEach(function (c) { c.classList.remove('active'); });
+  if (tab) { switchTab(tab); }
+  if (rewrite) {
+    showToast('info', '改写模式', '可在 AI 续写候选中挑选，或直接修改正文');
+  } else {
+    var tip = tab === 'assets' ? ' · 图片管理' : (tab === 'pricing' ? ' · 收费设置' : '');
+    showToast('ok', '已打开作品', (w ? w.name : '') + tip);
+  }
+  try { history.replaceState(null, '', 'work-editor.html?w=' + id + (tab ? '&tab=' + tab : '')); } catch (e) {}
+}
+
+/* ============ 图片上传：更换人物 / 道具 / 场景图片 ============ */
+var _imgTarget = null;
+function changeImg(btn, key){
+  var card = btn.closest('.asset-card');
+  var img = card ? card.querySelector('.ac-img') : null;
+  if (!img) return;
+  _imgTarget = { el: img, key: key };
+  var input = document.getElementById('imgPick');
+  input.value = '';
+  input.click();
+}
+function wireImgPick(){
+  var input = document.getElementById('imgPick');
+  if (!input) return;
+  input.addEventListener('change', function () {
+    var f = this.files && this.files[0];
+    if (!f || !_imgTarget) return;
+    var reader = new FileReader();
+    reader.onload = function (ev) {
+      var url = ev.target.result;
+      _imgTarget.el.style.backgroundImage = 'url(' + url + ')';
+      _imgTarget.el.textContent = '';
+      var st = wpState();
+      st.images = st.images || {};
+      st.images[_imgTarget.key] = url;
+      wpSave(st);
+      showToast('ok', '图片已更换', '已保存到本机');
+    };
+    reader.readAsDataURL(f);
+  });
+}
+function wireAssetUploads(){
+  var cards = document.querySelectorAll('.asset-card');
+  for (var i = 0; i < cards.length; i++) {
+    var card = cards[i];
+    var img = card.querySelector('.ac-img');
+    if (!img) continue;
+    var nameEl = card.querySelector('.ac-name');
+    var key = 'a' + i + '_' + (nameEl ? nameEl.textContent.trim() : 'asset');
+    img.setAttribute('data-img-key', key);
+    img.style.cursor = 'pointer';
+    img.title = '点击更换图片';
+    bindImgEl(img, key);
+    var btns = card.querySelectorAll('.ac-btn');
+    for (var j = 0; j < btns.length; j++) {
+      if (btns[j].textContent.indexOf('换图') >= 0) {
+        btns[j].removeAttribute('onclick');
+        bindImgBtn(btns[j], key);
+      }
+    }
+  }
+}
+function bindImgEl(img, key){
+  img.addEventListener('click', function () {
+    _imgTarget = { el: img, key: key };
+    var input = document.getElementById('imgPick');
+    input.value = '';
+    input.click();
+  });
+}
+function bindImgBtn(btn, key){
+  btn.addEventListener('click', function () { changeImg(btn, key); });
+}
+
+/* ============ 收费项就地编辑（收费章节 / 收费道具） ============ */
+function editPrice(el){
+  el.setAttribute('contenteditable', 'true');
+  el.focus();
+  try {
+    var range = document.createRange();
+    range.selectNodeContents(el);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } catch (e) {}
+}
+function savePrice(el){
+  el.removeAttribute('contenteditable');
+  var id = el.getAttribute('data-price-id');
+  if (!id) return;
+  var st = wpState();
+  st.prices = st.prices || {};
+  st.prices[id] = el.textContent.trim();
+  wpSave(st);
+  showToast('ok', '价格已更新', el.textContent.trim());
+}
+function wirePricing(){
+  var list = document.querySelectorAll('.ch-price, .pr-price');
+  for (var i = 0; i < list.length; i++) {
+    var el = list[i];
+    var id = 'price' + i;
+    el.setAttribute('data-price-id', id);
+    el.classList.add('price-edit');
+    el.setAttribute('title', '点击可修改价格');
+    bindPrice(el);
+  }
+}
+function bindPrice(el){
+  el.addEventListener('click', function () { editPrice(el); });
+  el.addEventListener('blur', function () { savePrice(el); });
+}
+
+/* ============ 初始化 ============ */
+function restoreState(){
+  var st = wpState();
+  if (st.images) {
+    Object.keys(st.images).forEach(function (k) {
+      var el = document.querySelector('.ac-img[data-img-key="' + k + '"]');
+      if (el) { el.style.backgroundImage = 'url(' + st.images[k] + ')'; el.textContent = ''; }
+    });
+  }
+  if (st.prices) {
+    Object.keys(st.prices).forEach(function (k) {
+      var el = document.querySelector('[data-price-id="' + k + '"]');
+      if (el) el.textContent = st.prices[k];
+    });
+  }
+}
+function initWorkEditor(){
+  wireImgPick();
+  wireAssetUploads();
+  wirePricing();
+  var q = LJSearch() || '';
+  var m = q.match(/[?&]w=([a-zA-Z0-9_-]+)/);
+  var t = q.match(/[?&]tab=([a-zA-Z]+)/);
+  if (m) { openWork(m[1], t ? t[1] : null); } else { showPicker(); }
+  restoreState();
+}
+
+// Toast
+function showToast(kind, title, msg){
+  var c = document.getElementById('toast');
+  var t = document.createElement('div');
+  t.className = 'toast-item';
+  t.style.cssText='padding:10px 16px;border-radius:10px;background:var(--card);border:1px solid var(--border);font-size:13px;margin-bottom:8px;box-shadow:0 4px 20px rgba(0,0,0,.4)';
+  const colors = {ok:'var(--ok)',warn:'var(--warn)',info:'var(--xinyu)'};
+  t.innerHTML = '<b style="color:'+(colors[kind]||'var(--accent)')+'">'+title+'</b>' + (msg?' <span style="color:var(--sub)">· '+msg+'</span>':'');
+  c.appendChild(t);
+  setTimeout(()=>t.remove(), 3000);
+}
+
+// 启动：无 ?w= 参数时进入「作品选择」视图
+initWorkEditor();
+</script>
+<script src="js/creator-store.js"></script>
+<script src="js/creator-ai.js"></script>
+<script src="js/creator-pages.js"></script>
+<script src="js/tabbar.js"></script>
+</body>
+</html>

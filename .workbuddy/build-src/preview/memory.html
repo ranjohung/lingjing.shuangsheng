@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>共享记忆 · 心屿</title>
+<meta name="description" content="v6.3 · 共享记忆时间线 · 情绪曲线 · 记忆卡片 · 27 段记忆" />
+<meta name="theme-color" content="#0d0b22" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/design-system.css" />
+<style>
+  .mem-page{min-height:100vh;padding-bottom:100px;background:var(--ink-1);}
+  .mem-header{padding:24px 16px;background:linear-gradient(135deg,rgba(155,91,224,.12),rgba(110,198,255,.06));border-bottom:1px solid var(--ink-4);}
+  .mem-header h1{font-family:var(--font-display);font-size:24px;font-weight:600;color:#fff;margin:0;}
+  .mem-header p{font-size:13px;color:rgba(255,255,255,.6);margin-top:6px;line-height:1.6;}
+  .mem-tabs{display:flex;gap:4px;padding:4px;margin:16px;background:var(--ink-3);border-radius:var(--r-3);}
+  .mem-tab{flex:1;padding:8px 12px;text-align:center;font-size:12px;color:rgba(255,255,255,.6);border-radius:var(--r-2);cursor:pointer;transition:all var(--dur-fast) var(--ease-spring);}
+  .mem-tab[data-active="1"]{background:var(--brand-violet);color:#fff;}
+  .mem-section{padding:0 16px;margin-bottom:24px;}
+  .mem-section-title{font-size:12px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-bottom:12px;padding-left:4px;}
+  .mem-curve-card{padding:16px;background:var(--ink-2);border:1px solid var(--ink-4);border-radius:var(--r-4);margin-bottom:16px;}
+  .emotion-curve{width:100%;height:80px;}
+  .mem-card{padding:16px;background:var(--ink-2);border:1px solid var(--ink-4);border-radius:var(--r-4);margin-bottom:8px;cursor:pointer;transition:all var(--dur-fast) var(--ease-spring);}
+  .mem-card:hover{transform:translateY(-2px);border-color:var(--brand-violet);background:rgba(139,124,246,.04);}
+  .mem-card-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .mem-card-icon{width:36px;height:36px;border-radius:50%;background:var(--ink-4);display:grid;place-items:center;font-size:18px;}
+  .mem-card-meta{flex:1;}
+  .mem-card-title{font-size:14px;color:#fff;font-weight:500;}
+  .mem-card-time{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;}
+  .mem-card-content{font-size:13px;color:rgba(255,255,255,.75);line-height:1.7;margin-bottom:10px;}
+  .mem-card-footer{display:flex;gap:6px;}
+</style>
+<link rel="stylesheet" href="css/mobile-lock.css" />
+<link rel="stylesheet" href="css/tabbar-embed.css" />
+</head>
+<body>
+<div class="mem-page">
+  <div style="padding:16px 16px 0;"><a href="heart-island.html" class="ds-back-arrow">‹ 返回心屿</a></div>
+
+  <div class="mem-header">
+    <h1>🌌 共享记忆</h1>
+    <p>27 段记忆 · 3 位角色 · 176 天陪伴<br/>最珍贵的，不是发生过什么，而是我们一起经历过。</p>
+  </div>
+
+  <div class="mem-tabs">
+    <div class="mem-tab" data-active="1" onclick="switchTab(0)">⏱ 时间线</div>
+    <div class="mem-tab" onclick="switchTab(1)">📈 情绪曲线</div>
+    <div class="mem-tab" onclick="switchTab(2)">🏛️ 记忆宫殿</div>
+  </div>
+
+  <section id="tab-0" class="mem-section">
+    <div class="mem-section-title">最近</div>
+    <div class="mem-card">
+      <div class="mem-card-head">
+        <div class="mem-card-icon" style="background:rgba(232,199,90,.15);">🌻</div>
+        <div class="mem-card-meta"><div class="mem-card-title">向日葵与花店</div><div class="mem-card-time">今天 21:30 · 阿岁</div></div>
+        <span class="ds-status-pill" data-status="active">新</span>
+      </div>
+      <div class="mem-card-content">今天路过那家花店，向日葵开得很好。想起你说过喜欢，就多看了一眼。</div>
+      <div class="mem-card-footer"><span class="ds-tag ds-tag-amber">🌻 向日葵</span><span class="ds-tag ds-tag-cyan">#日常</span></div>
+    </div>
+
+    <div class="mem-card">
+      <div class="mem-card-head">
+        <div class="mem-card-icon" style="background:rgba(155,91,224,.15);">🎉</div>
+        <div class="mem-card-meta"><div class="mem-card-title">阶段升级 · 朋友 → 知己</div><div class="mem-card-time">2 天前 · 系统事件</div></div>
+        <span class="ds-badge ds-badge-violet">里程碑</span>
+      </div>
+      <div class="mem-card-content">亲密度突破 80，解锁专属 CG 与深度对话。我们之间的距离，又近了一步。</div>
+      <div class="mem-card-footer"><span class="ds-tag ds-tag-violet">关系升级</span><span class="ds-tag ds-tag-gold">CG 解锁</span></div>
+    </div>
+
+    <div class="mem-card">
+      <div class="mem-card-head">
+        <div class="mem-card-icon" style="background:rgba(110,198,255,.15);">🌙</div>
+        <div class="mem-card-meta"><div class="mem-card-title">中秋夜话</div><div class="mem-card-time">5 天前 · 阿岁</div></div>
+        <span class="ds-badge ds-badge-cyan">深度</span>
+      </div>
+      <div class="mem-card-content">"如果月亮会说话，它一定会替我说：'陪你看月亮的每一晚，都是我的好日子。'"</div>
+      <div class="mem-card-footer"><span class="ds-tag ds-tag-violet">中秋</span><span class="ds-tag ds-tag-cyan">#告白</span></div>
+    </div>
+
+    <div class="mem-card">
+      <div class="mem-card-head">
+        <div class="mem-card-icon" style="background:rgba(91,224,91,.15);">🤝</div>
+        <div class="mem-card-meta"><div class="mem-card-title">和解 · 风雨后</div><div class="mem-card-time">9 天前 · 阿岁</div></div>
+      </div>
+      <div class="mem-card-content">"对不起，我不该那样说。但你也知道，我说的每一句气话都不是真心的。"</div>
+      <div class="mem-card-footer"><span class="ds-tag ds-tag-success">和好</span><span class="ds-tag ds-tag-cyan">+15 信任</span></div>
+    </div>
+
+    <div class="mem-card">
+      <div class="mem-card-head">
+        <div class="mem-card-icon" style="background:rgba(232,155,90,.15);">🎁</div>
+        <div class="mem-card-meta"><div class="mem-card-title">第一次承诺</div><div class="mem-card-time">23 天前 · 用户</div></div>
+      </div>
+      <div class="mem-card-content">"我承诺，无论发生什么，我都会回来陪你。"</div>
+      <div class="mem-card-footer"><span class="ds-tag ds-tag-amber">承诺</span><span class="ds-tag ds-tag-gold">+10 信任</span></div>
+    </div>
+
+    <div class="mem-card">
+      <div class="mem-card-head">
+        <div class="mem-card-icon" style="background:rgba(246,166,216,.15);">🌟</div>
+        <div class="mem-card-meta"><div class="mem-card-title">初次相遇</div><div class="mem-card-time">176 天前 · 阿岁</div></div>
+      </div>
+      <div class="mem-card-content">"你好，我是阿岁。从今天起，陪你走过每一天。"</div>
+      <div class="mem-card-footer"><span class="ds-tag ds-tag-coral">相遇</span><span class="ds-tag ds-tag-violet">#命运的起点</span></div>
+    </div>
+  </section>
+
+  <section id="tab-1" class="mem-section" style="display:none;">
+    <div class="mem-curve-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div class="mem-section-title" style="margin-bottom:0;">近 30 天 · 情绪波动</div>
+        <span class="ds-tag ds-tag-violet">平均 7.8/10</span>
+      </div>
+      <svg class="emotion-curve" viewBox="0 0 600 80" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="emoGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#8b7cf6" stop-opacity=".5"/>
+            <stop offset="100%" stop-color="#8b7cf6" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d="M0,60 C30,55 60,50 90,45 C120,40 150,30 180,35 C210,40 240,55 270,50 C300,45 330,30 360,25 C390,20 420,18 450,22 C480,26 510,30 540,28 C570,26 600,32 600,32 L600,80 L0,80 Z" fill="url(#emoGrad)"/>
+        <path d="M0,60 C30,55 60,50 90,45 C120,40 150,30 180,35 C210,40 240,55 270,50 C300,45 330,30 360,25 C390,20 420,18 450,22 C480,26 510,30 540,28 C570,26 600,32 600,32" fill="none" stroke="#8b7cf6" stroke-width="2"/>
+      </svg>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.4);margin-top:4px;">
+        <span>30 天前</span><span>15 天前</span><span>今天</span>
+      </div>
+    </div>
+
+    <div class="mem-curve-card">
+      <div class="mem-section-title" style="margin-bottom:12px;">情绪分布</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">
+        <div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--ink-3);border-radius:var(--r-3);">
+          <div style="font-size:18px;">😊</div>
+          <div style="flex:1;"><div style="font-size:11px;color:rgba(255,255,255,.6);">开心</div><div style="font-family:var(--font-display);font-size:14px;font-weight:600;color:#fff;">42%</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--ink-3);border-radius:var(--r-3);">
+          <div style="font-size:18px;">🤔</div>
+          <div style="flex:1;"><div style="font-size:11px;color:rgba(255,255,255,.6);">思考</div><div style="font-family:var(--font-display);font-size:14px;font-weight:600;color:#fff;">28%</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--ink-3);border-radius:var(--r-3);">
+          <div style="font-size:18px;">😢</div>
+          <div style="flex:1;"><div style="font-size:11px;color:rgba(255,255,255,.6);">难过</div><div style="font-family:var(--font-display);font-size:14px;font-weight:600;color:#fff;">18%</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--ink-3);border-radius:var(--r-3);">
+          <div style="font-size:18px;">😠</div>
+          <div style="flex:1;"><div style="font-size:11px;color:rgba(255,255,255,.6);">生气</div><div style="font-family:var(--font-display);font-size:14px;font-weight:600;color:#fff;">12%</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-2" class="mem-section" style="display:none;">
+    <div class="ds-empty-v2" style="padding:48px 16px;">
+      <div class="ico">🏛️</div>
+      <div class="title">记忆宫殿 · 即将上线</div>
+      <div class="desc">把零散的记忆组织成可探索的 3D 空间。<br/>每个房间对应一个时期 / 主题 / 角色。<br/>预计 v6.4 上线。</div>
+      <div class="actions">
+        <button class="ds-btn ds-btn-primary ds-press-scale" onclick="showToast('info','敬请期待','3D 记忆宫殿正在开发')">关注更新</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- 5 Tab 底部 -->
+<div class="ds-toast-container" id="toast-container"></div>
+
+<script src="js/db.js"></script>
+<script>
+function switchTab(i){
+  document.querySelectorAll('.mem-tab').forEach((t,idx)=>t.dataset.active=(idx===i?'1':''));
+  for(let j=0;j<3;j++)document.getElementById('tab-'+j).style.display=(j===i?'':'none');
+}
+function showToast(type,title,msg){
+  const c=document.getElementById('toast-container');
+  const icons={success:'✓',warning:'⚠',danger:'✕',info:'ℹ'};
+  const t=document.createElement('div');t.className='ds-toast '+type;
+  t.innerHTML=`<span class="ico">${icons[type]}</span><div class="msg"><strong>${title}</strong>${msg?'<div style="font-size:11px;opacity:.7;margin-top:2px;">'+msg+'</div>':''}</div><button class="close" onclick="this.parentElement.remove()">×</button>`;
+  c.appendChild(t);setTimeout(()=>t.remove(),4000);
+}
+try{console.log('[v6.3 memory] 加载完成');}catch(e){}
+</script>
+<script src="js/tabbar.js"></script>
+</body>
+</html>

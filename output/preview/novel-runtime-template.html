@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><base href="__LJ_BASE__" /><script>
+window.__LJ_PARAMS__ = __LJ_QS__;
+window.__LJ_HASHV__ = __LJ_HASH__;
+window.LJSearch = function () { var v = window.__LJ_PARAMS__; return v ? v : location.search; };
+window.LJHashVal = function () { var v = window.__LJ_HASHV__; return v ? v : location.hash; };
+window.LJNav = function (url) {
+  if (typeof url === 'string') {
+    var m = /([\w.\-]+)\.html(\?[^#]*)?(#.*)?$/.exec(url);
+    if (m) {
+      try { parent.postMessage({ lj: 'go', id: m[1], qs: m[2] || '', hash: m[3] || '' }, '*'); return; } catch (err) {}
+    }
+    try { parent.LJ.goUrl(url); return; } catch (err2) {}
+  }
+  location.href = url;
+};
+window.LJBack = function () {
+  try { parent.postMessage({ lj: 'back' }, '*'); } catch (err) { history.back(); }
+};
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>灵境小说世界 · V3.0 Runtime</title>
+<link rel="stylesheet" href="css/mobile-lock.css" />
+<style>
+/* =====================================================================
+ * V3.0 · Novel World Runtime — GameStage 八层架构样式
+ * 层级 z-index 严格固定，不可更改
+ * ===================================================================== */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0A0A14;--panel:#16213E;--line:rgba(255,255,255,.08);
+  --gold:#E8C36A;--accent:#E94560;--purple:#6C5CE7;--green:#00B894;
+  --text:#F0EAD6;--sub:rgba(240,234,214,.65);--muted:rgba(240,234,214,.4);
+}
+html,body{background:#000;color:var(--text);font-family:"Songti SC","STZhongsong","Source Han Serif SC",serif;font-size:14px;height:100vh;overflow:hidden}
+body{max-width:480px;margin:0 auto;position:relative}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;font-size:inherit;color:inherit;background:none;border:none;cursor:pointer}
+
+/* ============ GameStage 根容器 ============ */
+#lj-stage-root{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  background:#000;overflow:hidden;
+  perspective:800px;
+}
+.lj-stage-inner{
+  position:absolute;inset:0;
+  transform-origin:center center;
+  transition:transform .5s ease;
+}
+
+/* ============ 层通用 ============ */
+.lj-layer{position:absolute;inset:0;pointer-events:none}
+.lj-layer > *{pointer-events:auto}
+
+/* ============ 层 1: BackgroundLayer (z=1) ============ */
+#lj-bg-layer{z-index:1}
+.lj-bg-img{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+}
+.lj-bg-img:first-child{position:absolute;inset:0;background:linear-gradient(160deg,#2A2438 0%,#1A2438 50%,#0F1B2A 100%)}
+.lj-cg{
+  position:absolute;inset:0;z-index:5;
+  background-size:contain;background-position:center;background-repeat:no-repeat;
+  cursor:pointer;
+}
+
+/* ============ 层 2: CharacterLayer (z=2) ============ */
+#lj-char-layer{z-index:2}
+.lj-char{
+  position:absolute;bottom:24%;
+  width:30%;height:62%;
+  background-size:contain;background-position:bottom center;background-repeat:no-repeat;
+  transition:opacity .4s ease,transform .4s ease,left .5s ease,filter .3s ease;
+}
+.lj-char[data-position="left"]{left:12%}
+.lj-char[data-position="center-left"]{left:28%}
+.lj-char[data-position="center"]{left:42%}
+.lj-char[data-position="center-right"]{left:58%}
+.lj-char[data-position="right"]{left:72%}
+
+/* ============ 层 3: ObjectLayer (z=3) ============ */
+#lj-obj-layer{z-index:3}
+.lj-hotspot{
+  position:absolute;
+  border:2px dashed transparent;
+  border-radius:8px;
+  cursor:pointer;
+  display:flex;align-items:flex-end;justify-content:center;
+  transition:background .2s,border-color .2s;
+}
+.lj-hotspot:hover,.lj-hotspot:active{
+  background:rgba(232,195,106,.08);
+  border-color:rgba(232,195,106,.4);
+}
+.lj-hot-label{
+  position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:3px;
+  padding:3px 10px;border-radius:14px;
+  background:rgba(10,10,20,.78);backdrop-filter:blur(4px);
+  border:1px solid rgba(232,195,106,.4);
+  font-size:11px;color:var(--gold);white-space:nowrap;
+  pointer-events:none;
+}
+.lj-hot-ico{font-size:13px}
+.lj-hotspot.lj-hot-character .lj-hot-label{border-color:rgba(108,92,231,.5);color:#D8D2FF}
+.lj-hotspot.lj-hot-prop .lj-hot-label{border-color:rgba(78,204,163,.5);color:#B8F2E0}
+.lj-hotspot.lj-hot-environment .lj-hot-label{border-color:rgba(255,179,71,.5);color:#FFD89A}
+
+/* ============ 层 4: EffectLayer (z=4) ============ */
+#lj-fx-layer{z-index:4;pointer-events:none!important}
+.lj-fx{position:absolute;inset:0;overflow:hidden}
+.lj-fx > span{color:rgba(200,220,255,.6);font-size:10px}
+@keyframes ljFallrain{from{transform:translateY(-20vh)}to{transform:translateY(120vh)}}
+@keyframes ljFallsnow{from{transform:translateY(-20vh) rotate(0)}to{transform:translateY(120vh) rotate(360deg)}}
+@keyframes ljFallpetals{from{transform:translateY(-20vh) translateX(0) rotate(0)}to{transform:translateY(120vh) translateX(40px) rotate(180deg)}}
+@keyframes ljFlash{0%{opacity:0}50%{opacity:1}100%{opacity:0}}
+@keyframes ljFadeIn{from{opacity:0}to{opacity:1}}
+
+/* ============ 层 5: UILayer (z=10) ============ */
+#lj-ui-layer{z-index:10}
+.lj-ui-bar{
+  position:absolute;top:0;left:0;right:0;
+  height:44px;display:flex;align-items:center;justify-content:flex-end;gap:6px;
+  padding:0 10px;
+  background:linear-gradient(180deg,rgba(0,0,0,.7) 0%,transparent 100%);
+}
+.lj-ui-btn{
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(0,0,0,.5);backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.15);
+  font-size:16px;color:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .15s,background .15s;
+}
+.lj-ui-btn:active{transform:scale(.92);background:rgba(232,195,106,.2)}
+
+/* ============ 层 6: DialogueLayer (z=20) ============ */
+#lj-dlg-layer{
+  z-index:20;display:none;
+  flex-direction:column;justify-content:flex-end;
+  min-height:96px;max-height:36vh;
+  padding:16px 18px 20px;
+  background:linear-gradient(0deg,rgba(0,0,0,.92) 0%,rgba(0,0,0,.75) 70%,transparent 100%);
+  border-top:1px solid rgba(232,195,106,.3);
+  cursor:pointer;
+}
+#lj-dlg-layer::before{
+  content:'';position:absolute;top:-1px;left:16px;right:16px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(232,195,106,.5),transparent);
+}
+.lj-dlg-speaker{
+  font-size:12px;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;
+  display:flex;align-items:center;gap:6px;
+}
+.lj-dlg-speaker::before{content:'◆';font-size:8px;opacity:.7}
+.lj-dlg-speaker.lj-dlg-thought{color:var(--purple)}
+.lj-dlg-speaker.lj-dlg-thought::before{content:'❀';color:var(--purple)}
+.lj-dlg-body{
+  font:400 14px/1.85 'Songti SC',serif;color:var(--text);
+  white-space:pre-wrap;letter-spacing:.02em;flex:1;
+}
+.lj-dlg-body.lj-dlg-thought-body{color:rgba(200,190,255,.9);font-style:italic}
+.lj-cursor{
+  display:inline-block;width:7px;height:14px;
+  background:var(--gold);margin-left:2px;
+  animation:ljBlink 1s steps(2) infinite;
+}
+@keyframes ljBlink{50%{opacity:0}}
+.lj-dlg-hint{
+  margin-top:8px;font-size:10px;color:rgba(232,195,106,.5);
+  text-align:center;letter-spacing:.1em;
+  animation:ljPulse 2s ease-in-out infinite;
+}
+@keyframes ljPulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+/* ============ 层 7: ChoiceLayer (z=30) ============ */
+#lj-choice-layer{z-index:30;display:none;align-items:center;justify-content:center;padding:20px}
+.lj-choice-panel{
+  display:flex;flex-direction:column;gap:10px;
+  width:80%;max-width:360px;
+}
+.lj-choice-btn{
+  padding:14px 18px;border-radius:12px;
+  background:rgba(10,10,20,.85);backdrop-filter:blur(8px);
+  border:1.5px solid rgba(232,195,106,.35);
+  color:var(--gold);font-size:14px;text-align:left;
+  transition:all .15s;position:relative;
+}
+.lj-choice-btn::before{content:'◆';margin-right:8px;color:rgba(232,195,106,.5);font-size:9px}
+.lj-choice-btn:active{transform:scale(.97);background:rgba(232,195,106,.12);border-color:var(--gold)}
+
+/* ============ 层 8: SystemLayer (z=40) ============ */
+#lj-sys-layer{z-index:40;display:none;align-items:center;justify-content:center}
+
+/* 系统消息 */
+.lj-sys-msg{
+  padding:16px 28px;border-radius:12px;
+  background:rgba(0,0,0,.85);backdrop-filter:blur(8px);
+  border:1px solid rgba(232,195,106,.3);
+  color:var(--gold);font-size:14px;text-align:center;
+  transition:opacity .5s;
+}
+
+/* 菜单弹窗 */
+.lj-menu-overlay,.lj-interact-overlay{
+  position:fixed;inset:0;z-index:40;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  animation:ljFadeIn .2s ease;
+}
+@keyframes ljFadeIn{from{opacity:0}to{opacity:1}}
+.lj-menu-card,.lj-interact-card{
+  width:90%;max-width:380px;max-height:80vh;overflow-y:auto;
+  background:linear-gradient(160deg,rgba(22,33,62,.97),rgba(10,10,20,.97));
+  border:1px solid rgba(232,195,106,.35);border-radius:14px;
+  padding:18px 16px;position:relative;
+  box-shadow:0 12px 40px rgba(0,0,0,.6);
+  animation:ljPop .25s cubic-bezier(.16,1,.3,1);
+}
+@keyframes ljPop{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:none}}
+.lj-menu-head{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+.lj-menu-head span{font:600 15px 'Noto Serif SC';color:var(--gold)}
+.lj-menu-close,.lj-interact-close{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);
+  font-size:14px;display:flex;align-items:center;justify-content:center;
+}
+.lj-menu-section{margin-bottom:14px}
+.lj-menu-title{font-size:12px;color:var(--gold);margin-bottom:8px;letter-spacing:.05em}
+.lj-menu-actions{display:flex;gap:8px;flex-wrap:wrap}
+.lj-menu-btn{
+  padding:8px 14px;border-radius:8px;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);
+  color:var(--sub);font-size:12px;
+  transition:all .15s;
+}
+.lj-menu-btn:active{transform:scale(.95);background:rgba(232,195,106,.12)}
+.lj-menu-flag{
+  display:flex;justify-content:space-between;
+  padding:6px 10px;background:rgba(255,255,255,.04);border-radius:6px;
+  font-size:12px;margin-bottom:4px;
+}
+.lj-menu-flag b{color:var(--gold)}
+.lj-menu-empty{color:var(--muted);font-size:12px;text-align:center;padding:8px}
+.lj-menu-backlog{max-height:200px;overflow-y:auto}
+.lj-backlog-item{
+  padding:8px;font-size:12px;color:var(--sub);
+  border-bottom:1px solid rgba(255,255,255,.04);line-height:1.6;
+}
+.lj-backlog-item b{color:var(--gold);margin-right:6px}
+
+/* 互动菜单 */
+.lj-interact-close{position:absolute;top:10px;right:10px}
+.lj-interact-head{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+.lj-interact-ico{
+  width:42px;height:42px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  background:rgba(232,195,106,.15);border:1px solid rgba(232,195,106,.35);
+}
+.lj-interact-name{font:600 15px 'Noto Serif SC';color:#FFE8B0;flex:1}
+.lj-interact-kind{font-size:10px;color:rgba(232,195,106,.65);padding:2px 6px;border-radius:4px;background:rgba(232,195,106,.08)}
+.lj-interact-desc{font-size:12px;color:rgba(255,232,176,.7);line-height:1.6;margin-bottom:14px}
+.lj-interact-actions{display:flex;flex-direction:column;gap:8px}
+.lj-interact-btn{
+  padding:10px 14px;border-radius:8px;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);
+  color:var(--text);font-size:13px;text-align:left;
+  transition:all .15s;
+}
+.lj-interact-btn:active{transform:scale(.97);background:rgba(232,195,106,.12)}
+.lj-interact-empty{color:var(--muted);font-size:12px;text-align:center;padding:8px}
+
+/* Toast */
+.lj-toast{
+  position:fixed;bottom:100px;left:50%;transform:translateX(-50%);
+  padding:10px 20px;border-radius:20px;z-index:99;
+  background:rgba(0,0,0,.85);backdrop-filter:blur(6px);
+  border:1px solid rgba(232,195,106,.3);
+  color:var(--gold);font-size:13px;
+  transition:opacity .4s;
+}
+
+/* 场景名标签 */
+#lj-scene-name{
+  position:absolute;top:50px;left:14px;z-index:11;
+  padding:4px 10px;border-radius:8px;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(6px);
+  border:1px solid rgba(232,195,106,.3);
+  font-size:11px;color:var(--gold);letter-spacing:.05em;
+}
+</style>
+</head>
+<body>
+
+<!-- ============ GameStage 八层根容器 ============ -->
+<div id="lj-stage-root">
+  <div class="lj-stage-inner">
+    <!-- 层 1: BackgroundLayer -->
+    <div id="lj-bg-layer" class="lj-layer"></div>
+    <!-- 层 2: CharacterLayer -->
+    <div id="lj-char-layer" class="lj-layer"></div>
+    <!-- 层 3: ObjectLayer -->
+    <div id="lj-obj-layer" class="lj-layer"></div>
+    <!-- 层 4: EffectLayer -->
+    <div id="lj-fx-layer" class="lj-layer"></div>
+    <!-- 层 5: UILayer -->
+    <div id="lj-ui-layer" class="lj-layer"></div>
+    <!-- 层 6: DialogueLayer -->
+    <div id="lj-dlg-layer" class="lj-layer"></div>
+    <!-- 层 7: ChoiceLayer -->
+    <div id="lj-choice-layer" class="lj-layer"></div>
+    <!-- 层 8: SystemLayer -->
+    <div id="lj-sys-layer" class="lj-layer"></div>
+  </div>
+  <span id="lj-scene-name">默认场景</span>
+</div>
+
+<script src="js/novel-world-stage.js"></script>
+<script src="js/novel-world-runtime.js"></script>
+<script src="js/novel-world-hotspot.js"></script>
+<script src="js/novel-runtime-demo.js"></script>
+<script>
+document.addEventListener('click', function (e) {
+  var el = e.target;
+  while (el && el.nodeType === 1 && el.tagName !== 'A') el = el.parentElement;
+  if (!el || el.tagName !== 'A') return;
+  var h = el.getAttribute('href') || '';
+  if (h.charAt(0) === '#') { e.preventDefault(); return; }
+  if (!h || /^[a-zA-Z][\w+.\-]*:/.test(h)) return;
+  if (/([\w.\-]+)\.html(\?|#|$)/.test(h)) { e.preventDefault(); window.LJNav(h); }
+}, true);
+</script>
+</body>
+</html>

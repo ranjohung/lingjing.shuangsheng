@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<base href="__LJ_BASE__" />
+<script>
+window.__LJ_PARAMS__ = __LJ_QS__;
+window.__LJ_HASHV__ = __LJ_HASH__;
+window.LJNav = function (url) {
+  try { parent.postMessage({ lj: 'nav', url: url }, '*'); } catch (e) { location.href = url; }
+};
+</script>
+<title>灵境 · 原文阅读器</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0d0d1a;color:#EAEAF0;font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif}
+:root{--accent:#C8A65C;--accent2:#7B5E9B;--bg:#0d0d1a;--panel:#161628;--panel2:#1e1e36;--border:#2a2a4a;--text:#EAEAF0;--dim:#8888aa}
+
+/* ====== 书库选择界面 ====== */
+#canon-book-select{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;z-index:1}
+#canon-book-select .hdr{text-align:center;margin-bottom:30px}
+#canon-book-select .hdr h1{font-size:22px;font-weight:600;color:var(--accent);letter-spacing:2px}
+#canon-book-select .hdr p{font-size:13px;color:var(--dim);margin-top:8px}
+.canon-book-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;max-width:860px;width:100%}
+.canon-book-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.canon-book-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 30px rgba(200,166,92,.15)}
+.canon-book-card .cov{width:100%;height:80px;border-radius:8px;margin-bottom:14px;display:flex;align-items:center;justify-content:center;font-size:36px}
+.canon-book-card h3{font-size:16px;font-weight:600;color:var(--text)}
+.canon-book-card .au{font-size:12px;color:var(--dim);margin-top:4px}
+.canon-book-card .tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(200,166,92,.15);color:var(--accent);margin-top:8px}
+.canon-book-card .lock{position:absolute;top:12px;right:12px;font-size:10px;color:#4CAF50;opacity:.8}
+
+/* ====== 章节列表界面 ====== */
+#canon-chapter-list{position:fixed;inset:0;display:none;flex-direction:column;z-index:1;background:var(--bg);padding:50px 20px 20px;overflow-y:auto}
+#canon-chapter-list.show{display:flex}
+.canon-back-btn{position:fixed;top:16px;left:16px;background:var(--panel);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;z-index:10}
+.canon-back-btn:hover{border-color:var(--accent)}
+.canon-cl-header{text-align:center;margin:20px 0 30px}
+.canon-cl-header h2{font-size:20px;color:var(--accent);font-weight:600}
+.canon-cl-header .lock-info{font-size:12px;color:#4CAF50;margin-top:8px}
+.canon-cl-header .lock-info span{font-family:monospace}
+.canon-chapter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;max-width:860px;margin:0 auto;width:100%}
+.canon-chapter-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .25s}
+.canon-chapter-card:hover{border-color:var(--accent);background:var(--panel2)}
+.canon-chapter-card .ch-num{font-size:15px;font-weight:600;color:var(--accent)}
+.canon-chapter-card .ch-preview{font-size:12px;color:var(--dim);margin-top:6px;line-height:1.5;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.canon-chapter-card .ch-meta{font-size:11px;color:#555577;margin-top:6px}
+
+/* ====== Runtime 舞台界面 ====== */
+#canon-stage-screen{position:fixed;inset:0;display:none;z-index:1}
+#canon-stage-screen.show{display:block}
+.lj-stage-root{position:fixed;inset:0;overflow:hidden;cursor:pointer}
+.lj-stage-inner{width:100%;height:100%;position:relative;transition:transform .3s ease;transform-origin:center}
+.lj-layer{position:absolute;inset:0;pointer-events:none}
+.lj-bg-layer{z-index:1}
+.lj-char-layer{z-index:2}
+.lj-obj-layer{z-index:3}
+.lj-fx-layer{z-index:4}
+.lj-ui-layer{z-index:10;pointer-events:auto}
+.lj-dlg-layer{z-index:20;pointer-events:auto}
+.lj-choice-layer{z-index:30;pointer-events:auto}
+.lj-sys-layer{z-index:40;pointer-events:auto}
+
+/* 背景 */
+.lj-bg-img{position:absolute;inset:0;background-size:cover;background-position:center;transition:opacity .8s ease}
+.lj-cg{position:absolute;inset:0;background-size:contain;background-position:center;background-repeat:no-repeat;z-index:5;cursor:pointer}
+
+/* 角色 */
+.lj-char{position:absolute;bottom:0;width:24%;height:80%;background-size:contain;background-position:bottom;background-repeat:no-repeat;transition:opacity .4s ease,transform .4s ease,filter .3s ease,left .5s ease}
+
+/* 对话框 */
+.lj-dlg-layer{display:none;flex-direction:column;justify-content:flex-end;pointer-events:auto;background:linear-gradient(180deg,transparent 0%,transparent 40%,rgba(13,13,26,.85) 65%,rgba(13,13,26,.95) 100%);backdrop-filter:blur(2px);padding:60px 0 0}
+.lj-dlg-speaker{font-size:15px;font-weight:600;color:var(--accent);padding:0 30px 4px;text-shadow:0 2px 8px rgba(0,0,0,.8)}
+.lj-dlg-body{font-size:16px;line-height:1.8;color:#f0f0f0;padding:0 30px 8px;text-shadow:0 2px 8px rgba(0,0,0,.8);min-height:48px;white-space:pre-wrap;word-break:break-all}
+.lj-dlg-thought{color:var(--accent2);font-style:italic}
+.lj-dlg-thought-body{color:#c8b8e0}
+.lj-dlg-hint{font-size:12px;color:var(--accent);padding:0 30px 12px;text-align:right;opacity:.7;animation:ljBlink 1.5s ease infinite}
+.lj-dlg-box{background:linear-gradient(180deg,rgba(13,13,26,.85),rgba(13,13,26,.95));border-top:1px solid rgba(200,166,92,.3);backdrop-filter:blur(10px);padding:20px 0 24px}
+.lj-cursor{display:inline-block;width:2px;height:1em;background:var(--accent);animation:ljBlink .8s steps(2) infinite;vertical-align:text-bottom;margin-left:1px}
+@keyframes ljBlink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* 选项 */
+.lj-choice-panel{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px}
+.lj-choice-btn{background:rgba(22,22,40,.9);border:1px solid var(--border);color:var(--text);padding:12px 32px;border-radius:8px;font-size:15px;cursor:pointer;transition:all .2s;min-width:280px;text-align:center}
+.lj-choice-btn:hover{border-color:var(--accent);background:rgba(30,30,54,.95);transform:translateX(4px)}
+
+/* UI 栏 */
+.lj-ui-bar{position:absolute;top:12px;right:12px;display:flex;gap:8px}
+.lj-ui-btn{width:36px;height:36px;border-radius:8px;background:rgba(22,22,40,.8);border:1px solid var(--border);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.lj-ui-btn:hover{border-color:var(--accent);background:rgba(30,30,54,.9)}
+
+/* 系统消息 */
+.lj-sys-msg{background:rgba(22,22,40,.95);border:1px solid var(--accent);border-radius:10px;padding:14px 28px;font-size:14px;color:var(--accent);margin:10px auto;text-align:center;transition:opacity .5s;box-shadow:0 4px 20px rgba(200,166,92,.2)}
+
+/* 热点 */
+.lj-hotspot{position:absolute;cursor:pointer;transition:all .2s;border:2px solid transparent;border-radius:6px}
+.lj-hotspot:hover{border-color:rgba(200,166,92,.5);background:rgba(200,166,92,.08)}
+.lj-hot-label{position:absolute;bottom:0;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;color:#ccc;background:rgba(0,0,0,.6);padding:2px 8px;border-radius:4px;pointer-events:none}
+.lj-hot-ico{margin-right:3px}
+
+/* 互动菜单 */
+.lj-interact-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:40}
+.lj-interact-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:24px;max-width:380px;width:90%;position:relative}
+.lj-interact-close{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,.05);border:none;color:var(--dim);font-size:14px;cursor:pointer}
+.lj-interact-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.lj-interact-ico{font-size:24px}
+.lj-interact-name{font-size:17px;font-weight:600;color:var(--accent)}
+.lj-interact-kind{font-size:11px;color:var(--dim);margin-left:auto}
+.lj-interact-desc{font-size:13px;color:#bbb;margin-bottom:14px;line-height:1.5}
+.lj-interact-actions{display:flex;flex-direction:column;gap:8px}
+.lj-interact-btn{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:10px;border-radius:8px;font-size:14px;cursor:pointer;transition:all .2s}
+.lj-interact-btn:hover{border-color:var(--accent);background:rgba(200,166,92,.1)}
+.lj-interact-empty{text-align:center;color:var(--dim);font-size:13px;padding:10px}
+
+/* 特效 */
+.lj-fx{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.lj-fx-fade_black{position:absolute;inset:0;background:#000;animation:ljFadeIn .5s ease forwards}
+.lj-fx-flash{position:absolute;inset:0;background:rgba(255,255,255,.8);animation:ljFlash .3s ease}
+@keyframes ljFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes ljFlash{0%{opacity:0}50%{opacity:.8}100%{opacity:0}}
+@keyframes ljFallpetals{0%{transform:translateY(-10%) rotate(0deg);opacity:1}100%{transform:translateY(1000px) rotate(360deg);opacity:0}}
+@keyframes ljFallrain{0%{transform:translateY(-10%);opacity:.6}100%{transform:translateY(1000px);opacity:0}}
+@keyframes ljFallsnow{0%{transform:translateY(-10%);opacity:1}100%{transform:translateY(1000px);opacity:.3}}
+
+/* 菜单 */
+.lj-menu-overlay{position:absolute;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:40}
+.lj-menu-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:24px;max-width:420px;width:90%;max-height:80vh;overflow-y:auto;position:relative}
+.lj-menu-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.lj-menu-close{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,.05);border:none;color:var(--dim);font-size:14px;cursor:pointer}
+.lj-menu-title{font-size:14px;color:var(--accent);margin:12px 0 6px}
+.lj-menu-backlog{max-height:200px;overflow-y:auto}
+.lj-backlog-item{font-size:12px;color:#aaa;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.lj-menu-flag{display:flex;justify-content:space-between;font-size:12px;padding:3px 0}
+.lj-menu-empty{text-align:center;color:var(--dim);font-size:13px;padding:10px}
+.lj-menu-actions{display:flex;gap:8px;flex-wrap:wrap}
+.lj-menu-btn{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer}
+.lj-menu-btn:hover{border-color:var(--accent)}
+
+/* Toast */
+.lj-toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--panel);border:1px solid var(--accent);color:var(--accent);padding:8px 20px;border-radius:8px;font-size:13px;z-index:9999;transition:opacity .3s}
+
+/* 章节结束导航 */
+.canon-end-overlay{position:absolute;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:40;backdrop-filter:blur(4px)}
+.canon-end-card{background:var(--panel);border:1px solid var(--accent);border-radius:14px;padding:30px;text-align:center;max-width:340px}
+.canon-end-card h3{font-size:18px;color:var(--accent);margin-bottom:16px}
+.canon-end-card .end-actions{display:flex;flex-direction:column;gap:10px}
+.canon-end-card button{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:10px 24px;border-radius:8px;font-size:14px;cursor:pointer;transition:all .2s}
+.canon-end-card button:hover{border-color:var(--accent);background:rgba(200,166,92,.1)}
+.canon-end-card button.primary{background:rgba(200,166,92,.15);border-color:var(--accent);color:var(--accent)}
+</style>
+</head>
+<body>
+
+<!-- 书库选择界面 -->
+<div id="canon-book-select">
+  <div class="hdr">
+    <h1>原文阅读器 · Canon Reader</h1>
+    <p>V3.0 Script Action Runtime · SHA-256 Canon Lock</p>
+  </div>
+  <div class="canon-book-grid" id="canon-book-grid"></div>
+</div>
+
+<!-- 章节列表界面 -->
+<div id="canon-chapter-list">
+  <button class="canon-back-btn" onclick="__canonBackToBooks()">← 返回书库</button>
+  <div class="canon-cl-header">
+    <h2 id="canon-cl-title"></h2>
+    <div class="lock-info" id="canon-cl-lock"></div>
+  </div>
+  <div class="canon-chapter-grid" id="canon-chapter-grid"></div>
+</div>
+
+<!-- Runtime 舞台界面 -->
+<div id="canon-stage-screen">
+  <div class="lj-stage-root" id="lj-stage-root">
+    <div class="lj-stage-inner">
+      <div class="lj-layer" id="lj-bg-layer"></div>
+      <div class="lj-layer" id="lj-char-layer"></div>
+      <div class="lj-layer" id="lj-obj-layer"></div>
+      <div class="lj-layer" id="lj-fx-layer"></div>
+      <div class="lj-layer" id="lj-ui-layer"></div>
+      <div class="lj-layer" id="lj-dlg-layer"></div>
+      <div class="lj-layer" id="lj-choice-layer"></div>
+      <div class="lj-layer" id="lj-sys-layer"></div>
+    </div>
+  </div>
+</div>
+
+<script src="__LJ_BASE__js/novel-world-stage.js"></script>
+<script src="__LJ_BASE__js/novel-world-runtime.js"></script>
+<script src="__LJ_BASE__js/novel-world-hotspot.js"></script>
+<script src="__LJ_BASE__js/novel-world-canon-data.js"></script>
+<script src="__LJ_BASE__js/novel-world-canon.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  // ============ 初始化 ============
+  function init() {
+    var Canon = window.NovelWorldCanon;
+    var Runtime = window.NovelWorldRuntime;
+    var Stage = window.NovelWorldStage;
+
+    // 初始化 Runtime
+    Runtime.init();
+    Stage.init();
+    Stage.setupStageClick();
+
+    // 注册 CANON_CHAPTER_END 处理器
+    Canon.setChapterEndHandler(function(chapter, hasNext, resolve) {
+      showChapterEndOverlay(chapter, hasNext, resolve);
+    });
+
+    // 注册 SHOW_SYSTEM_MESSAGE（如果未注册）
+    if (!Runtime.getRegisteredActions().includes('SHOW_SYSTEM_MESSAGE')) {
+      Runtime.registerAction('SHOW_SYSTEM_MESSAGE', function(p, ctrl) {
+        Stage.showSystemMessage(p.text || '');
+        ctrl.advance();
+      });
+    }
+
+    Canon.registerCanonActions();
+
+    // 全局函数：返回章节列表
+    window.__canonGoChapters = function() {
+      document.getElementById('canon-stage-screen').classList.remove('show');
+      document.getElementById('canon-chapter-list').classList.add('show');
+      Stage.clearDialogue();
+    };
+
+    // 渲染书库
+    renderBookSelect();
+  }
+
+  // ============ 书库选择 ============
+  function renderBookSelect() {
+    var Canon = window.NovelWorldCanon;
+    var books = Canon.getBooks();
+    var grid = document.getElementById('canon-book-grid');
+    grid.innerHTML = '';
+    books.forEach(function(b) {
+      var card = document.createElement('div');
+      card.className = 'canon-book-card';
+      card.innerHTML =
+        '<div class="cov" style="background:' + b.cov + '">' + b.emoji + '</div>' +
+        '<h3>' + b.title + '</h3>' +
+        '<div class="au">作者：' + b.author + '</div>' +
+        '<div class="tag">公版名著</div>' +
+        '<div class="lock">SHA-256 Lock</div>';
+      card.addEventListener('click', function() {
+        selectBook(b.id);
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  // ============ 选择书目 ============
+  function selectBook(bookId) {
+    var Canon = window.NovelWorldCanon;
+    document.getElementById('canon-book-select').style.display = 'none';
+    document.getElementById('canon-chapter-list').classList.add('show');
+
+    Canon.loadWorld(bookId, function(result) {
+      if (!result) {
+        alert('数据加载失败');
+        return;
+      }
+      renderChapterList();
+    });
+  }
+
+  // ============ 章节列表 ============
+  function renderChapterList() {
+    var Canon = window.NovelWorldCanon;
+    var meta = Canon.getMeta() || {};
+    var chapters = Canon.getChapters();
+    var hashInfo = Canon.getHashInfo();
+
+    document.getElementById('canon-cl-title').textContent =
+      (meta.title || '未知') + ' · 章节目录';
+
+    var lockEl = document.getElementById('canon-cl-lock');
+    if (hashInfo.verified) {
+      lockEl.innerHTML = 'Canon Lock: <span>SHA-256 Verified</span> · ' + hashInfo.hashed + '/' + hashInfo.totalAnchors + ' 段已锁定';
+    } else {
+      lockEl.innerHTML = 'Canon Lock: <span style="color:#ff9800">校验中…</span> · ' + hashInfo.hashed + '/' + hashInfo.totalAnchors + ' 段';
+    }
+
+    var grid = document.getElementById('canon-chapter-grid');
+    grid.innerHTML = '';
+    chapters.forEach(function(ch) {
+      var card = document.createElement('div');
+      card.className = 'canon-chapter-card';
+      card.innerHTML =
+        '<div class="ch-num">第 ' + ch.num + ' 回</div>' +
+        '<div class="ch-preview">' + (ch.firstText || '') + '…</div>' +
+        '<div class="ch-meta">' + ch.count + ' 段原文</div>';
+      card.addEventListener('click', function() {
+        startReading(ch.num);
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  // ============ 开始阅读 ============
+  function startReading(chapter) {
+    var Canon = window.NovelWorldCanon;
+    var Stage = window.NovelWorldStage;
+
+    document.getElementById('canon-chapter-list').classList.remove('show');
+    document.getElementById('canon-stage-screen').classList.add('show');
+
+    // 确保舞台已初始化
+    if (!Stage._LAYERS || !Stage._LAYERS().bg) {
+      Stage.init();
+      Stage.setupStageClick();
+    }
+
+    Canon.playChapter(chapter);
+  }
+
+  // ============ 章节结束导航 ============
+  function showChapterEndOverlay(chapter, hasNext, resolve) {
+    var Stage = window.NovelWorldStage;
+    var sysLayer = document.getElementById('lj-sys-layer');
+    if (!sysLayer) return resolve('chapters');
+
+    var overlay = document.createElement('div');
+    overlay.className = 'canon-end-overlay';
+    var card = document.createElement('div');
+    card.className = 'canon-end-card';
+
+    var btns = '';
+    if (hasNext) {
+      btns = '<button class="primary" data-act="next">继续阅读下一回 →</button>';
+    }
+    btns += '<button data-act="restart">重新阅读本章</button>';
+    btns += '<button data-act="chapters">返回章节目录</button>';
+
+    card.innerHTML =
+      '<h3>第 ' + chapter + ' 回 · 完</h3>' +
+      '<div class="end-actions">' + btns + '</div>';
+    overlay.appendChild(card);
+    sysLayer.appendChild(overlay);
+    sysLayer.style.display = 'flex';
+
+    overlay.querySelectorAll('button').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        overlay.remove();
+        if (!sysLayer.querySelector('.canon-end-overlay') && !sysLayer.querySelector('.lj-menu-overlay')) {
+          sysLayer.style.display = 'none';
+        }
+        resolve(btn.dataset.act);
+      });
+    });
+  }
+
+  // ============ 返回书库 ============
+  window.__canonBackToBooks = function() {
+    document.getElementById('canon-chapter-list').classList.remove('show');
+    document.getElementById('canon-book-select').style.display = 'flex';
+  };
+
+  // ============ 启动 ============
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
