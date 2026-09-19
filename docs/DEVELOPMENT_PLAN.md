@@ -343,3 +343,31 @@ novel-ai-helper.html (核心新增)
 - 单 HTML 架构：全部改动经由 LJ_PAGES JSON 解析/写回（锚点 assert 幂等），页面内 JS 保持 ES5 function 风格、不使用反引号模板
 - 预览链路：work-editor `previewChapter` → `parent.LJ.go('novel-canon-reader','?book=<映射>&preview=1&chapter=<n>')` → 悬浮条/章末按钮 `postMessage {lj:'back'}` 弹栈回编辑器 → `checkPreviewPending` 弹反馈面板
 - 作品→公版书映射 LJ_BOOK_MAP：changye/taohua→xiyouji、saibo→sanguoyanyi、shenhai/hlmrev/jiuri→hongloumeng
+
+
+---
+
+## V28 工作包（2026-09-19，全部 ✅）
+
+| 任务 | 内容 | 状态 |
+| --- | --- | --- |
+| V28-A | 壳层 #stage 桌面 letterbox（>480px 视口锁 480px 居中 + 暗边光晕），全页统一 | ✅ |
+| V28-B | 新增 novel-detail 橙光式小说详情页（三 Tab/评分/人气值/灵晶值/付费信息/角色/互动/底部操作栏）+ 路由（书卡→详情→游戏→返回链） | ✅ |
+| V28-B-fix | 壳层 novel-game 映射删除 ×2 / ngQS 参数规范化 / back 栈 __noPush 防死循环 / loadEmbedded 内嵌公版 / world-view showToast 补头 / world-hub tabbar-embed 路径 | ✅ |
+| V28-C | Playwright 回归 32/32 + 截图 9 张 + PRD/DEV_PLAN 登记 | ✅ |
+
+### 验收对照
+1. 桌面 1108px 横屏：舞台 480px 居中、两侧暗色留边 ✅（S0a/S0b）
+2. 世界页书卡 → 小说详细介绍页 ✅（S3a）
+3. 详情页含：作品ID/作者/评分/人气值/灵晶值/标签/简介/更新日志/付费信息/特别参演/角色/互动/底部操作栏 ✅（S1a~i）
+4. 货币=灵晶，无第三方名 ✅（grep 校验）
+5. 开始阅读 → 游戏页（书名正确）✅（S3b/S3c）
+6. 游戏页返回 → 详情页 ✅（S3d）
+7. 详情页返回 → 世界页 ✅（S3e）
+8. 点赞/收藏/评论持久化 ✅（S2i~k）；pageerror/console 全零 ✅（S4）
+
+### 技术要点
+- 壳层 letterbox 用纯 CSS 媒体查询（min-width:481px），iframe fixed + margin:auto 居中，无 JS 参与
+- LJ_PAGES 65 页：novel-detail 经 json 解析/写回注入（锚点 assert 幂等），页面 JS 保持 ES5 function 风格
+- back 栈语义修正：LJ.go(id,qs,hash,__noPush)，postMessage back 弹栈路由不再压栈（影响全局返回链，回归通过）
+- novel-game 在 srcdoc 下取参必须走 __LJ_PARAMS__（location.search 恒空）——ngQS() 统一规范化
