@@ -312,3 +312,34 @@ novel-ai-helper.html (核心新增)
 
 
 `r`n`r`n## 世界演出交互验收补充（2026-09-16）`r`n- Canon 主线正文按句播放；点击继续先推进当前锚点句子，句子结束后才进入下一个画面。`r`n- 场景变化由 Scene/Presentation 数据驱动，背景、人物和镜头变化时切换演出画面。`r`n- 地点、家具、道具、人物必须是可点击热点；点击后显示查看、使用、前往、交谈等对象对应操作。`r`n- 世界探索结果标记为【世界探索】，不得冒充原著正文；世界功能区不使用聊天气泡。`r`n
+
+
+---
+
+## 2026-09-19 新增计划：V27 编辑我的作品 — 修复与增强（已交付）
+
+### 工作包列表
+
+| ID | 工作包 | 交付物 | 状态 |
+| --- | --- | --- | --- |
+| V27-A | my-works：P1 返回修复 + 卡片 6 操作按钮 + 删除作品（确认弹窗/持久化/列表过滤） | scripts/v27_fix_my_works.py | ✅ |
+| V27-B | work-editor 结构与样式：图片管理三区面板 + 弹窗/候选/反馈 CSS | scripts/v27_fix_work_editor_p1.py | ✅ |
+| V27-C | work-editor JS：P2 收费弹窗（六字段+编辑删除）、P3 续写（候选使用/换一批/我来说/字数/章节保存）、P5 预览发起与反馈面板 | scripts/v27_fix_work_editor_p2.py | ✅ |
+| V27-D | canon-reader：preview=1 接收端（预览悬浮条 + 章末"← 返回编辑器"） | scripts/v27_fix_canon_reader.py | ✅ |
+| V27-E | 引导时序修复（DOMContentLoaded）+ 版本 V1 入账修复 + 反馈默认跳转修复 | scripts/v27_fix_we_bootstrap.py / v27_fix_we_version.py / v27_fix_we_feedback.py | ✅ |
+| V27-F | 全链路回归 + 截图 + 文档登记 | scripts/test_v27_edit_works.py · screenshots/v27/（13 张） | ✅ 39/39 |
+
+### 验收对照（需求文档 8 条）
+1. ✅ 作品卡片六按钮：继续续写 / 收费 / 数据 / 预览 / 图片管理 / 删除（审核中/已下架卡按状态显示申诉、质检等）
+2. ✅ 右上角返回可点击，返回上一级（弹栈实测：my-works → 创作中心）
+3. ✅ 添加收费道具弹窗六字段可填写、图片三方式、保存后入列并持久化；支持编辑/删除
+4. ✅ 续写与小说辅助模拟器一致：4 候选 [使用] 写入正文、换一批、我来说、润色/重写/场景/对话、字数实时
+5. ✅ 图片管理：背景/人物/道具三区，上传/AI 生成 4 候选/预设库，版本管理可回滚
+6. ✅ 预览：可选章节，真实小说世界 Runtime 呈现（花果山背景 + Canon Lock），悬浮条返回
+7. ✅ 预览反馈面板：三组满意度，不满意直接跳转对应修改区（实测跳收费 Tab）
+8. ✅ 布局保持现状、0 console error、0 未捕获异常（39/39 断言通过）
+
+### 技术要点
+- 单 HTML 架构：全部改动经由 LJ_PAGES JSON 解析/写回（锚点 assert 幂等），页面内 JS 保持 ES5 function 风格、不使用反引号模板
+- 预览链路：work-editor `previewChapter` → `parent.LJ.go('novel-canon-reader','?book=<映射>&preview=1&chapter=<n>')` → 悬浮条/章末按钮 `postMessage {lj:'back'}` 弹栈回编辑器 → `checkPreviewPending` 弹反馈面板
+- 作品→公版书映射 LJ_BOOK_MAP：changye/taohua→xiyouji、saibo→sanguoyanyi、shenhai/hlmrev/jiuri→hongloumeng
