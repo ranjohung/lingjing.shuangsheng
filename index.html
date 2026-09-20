@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head><link rel="icon" href="data:,">
 <meta charset="UTF-8" />
@@ -618,8 +618,8 @@ var Wallet = (function () {
   function get() {
     try {
       var raw = JSON.parse(localStorage.getItem(KEY) || '{}');
-      return { crystal: raw.crystal != null ? raw.crystal : 100, jade: raw.jade != null ? raw.jade : 0 };
-    } catch (e) { return { crystal: 100, jade: 0 }; }
+      return { crystal: raw.crystal != null ? raw.crystal : 500, jade: raw.jade != null ? raw.jade : 0 };
+    } catch (e) { return { crystal: 500, jade: 0 }; }
   }
   function save(c) { try { localStorage.setItem(KEY, JSON.stringify(c)); } catch (e) {} }
   function add(n, reason) {
@@ -670,7 +670,7 @@ var Wallet = (function () {
         var p = JSON.parse(oldRaw);
         if (p && p.lingjing != null) {
           var cur = get();
-          if (cur.crystal <= 100 && p.lingjing > cur.crystal) {
+          if (cur.crystal <= 500 && p.lingjing > cur.crystal) {
             cur.crystal = p.lingjing;
             try { localStorage.setItem(KEY, JSON.stringify(cur)); } catch (e) {}
           }
