@@ -17,6 +17,7 @@ from .core.kill_switch import KillSwitch
 from .infrastructure.cache import create_cache
 from .modules.chat import router as chat_router
 from .modules.characters import router as characters_router
+from .modules.economy import router as economy_router
 from .modules.memories import router as memories_router
 from .modules.profile import router as profile_router
 from .modules.scenes import router as scenes_router
@@ -49,6 +50,7 @@ app.add_middleware(
 
 app.include_router(chat_router)
 app.include_router(characters_router)
+app.include_router(economy_router)
 app.include_router(memories_router)
 app.include_router(profile_router)
 app.include_router(scenes_router)
