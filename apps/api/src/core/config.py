@@ -17,13 +17,17 @@ class Settings(BaseSettings):
     # PostgreSQL（Phase 5 起使用）
     database_url: str = "postgresql://mirai:local_dev_pass@localhost:5432/mirai"
 
-    # Explicit opt-in persistence. None keeps the existing development memory mode.
-    story_database_url: str | None = None
+    # SQLite is the default development persistence; production should use PostgreSQL.
+    story_database_url: str | None = "sqlite:///./story-development.db"
 
     # Redis；未配置或连不上时自动降级为进程内缓存
     redis_url: str | None = "redis://localhost:6379/0"
 
-    # Supabase Auth（Phase 4 起使用；未配置时使用本地 dev 用户）
+    # Auth: development fallback is explicit; production requires JWT verification.
+    environment: str = "development"
+    dev_auth_enabled: bool = True
+    dev_user_id: str = "local-dev-user"
+    auth_jwt_secret: str | None = None
     supabase_url: str | None = None
     supabase_anon_key: str | None = None
 

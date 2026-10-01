@@ -96,7 +96,8 @@ v5.15 入口：[output/preview/library.html](../output/preview/library.html) 即
 
 - [x] 确认正式产品需要后端：认证、跨设备存档、用户隔离、持久化经济账本和内容版本。
 - [x] 确认当前 `apps/api` 仍为开发降级：角色/记忆/关系/经济为进程内数据，认证为 dev fallback。
-- [ ] 修复 API 虚拟环境依赖并完成后端回归基线。
-- [ ] 完成 SQLite/PostgreSQL 持久化与真实 JWT 校验。
+- [x] 修复 API 虚拟环境依赖并完成后端回归基线（10 项 unittest 通过）。
+- [x] 启用 SQLite 故事会话持久化并加入 HS256 JWT 校验基线。
+- [ ] 将角色、记忆、关系、经济和完整游戏存档迁移到数据库；生产接入正式身份提供商。
 - [ ] 完成前端 API 接入后再评估支付和生成服务。
 - 详见 [BACKEND_ASSESSMENT_2026-10-01.md](BACKEND_ASSESSMENT_2026-10-01.md)。

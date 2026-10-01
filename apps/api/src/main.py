@@ -18,9 +18,11 @@ from .infrastructure.cache import create_cache
 from .modules.chat import router as chat_router
 from .modules.characters import router as characters_router
 from .modules.economy import router as economy_router
+from .modules.discovery import router as discovery_router
 from .modules.memories import router as memories_router
 from .modules.profile import router as profile_router
 from .modules.scenes import router as scenes_router
+from .modules.world_saves import router as world_saves_router
 from .modules.story.router import router as story_router
 
 logging.basicConfig(level=logging.INFO)
@@ -51,9 +53,11 @@ app.add_middleware(
 app.include_router(chat_router)
 app.include_router(characters_router)
 app.include_router(economy_router)
+app.include_router(discovery_router)
 app.include_router(memories_router)
 app.include_router(profile_router)
 app.include_router(scenes_router)
+app.include_router(world_saves_router)
 app.include_router(story_router)
 
 
@@ -67,9 +71,9 @@ async def health(request: Request):
         "phase": 0,
         "components": {
             "cache": ks.cache_kind,
-            "database": "not_configured_phase5",
+            "database": "sqlite" if settings.story_database_url and settings.story_database_url.startswith("sqlite") else ("configured" if settings.story_database_url else "not_configured"),
             "kill_switch": "enabled",
-            "auth": "dev_fallback" if not settings.supabase_configured else "supabase",
+            "auth": "jwt" if settings.auth_jwt_secret else ("dev_fallback" if settings.dev_auth_enabled else "not_configured"),
             "llm": "rule_engine" if not settings.llm_configured else "gateway",
         },
         "budget": {"spent_usd": round(cost, 4), "limit_usd": ks.daily_limit},

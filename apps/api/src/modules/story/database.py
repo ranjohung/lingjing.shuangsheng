@@ -21,6 +21,9 @@ events = Table("story_choice_events", metadata,
 class SQLRepository:
     def __init__(self, url):
         self.engine = create_engine(url, pool_pre_ping=True)
+        if self.engine.dialect.name == "sqlite":
+            # 开发环境自动确保故事存档表存在；生产环境仍由 Alembic 管理。
+            metadata.create_all(self.engine)
         self.storage_mode = "development_sqlite" if self.engine.dialect.name == "sqlite" else "postgresql"
 
     def _load(self, connection, owner, sid):
