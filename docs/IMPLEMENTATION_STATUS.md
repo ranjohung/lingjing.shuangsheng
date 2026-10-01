@@ -94,6 +94,13 @@ v5.15 入口：[output/preview/library.html](../output/preview/library.html) 即
 
 
 
+
+### 2026-10-01 持久化推进（世界存档）
+
+- [x] `apps/api/src/modules/world_saves.py` 已将 API 存档写入 SQLite `api_world_saves`，按用户、小说、槽位唯一约束保存。
+- [x] 支持列表、读取、覆盖、删除以及进程重启后的恢复；`SAVES.clear()` 仍保留为测试清理钩子。
+- [x] 完成隔离用户烟测和跨进程恢复烟测；已补标准库持久化回归测试。
+- [ ] 仍需完成前端 API 接入和完整生产身份提供商配置。
 ### 2026-10-01 持久化推进（经济账本）
 
 - [x] `apps/api/src/modules/economy.py` 已将灵晶、灵玉、行动值、世界货币、物品和交易记录写入 SQLite `economy_ledgers`。
@@ -115,5 +122,6 @@ v5.15 入口：[output/preview/library.html](../output/preview/library.html) 即
 - [ ] 将角色、记忆、关系、经济和完整游戏存档迁移到数据库；生产接入正式身份提供商。
 - [ ] 完成前端 API 接入后再评估支付和生成服务。
 - 详见 [BACKEND_ASSESSMENT_2026-10-01.md](BACKEND_ASSESSMENT_2026-10-01.md)。
+
 
 
