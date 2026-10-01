@@ -93,6 +93,13 @@ v5.15 入口：[output/preview/library.html](../output/preview/library.html) 即
 本次仍为文档交付，未执行数据库迁移、应用代码开发或SD/Blender资产制作；商业争议和法律核验保留独立状态，不能视为功能已实现。
 
 
+
+### 2026-10-01 持久化推进（经济账本）
+
+- [x] `apps/api/src/modules/economy.py` 已将灵晶、灵玉、行动值、世界货币、物品和交易记录写入 SQLite `economy_ledgers`。
+- [x] 账本以 `user_id` 为主键，余额、商城购买、兑换、世界消费和交易查询均保持用户隔离。
+- [x] 兼容现有 `LEDGERS.pop(user_id, None)` 测试清理语义；已完成编译、10 项 unittest、跨进程钱包烟测及隔离烟测。
+- [ ] pytest 尚未安装，pytest 风格经济测试仍需在开发依赖恢复后执行；世界存档和前端 API 接入仍待完成。
 ### 2026-10-01 持久化推进（角色 / 记忆 / 关系）
 
 - [x] `apps/api/src/modules/memory_store.py` 已接入 `SQLiteStore`；开发默认库固定为 `apps/api/story-development.db`。
@@ -108,4 +115,5 @@ v5.15 入口：[output/preview/library.html](../output/preview/library.html) 即
 - [ ] 将角色、记忆、关系、经济和完整游戏存档迁移到数据库；生产接入正式身份提供商。
 - [ ] 完成前端 API 接入后再评估支付和生成服务。
 - 详见 [BACKEND_ASSESSMENT_2026-10-01.md](BACKEND_ASSESSMENT_2026-10-01.md)。
+
 
