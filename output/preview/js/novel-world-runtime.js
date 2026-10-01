@@ -177,6 +177,30 @@
   }
 
   // ============ 存档 ============
+  function apiBase() {
+    try { return (global.LJ_API_BASE || localStorage.getItem('lingjing_api_base') || '').replace(/\/$/, ''); } catch (e) { return ''; }
+  }
+
+  function syncSaveToApi(slot, data) {
+    var base = apiBase();
+    if (!base || !global.fetch) return;
+    var book = (global.__LJ_PARAMS__ || '').match(/[?&]book=([^&]+)/);
+    var novelId = book ? decodeURIComponent(book[1]) : (global.LJ_BOOK_ID || 'demo');
+    var slotNumber = slot === 'auto' || slot == null ? 0 : Number(slot);
+    if (!isFinite(slotNumber)) slotNumber = 0;
+    fetch(base + '/api/v1/world-saves/' + encodeURIComponent(novelId) + '/' + slotNumber, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        slot: slotNumber,
+        chapter: String(data.currentNodeId || 'runtime'),
+        progress: Math.max(0, Math.min(100, Number(data.actionIndex || 0))),
+        state: data
+      })
+    }).catch(function () { /* 后端不可用时保持本地模式，不阻塞游戏 */ });
+  }
+
   function saveGame(slot) {
     var data = {
       flags: STATE.flags,
@@ -189,6 +213,7 @@
     var key = 'lingjing_save_' + (slot || 'auto');
     try {
       localStorage.setItem(key, JSON.stringify(data));
+      syncSaveToApi(slot, data);
       return true;
     } catch (e) { return false; }
   }

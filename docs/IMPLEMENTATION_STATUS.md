@@ -95,6 +95,13 @@ v5.15 入口：[output/preview/library.html](../output/preview/library.html) 即
 
 
 
+
+### 2026-10-02 前端 API 接入（世界运行时）
+
+- [x] `output/preview/js/novel-world-runtime.js` 的统一 `saveGame` 入口已增加后端同步，调用 `/api/v1/world-saves/{novel_id}/{slot}`。
+- [x] 后端同步为非阻塞；API 未配置或不可用时继续使用 localStorage，避免静态预览和离线游戏被阻断。
+- [x] 保留用户可配置的 `window.LJ_API_BASE` / `localStorage.lingjing_api_base`，便于部署环境接入真实 API。
+- [ ] 仍需浏览器端配置登录 token、读取远端存档并完成真实 API 端到端验收。
 ### 2026-10-01 持久化推进（世界存档）
 
 - [x] `apps/api/src/modules/world_saves.py` 已将 API 存档写入 SQLite `api_world_saves`，按用户、小说、槽位唯一约束保存。
@@ -122,6 +129,7 @@ v5.15 入口：[output/preview/library.html](../output/preview/library.html) 即
 - [ ] 将角色、记忆、关系、经济和完整游戏存档迁移到数据库；生产接入正式身份提供商。
 - [ ] 完成前端 API 接入后再评估支付和生成服务。
 - 详见 [BACKEND_ASSESSMENT_2026-10-01.md](BACKEND_ASSESSMENT_2026-10-01.md)。
+
 
 
 
