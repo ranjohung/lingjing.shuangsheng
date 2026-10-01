@@ -92,6 +92,13 @@ v5.15 入口：[output/preview/library.html](../output/preview/library.html) 即
 用户已确认全部聊天记录提供完毕，本节替代上文"等待继续上传"的历史下一步。S07与S05/S06哈希相同；累计7份附件归档。PRD及开发计划升级v5.1，补齐工程契约、九表DDL参考、七项缺口映射、九Sprint正反例证据与实施依赖顺序。
 本次仍为文档交付，未执行数据库迁移、应用代码开发或SD/Blender资产制作；商业争议和法律核验保留独立状态，不能视为功能已实现。
 
+
+### 2026-10-01 持久化推进（角色 / 记忆 / 关系）
+
+- [x] `apps/api/src/modules/memory_store.py` 已接入 `SQLiteStore`；开发默认库固定为 `apps/api/story-development.db`。
+- [x] 角色、记忆、关系均按 `user_id` 隔离；角色创建、记忆搜索/失活、关系衰减与更新均写入 SQLite。
+- [x] 已完成跨进程重载读取烟测及用户隔离烟测；原有 10 项 unittest 全部通过。
+- [ ] 经济账本和世界存档仍待迁移到数据库；前端仍待接入真实 API。
 ## 2026-10-01 后端评估
 
 - [x] 确认正式产品需要后端：认证、跨设备存档、用户隔离、持久化经济账本和内容版本。
@@ -101,3 +108,4 @@ v5.15 入口：[output/preview/library.html](../output/preview/library.html) 即
 - [ ] 将角色、记忆、关系、经济和完整游戏存档迁移到数据库；生产接入正式身份提供商。
 - [ ] 完成前端 API 接入后再评估支付和生成服务。
 - 详见 [BACKEND_ASSESSMENT_2026-10-01.md](BACKEND_ASSESSMENT_2026-10-01.md)。
+
