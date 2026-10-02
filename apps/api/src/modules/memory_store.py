@@ -8,6 +8,7 @@ from __future__ import annotations
 import re
 import time
 import uuid
+from contextlib import contextmanager
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Optional
@@ -253,8 +254,16 @@ class SQLiteStore(InMemoryStore):
         conn.row_factory = self._sqlite3.Row
         return conn
 
+    @contextmanager
+    def _connection(self):
+        conn = self._connect()
+        try:
+            yield conn
+        finally:
+            conn.close()
+
     def _init_db(self):
-        with self._connect() as conn:
+        with self._connection() as conn:
             conn.executescript("""
             CREATE TABLE IF NOT EXISTS companion_characters (
               id TEXT NOT NULL, user_id TEXT NOT NULL, name TEXT NOT NULL,
@@ -276,7 +285,7 @@ class SQLiteStore(InMemoryStore):
             """)
 
     def _load_custom(self, user_id):
-        with self._connect() as conn:
+        with self._connection() as conn:
             return [Character(id=r["id"], user_id=r["user_id"], name=r["name"], persona=r["persona"],
                 relationship_type=r["relationship_type"], avatar=r["avatar"], glow=r["glow"], is_preset=bool(r["is_preset"]))
                 for r in conn.execute("SELECT * FROM companion_characters WHERE user_id=? ORDER BY rowid", (user_id,))]
@@ -288,17 +297,17 @@ class SQLiteStore(InMemoryStore):
         preset = super().get_character(user_id, character_id)
         if preset:
             return preset
-        with self._connect() as conn:
+        with self._connection() as conn:
             r = conn.execute("SELECT * FROM companion_characters WHERE user_id=? AND id=?", (user_id, character_id)).fetchone()
         return None if not r else Character(id=r["id"], user_id=r["user_id"], name=r["name"], persona=r["persona"], relationship_type=r["relationship_type"], avatar=r["avatar"], glow=r["glow"], is_preset=False)
 
     def count_custom_characters(self, user_id):
-        with self._connect() as conn:
+        with self._connection() as conn:
             return int(conn.execute("SELECT COUNT(*) FROM companion_characters WHERE user_id=?", (user_id,)).fetchone()[0])
 
     def create_character(self, user_id, name, persona, relationship_type, avatar, glow):
         item = Character(id=uuid.uuid4().hex[:10], user_id=user_id, name=name, persona=persona, relationship_type=relationship_type, avatar=avatar, glow=glow, is_preset=False)
-        with self._connect() as conn:
+        with self._connection() as conn:
             conn.execute("INSERT INTO companion_characters VALUES (?,?,?,?,?,?,?,0)", (item.id, user_id, name, persona, relationship_type, avatar, glow))
         return item
 
@@ -308,7 +317,7 @@ class SQLiteStore(InMemoryStore):
         if character_id:
             sql += " AND character_id=?"; args.append(character_id)
         sql += " ORDER BY created_at DESC"
-        with self._connect() as conn:
+        with self._connection() as conn:
             rows = conn.execute(sql, args).fetchall()
         items = [MemoryItem(id=r["id"], user_id=r["user_id"], character_id=r["character_id"], content=r["content"], memory_type=r["memory_type"], importance=r["importance"], created_at=r["created_at"], active=bool(r["active"])) for r in rows]
         if query is not None:
@@ -325,7 +334,7 @@ class SQLiteStore(InMemoryStore):
 
     def add_memory(self, user_id, character_id, content, memory_type, importance=0.5):
         item = MemoryItem(id=uuid.uuid4().hex[:12], user_id=user_id, character_id=character_id, content=content, memory_type=memory_type, importance=importance)
-        with self._connect() as conn:
+        with self._connection() as conn:
             if memory_type == "preference":
                 tokens = _shingles(content)
                 for old in self._rows_memories(user_id, character_id):
@@ -335,20 +344,20 @@ class SQLiteStore(InMemoryStore):
         return item
 
     def delete_memory(self, user_id, memory_id):
-        with self._connect() as conn:
+        with self._connection() as conn:
             cur = conn.execute("UPDATE companion_memories SET active=0 WHERE id=? AND user_id=? AND active=1", (memory_id, user_id))
             return cur.rowcount == 1
 
     def forget_topic(self, user_id, topic, character_id=None):
         ids = [m.id for m in self._rows_memories(user_id, character_id) if len(_shingles(topic) & m.tokens) >= 2]
-        with self._connect() as conn:
+        with self._connection() as conn:
             for memory_id in ids:
                 conn.execute("UPDATE companion_memories SET active=0 WHERE id=? AND user_id=?", (memory_id, user_id))
         return len(ids)
 
     def get_relationship(self, user_id, character_id):
         import json
-        with self._connect() as conn:
+        with self._connection() as conn:
             r = conn.execute("SELECT * FROM companion_relationships WHERE user_id=? AND character_id=?", (user_id, character_id)).fetchone()
             if r:
                 return Relationship(user_id=user_id, character_id=character_id, dimensions=json.loads(r["dimensions"]), last_interaction=r["last_interaction"])
@@ -364,7 +373,7 @@ class SQLiteStore(InMemoryStore):
             if dim in rel.dimensions:
                 rel.dimensions[dim] = max(0.0, min(1.0, rel.dimensions[dim] + value))
         rel.last_interaction = time.time()
-        with self._connect() as conn:
+        with self._connection() as conn:
             conn.execute("UPDATE companion_relationships SET dimensions=?, last_interaction=? WHERE user_id=? AND character_id=?", (json.dumps(rel.dimensions), rel.last_interaction, user_id, character_id))
         return rel, decay_drop
 
@@ -377,7 +386,7 @@ class SQLiteStore(InMemoryStore):
         }
 
     def _relationship_keys(self, user_id):
-        with self._connect() as conn:
+        with self._connection() as conn:
             return [(r["user_id"], r["character_id"]) for r in conn.execute("SELECT user_id, character_id FROM companion_relationships WHERE user_id=?", (user_id,))]
 
 try:

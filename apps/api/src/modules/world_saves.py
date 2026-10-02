@@ -6,6 +6,7 @@ Every operation is scoped by the authenticated development user and novel id.
 from __future__ import annotations
 
 import time, json, sqlite3
+from contextlib import closing
 from pathlib import Path
 from urllib.parse import urlparse
 from ..core.config import settings
@@ -25,13 +26,15 @@ class PersistentSaves(dict):
             raw = raw[1:]
         self.db_path = str((Path(__file__).resolve().parents[2] / raw).resolve()) if not Path(raw).is_absolute() else str(Path(raw).resolve())
         Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
-        with sqlite3.connect(self.db_path) as conn:
+        with closing(sqlite3.connect(self.db_path)) as conn:
             conn.execute("CREATE TABLE IF NOT EXISTS api_world_saves (user_id TEXT NOT NULL, novel_id TEXT NOT NULL, save_slot INTEGER NOT NULL, payload TEXT NOT NULL, saved_at REAL NOT NULL, PRIMARY KEY(user_id, novel_id, save_slot))")
+            conn.commit()
 
     def clear(self):
         super().clear()
-        with sqlite3.connect(self.db_path) as conn:
+        with closing(sqlite3.connect(self.db_path)) as conn:
             conn.execute("DELETE FROM api_world_saves")
+            conn.commit()
 
 SAVES = PersistentSaves()
 
@@ -44,19 +47,21 @@ class SavePayload(BaseModel):
 def slots_for(user_id: str, novel_id: str) -> dict[int, dict]:
     key = (user_id, novel_id)
     if key not in SAVES:
-        with sqlite3.connect(SAVES.db_path) as conn:
+        with closing(sqlite3.connect(SAVES.db_path)) as conn:
             rows = conn.execute("SELECT save_slot, payload FROM api_world_saves WHERE user_id=? AND novel_id=? ORDER BY save_slot", (user_id, novel_id)).fetchall()
         SAVES[key] = {int(slot): json.loads(payload) for slot, payload in rows}
     return SAVES[key]
 
 def persist_slots(user_id: str, novel_id: str, slots: dict[int, dict]) -> None:
-    with sqlite3.connect(SAVES.db_path) as conn:
+    with closing(sqlite3.connect(SAVES.db_path)) as conn:
         for slot, record in slots.items():
             conn.execute("INSERT INTO api_world_saves(user_id,novel_id,save_slot,payload,saved_at) VALUES(?,?,?,?,?) ON CONFLICT(user_id,novel_id,save_slot) DO UPDATE SET payload=excluded.payload,saved_at=excluded.saved_at", (user_id, novel_id, slot, json.dumps(record, ensure_ascii=False), record["saved_at"]))
+        conn.commit()
 
 def delete_persisted(user_id: str, novel_id: str, slot: int) -> None:
-    with sqlite3.connect(SAVES.db_path) as conn:
+    with closing(sqlite3.connect(SAVES.db_path)) as conn:
         conn.execute("DELETE FROM api_world_saves WHERE user_id=? AND novel_id=? AND save_slot=?", (user_id, novel_id, slot))
+        conn.commit()
 
 @router.get("/{novel_id}")
 async def list_saves(novel_id: str, user: CurrentUser = Depends(get_current_user)):

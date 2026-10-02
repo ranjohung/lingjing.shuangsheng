@@ -101,7 +101,15 @@ v5.15 入口：[output/preview/library.html](../output/preview/library.html) 即
 - [x] `output/preview/js/novel-world-runtime.js` 的统一 `saveGame` 入口已增加后端同步，调用 `/api/v1/world-saves/{novel_id}/{slot}`。
 - [x] 后端同步为非阻塞；API 未配置或不可用时继续使用 localStorage，避免静态预览和离线游戏被阻断。
 - [x] 保留用户可配置的 `window.LJ_API_BASE` / `localStorage.lingjing_api_base`，便于部署环境接入真实 API。
-- [ ] 仍需浏览器端配置登录 token、读取远端存档并完成真实 API 端到端验收。
+- [x] 浏览器上下文回归已验证：保存请求携带 `Authorization: Bearer`，远端读取成功后恢复状态；API 不可用时仍保留本地降级。
+- [x] 首页发现模块读取 `window.LJ_API_BASE` 或 `localStorage.lingjing_api_base`，通知/推荐接口不再固定请求静态站点自身。
+- [ ] 生产环境仍需配置正式 JWT 签发方和部署 API 地址。
+
+### 2026-10-02 发现接口与连接资源修复
+
+- [x] 通知接口已落 SQLite `notifications`，按 `user_id` 隔离并支持已读写回；推荐目录明确标记为非个性化 bundled catalog。
+- [x] SQLite 连接在角色/记忆/关系、经济、存档和发现模块中显式关闭，避免回归测试产生未关闭连接警告。
+- [x] `apps/api` 标准库 unittest 回归：13 项通过；前端 `LJ_PAGES` JSON 结构校验：72 个页面可解析。
 ### 2026-10-01 持久化推进（世界存档）
 
 - [x] `apps/api/src/modules/world_saves.py` 已将 API 存档写入 SQLite `api_world_saves`，按用户、小说、槽位唯一约束保存。

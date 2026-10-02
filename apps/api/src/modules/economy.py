@@ -1,6 +1,7 @@
 """Development wallet API with the V7 one-way currency rules."""
 from __future__ import annotations
 import time, uuid, json, sqlite3
+from contextlib import closing
 from pathlib import Path
 from urllib.parse import urlparse
 from ..core.config import settings
@@ -30,13 +31,15 @@ class PersistentLedgerCache(dict):
             raw = raw[1:]
         self.db_path = str((Path(__file__).resolve().parents[2] / raw).resolve()) if not Path(raw).is_absolute() else str(Path(raw).resolve())
         Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
-        with sqlite3.connect(self.db_path) as conn:
+        with closing(sqlite3.connect(self.db_path)) as conn:
             conn.execute("CREATE TABLE IF NOT EXISTS economy_ledgers (user_id TEXT PRIMARY KEY, payload TEXT NOT NULL, updated_at REAL NOT NULL)")
+            conn.commit()
 
     def pop(self, user_id, *args):
         value = super().pop(user_id, *args)
-        with sqlite3.connect(self.db_path) as conn:
+        with closing(sqlite3.connect(self.db_path)) as conn:
             conn.execute("DELETE FROM economy_ledgers WHERE user_id=?", (user_id,))
+            conn.commit()
         return value
 
 LEDGERS = PersistentLedgerCache()
@@ -44,7 +47,7 @@ def ledger(user_id: str) -> Ledger:
     cached = LEDGERS.get(user_id)
     if cached is not None:
         return cached
-    with sqlite3.connect(LEDGERS.db_path) as conn:
+    with closing(sqlite3.connect(LEDGERS.db_path)) as conn:
         row = conn.execute("SELECT payload FROM economy_ledgers WHERE user_id=?", (user_id,)).fetchone()
     if not row:
         value = Ledger()
@@ -56,8 +59,9 @@ def ledger(user_id: str) -> Ledger:
 
 def persist_ledger(user_id: str, value: Ledger) -> None:
     payload = json.dumps({"lingjing": value.lingjing, "lingyu": value.lingyu, "action_value": value.action_value, "items": value.items, "worlds": value.worlds, "transactions": value.transactions}, ensure_ascii=False)
-    with sqlite3.connect(LEDGERS.db_path) as conn:
+    with closing(sqlite3.connect(LEDGERS.db_path)) as conn:
         conn.execute("INSERT INTO economy_ledgers(user_id,payload,updated_at) VALUES(?,?,?) ON CONFLICT(user_id) DO UPDATE SET payload=excluded.payload, updated_at=excluded.updated_at", (user_id, payload, time.time()))
+        conn.commit()
 
 class ExchangeRequest(BaseModel):
     novel_id: str = Field(min_length=1, max_length=100)
