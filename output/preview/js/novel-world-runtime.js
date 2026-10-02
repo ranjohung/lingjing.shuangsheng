@@ -181,6 +181,15 @@
     try { return (global.LJ_API_BASE || localStorage.getItem('lingjing_api_base') || '').replace(/\/$/, ''); } catch (e) { return ''; }
   }
 
+  function apiHeaders() {
+    var headers = { 'Content-Type': 'application/json' };
+    try {
+      var token = global.LJ_AUTH_TOKEN || localStorage.getItem('lingjing_auth_token');
+      if (token) headers.Authorization = 'Bearer ' + token;
+    } catch (e) {}
+    return headers;
+  }
+
   function syncSaveToApi(slot, data) {
     var base = apiBase();
     if (!base || !global.fetch) return;
@@ -190,7 +199,7 @@
     if (!isFinite(slotNumber)) slotNumber = 0;
     fetch(base + '/api/v1/world-saves/' + encodeURIComponent(novelId) + '/' + slotNumber, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: apiHeaders(),
       credentials: 'include',
       body: JSON.stringify({
         slot: slotNumber,
@@ -225,6 +234,27 @@
       if (!raw) return null;
       return JSON.parse(raw);
     } catch (e) { return null; }
+  }
+
+  function loadGameRemote(slot) {
+    var base = apiBase();
+    if (!base || !global.fetch) return Promise.resolve(null);
+    var book = (global.__LJ_PARAMS__ || '').match(/[?&]book=([^&]+)/);
+    var novelId = book ? decodeURIComponent(book[1]) : (global.LJ_BOOK_ID || 'demo');
+    var slotNumber = slot === 'auto' || slot == null ? 0 : Number(slot);
+    if (!isFinite(slotNumber)) slotNumber = 0;
+    return fetch(base + '/api/v1/world-saves/' + encodeURIComponent(novelId) + '/' + slotNumber, {
+      headers: apiHeaders(), credentials: 'include'
+    }).then(function (response) {
+      if (response.status === 404) return null;
+      if (!response.ok) throw new Error('远端存档读取失败: ' + response.status);
+      return response.json();
+    }).then(function (payload) {
+      if (!payload || !payload.save || !payload.save.state) return null;
+      var data = payload.save.state;
+      try { localStorage.setItem('lingjing_save_' + (slot || 'auto'), JSON.stringify(data)); } catch (e) {}
+      return data;
+    });
   }
 
   // ============ 默认动作注册 ============
@@ -408,6 +438,7 @@
     getBacklog: getBacklog,
     saveGame: saveGame,
     loadGame: loadGame,
+    loadGameRemote: loadGameRemote,
     setScriptData: function (data) { STATE.scriptData = data; },
     // 暴露 pause/resume/advance 供 Hotspot 等外部模块使用
     pause: pause,
