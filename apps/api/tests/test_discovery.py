@@ -1,10 +1,17 @@
 from fastapi.testclient import TestClient
+from uuid import uuid4
 
 from src.main import app
+from src.core.config import settings
+
+
+def _client_for_isolated_user():
+    settings.dev_user_id = "discovery-test-" + uuid4().hex
+    return TestClient(app)
 
 
 def test_notifications_are_user_scoped_and_readable():
-    with TestClient(app) as client:
+    with _client_for_isolated_user() as client:
         first = client.get('/api/v1/notifications')
         assert first.status_code == 200
         data = first.json()
@@ -17,7 +24,7 @@ def test_notifications_are_user_scoped_and_readable():
 
 
 def test_recommendations_are_explicitly_non_personalized():
-    with TestClient(app) as client:
+    with _client_for_isolated_user() as client:
         response = client.get('/api/v1/recommendations?limit=3')
         assert response.status_code == 200
         data = response.json()

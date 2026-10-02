@@ -110,6 +110,7 @@ v5.15 入口：[output/preview/library.html](../output/preview/library.html) 即
 - [x] 通知接口已落 SQLite `notifications`，按 `user_id` 隔离并支持已读写回；推荐目录明确标记为非个性化 bundled catalog。
 - [x] SQLite 连接在角色/记忆/关系、经济、存档和发现模块中显式关闭，避免回归测试产生未关闭连接警告。
 - [x] `apps/api` 标准库 unittest 回归：13 项通过；前端 `LJ_PAGES` JSON 结构校验：72 个页面可解析。
+- [x] 已恢复 `apps/api/requirements-dev.txt` 中的 pytest 运行环境；pytest 全量回归 20 项通过（保留 1 项 Starlette/httpx 弃用警告，不影响结果）。
 ### 2026-10-01 持久化推进（世界存档）
 
 - [x] `apps/api/src/modules/world_saves.py` 已将 API 存档写入 SQLite `api_world_saves`，按用户、小说、槽位唯一约束保存。
