@@ -598,3 +598,5 @@ novel-ai-helper.html (核心新增)
 - 验证：`scripts/test_character_publish_ui.py` 通过真实 Chromium，成功读取服务端角色并显示公开控制；截图 `screenshots/character-publish-ui.png`。
 - 完成：聊天 API 响应补充四级安全管线标识 `input_scan → intent_route → risk_action → output_scan`；高风险自伤输入固定转介并阻断，反迎合输入降级处理，安全事件写入 SQLite 审计表，前端可区分 `clear/deescalated/high_risk_blocked`。
 - 验证：新增 `tests/test_chat_safety_pipeline.py`，与角色广场及通知接口测试合计 4 项通过；未配置生产 LLM 时仍明确使用规则引擎，不宣称模型已接通。
+- 完成：聊天页接收安全阶段并展示用户可见处置提示；高风险输入不静默回落普通陪伴回复。
+- 验证：`scripts/test_chat_safety_ui.py` 通过真实 Chromium 与 Uvicorn，确认 `/api/chat` 返回 200、热线内容和“安全管线”提示，截图 `screenshots/chat-safety-ui.png`。
