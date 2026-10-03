@@ -149,6 +149,13 @@ v5.15 入口：[output/preview/library.html](../output/preview/library.html) 即
 - [x] pytest 全量 23 项通过；开发测试客户端已切换到 Starlette 推荐的 `httpx2`，弃用警告已清零。
 - [ ] 生产部署仍需由运维填写 `.env.local` 并接入正式 JWT 签发方和 API 域名。
 
+### 2026-10-03 创作与审核接口补全
+
+- [x] 生成任务、角色广场公开/下架、内容举报和管理员审核接口均已纳入 SQLite 运行时。
+- [x] Alembic `0004_creator_and_moderation_tables` 覆盖生成任务、角色广场和举报表。
+- [x] 生成任务与举报数据按用户隔离；未配置生成服务时明确返回排队/未配置状态，不伪造媒体产物。
+- [x] pytest 全量 25 项、unittest 全量 15 项通过。
+
 
 
 
