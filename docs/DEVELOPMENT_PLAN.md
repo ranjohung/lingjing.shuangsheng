@@ -600,3 +600,8 @@ novel-ai-helper.html (核心新增)
 - 验证：新增 `tests/test_chat_safety_pipeline.py`，与角色广场及通知接口测试合计 4 项通过；未配置生产 LLM 时仍明确使用规则引擎，不宣称模型已接通。
 - 完成：聊天页接收安全阶段并展示用户可见处置提示；高风险输入不静默回落普通陪伴回复。
 - 验证：`scripts/test_chat_safety_ui.py` 通过真实 Chromium 与 Uvicorn，确认 `/api/chat` 返回 200、热线内容和“安全管线”提示，截图 `screenshots/chat-safety-ui.png`。
+
+## 2026-10-03 角色广场举报入口
+- 完成：公开角色卡片提供举报按钮，调用 `/api/characters/plaza/{id}/report`，成功后显示“已举报”，失败显示“接口不可用”，不伪造提交结果。
+- 验证：`scripts/test_character_plaza_ui.py` 使用 Chromium 创建、公开、搜索并举报角色，举报进入统一管理员审核队列。
+- 未完成：自动下架、评论/共鸣与生产化身份权限仍待后续接入。
