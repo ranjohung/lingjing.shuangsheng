@@ -594,3 +594,5 @@ novel-ai-helper.html (核心新增)
 - 完成：`我的`功能区增加“角色广场”入口，接入真实 `/api/characters/plaza`，在线为空时显示“暂无作者公开角色”，接口离线时不伪造数据。
 - 验证：`tests/test_character_plaza.py` 与 `scripts/test_character_plaza_ui.py` 通过，Chromium 截图 `screenshots/character-plaza-api-ui.png`。
 - 未完成：正式账号体系、图片审核、举报自动下架和社区评论/共鸣仍需后续生产化。
+- 完成：`my-characters` 作者管理页接入真实角色 API；自建角色显示“公开到广场/已公开”控制，调用公开/下架接口，API 未连接时明确不修改状态。
+- 验证：`scripts/test_character_publish_ui.py` 通过真实 Chromium，成功读取服务端角色并显示公开控制；截图 `screenshots/character-publish-ui.png`。
