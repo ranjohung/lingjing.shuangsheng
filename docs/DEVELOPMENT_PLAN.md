@@ -610,3 +610,9 @@ novel-ai-helper.html (核心新增)
 - 完成：新增 `POST /api/memories`，支持 `preference/fact/event` 类型、重要度范围校验，并强制绑定当前用户；SQLite 写入后立即提交，随后列表接口可读回。
 - 验证：`tests/test_memories_create.py` 与聊天安全、角色广场接口回归共 3 项通过。
 - 未完成：四层记忆提取、向量检索、加密存储和跨设备同步仍待生产化。
+
+## 2026-10-03 角色广场互动
+- 完成：公开角色支持 `resonate/like` 幂等切换，SQLite 持久化用户反应并在广场列表返回计数；未公开角色不能互动。
+- 完成：广场卡片增加“共鸣”按钮，调用真实反应接口；接口失败显示“接口不可用”，不伪造成功。
+- 验证：角色广场 API 与 Chromium UI 回归通过，截图 `screenshots/character-plaza-api-ui.png`。
+- 未完成：评论线程、推荐排序和生产化反滥用限流仍待接入。

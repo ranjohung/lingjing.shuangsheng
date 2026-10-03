@@ -31,6 +31,9 @@ def main():
             frame.locator('[data-plaza-report]').first.click()
             frame.locator('[data-plaza-report]').first.wait_for(state='visible', timeout=5000)
             assert frame.locator('[data-plaza-report]').first.inner_text() == '已举报'
+            reaction = frame.locator('[data-plaza-react]').first
+            reaction.click()
+            assert reaction.inner_text().startswith('共鸣 ')
             page.screenshot(path=str(ROOT / 'screenshots' / 'character-plaza-api-ui.png'), full_page=True)
             print('CHARACTER_PLAZA_UI_PASS', text[:120].encode('ascii', 'backslashreplace').decode())
             browser.close()

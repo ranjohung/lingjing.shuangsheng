@@ -22,6 +22,13 @@ def test_character_plaza_requires_owner_opt_in_and_supports_report(monkeypatch):
     assert published.status_code == 200
     items = client.get('/api/characters/plaza?query=公开测试').json()['items']
     assert any(item['id'] == cid for item in items)
+    reaction = client.post(f'/api/characters/plaza/{cid}/reaction', json={'kind': 'resonate'})
+    assert reaction.status_code == 200
+    assert reaction.json()['active'] is True
+    assert reaction.json()['count'] == 1
+    toggled = client.post(f'/api/characters/plaza/{cid}/reaction', json={'kind': 'resonate'})
+    assert toggled.json()['active'] is False
+    assert toggled.json()['count'] == 0
     report = client.post(f'/api/characters/plaza/{cid}/report', json={'reason': '测试举报理由'})
     assert report.status_code == 201
     assert client.delete(f'/api/characters/{cid}/publish').status_code == 200
