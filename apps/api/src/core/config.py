@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     api_host: str = "0.0.0.0"
     api_port: int = 8000
     # 逗号分隔的前端来源；生产环境通过 CORS_ORIGINS 显式覆盖，不使用通配符配合凭据。
-    cors_origins: str = "http://localhost:3000,https://ranjohung.github.io"
+    cors_origins: str = "http://localhost:3000,http://127.0.0.1:8001,http://localhost:8001,https://ranjohung.github.io"
 
     # PostgreSQL（Phase 5 起使用）
     database_url: str = "postgresql://mirai:local_dev_pass@localhost:5432/mirai"

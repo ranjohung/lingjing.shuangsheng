@@ -103,6 +103,7 @@ v5.15 入口：[output/preview/library.html](../output/preview/library.html) 即
 - [x] 保留用户可配置的 `window.LJ_API_BASE` / `localStorage.lingjing_api_base`，便于部署环境接入真实 API。
 - [x] 浏览器上下文回归已验证：保存请求携带 `Authorization: Bearer`，远端读取成功后恢复状态；API 不可用时仍保留本地降级。
 - [x] 首页发现模块读取 `window.LJ_API_BASE` 或 `localStorage.lingjing_api_base`，通知/推荐接口不再固定请求静态站点自身。
+- [x] 真实 `index.html#/home` 浏览器回归通过：通知/推荐均返回 200，首页显示“接口已连接”；默认 CORS 已包含本地静态入口端口。
 - [ ] 生产环境仍需配置正式 JWT 签发方和部署 API 地址。
 - [x] 健康检查会将生产环境缺失 JWT 密钥明确标记为 `misconfigured_production`；新增 `apps/api/.env.example` 作为部署配置边界模板。
 
