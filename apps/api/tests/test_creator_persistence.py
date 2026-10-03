@@ -29,3 +29,31 @@ def test_generation_and_reports_are_user_scoped():
             assert client.get('/api/reports').json()['items'][0]['id'] == report['id']
     finally:
         settings.dev_user_id = original_user
+
+
+def test_character_plaza_requires_owner_publish_and_hides_unpublished():
+    original_user = settings.dev_user_id
+    try:
+        owner = "plaza-owner-" + uuid4().hex
+        visitor = "plaza-visitor-" + uuid4().hex
+        with TestClient(app) as client:
+            settings.dev_user_id = owner
+            created = client.post('/api/characters', json={
+                'name': '广场测试角色', 'persona': '用于公开测试的角色'
+            })
+            assert created.status_code == 201
+            character_id = created.json()['id']
+            assert client.get('/api/characters/plaza').json()['items'] == []
+            published = client.post('/api/characters/' + character_id + '/publish', json={'summary': '公开测试'})
+            assert published.status_code == 200
+
+            settings.dev_user_id = visitor
+            plaza = client.get('/api/characters/plaza').json()['items']
+            assert [item['id'] for item in plaza] == [character_id]
+            assert client.delete('/api/characters/' + character_id + '/publish').status_code == 404
+
+            settings.dev_user_id = owner
+            assert client.delete('/api/characters/' + character_id + '/publish').status_code == 200
+            assert client.get('/api/characters/plaza').json()['items'] == []
+    finally:
+        settings.dev_user_id = original_user

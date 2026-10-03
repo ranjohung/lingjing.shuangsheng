@@ -154,7 +154,7 @@ v5.15 入口：[output/preview/library.html](../output/preview/library.html) 即
 - [x] 生成任务、角色广场公开/下架、内容举报和管理员审核接口均已纳入 SQLite 运行时。
 - [x] Alembic `0004_creator_and_moderation_tables` 覆盖生成任务、角色广场和举报表。
 - [x] 生成任务与举报数据按用户隔离；未配置生成服务时明确返回排队/未配置状态，不伪造媒体产物。
-- [x] pytest 全量 25 项、unittest 全量 15 项通过。
+- [x] pytest 全量 26 项、unittest 全量 15 项通过；角色广场公开/下架及访客可见性也有回归覆盖。
 
 
 
