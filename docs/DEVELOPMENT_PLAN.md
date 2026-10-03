@@ -651,3 +651,7 @@ novel-ai-helper.html (核心新增)
 
 ## 2026-10-03 创作者中心钱包状态浏览器验收
 - 验证：`scripts/test_creator_wallet_status.py` 在真实 Uvicorn API 与 Chromium 中打开创作者中心，确认余额/流水来自接口，并明确显示收益结算服务仍未接入；截图为 `screenshots/creator-wallet-status.png`。
+
+## 2026-10-03 角色广场评论安全状态反馈
+- 完成：评论接口返回 `quarantined` 时，角色广场按钮显示“已隔离待审核”，并通过 `title` 明确暂不会公开；普通成功评论仍显示“已评论”，接口失败可恢复重试。
+- 验证：`scripts/test_character_comment_safety_ui.py` 使用真实 API + Chromium 提交敏感评论，确认隔离状态和安全审核提示；截图为 `screenshots/character-comment-safety-ui.png`。
