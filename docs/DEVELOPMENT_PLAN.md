@@ -605,3 +605,8 @@ novel-ai-helper.html (核心新增)
 - 完成：公开角色卡片提供举报按钮，调用 `/api/characters/plaza/{id}/report`，成功后显示“已举报”，失败显示“接口不可用”，不伪造提交结果。
 - 验证：`scripts/test_character_plaza_ui.py` 使用 Chromium 创建、公开、搜索并举报角色，举报进入统一管理员审核队列。
 - 未完成：自动下架、评论/共鸣与生产化身份权限仍待后续接入。
+
+## 2026-10-03 陪伴 AI 服务端记忆写入
+- 完成：新增 `POST /api/memories`，支持 `preference/fact/event` 类型、重要度范围校验，并强制绑定当前用户；SQLite 写入后立即提交，随后列表接口可读回。
+- 验证：`tests/test_memories_create.py` 与聊天安全、角色广场接口回归共 3 项通过。
+- 未完成：四层记忆提取、向量检索、加密存储和跨设备同步仍待生产化。

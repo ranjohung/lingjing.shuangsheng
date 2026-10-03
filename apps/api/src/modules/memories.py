@@ -28,6 +28,13 @@ class ForgetResponse(BaseModel):
     forgotten_count: int
 
 
+class MemoryCreateRequest(BaseModel):
+    character_id: str = Field(min_length=1, max_length=80)
+    content: str = Field(min_length=1, max_length=2000)
+    memory_type: str = Field(pattern="^(preference|fact|event)$")
+    importance: float = Field(default=0.5, ge=0.0, le=1.0)
+
+
 @router.get("/memories", response_model=list[MemoryOut])
 async def list_memories(character_id: str | None = Query(default=None),
                         user: CurrentUser = Depends(get_current_user)):
@@ -36,6 +43,17 @@ async def list_memories(character_id: str | None = Query(default=None),
                   memory_type=m.memory_type, importance=m.importance, created_at=m.created_at)
         for m in store.list_memories(user.user_id, character_id)
     ]
+
+
+@router.post("/memories", response_model=MemoryOut, status_code=201)
+async def create_memory(payload: MemoryCreateRequest,
+                        user: CurrentUser = Depends(get_current_user)):
+    # 记忆写入必须绑定当前用户，不能接受任意 user_id。
+    item = store.add_memory(user.user_id, payload.character_id, payload.content,
+                            payload.memory_type, payload.importance)
+    return MemoryOut(id=item.id, character_id=item.character_id, content=item.content,
+                     memory_type=item.memory_type, importance=item.importance,
+                     created_at=item.created_at)
 
 
 @router.delete("/memories/{memory_id}")

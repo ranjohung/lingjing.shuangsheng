@@ -342,6 +342,7 @@ class SQLiteStore(InMemoryStore):
                     if old.memory_type == "preference" and len(tokens & old.tokens) >= 2:
                         conn.execute("UPDATE companion_memories SET active=0 WHERE id=? AND user_id=?", (old.id, user_id))
             conn.execute("INSERT INTO companion_memories VALUES (?,?,?,?,?,?,?,1)", (item.id, user_id, character_id, content, memory_type, importance, item.created_at))
+            conn.commit()
         return item
 
     def delete_memory(self, user_id, memory_id):
