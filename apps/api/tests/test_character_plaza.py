@@ -34,6 +34,10 @@ def test_character_plaza_requires_owner_opt_in_and_supports_report(monkeypatch):
     assert comment.status_code == 201
     comments = client.get(f'/api/characters/plaza/{cid}/comments').json()['items']
     assert comments[0]['content'] == '这个角色很有灵气'
+    quarantined = client.post(f'/api/characters/plaza/{cid}/comments', json={'content': '这是诈骗内容'})
+    assert quarantined.status_code == 201
+    assert quarantined.json()['status'] == 'quarantined'
+    assert all(item['content'] != '这是诈骗内容' for item in client.get(f'/api/characters/plaza/{cid}/comments').json()['items'])
     report = client.post(f'/api/characters/plaza/{cid}/report', json={'reason': '测试举报理由'})
     assert report.status_code == 201
     report_id = report.json()['report_id']

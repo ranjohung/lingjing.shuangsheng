@@ -15,6 +15,7 @@ router = APIRouter(prefix="/api/characters", tags=["characters"])
 AVATAR_CHOICES = ["🧚", "🌻", "🐱", "🦊", "🌙", "⭐", "🐰", "🦉"]
 GLOW_CHOICES = ["#8b7cf6", "#f6a6d8", "#6ec6ff", "#ffd166", "#7cf6c0", "#ff9e7d"]
 RELATIONSHIP_TYPES = ["friend", "partner", "family", "custom"]
+COMMENT_BLOCKLIST = ("自杀", "伤害未成年人", "诈骗", "仇恨攻击")
 
 
 class CharacterOut(BaseModel):
@@ -194,8 +195,10 @@ async def create_plaza_comment(character_id: str, payload: PlazaCommentRequest, 
         if visible is None:
             raise HTTPException(status_code=404, detail="角色未公开或已下架")
         item_id = uuid.uuid4().hex
-        conn.execute("INSERT INTO character_comments VALUES (?,?,?,?,?,?)", (item_id, character_id, user.user_id, payload.content.strip(), time.time(), "visible"))
+        content = payload.content.strip()
+        status = "quarantined" if any(term in content for term in COMMENT_BLOCKLIST) else "visible"
+        conn.execute("INSERT INTO character_comments VALUES (?,?,?,?,?,?)", (item_id, character_id, user.user_id, content, time.time(), status))
         conn.commit()
-        return {"id": item_id, "character_id": character_id, "content": payload.content.strip(), "mode": "sqlite"}
+        return {"id": item_id, "character_id": character_id, "content": content, "status": status, "mode": "sqlite"}
     finally:
         conn.close()
