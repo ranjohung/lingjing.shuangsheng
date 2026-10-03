@@ -447,3 +447,150 @@ novel-ai-helper.html (核心新增)
 - [x] 修复小说详情页返回世界主页后底部主功能区 button 默认白底问题。
 - [x] 同步 `index.html`、`product-preview.html` 与 `output/preview/css/shell-v64.css`。
 - [x] 在 `AGENTS.md` 固化底部导航透明按钮防回归约束。详见 `docs/UI_REPAIR_REPORT_2026-09-26.md`。
+# 2026-09-26 进度补充：移除场景快捷历史入口的硬编码《红楼梦》对白，统一读取运行时最近 50 句真实记录，并完成浏览器验收。详见 docs/HISTORY_SHORTCUT_TEST_2026-09-26.md。
+# 2026-09-26 进度补充：福利入口已改为每日一次的本地持久化领取，实际增加灵玉并阻止重复领取，完成浏览器验收。服务端签到和活动服务仍未接入。详见 docs/BENEFIT_CLAIM_TEST_2026-09-26.md。
+# 2026-09-26 进度补充：设置面板已支持本地持久化恢复，未接入的全屏 API、自动播放调度、音频引擎和云端同步保持明确未完成。详见 docs/SETTINGS_PERSIST_TEST_2026-09-26.md。
+# 2026-09-26 进度补充：场景 NPC 对话、赠礼、物品采集/收获/使用现在会实际写入历史、背包、关系和本地存档，并回归热点来源测试。服务端事件流水和素材对象数据库仍未接入。详见 docs/HOTSPOT_STATE_INTERACTION_TEST_2026-09-26.md。
+# 2026-09-26 关键回归修复：恢复完整 LJ_PAGES 页面映射（72 页），重新注入小说世界代码并完成商城/历史回归。详情见 docs/PAGES_MAPPING_RECOVERY_TEST_2026-09-26.md。
+# 2026-09-26 进度补充：陪伴 AI 记忆页已支持本地新增、锁定、解锁、删除和持久化，并完成浏览器验收；服务端四层记忆、AI 提取/衰减、向量检索与跨设备同步仍未接入。详见 docs/MEMORY_RUNTIME_TEST_2026-09-26.md。
+# 2026-09-26 进度补充：聊天页已把明确偏好表达联动到本地记忆库，并通过真实输入浏览器验收；AI 候选提取、确认卡、敏感检测和服务端记忆仍未接入。详见 docs/CHAT_MEMORY_LINK_TEST_2026-09-26.md。
+# 2026-09-26 进度补充：聊天记忆写入前已增加敏感信息拦截并完成浏览器验收；服务端安全 Pipeline、加密存储与审计仍未接入。详见 docs/CHAT_MEMORY_SAFETY_TEST_2026-09-26.md。
+# 2026-09-26 进度补充：菜单章节跳转已改为只读取真实本地存档槽，禁止选择未存档原章节，并完成浏览器验收。云端存档仍未接入。详见 docs/SAVED_CHAPTER_JUMP_TEST_2026-09-26.md。
+# 2026-09-26 进度补充：修复游戏菜单返回按钮，严格回到小说详情页并完成浏览器路由验收；自由上传模式和云端会话仍保持本地边界。详见 docs/MENU_EXIT_DETAIL_TEST_2026-09-26.md。
+# 2026-09-26 进度补充：核心路由冒烟测试通过，真实 Chromium 已切换 8 个核心页面且无 pageerror；该测试不替代小说世界端到端验收。详见 docs/CORE_ROUTES_SMOKE_TEST_2026-09-26.md。
+# 2026-09-26 进度补充：完成小说世界入口回归，真实浏览器完成角色创建、游戏、手动存档、打开书签和真实存档读取，空槽保持“暂无剧情”，无 pageerror。详见 docs/ENTRY_ROUNDTRIP_TEST_2026-09-26.md。
+# 2026-09-26 进度补充：仓库补齐使用、装备、赠送三类实际操作，分别写入背包、角色装备、关系/历史并完成浏览器验收。详见 docs/INVENTORY_ACTIONS_TEST_2026-09-26.md。
+# 2026-09-26 进度补充：衣柜换装与福利领取现在立即写入当前本地存档，并完成衣柜、福利、设置浏览器回归；服务端同步仍未接入。详见 docs/WARDROBE_BENEFIT_PERSIST_TEST_2026-09-26.md。
+# 2026-09-26 需求冲突修正：移除旧长滚动阅读入口与可切换分支，玩家小说世界固定使用视觉小说点击推进舞台，并完成入口、角色、存档和菜单回归。详见 docs/REMOVE_SCROLL_READER_TEST_2026-09-26.md。
+# 2026-09-26 进度补充：地图读取当前章节真实原文场景节点，支持点击切换并写入场景标题、历史和本地存档；无节点时不伪造地点。详见 docs/MAP_SCENE_SWITCH_TEST_2026-09-26.md。
+# 2026-09-26 进度补充：场景热点扩展覆盖原文中的动物、家具、药物、庄稼，并接入对应互动动作；点击推进与存档回归通过。详见 docs/SCENE_OBJECT_HOTSPOT_TEST_2026-09-26.md。
+# 2026-10-01 进度补充：场景热点进一步数据化；当前原文段落编译出的热点按“章节:段落”保存稳定位置和类型，并随自动/手动存档读档恢复，避免场景重绘时热点漂移；服务端热点事件流水仍未接入。
+# 2026-10-01 进度补充：热点交互现在记录 `view/feed/talk/gift/collect/harvest/use` 等最后动作、使用次数和时间，并随热点状态存档恢复；真实游戏菜单与四书存档回归通过。
+# 2026-10-01 进度补充：重新开始或重新选择角色时清空本轮热点运行态；继续游戏/读档保留原存档热点，避免新角色继承旧世界互动数据。
+# 2026-09-26 进度补充：动物喂食现在实际更新好感、喂食次数、历史和本地存档，并完成场景点击与赠礼回归。详见 docs/ANIMAL_FEED_INTERACTION_TEST_2026-09-26.md。
+# 2026-09-26 进度补充：地图场景名称纳入自动存档、手动槽位和读档恢复，入口与地图回归通过。详见 docs/SCENE_SAVE_RESTORE_TEST_2026-09-26.md。
+# 2026-09-26 进度补充：场景地图快捷入口统一复用真实地图面板，避免与主地图行为分叉；地图与菜单唯一性回归通过。详见 docs/SCENE_MAP_SHORTCUT_TEST_2026-09-26.md。
+# 2026-09-27 进度补充：真实 Chromium 逐项点击游戏菜单 12 个功能及“返回小说详情页”，全部打开对应面板或完成退出路由，无 pageerror。详见 docs/ALL_GAME_MENU_ACTIONS_TEST_2026-09-27.md。
+# 2026-09-27 进度补充：好感度面板补充展示动物喂食次数，读取真实关系状态；完整菜单回归通过。详见 docs/RELATIONSHIP_FEEDING_DISPLAY_TEST_2026-09-27.md。
+# 2026-09-27 后端验收：FastAPI 真实 HTTP Phase 0 冒烟 8/8 通过，覆盖健康、聊天、记忆、安全拦截和用户熔断；测试支持 MIRAI_API_BASE。当前仍为内存/开发身份/规则回复，生产数据库与 LLM Gateway 未接入。详见 docs/API_PHASE0_HTTP_SMOKE_TEST_2026-09-27.md。
+
+---
+
+## 2026-10-01 本轮完成：影视化生活模拟层
+
+- 在 `novel-game` 原著点击推进舞台上增加持久化生活状态：日期/时段、精力、饱腹、心情、健康。
+- 增加场景内动作牌：休息、进食、劳作、散步；动作会真实消耗行动值、改变状态、产出铜钱（劳作）、写入历史对话并进入存档/读档。
+- 保留原著文本零删减、热点互动、背包、关系、地图、商城和严格退出链路；未接服务端的同步/支付仍明确为本地演示。
+- 回归：入口、存档读取、核心路由测试通过；多作品测试已确认原著角色路径不应点击随机/自定义向导的隐藏 CTA，测试断言需按角色类型分支修正。
+- 多作品回归已完成：红楼梦/贾宝玉、三国演义/刘备、水浒传/宋江、聊斋志异/书生均通过“角色→舞台→存档→读档→详情→世界”真实 Chromium 流程；详见 [MULTI_BOOK_ENTRY_TEST_2026-10-01.md](MULTI_BOOK_ENTRY_TEST_2026-10-01.md)。
+- 生活模拟第二轮：动作推进清晨/上午/午后/黄昏/夜里时段，夜间休息进入下一日；劳作创建并推进真实支线任务“日常劳作”，任务状态随存档读档保留。
+- 生活模拟验收：真实 Chromium 点击劳作后由“第 1 日·清晨”变为“第 1 日·上午”，精力 80→62、饱腹 80→68、心情 70→67、铜钱 +3，并生成 1 条任务；新角色初始行动值修正为 62。 
+- 属性面板补充展示生活状态（时段、精力、饱腹、心情、健康、行动值）；游戏菜单全功能回归保持通过。
+- 核心回归保持通过：核心路由、入口往返、四部公版存档读档、全部游戏菜单动作均完成真实浏览器测试；未接服务端能力仍未标记为完成。
+- 后端基础补充：新增 `/api/v1/notifications`、通知已读接口和 `/api/v1/recommendations`；10 个 API 单元测试通过。当前返回明确标记 `local-dev` / `bundled-catalog`，推荐尚未宣称个性化，通知尚未宣称生产持久化。
+- 2026-10-01：商业化 API 新增商城目录与购买接口；灵晶扣款、小说世界货币/行动值/道具到账和交易流水均可测试，返回 `local-demo`，未接真实支付与持久化钱包，不标记为生产完成。
+- 2026-10-01：小说世界菜单商城改为 API 优先；成功连接时显示 API 商品目录/余额并使用服务端购买结果，连接失败时回退本地演示并明确提示接口未连接。核心路由与菜单回归通过。
+- 2026-10-01：新增 `/api/v1/world-saves/{novel_id}` 服务端存档 API，支持按用户/小说隔离的槽位列表、写入、读取、删除；返回 `local-dev`，尚未宣称生产云同步。定向 API 回归 `12 passed`。
+- 2026-10-01：API 定向回归 `11 passed`；全量 `pytest tests -q` 目前因环境未安装 `alembic` 在 `test_story_database.py` 收集阶段失败，已记录为环境缺口，未将全量标记为通过。
+- 2026-10-01：新增 `apps/api/requirements-dev.txt`，固定完整 API 回归所需的 pytest；当前工作区 `.venv` 的 pip 指向另一份 MIRAI 环境，仍需在本项目环境重建依赖后再宣称全量回归通过。
+- 2026-10-01：唯一入口首页与世界主页接入通知/推荐接口探测；在线时更新未读数，离线时明确显示“本地内置目录”，通知中心展示接口返回并支持标记已读；未接后端的在线能力仍不标记完成。
+
+## 2026-10-01 开发计划：创作功能区 7 项功能深化 + 心屿社交功能（v4 文档落地）
+
+> 需求来源与范围限定见 [PRD.md](PRD.md) 同日章节。仅修改 LJ_PAGES 中 8 个页面键的值（create-video / create-image / create-sound / create-post / voice-clone / create-card / agent-create / heart-island），其余 64 键与壳层零改动；不改动各页既有 topbar、返回路由与样式基调。
+
+### 工作包
+
+| ID | 工作包 | 页面 | 关键交付 | 状态 |
+|---|---|---|---|---|
+| V26-A1 | 创建图片 6 模式 | create-image | 文生/图生/角色一致性/定妆照/局部重绘/扩图、负面描述、关联角色+形象版本、数量 1/2/4、灵晶计价 10(+5)、进度模拟、一致性评分、设为头像/定妆照/重绘/扩图 | 待开发 |
+| V26-A2 | 创建声音 3 模式 | create-sound | TTS（情感 9 种+滑块+BGM+字数）、角色配音（批量台词队列）、AI 写歌（两步流程+曲风/情绪/语言/时长） | 待开发 |
+| V26-A3 | 创建视频 4 模式 | create-video | 文生 30/图生 25/关键帧 35/漫剧 15 每镜头、时长/画幅/BGM/运镜、对口型 +10、漫剧 10 步+分镜编辑器+模板库 5 套、进度模拟 | 待开发 |
+| V26-A4 | 创建动态 3 方式 | create-post | AI 自动生成（角色+场景+主题+附带媒体+基调+长度）、手动（保留）、定时发布+审核队列（编辑/跳过）、动态类型 5 种、评论角色回复 | 待开发 |
+| V26-A5 | 复刻音色 7 步 | voice-clone | 版权同意书、参考文案引导、预处理+三项校验、训练进度、试听、微调滑块、音色库+绑定角色 | 待开发 |
+| V26-A6 | 创建灵念 6 步 | create-card | Big5 人格滑块、主动行为频率约束表、情感系统 6 情绪、记忆成长、测试对话+激活、好感度首级「初识」 | 待开发 |
+| V26-A7 | Agent 创建 7 步 | agent-create | 领域 10 域+婉拒路由、知识库、开场白/告别语、高级设置、角色资产、测试发布、工具 8 种、Character.AI 导入演示 | 待开发 |
+| V26-B1 | 心屿精选社交 | heart-island | 推荐流、榜单 4 种、点赞/收藏/分享/评分/关注（localStorage 持久化）、角色详情弹窗、动态广场+评论角色回复、话题标签、热度分公式 | 待开发 |
+| V26-T1 | 回归验证 | 全部 | LJ_PAGES 仍 72 键可解析；全部内联脚本可编译；浏览器逐页冒烟；其余页面零 diff | 待开发 |
+
+### 边界约束（硬性）
+
+- 只通过 dump→改→set 管线替换上述 8 个页面键；禁止直接编辑 index.html 其他区域。
+- 不改底部导航、首页/世界/我的 Tab、创作中心入口卡片、收益体系、灵晶经济。
+- 各页内嵌 `data-bundled-source="js/creator-store.js"` 捆绑脚本保持原样，仅通过其公开 API（getCoins/consume/toast/addMedia/addCard/…）交互。
+- JS 字符串中出现 `</script>` 必须写作 `<\/script>`；页面需在 srcdoc iframe 中独立可渲染。
+
+## 2026-10-01 本轮修正记录
+
+- 角色创建入口收敛：删除重复的“自定义角色”独立卡片；“随机路人”进入统一向导，在向导内选择姓名、形象、职业、技能和更丰富的性格属性。
+- 游戏舞台收敛：生活动作不再常驻遮挡剧情画面，改为菜单中的“日程与生活”功能键，点击后展开当天可执行的休息、进食、劳作、散步。
+- 小说详情角色卡已接入点击交互：显示好感度，达到 80 后可用 1200 灵晶登记为心屿陪伴 AI；未接真实支付时仅使用本地演示状态，不标记为生产交易完成。
+- 修复交流群二维码资源路径：复制到 `output/preview/assets/community/`，避免 srcdoc iframe 以 `output/preview/` 为基址时图片 404。
+- “我的”页创作者中心改为所有用户可进入，收益与作品数据仍按当前用户展示；创作、视频、图片、声音等页面补充纵向滚动和底部安全区，避免功能按钮被固定导航遮挡。
+## 2026-10-01 继续修复与回归记录
+
+- 角色创建入口按最新反馈收敛：保留原著主角、原著配角与随机路人，随机路人进入同一个四步创建向导；职业、技能、初始形象和扩展性格均在向导内完成，不再保留重复的独立“自定义角色”入口。
+- 游戏舞台的日程/生活操作默认隐藏，正式游戏画面不再被操作条遮挡；通过游戏菜单的“日程与生活”按需打开，保留每日开始时的行动选择逻辑。
+- 小说详情页主演卡片已接入好感度弹层：展示本地好感度、达标条件和灵晶带出陪伴 AI 的本地演示状态；未达到条件时明确提示，不伪造真实支付。
+- 交流群二维码改为稳定的 `assets/community/lingjing-shuangsheng-group.jpg`，并同步到 `output/preview/assets/community/`；`product-preview.html` 同步同一逻辑。
+- “我的”页创作者中心改为所有用户可进入，作品与收入数据仅展示当前用户；创作中心、视频/图片/声音/动态/卡牌/Agent/克隆页面补充独立纵向滚动安全样式，并同步到产品预览页。
+- 已验证：`test_core_routes_smoke.py` 通过 8 条核心路由；`test_multi_book_entry.py` 通过 hongloumeng、sanguoyanyi、shuihuzhuan、liaozhai 四本书；`test_all_game_menu_actions.py` 已启动真实浏览器回归但旧脚本无终态输出，需继续重写为当前菜单选择器验收。
+- 待处理：重写 `test_v28_desktop.py` 中仍引用旧 `#nd-*` 详情页选择器的部分；补充当前详情角色卡、二维码自然宽度、个人页创作者入口、创作页底部滚动和随机角色向导的真实浏览器截图回归。
+- 创作中心“上架与定价”完成信息架构收敛：主卡只保留选择作品、收费点配置、保存定价与提交审核；移除创作中心的收益明细入口，收益明细统一从“我的”进入；版权分成改为独立“版权分成规则”卡片。
+- `creator-center-edit-source.txt` 已同步至 `index.html` 与 `product-preview.html`，核心路由回归 `core_routes_smoke_ok 8`。
+- 发现并修复详情页“游玩”绕过全屏剧情封面的流程缺陷：`plot-detail` 的公版小说入口统一改为 `novel-cover-entry`，必须先同意适龄协议，再由“剧情开始”进入角色选择。
+- 真实 Chromium 回归 `scripts/test_current_novel_world_flow.py` 通过：详情页 → 全屏封面 → 角色选择；角色选项包含孙悟空、猪八戒、随机路人且无独立“自定义角色”；随机路人向导包含姓名、形象、身份、技能和至少 5 项性格属性；无 pageerror，并生成 `screenshots/current-flow/01-detail.png`、`02-random-wizard.png`。
+- 已发现并修正首次入口的另一处绕过：详情页不再直接跳 `novel-game`，统一先跳 `novel-cover-entry`；封面同意协议后再写入 `start_mode=new` 并进入角色创建。当前回归已确认详情封面和随机角色向导截图生成；角色确认后游戏菜单的长流程仍需下一轮继续定位，未标记为完成。
+- 修复视觉小说舞台被旧 `#ng-stage #ng-reader{display:none!important}` 规则整体隐藏的问题；现在只隐藏旧读者正文，视觉小说容器和原文文字框正常显示。
+- 修复游戏菜单遮罩在视觉小说入口被设置为内联 `display:none` 后无法重新打开的问题；打开菜单时显式恢复 `display:flex`，关闭时再隐藏。
+- `test_current_novel_world_flow.py` 真实 Chromium 已通过：详情 → 全屏封面 → 随机角色四步向导 → 视觉小说舞台 → 游戏菜单；无 pageerror，生成 `03-game-menu.png`。
+- 2026-10-02：补齐世界退出链兜底；从游戏菜单返回小说详情后，详情页顶部返回在无历史来源时固定回到 `world-hub`，不再落到首页。`test_current_novel_world_flow.py` 已扩展并通过详情 → 世界回归，生成 `04-return-detail.png`、`05-return-world.png`；本地静态测试服务器对通知/推荐 API 的 404 仅记录为测试环境缺口，未将在线接口标记为通过。
+- 2026-10-02：完成创作端创建图片六模式 UI：文生图、图生图、角色一致性、定妆照、局部重绘、扩图；保留现有免费额度/灵晶扣减、候选图确认入素材库逻辑，并同步 `index.html` 与 `product-preview.html`。真实 Chromium `CREATOR_IMAGE_MODES_PASS` 通过并生成 `screenshots/creator-image-modes.png`。实际 AI 图片生成服务仍未接入，页面继续按本地演示边界运行。
+- 2026-10-02：完成创作端创建声音三模式 UI：TTS 配音、角色配音、AI 写歌；保留现有额度扣减、候选结果确认入素材库和滚动安全区，并同步两份入口。真实 Chromium `CREATOR_SOUND_MODES_PASS` 通过并生成 `screenshots/creator-sound-modes.png`；真实 TTS/配音/作曲服务仍未接入，未标记为生产生成完成。
+- 2026-10-02：创建动态页补齐发布方式选择：AI 自动生成、手动发布、定时审核；切换模式会改变 AI 辅助区与审核队列提示，并同步两份入口。核心路由回归通过；真实审核服务、定时任务和角色回复服务仍未接入，未标记为生产发布完成。
+- 2026-10-02：创作端页面同步后重新执行小说世界真实 Chromium 回归；详情→封面→随机角色向导→视觉小说舞台→游戏菜单→详情→世界链路通过，无 pageerror。静态服务器对通知/推荐 API 的 404 仍仅作为离线测试环境缺口记录。
+- 2026-10-02：修复 V22 视觉小说舞台未初始化生活面板的问题；现在游戏菜单“日程与生活”可打开按需显示的动作面板，不会常驻遮挡剧情。真实 Chromium 回归输出 `LIFE_PANEL_VISIBLE`、`EXIT_CHAIN_PASS`、`CURRENT_NOVEL_FLOW_PASS`，并生成 `screenshots/current-flow/03-life-actions.png`；通知/推荐 API 在静态离线服务器中的 404 仍未伪装为在线通过。
+- 2026-10-02：重新运行现有 `test_entry_roundtrip.py`，真实点击角色、游戏菜单存档、封面打开书签和读档入口，进程退出码为 0 并生成 `screenshots/entry-repair/game.png`、`bookmark.png`、`restored.png`；菜单中存档/读档、任务、地图、生活、商城、仓库、设置、衣柜、福利、历史和返回详情均可见。云端同步仍未接入。
+- 2026-10-02：补充菜单回归脚本的逐项记录逻辑；真实 Chromium 已再次验证角色创建→游戏→菜单→生活面板，以及任务、地图弹窗（输出 `LIFE_PANEL_VISIBLE`、`MENU_ACTION_OK ng-menu-quests`、`MENU_ACTION_OK ng-menu-map`）。商城及后续动态弹窗仍需下一轮稳定逐项复测，当前不标记为全部菜单完成。`python -m py_compile scripts/test_current_novel_world_flow.py` 与 `core_routes_smoke_ok 8` 通过。
+- 2026-10-02：修复动态菜单弹窗的统一生命周期：运行时弹窗增加 `data-runtime-modal` 标记，菜单关闭时清理残留弹窗；真实 Chromium 已完整验证任务、地图、商城、仓库、设置、衣柜、福利、历史对话、人物关系、道具面板均可打开，随后返回详情页并回到世界主页，输出 `MENU_ACTION_OK` 全项、`DETAIL_BACK_HASH #/world-hub`、`EXIT_CHAIN_PASS`、`CURRENT_NOVEL_FLOW_PASS`，且 `page_errors: []`。商城 API 在静态离线测试服务器返回 404，界面明确回落到本地演示，未伪装为在线服务。
+- 2026-10-02：复核 `apps/api` 的通知/推荐真实路由：使用项目虚拟环境 `TestClient` 实测 `/api/v1/notifications` 返回 200、`mode=local-dev`、未读数 2；`/api/v1/recommendations?limit=3` 返回 200、`mode=bundled-catalog`、`personalized=false`。当前 API 为开发态进程内存储/公版目录，尚未接入生产数据库、登录态和个性化事件流；静态 GitHub 页面因此继续显示明确的离线回退状态。
+- 2026-10-02：将通知 API 从进程内存改为 SQLite 开发持久化，与钱包账本共用 `story-development.db`；按 `user_id` 隔离通知、支持已读状态重启后保留。TestClient 实测 GET/POST/再次 GET 为 `200 sqlite-dev`、未读数从 2 变 1；推荐仍保持 `bundled-catalog`、`personalized=false`，生产推送与个性化排序未宣称完成。
+- 2026-10-02：复核陪伴 AI API：角色、记忆与关系模块已使用 SQLiteStore；在 FastAPI lifespan 上下文中实测 `/api/chat` 返回 200 规则引擎响应并写入偏好记忆，`/api/memories` 返回 200 且可读到 1 条，危机文本返回 200 且 `safety_blocked=true`。当前未配置 OPENAI_API_KEY，规则引擎与安全前置明确标记为开发模式，未宣称接入生产模型。
+- 2026-10-02：启动真实 Uvicorn 服务并运行 `apps/api/tests/phase0_smoke.py`（设置本机 `NO_PROXY` 避免代理干扰），8/8 通过：健康检查、正常聊天、记忆写入/召回/冲突覆盖、反迎合、自伤危机拦截、用户窗口熔断 429 与 `X-Budget-Exceeded: user`。
+- 2026-10-02：补齐管理员 API 权限边界：`/admin/cost/today` 与 `/admin/kill-switch/reset` 接入 `require_admin`；生产只接受 JWT `role=admin`，开发管理员必须同时显式配置 `dev_admin_enabled` 与 `dev_admin_user_id`，默认请求均为 403。TestClient 实测默认 403/403，显式开发管理员配置后 200/200；普通 `/health` 仍 200。
+- 2026-10-02：新增 SQLite 管理操作日志：熔断复位写入 `audit_events`，新增受 `require_admin` 保护的 `/admin/audit-log`；实测未授权读取 403，显式开发管理员复位 200，审计读取 200 且返回 `kill_switch.reset`。日志不含真实身份数据，生产仍需接入正式用户表与审计留存策略。
+- 2026-10-02：补充 UGC 举报 API：新增 `/api/reports` POST/GET，SQLite 持久化 `reporter_id/target_type/target_id/reason/status/created_at`，支持 novel、character、post、memory、comment 五类目标并按用户隔离。TestClient 实测创建 201、初始状态 `pending`，列表 200。审核队列、管理员处理和前端入口尚未接通，未标记为完整举报系统。
+- 2026-10-02：补齐举报后端审核闭环：新增管理员保护的 `/api/reports/admin/queue` 与 `/api/reports/admin/{id}/review`，支持 `reviewed/resolved/rejected` 状态，并为审核写入 `content_report.review` 审计事件。实测普通用户队列 403，显式开发管理员队列/审核/审计读取均成功；前端审核界面与生产通知仍未接通。
+- 2026-10-02：接通玩家侧“我的 → 法律与帮助 → 举报入口”：内嵌页面新增举报面板，支持小说/角色/动态/记忆/评论目标、理由提交、本人记录列表；请求 `/api/reports`，接口不可用时明确显示离线/未提交，不冒充已进入审核队列。Chromium 实测 `REPORT_ENTRY_UI_PASS`、`page_errors=[]`；管理员审核界面、生产鉴权与通知仍待后续接入。
+- 2026-10-02：修复视觉小说入口回归：角色向导完成后，`enterScene` 之后强制收敛 `#ng-v22-container/#ng-stage` 的显示状态，避免旧遮罩/读档回调把游戏舞台再次隐藏。完整浏览器流程复测 `CURRENT_NOVEL_FLOW_PASS`，包含角色创建、VN 舞台、菜单/生活面板、全部菜单项与游戏→详情→世界退出链，`page_errors=[]`。
+- 2026-10-02：核验商业化后端商城闭环：`GET /api/v1/currency/mall/items` 与 `POST /api/v1/currency/mall/purchase` 已由 SQLite 账本提供，商品目录、灵晶扣减、小说世界货币/道具入账和 `mall-purchase` 流水均实测 HTTP 200；更新经济模块测试期望为 `mode=sqlite`。静态离线浏览器仍会显示接口未连接降级，这是部署环境未启动 API，不标记为线上已接通。
+- 2026-10-02：补充并复核玩家存档 API：`/api/v1/world-saves/{novel_id}` 的空列表、写入槽位、读取、跨小说隔离、删除均走 SQLite 持久化；实测 `mode=sqlite`，保存状态可原样读回，更新 `test_world_saves.py` 的旧 `local-dev` 断言。前端本地存档与云端 API 的自动同步仍需独立接入。
+- 2026-10-02：为游戏内商城和云端存档增加可配置 API 基址：读取 `localStorage.lingjing_api_base` 后拼接 `/api/v1/currency/*` 与 `/api/v1/world-saves/*`，部署到独立前端域名时可指向真实 API；未配置或请求失败仍明确降级到本地功能。同步 72 个内嵌页面并通过 `node --check` 与 `CURRENT_NOVEL_FLOW_PASS`，`page_errors=[]`。
+- 2026-10-02：修复真实前端接入的 CORS 缺口：API 新增环境变量 `CORS_ORIGINS`（逗号分隔，默认开发端口与当前 GitHub Pages 域名），保留显式来源校验和凭据支持；预检请求从 GitHub Pages Origin 实测 200 并返回正确 `access-control-allow-origin`。生产部署仍需通过环境变量覆盖为实际域名。
+- 2026-10-02：陪伴聊天页新增真实 API 调用分支：配置 `lingjing_api_base` 时向 `/api/chat` 发送 `message/character_id`，展示后端回复与安全阻断标记；接口未配置或失败才使用本地规则回复。源码已同步到两个入口并保留本地降级；跨进程 UI 联调因当前浏览器入口仍受启动遮罩阻断，暂标记为“实现未完成最终浏览器验收”，未宣称全链路完成。
+- 2026-10-02：聊天页同步后的 6 段内联脚本全部通过 `node --check`；当前仍只把“代码语法正确”记为完成，跨进程 API 聊天 UI 验收继续单独追踪。
+- 2026-10-02：陪伴 AI 聊天页增加真实状态提示：配置 API 基址后探测 `/health`，显示“API 在线 · 模型网关/安全降级”；未配置显示“本地规则”，探测失败显示“接口离线 · 本地规则”。同步入口并对 7 段内联脚本逐段 `node --check`，全部通过；跨进程浏览器联调仍待验收。
+- 2026-10-02：修复多书存档面板回归：视觉小说 `enterScene` 会给进度遮罩留下内联 `display:none`，后续仅加 `open` 类仍不可见；`showProgressMask/showLegacyProgressMask` 现在先清除内联显示状态再打开。多书真实浏览器回归通过：`PASS hongloumeng`、`PASS sanguoyanyi`、`PASS shuihuzhuan`、`PASS liaozhai`，未报告页面错误。
+- 2026-10-02：修复“打开书签→历史存档→继续游戏”读取后落入退役长文 reader 的回归：`loadProgress` 现在重建当前书数据中枢并调用 `NovelWorldVN.enterScene` 恢复视觉小说舞台与存档位置；更新 `test_reading_restore.py` 使用当前 VN 选择器。真实 Chromium 通过 390/1100 两种视口，保存槽内容保持不变、角色名恢复、二级退出链通过、`page_errors=[]`。
+- 2026-10-02：新增内部 `admin-console` 页面并同步两个入口：管理员审核队列调用真实 `/api/reports/admin/queue`，处理/驳回调用真实 review API；401/403、接口离线和未配置 API 均明确提示，不渲染本地假审核数据。使用显式开发管理员配置启动 API 后，Chromium 实测在线状态 `sqlite-dev`、队列记录可见、`page_errors=[]`，截图 `screenshots/admin-console.png`；生产 JWT 与正式身份系统仍未宣称完成。
+- 2026-10-02：新增持久化媒体生成任务 API `/api/v1/generation/tasks`（图片/视频/声音/动态/灵念/Agent 类型校验，SQLite 任务状态与用户隔离）；未配置生产生成服务时返回 `provider_unconfigured` 和明确错误，不伪造媒体。创建图片页配置 `lingjing_api_base` 后已接入真实 POST，并在任务面板展示任务号/未生成原因；API 单测通过，真实 Chromium `GENERATION_UI_PASS` 通过并生成 `screenshots/generation-task.png`。生产图像/音视频供应商仍未接入，未标记为生成完成。
+- 2026-10-02：玩家场景交互回归发现并修复两个真实视觉缺口：VN `showSpeaker` 未显式打开文字框，导致原文字幕写入但不可见；动作确认遮罩仅加 class、未清除旧的 `display:none`，导致点击场景动作无法确认。现在无动作标注的公版场景提供明确标注的“观察当前场景”灵境原创动作；真实 Chromium `VN_SCENE_INTERACTION_PASS` 通过，热点点击后文本推进可见，核心世界流程复测 `CURRENT_NOVEL_FLOW_PASS`、`page_errors=[]`。
+- 2026-10-02：完成陪伴聊天跨进程联调并修正真实缺口：聊天页的本地角色 ID `c04` 与 API 预置角色 ID 不一致，导致浏览器请求被后端 404 后静默回落本地规则；预置 `preset_ling/preset_xiaoman` 现在在前端稳定映射，真实 Uvicorn `POST /api/chat` 返回 200。Chromium `CHAT_API_UI_PASS` 通过，状态显示“API 在线 · 安全降级”，聊天气泡来自后端响应，截图 `screenshots/chat-api-ui.png`；LLM 未配置时仍明确是规则引擎，不宣称生产模型。
+- 2026-10-02：创建声音页接入统一生成任务 API：TTS、角色配音和 AI 写歌模式提交 `kind=sound` 及对应 mode；供应商未配置时按钮显示“任务已记录（未生成）”，不弹假成功提示。真实 Uvicorn `POST /api/v1/generation/tasks` 返回 201，Chromium `SOUND_GENERATION_UI_PASS` 通过，截图 `screenshots/sound-generation-task.png`。
+## 2026-10-02 创建视频任务接入
+- 完成：`create-video` 页接入 `/api/v1/generation/tasks` 的视频任务提交，携带类型、描述、比例和时长；任务状态明确显示“任务已记录（未生成）”，不再把本地候选卡片冒充真实生成结果。
+- 完成：无 API 配置时保留本地演示，但明确标注为界面预览；空描述、接口失败均给出可见错误反馈。
+- 验证：`scripts/test_video_generation_ui.py` 通过，真实浏览器 iframe 填写并提交任务，截图 `screenshots/video-generation-task.png`；后端持久化任务接口返回成功。
+- 未完成：仍需配置生产媒体供应商并实现异步回调、媒体存储和候选视频真实预览。
+
+## 2026-10-03 通知与推荐真实接口联调
+- 完成：主页/世界页通知徽标与通知弹层接入 `/api/v1/notifications`，推荐区接入 `/api/v1/recommendations`；在线接口失败时明确回落本地内置目录，不伪造在线数据。
+- 验证：`scripts/test_discovery_ui.py` 通过，真实 Chromium 经 iframe 进入主页，看到“接口已连接”，打开通知中心并读取 SQLite 通知，截图 `screenshots/discovery-api-ui.png`。
+- 未完成：正式账户鉴权、推送通道和推荐策略仍需生产服务配置；当前开发环境为 SQLite/规则推荐降级。
+
+## 2026-10-03 角色广场最小闭环
+- 完成：角色服务增加作者主动公开/下架、广场搜索列表和角色举报接口；公开列表只返回 `status=published`，不暴露拥有者身份，举报进入统一管理员审核表。
+- 修复：SQLite 自建角色写入缺少 `commit()`，导致创建后无法被后续请求读取；现已补提交并通过接口测试。
+- 完成：`我的`功能区增加“角色广场”入口，接入真实 `/api/characters/plaza`，在线为空时显示“暂无作者公开角色”，接口离线时不伪造数据。
+- 验证：`tests/test_character_plaza.py` 与 `scripts/test_character_plaza_ui.py` 通过，Chromium 截图 `screenshots/character-plaza-api-ui.png`。
+- 未完成：正式账号体系、图片审核、举报自动下架和社区评论/共鸣仍需后续生产化。

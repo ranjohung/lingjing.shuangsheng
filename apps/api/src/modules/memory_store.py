@@ -309,6 +309,7 @@ class SQLiteStore(InMemoryStore):
         item = Character(id=uuid.uuid4().hex[:10], user_id=user_id, name=name, persona=persona, relationship_type=relationship_type, avatar=avatar, glow=glow, is_preset=False)
         with self._connection() as conn:
             conn.execute("INSERT INTO companion_characters VALUES (?,?,?,?,?,?,?,0)", (item.id, user_id, name, persona, relationship_type, avatar, glow))
+            conn.commit()
         return item
 
     def _rows_memories(self, user_id, character_id=None, query=None, limit=3):
