@@ -29,6 +29,10 @@ def test_character_plaza_requires_owner_opt_in_and_supports_report(monkeypatch):
     toggled = client.post(f'/api/characters/plaza/{cid}/reaction', json={'kind': 'resonate'})
     assert toggled.json()['active'] is False
     assert toggled.json()['count'] == 0
+    comment = client.post(f'/api/characters/plaza/{cid}/comments', json={'content': '这个角色很有灵气'})
+    assert comment.status_code == 201
+    comments = client.get(f'/api/characters/plaza/{cid}/comments').json()['items']
+    assert comments[0]['content'] == '这个角色很有灵气'
     report = client.post(f'/api/characters/plaza/{cid}/report', json={'reason': '测试举报理由'})
     assert report.status_code == 201
     assert client.delete(f'/api/characters/{cid}/publish').status_code == 200

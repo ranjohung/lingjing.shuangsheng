@@ -30,10 +30,12 @@ def main():
             page.on('dialog', lambda dialog: dialog.accept('测试举报'))
             frame.locator('[data-plaza-report]').first.click()
             frame.locator('[data-plaza-report]').first.wait_for(state='visible', timeout=5000)
+            page.wait_for_timeout(300)
             assert frame.locator('[data-plaza-report]').first.inner_text() == '已举报'
             reaction = frame.locator('[data-plaza-react]').first
             reaction.click()
             assert reaction.inner_text().startswith('共鸣 ')
+            assert frame.locator('[data-plaza-comment]').first.inner_text() == '评论'
             page.screenshot(path=str(ROOT / 'screenshots' / 'character-plaza-api-ui.png'), full_page=True)
             print('CHARACTER_PLAZA_UI_PASS', text[:120].encode('ascii', 'backslashreplace').decode())
             browser.close()

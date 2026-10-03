@@ -47,6 +47,10 @@ class PlazaReactionRequest(BaseModel):
     kind: str = Field(pattern="^(resonate|like)$")
 
 
+class PlazaCommentRequest(BaseModel):
+    content: str = Field(min_length=1, max_length=500)
+
+
 def _plaza_db():
     db_path = getattr(store, "_db_path", None)
     if not db_path:
@@ -55,6 +59,7 @@ def _plaza_db():
     conn.row_factory = sqlite3.Row
     conn.execute("CREATE TABLE IF NOT EXISTS character_plaza (character_id TEXT PRIMARY KEY, owner_id TEXT NOT NULL, summary TEXT NOT NULL, published_at REAL NOT NULL, status TEXT NOT NULL DEFAULT 'published')")
     conn.execute("CREATE TABLE IF NOT EXISTS character_reactions (character_id TEXT NOT NULL, user_id TEXT NOT NULL, kind TEXT NOT NULL, created_at REAL NOT NULL, PRIMARY KEY(character_id,user_id,kind))")
+    conn.execute("CREATE TABLE IF NOT EXISTS character_comments (id TEXT PRIMARY KEY, character_id TEXT NOT NULL, user_id TEXT NOT NULL, content TEXT NOT NULL, created_at REAL NOT NULL, status TEXT NOT NULL DEFAULT 'visible')")
     return conn
 
 
@@ -95,7 +100,7 @@ async def list_plaza(query: str = Query(default="", max_length=80), limit: int =
     conn = _plaza_db()
     try:
         pattern = f"%{query.strip()}%"
-        rows = conn.execute("SELECT c.id,c.name,c.persona,c.relationship_type,c.avatar,c.glow,p.summary,p.published_at,(SELECT COUNT(*) FROM character_reactions r WHERE r.character_id=c.id AND r.kind='resonate') AS resonate_count,(SELECT COUNT(*) FROM character_reactions r WHERE r.character_id=c.id AND r.kind='like') AS like_count FROM character_plaza p JOIN companion_characters c ON c.id=p.character_id AND c.user_id=p.owner_id WHERE p.status='published' AND (c.name LIKE ? OR p.summary LIKE ?) ORDER BY p.published_at DESC LIMIT ?", (pattern, pattern, limit)).fetchall()
+        rows = conn.execute("SELECT c.id,c.name,c.persona,c.relationship_type,c.avatar,c.glow,p.summary,p.published_at,(SELECT COUNT(*) FROM character_reactions r WHERE r.character_id=c.id AND r.kind='resonate') AS resonate_count,(SELECT COUNT(*) FROM character_reactions r WHERE r.character_id=c.id AND r.kind='like') AS like_count,(SELECT COUNT(*) FROM character_comments m WHERE m.character_id=c.id AND m.status='visible') AS comment_count FROM character_plaza p JOIN companion_characters c ON c.id=p.character_id AND c.user_id=p.owner_id WHERE p.status='published' AND (c.name LIKE ? OR p.summary LIKE ?) ORDER BY p.published_at DESC LIMIT ?", (pattern, pattern, limit)).fetchall()
         return {"items": [dict(row) for row in rows], "mode": "sqlite", "policy": "owner-opt-in"}
     finally:
         conn.close()
@@ -164,5 +169,33 @@ async def react_to_plaza_character(character_id: str, payload: PlazaReactionRequ
         conn.commit()
         count = conn.execute("SELECT COUNT(*) FROM character_reactions WHERE character_id=? AND kind=?", (character_id, payload.kind)).fetchone()[0]
         return {"success": True, "character_id": character_id, "kind": payload.kind, "active": active, "count": count, "mode": "sqlite"}
+    finally:
+        conn.close()
+
+
+@router.get("/plaza/{character_id}/comments")
+async def list_plaza_comments(character_id: str, limit: int = Query(default=30, ge=1, le=100), _user: CurrentUser = Depends(get_current_user)):
+    conn = _plaza_db()
+    try:
+        visible = conn.execute("SELECT 1 FROM character_plaza WHERE character_id=? AND status='published'", (character_id,)).fetchone()
+        if visible is None:
+            raise HTTPException(status_code=404, detail="角色未公开或已下架")
+        rows = conn.execute("SELECT id,content,created_at FROM character_comments WHERE character_id=? AND status='visible' ORDER BY created_at DESC LIMIT ?", (character_id, limit)).fetchall()
+        return {"items": [dict(row) for row in rows], "mode": "sqlite"}
+    finally:
+        conn.close()
+
+
+@router.post("/plaza/{character_id}/comments", status_code=201)
+async def create_plaza_comment(character_id: str, payload: PlazaCommentRequest, user: CurrentUser = Depends(get_current_user)):
+    conn = _plaza_db()
+    try:
+        visible = conn.execute("SELECT 1 FROM character_plaza WHERE character_id=? AND status='published'", (character_id,)).fetchone()
+        if visible is None:
+            raise HTTPException(status_code=404, detail="角色未公开或已下架")
+        item_id = uuid.uuid4().hex
+        conn.execute("INSERT INTO character_comments VALUES (?,?,?,?,?,?)", (item_id, character_id, user.user_id, payload.content.strip(), time.time(), "visible"))
+        conn.commit()
+        return {"id": item_id, "character_id": character_id, "content": payload.content.strip(), "mode": "sqlite"}
     finally:
         conn.close()
