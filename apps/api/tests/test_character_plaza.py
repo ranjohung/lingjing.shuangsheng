@@ -37,6 +37,8 @@ def test_character_plaza_requires_owner_opt_in_and_supports_report(monkeypatch):
     quarantined = client.post(f'/api/characters/plaza/{cid}/comments', json={'content': '这是诈骗内容'})
     assert quarantined.status_code == 201
     assert quarantined.json()['status'] == 'quarantined'
+    with sqlite3.connect(store._db_path) as conn:
+        assert conn.execute("SELECT COUNT(*) FROM content_reports WHERE target_type='comment' AND target_id=?", (quarantined.json()['id'],)).fetchone()[0] == 1
     assert all(item['content'] != '这是诈骗内容' for item in client.get(f'/api/characters/plaza/{cid}/comments').json()['items'])
     report = client.post(f'/api/characters/plaza/{cid}/report', json={'reason': '测试举报理由'})
     assert report.status_code == 201

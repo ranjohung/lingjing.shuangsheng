@@ -198,6 +198,9 @@ async def create_plaza_comment(character_id: str, payload: PlazaCommentRequest, 
         content = payload.content.strip()
         status = "quarantined" if any(term in content for term in COMMENT_BLOCKLIST) else "visible"
         conn.execute("INSERT INTO character_comments VALUES (?,?,?,?,?,?)", (item_id, character_id, user.user_id, content, time.time(), status))
+        if status == "quarantined":
+            conn.execute("CREATE TABLE IF NOT EXISTS content_reports (id TEXT PRIMARY KEY, reporter_id TEXT NOT NULL, target_type TEXT NOT NULL, target_id TEXT NOT NULL, reason TEXT NOT NULL, status TEXT NOT NULL, created_at REAL NOT NULL, resolved_at REAL)")
+            conn.execute("INSERT INTO content_reports VALUES (?,?,?,?,?,?,?,?)", (uuid.uuid4().hex, "safety-pipeline", "comment", item_id, "安全预检命中：待人工复核", "pending", time.time(), None))
         conn.commit()
         return {"id": item_id, "character_id": character_id, "content": content, "status": status, "mode": "sqlite"}
     finally:
