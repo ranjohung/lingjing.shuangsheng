@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><base href="__LJ_BASE__" /><script>
+window.__LJ_PAGE__ = "voice-clone";
+window.__LJ_PARAMS__ = __LJ_QS__;
+window.__LJ_HASHV__ = __LJ_HASH__;
+window.LJSearch = function () { var v = window.__LJ_PARAMS__; return v ? v : location.search; };
+window.LJHashVal = function () { var v = window.__LJ_HASHV__; return v ? v : location.hash; };
+window.LJNav = function (url) {
+  if (typeof url === 'string') {
+    var m = /([\w.\-]+)\.html(\?[^#]*)?(#.*)?$/.exec(url);
+    if (m) {
+      try { parent.postMessage({ lj: 'go', id: m[1], qs: m[2] || '', hash: m[3] || '' }, '*'); return; } catch (err) {}
+    }
+    try { parent.LJ.goUrl(url); return; } catch (err2) {}
+  }
+  location.href = url;
+};
+window.LJBack = function () {
+  try { parent.postMessage({ lj: 'back' }, '*'); } catch (err) { history.back(); }
+};
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>复刻音色 · 灵境</title>
+<link rel="stylesheet" href="css/shell-v64.css">
+<link rel="stylesheet" href="css/mobile-lock.css">
+<style>
+:root{--bg:#1A1A2E;--card:#16213E;--accent:#E94560;--xinyu:#6C5CE7;--ok:#4ECCA3;--warn:#FFB347;--text:#EAEAEA;--sub:#8A8A9A;--border:#2A2A4A}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:100px}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10}
+.topbar .back{font-size:18px;cursor:pointer;color:var(--accent)}
+.topbar h1{font-size:17px;font-weight:600}
+.topbar .quota{font-size:12px;color:var(--ok);background:rgba(78,202,163,.1);padding:4px 10px;border-radius:12px}
+.container{padding:16px}
+.section{margin-bottom:24px}
+.section-title{font-size:14px;font-weight:600;color:var(--sub);margin-bottom:12px;letter-spacing:1px}
+.upload-area{background:var(--card);border:2px dashed var(--border);border-radius:16px;padding:40px 20px;text-align:center;cursor:pointer;transition:all .2s}
+.upload-area:active{border-color:var(--accent)}
+.upload-area .icon{font-size:48px;margin-bottom:12px;opacity:.7}
+.upload-area .title{font-size:15px;font-weight:500;margin-bottom:6px}
+.upload-area .desc{font-size:12px;color:var(--sub);line-height:1.5}
+.upload-area .formats{font-size:11px;color:var(--xinyu);margin-top:8px}
+.tips{background:rgba(255,179,71,.1);border:1px solid rgba(255,179,71,.3);border-radius:12px;padding:14px;margin-top:16px}
+.tips .tip-title{font-size:13px;font-weight:600;color:var(--warn);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.tips .tip-list{font-size:12px;color:var(--sub);line-height:1.8}
+.tips .tip-list li{margin-left:16px}
+.param-group{margin-bottom:16px}
+.param-label{font-size:13px;color:var(--text);margin-bottom:8px;display:flex;justify-content:space-between}
+.param-label span:last-child{color:var(--xinyu);font-size:12px}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--border);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer}
+.form-textarea{width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:14px;outline:none;min-height:80px;resize:vertical;font-family:inherit}
+.form-textarea:focus{border-color:var(--accent)}
+.legal-check{display:flex;gap:12px;background:var(--card);border-radius:12px;padding:16px;align-items:flex-start;cursor:pointer}
+.legal-check input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent);flex-shrink:0;margin-top:2px}
+.legal-check .legal-text{font-size:13px;line-height:1.5;color:var(--sub)}
+.legal-check .legal-text strong{color:var(--warn)}
+.preview-card{background:var(--card);border-radius:16px;padding:16px;margin-top:12px;display:none}
+.preview-card.show{display:block}
+.preview-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.preview-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--xinyu),var(--accent));display:flex;align-items:center;justify-content:center;font-size:24px}
+.preview-name{font-size:15px;font-weight:600}
+.preview-status{font-size:11px;color:var(--ok);margin-top:2px}
+.waveform{height:40px;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;gap:2px;padding:0 12px}
+.waveform .bar{width:3px;background:var(--xinyu);border-radius:2px}
+.generate-bar{position:static;margin:28px 0 0;padding:16px 0;background:var(--bg);border-top:1px solid var(--border);display:flex;gap:12px;align-items:center}
+.cost-info{font-size:12px;color:var(--warn)}
+.cost-info .free{color:var(--ok)}
+.btn-gen{flex:1;padding:14px;background:linear-gradient(135deg,var(--accent),var(--xinyu));border:none;border-radius:12px;color:#fff;font-size:15px;font-weight:600;cursor:pointer}
+.btn-gen:disabled{opacity:.5;cursor:not-allowed}
+</style>
+<link rel="stylesheet" href="css/tabbar-embed.css">
+<style id="lj-scroll-safe">html,body{min-height:100%;overflow-y:auto!important}main{padding-bottom:112px!important}</style></head>
+<body>
+<div class="topbar">
+  <span class="back" onclick="parent.LJ.go('creator-center', '', '', true)">‹ 返回</span>
+  <h1>🎤 复刻音色</h1>
+  <span class="quota">首次免费</span>
+</div>
+<div class="container">
+  <div class="section">
+    <div class="section-title">上传音频素材</div>
+    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+      <div class="icon">🎙️</div>
+      <div class="title">点击上传音频文件</div>
+      <div class="desc">上传目标音色的清晰录音<br>建议时长 30秒 ~ 5分钟</div>
+      <div class="formats">支持 MP3 / WAV / FLAC / M4A</div>
+    </div>
+    <input type="file" id="fileInput" accept="audio/*" style="display:none" onchange="onUpload()">
+    <div class="tips">
+      <div class="tip-title">⚠️ 录音建议</div>
+      <ul class="tip-list">
+        <li>选择安静环境，避免背景噪音</li>
+        <li>保持说话者语调自然、稳定</li>
+        <li>建议包含多种情绪和语调变化</li>
+        <li>时长越长，复刻效果越精准</li>
+      </ul>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">音色参数微调</div>
+    <div class="param-group">
+      <div class="param-label"><span>相似度</span><span id="simVal">85%</span></div>
+      <input type="range" min="50" max="100" value="85" oninput="document.getElementById('simVal').textContent=this.value+'%'">
+    </div>
+    <div class="param-group">
+      <div class="param-label"><span>平滑度</span><span id="smoothVal">70%</span></div>
+      <input type="range" min="0" max="100" value="70" oninput="document.getElementById('smoothVal').textContent=this.value+'%'">
+    </div>
+    <div class="param-group">
+      <div class="param-label"><span>情感保留</span><span id="emoVal">90%</span></div>
+      <input type="range" min="0" max="100" value="90" oninput="document.getElementById('emoVal').textContent=this.value+'%'">
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">测试台词</div>
+    <textarea class="form-textarea" placeholder="输入一段测试台词，用于验证复刻效果...">你好，我是你用灵境复刻的专属音色，听起来像吗？</textarea>
+  </div>
+  <div class="section">
+    <label class="legal-check">
+      <input type="checkbox" id="legalAgree" onchange="checkLegal()">
+      <div class="legal-text">我确认拥有该声音的<strong>合法授权</strong>，包括但不限于本人声音或已获得声音所有者的书面授权。未经授权使用他人声音可能涉及法律风险。</div>
+    </label>
+  </div>
+  <div class="preview-card" id="previewCard">
+    <div class="preview-header">
+      <div class="preview-avatar">🎤</div>
+      <div>
+        <div class="preview-name">复刻音色预览</div>
+        <div class="preview-status">● 已就绪</div>
+      </div>
+    </div>
+    <div class="waveform">
+      <div class="bar" style="height:8px"></div><div class="bar" style="height:16px"></div><div class="bar" style="height:28px"></div>
+      <div class="bar" style="height:12px"></div><div class="bar" style="height:22px"></div><div class="bar" style="height:32px"></div>
+      <div class="bar" style="height:18px"></div><div class="bar" style="height:10px"></div><div class="bar" style="height:26px"></div>
+      <div class="bar" style="height:14px"></div><div class="bar" style="height:20px"></div><div class="bar" style="height:30px"></div>
+      <div class="bar" style="height:8px"></div><div class="bar" style="height:24px"></div><div class="bar" style="height:16px"></div>
+    </div>
+    <!-- v26-A 试听与微调 -->
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button id="btnPreviewPlay" style="flex:1;padding:10px;background:var(--xinyu);border:none;border-radius:10px;color:#fff;font-size:13px;cursor:pointer" onclick="previewPlay(this)">▶ 试听复刻音色</button>
+      <button style="padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:13px;cursor:pointer" onclick="alert('微调面板（演示）：音调/语速/情感滑块')">🎚️ 微调</button>
+    </div>
+  </div>
+  <!-- v26-A 新增：参考文案 -->
+  <div class="section" id="refSection" style="display:none">
+    <div class="section-title">📝 参考文案（4段）</div>
+    <div class="form-label"><span>请朗读以下文案并录制</span></div>
+    <div id="refTexts" style="margin-top:8px">
+      <div style="padding:10px;background:var(--card);border-radius:10px;margin-top:8px;font-size:13px;line-height:1.6">1. "今天天气真好，适合出去走走。"</div>
+      <div style="padding:10px;background:var(--card);border-radius:10px;margin-top:8px;font-size:13px;line-height:1.6">2. "我觉得这件事情需要重新考虑一下。"</div>
+      <div style="padding:10px;background:var(--card);border-radius:10px;margin-top:8px;font-size:13px;line-height:1.6">3. "哇！这也太厉害了吧！"</div>
+      <div style="padding:10px;background:var(--card);border-radius:10px;margin-top:8px;font-size:13px;line-height:1.6">4. "嗯……让我想想，应该怎么做比较好呢？"</div>
+    </div>
+  </div>
+  <!-- v26-A 新增：音色库 -->
+  <div class="section" id="voiceLibSection" style="display:none">
+    <div class="section-title">🎵 音色库</div>
+    <div id="voiceLibList" style="margin-top:8px"></div>
+    <div style="margin-top:12px;padding:12px;background:rgba(78,202,163,.1);border-radius:12px;font-size:12px;color:var(--ok)">
+      ✅ 复刻完成后音色将保存到音色库，可绑定角色使用
+    </div>
+  </div>
+</div>
+<div class="generate-bar">
+  <div class="cost-info"><span class="free">首次免费</span> · 后续 50灵晶/次</div>
+  <button class="btn-gen" id="genBtn" disabled onclick="startClone()">✨ 开始复刻</button>
+</div>
+<script>
+function onUpload(){
+  document.querySelector('.upload-area .title').textContent='✅ 已上传';
+  document.querySelector('.upload-area .desc').textContent='素材准备就绪，请勾选授权协议后开始复刻';
+  checkLegal();
+}
+function checkLegal(){
+  const agreed=document.getElementById('legalAgree').checked;
+  document.getElementById('genBtn').disabled=!agreed;
+}
+function previewPlay(btn){
+  if(btn.dataset.playing==='1'){return}
+  btn.dataset.playing='1';btn.textContent='🔊 播放中...';
+  // 波形动画
+  var bars=document.querySelectorAll('#previewCard .waveform .bar');
+  var t=setInterval(function(){
+    for(var i=0;i<bars.length;i++){bars[i].style.height=(6+Math.floor(Math.random()*28))+'px'}
+  },120);
+  setTimeout(function(){
+    clearInterval(t);btn.dataset.playing='';btn.textContent='▶ 试听复刻音色';
+    alert('试听结束（演示：正式版将播放真实克隆音频）');
+  },3000);
+}
+function startClone(){
+  var btn=document.getElementById('genBtn');
+  var base='';
+  try { base=(localStorage.getItem('lingjing_api_base')||'').replace(/\/$/,''); } catch(e) {}
+  if(!base){ alert('音色复刻服务未接入：请先配置生成 API，当前不会模拟完成'); return; }
+  btn.textContent='⏳ 正在提交真实生成任务…';btn.disabled=true;
+  fetch(base+'/api/v1/generation/tasks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:'sound',mode:'voice-clone',prompt:'用户授权的音色复刻任务'})})
+    .then(function(r){return r.json().then(function(d){if(!r.ok)throw Error(d.detail||'生成接口失败');return d})})
+    .then(function(d){btn.disabled=false;btn.textContent='✨ 开始复刻';alert('音色复刻任务已提交：'+(d.id||d.task_id||'已创建')+'；当前不会伪造试听结果')})
+    .catch(function(e){btn.disabled=false;btn.textContent='✨ 开始复刻';alert('音色复刻未启动：'+(e.message||'生成 API 不可用'))});
+}
+</script>
+<script data-bundled-source="js/creator-store.js">
+/* =====================================================================
+ * 灵境 · 双生 — V23 创作功能区共享数据层 (creator-store.js)
+ * 键：lingjing_v523_creator_v1（自有数据）+ lingjing_v520_wallet（灵晶，只读写余额字段）
+ * 职责：
+ *   1. 免费额度系统（V3.0 §2.2：智能体周10/图片日3/视频月1/声音日5/音色首次/灵念日1/Agent月3）
+ *   2. 超额灵晶扣费（联动 lingjing_v520_wallet.crystal）
+ *   3. 作品库（小说/角色/道具/场景）+ 互动管理四模块 + 动态/灵念/Agent行为
+ *   4. 创作者等级（V3.0 §4.2 L1-L5）
+ * 铁律：不接真支付；Toast 替代 alert；第三方名 0 出现
+ * ===================================================================== */
+window.CreatorStore = (function () {
+  var KEY = 'lingjing_v523_creator_v1';
+  var COIN_KEY = 'lingjing_v520_wallet';
+
+  /* ---------- 额度配置（V3.0 §2.2）---------- */
+  var QUOTAS = {
+    agent:         { label: '创建智能体', limit: 10,  window: 'week',  cost: 0   },
+    image:         { label: '创建图片',   limit: 3,   window: 'day',   cost: 20  },
+    video:         { label: '创建视频',   limit: 1,   window: 'month', cost: 200 },
+    sound:         { label: '创建声音',   limit: 5,   window: 'day',   cost: 10  },
+    voiceClone:    { label: '复刻音色',   limit: 1,   window: 'ever',  cost: 50  },
+    post:          { label: '创建动态',   limit: 999, window: 'day',   cost: 0   },
+    card:          { label: '创建灵念',   limit: 1,   window: 'day',   cost: 30  },
+    agentBehavior: { label: 'Agent 创建', limit: 3,   window: 'month', cost: 100 }
+  };
+
+  /* ---------- 基础存储 ---------- */
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return seed();
+  }
+  function save(d) {
+    try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {}
+  }
+  function seed() {
+    var d = {
+      quotaUse: {},           // {kind: {windowKey: count}}
+      voiceCloneDone: false,  // 音色复刻首次免费标记
+      works: [                // 预置演示作品（V3.0 §4.1 示例 · 仅公版名著）
+        { id: 'w_novel', type: 'novel', title: '《西游记》', status: '已发布',
+          words: '86.2万字', readers: '1.2万阅读', score: '4.8', income: 8400 },
+        { id: 'w_char', type: 'character', title: '角色：孙悟空', status: '已发布',
+          desc: '3,200次使用', income: 1800 },
+        { id: 'w_prop', type: 'prop', title: '道具：如意金箍棒', status: '已发布',
+          desc: '580次购买', income: 2600 }
+      ],
+      interactions: {         // 互动管理四模块（V3.0 §4.3）{charId: {kind: [items]}} · 示例仅公版角色
+        char_wukong: {
+          scenes: [
+            { id: 's1', name: '和TA一起回水帘洞', open: '花果山飞瀑前，TA招手邀你进洞天',
+              choices: 3, ending: '游览后各自归去，关系+2', rel: '+2' }
+          ],
+          events: [
+            { id: 'e1', name: 'TA今天打了一件不平事', trigger: '亲密度≥30 · 上次互动>1天',
+              content: 'TA主动发来消息，语气比平日更爽利', options: 3, result: '倾听后关系+3' }
+          ],
+          fragments: [
+            { id: 'f1', name: 'TA的学艺记忆', unlock: '亲密度≥60', content: '一段可互动的回忆',
+              options: 2, impact: '解锁隐藏对话' }
+          ],
+          missions: [
+            { id: 'm1', name: '帮TA找回落海的兵器', goal: '找回沉入东海的趁手兵刃', nodes: 3,
+              reward: '关系值+5 · 解锁新互动' }
+          ]
+        }
+      },
+      posts: [],              // 动态
+      cards: [],              // 灵念卡牌
+      behaviors: [],          // Agent 行为
+      media: [],              // 生成记录（图/视频/声音）
+      income: 12800,          // 总收益（灵晶）
+      pending: 3200           // 待结算
+    };
+    save(d);
+    return d;
+  }
+
+  /* ---------- 时间窗口键 ---------- */
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  function windowKey(w) {
+    var t = new Date();
+    if (w === 'day') return t.getFullYear() + '-' + pad(t.getMonth() + 1) + '-' + pad(t.getDate());
+    if (w === 'month') return t.getFullYear() + '-' + pad(t.getMonth() + 1);
+    if (w === 'ever') return 'ever';
+    if (w === 'week') { // ISO 周（周四定界）
+      var d = new Date(Date.UTC(t.getFullYear(), t.getMonth(), t.getDate()));
+      var day = d.getUTCDay() || 7;
+      d.setUTCDate(d.getUTCDate() + 4 - day);
+      var y0 = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      var wk = Math.ceil((((d - y0) / 86400000) + 1) / 7);
+      return d.getUTCFullYear() + '-W' + pad(wk);
+    }
+    return 'na';
+  }
+
+  /* ---------- 灵晶（只读写 lingjing_v520_wallet 的 crystal 字段）---------- */
+  function getCoins() {
+    try {
+      var c = JSON.parse(localStorage.getItem(COIN_KEY) || '{}');
+      if (typeof c.crystal !== 'number') { c.crystal = 8888; c.jade = c.jade || 60; }
+      return c;
+    } catch (e) { return { crystal: 8888, jade: 60 }; }
+  }
+  function setCoins(c) {
+    try { localStorage.setItem(COIN_KEY, JSON.stringify(c)); } catch (e) {}
+  }
+
+  /* ---------- Toast（铁律 #10：替代 alert/confirm）---------- */
+  function toast(kind, title, msg) {
+    var t = document.getElementById('lj-creator-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'lj-creator-toast';
+      t.style.cssText = 'position:fixed;left:50%;bottom:110px;transform:translateX(-50%);' +
+        'z-index:9999;max-width:86%;padding:12px 18px;border-radius:14px;font-size:13px;' +
+        'line-height:1.5;color:#fff;background:rgba(26,26,46,.94);border:1px solid rgba(233,69,96,.4);' +
+        'box-shadow:0 8px 30px rgba(0,0,0,.35);opacity:0;transition:opacity .25s;pointer-events:none;text-align:center';
+      (document.body || document.documentElement).appendChild(t);
+    }
+    var icon = kind === 'ok' ? '✅ ' : kind === 'warn' ? '⚠️ ' : 'ℹ️ ';
+    t.innerHTML = icon + '<b>' + title + '</b>' + (msg ? '<br><span style="opacity:.8;font-size:12px">' + msg + '</span>' : '');
+    t.style.opacity = '1';
+    clearTimeout(toast._tm);
+    toast._tm = setTimeout(function () { t.style.opacity = '0'; }, 2600);
+  }
+
+  /* ---------- 额度查询 ---------- */
+  function quotaInfo(kind) {
+    var q = QUOTAS[kind];
+    if (!q) return null;
+    var d = load();
+    var wk = windowKey(q.window);
+    var used = (d.quotaUse[kind] && d.quotaUse[kind][wk]) || 0;
+    var unlimited = kind === 'post';
+    return {
+      kind: kind, label: q.label, used: used,
+      limit: unlimited ? '∞' : q.limit,
+      remaining: unlimited ? '∞' : Math.max(0, q.limit - used),
+      freeLeft: Math.max(0, q.limit - used),
+      cost: q.cost, window: q.window, unlimited: unlimited
+    };
+  }
+
+  /* ---------- 消耗一次（额度内免费，超额扣灵晶）---------- */
+  function consume(kind) {
+    var q = QUOTAS[kind];
+    var info = quotaInfo(kind);
+    if (!q || !info) return { ok: false, reason: 'unknown-kind' };
+    var d = load();
+    var wk = windowKey(q.window);
+    if (!d.quotaUse[kind]) d.quotaUse[kind] = {};
+    var coins = getCoins();
+    if (info.freeLeft > 0) {
+      d.quotaUse[kind][wk] = info.used + 1;
+      save(d);
+      return { ok: true, free: true, charged: 0, balance: coins.crystal, left: q.limit - info.used - 1 };
+    }
+    if (q.cost <= 0) { // 无额度上限类（动态）
+      d.quotaUse[kind][wk] = info.used + 1;
+      save(d);
+      return { ok: true, free: true, charged: 0, balance: coins.crystal, left: '∞' };
+    }
+    if (coins.crystal < q.cost) {
+      return { ok: false, reason: 'insufficient', need: q.cost, balance: coins.crystal };
+    }
+    coins.crystal -= q.cost;
+    setCoins(coins);
+    d.quotaUse[kind][wk] = info.used + 1;
+    save(d);
+    return { ok: true, free: false, charged: q.cost, balance: coins.crystal, left: 0 };
+  }
+
+  /* ---------- 作品库 ---------- */
+  function works(type) {
+    var d = load();
+    return type ? d.works.filter(function (w) { return w.type === type; }) : d.works;
+  }
+  function addWork(w) {
+    var d = load();
+    w.id = 'w_' + Date.now();
+    w.status = w.status || '草稿';
+    d.works.push(w);
+    save(d);
+    return w;
+  }
+  function removeWork(id) {
+    var d = load();
+    d.works = d.works.filter(function (w) { return w.id !== id; });
+    save(d);
+  }
+
+  /* ---------- 互动管理四模块（V3.0 §4.3：scenes/events/fragments/missions）---------- */
+  var IKIND = { scenes: '互动场景', events: '日常事件', fragments: '剧情碎片', missions: '共同任务' };
+  function interactions(charId, kind) {
+    var d = load();
+    var c = d.interactions[charId] || {};
+    return kind ? (c[kind] || []) : c;
+  }
+  function interactionCounts(charId) {
+    var d = load();
+    var c = d.interactions[charId] || {};
+    var out = {};
+    Object.keys(IKIND).forEach(function (k) { out[k] = (c[k] || []).length; });
+    return out;
+  }
+  function addInteraction(charId, kind, item) {
+    var d = load();
+    if (!d.interactions[charId]) d.interactions[charId] = {};
+    if (!d.interactions[charId][kind]) d.interactions[charId][kind] = [];
+    item.id = kind.charAt(0) + Date.now();
+    d.interactions[charId][kind].push(item);
+    save(d);
+    return item;
+  }
+  function removeInteraction(charId, kind, id) {
+    var d = load();
+    var c = d.interactions[charId];
+    if (c && c[kind]) c[kind] = c[kind].filter(function (x) { return x.id !== id; });
+    save(d);
+  }
+
+  /* ---------- 动态 / 灵念 / Agent 行为 / 媒体记录 ---------- */
+  function addPost(p) { var d = load(); p.id = 'p_' + Date.now(); p.at = new Date().toISOString(); d.posts.push(p); save(d); return p; }
+  function posts() { return load().posts; }
+  function addCard(c) { var d = load(); c.id = 'c_' + Date.now(); c.at = new Date().toISOString(); d.cards.push(c); save(d); return c; }
+  function cards() { return load().cards; }
+  function addBehavior(b) { var d = load(); b.id = 'b_' + Date.now(); d.behaviors.push(b); save(d); return b; }
+  function behaviors() { return load().behaviors; }
+  function addMedia(m) { var d = load(); m.id = 'md_' + Date.now(); m.at = new Date().toISOString(); d.media.push(m); if (d.media.length > 50) d.media.shift(); save(d); return m; }
+  function media() { return load().media; }
+  function markVoiceCloneDone() { var d = load(); d.voiceCloneDone = true; save(d); }
+  function voiceCloneDone() { return load().voiceCloneDone; }
+
+  /* ---------- 创作者等级（V3.0 §4.2）---------- */
+  var LEVELS = [
+    { lv: 'L5', name: '传奇', share: '80%' },
+    { lv: 'L4', name: '钻石', share: '75%' },
+    { lv: 'L3', name: '黄金', share: '70%' },
+    { lv: 'L2', name: '白银', share: '60%' },
+    { lv: 'L1', name: '青铜', share: '50%' }
+  ];
+  function level() {
+    var d = load();
+    var inc = d.income;
+    for (var i = 0; i < LEVELS.length; i++) {
+      var th = { L5: 1000000, L4: 200000, L3: 10000, L2: 5000, L1: 0 }[LEVELS[i].lv];
+      if (inc >= th) return LEVELS[i];
+    }
+    return LEVELS[4];
+  }
+  function incomeSummary() {
+    var d = load();
+    return { total: d.income, pending: d.pending, level: level() };
+  }
+  function addIncome(n) { var d = load(); d.income += n; save(d); }
+
+  return {
+    QUOTAS: QUOTAS, IKIND: IKIND,
+    quotaInfo: quotaInfo, consume: consume,
+    getCoins: getCoins, toast: toast,
+    works: works, addWork: addWork, removeWork: removeWork,
+    interactions: interactions, interactionCounts: interactionCounts,
+    addInteraction: addInteraction, removeInteraction: removeInteraction,
+    addPost: addPost, posts: posts,
+    addCard: addCard, cards: cards,
+    addBehavior: addBehavior, behaviors: behaviors,
+    addMedia: addMedia, media: media,
+    markVoiceCloneDone: markVoiceCloneDone, voiceCloneDone: voiceCloneDone,
+    level: level, incomeSummary: incomeSummary, addIncome: addIncome
+  };
+})();
+
+</script>
+<script data-bundled-source="js/creator-ai.js">
+/* =====================================================================
+ * 灵境 · 双生 — V23 创作功能区 AI 候选生成器 (creator-ai.js)
+ * 铁律 #19：不接真 LLM（mock + AIHelper 钩子）；AI 候选恒 3-5 + 换一批 + 我来说
+ * 用法：CreatorAI.candidates(kind, ctx, offset) -> [{icon,name,detail}] 4-5 条
+ *       CreatorAI.rotate()  内部换一批偏移自增
+ * ===================================================================== */
+window.CreatorAI = (function () {
+  var offset = 0;
+
+  /* ---------- 候选池（按 kind 分组，每池 >=6 条保证换一批有新内容）---------- */
+  var POOLS = {
+    charName: [
+      { icon: '🌙', name: '苏晚吟', detail: '清冷琴师，话少但每句都落在心上' },
+      { icon: '🔥', name: '洛九野', detail: '街头出身的刀客，嘴硬心软' },
+      { icon: '❄️', name: '顾栖霜', detail: '世家嫡女，外冷内热，极重承诺' },
+      { icon: '🌿', name: '沈青梧', detail: '药庐学徒，温柔且观察力惊人' },
+      { icon: '⚡', name: '祁夜', detail: '夜行侠盗，只在雨天出现' },
+      { icon: '🌊', name: '温叙白', detail: '说书人，把秘密都藏进故事里' }
+    ],
+    charBackstory: [
+      { icon: '🏔️', name: '山中来客', detail: '幼年随隐士学艺，下山寻找身世线索，目标明确但恐惧被抛弃' },
+      { icon: '🏮', name: '灯楼旧事', detail: '在灯楼长大，见过无数离别，渴望一个不会走的人；秘密是替人保管着一封信' },
+      { icon: '⚔️', name: '败军遗孤', detail: '父辈战败后隐姓埋名，练武只为有朝一日洗雪；恐惧重蹈覆辙' },
+      { icon: '🌊', name: '渡口人家', detail: '在渡口撑船十几年，听尽南来北往的故事，梦想写一本自己的书' },
+      { icon: '🕯️', name: '守夜人', detail: '世代守着城中灯塔，习惯孤独却害怕黑暗；心底藏着一个未兑现的约定' },
+      { icon: '🎼', name: '失声的歌者', detail: '曾是名动一城的歌者，一夜失声后隐居；渴望重新开口唱一次' }
+    ],
+    charSecret: [
+      { icon: '🔐', name: '身世之谜', detail: '真实姓氏被刻意隐瞒，与城中望族有血缘纠葛' },
+      { icon: '📜', name: '代守之诺', detail: '替已故之人保管一件遗物，到期之日即是离别之时' },
+      { icon: '🌙', name: '夜间身份', detail: '白日与夜里判若两人，夜间在做一件不可告人却正义的事' },
+      { icon: '💔', name: '旧创', detail: '曾因自己的一次犹豫失去重要之人，从此不再让自己犹豫' },
+      { icon: '🗝️', name: '钥匙', detail: '手里有一把不知道开哪扇门的钥匙，是唯一的遗物' }
+    ],
+    fingerprintStyle: [
+      { icon: '❄️', name: '冷淡', detail: '句子简短，少用语气词，情感藏在动词里' },
+      { icon: '🔥', name: '毒舌', detail: '嘴上不饶人，但关键时刻永远靠得住' },
+      { icon: '🌿', name: '温和', detail: '语速平缓，善用比喻，从不把话说死' },
+      { icon: '📖', name: '文绉绉', detail: '爱引半句旧诗，正经里带着点自嘲' },
+      { icon: '⚡', name: '热情', detail: '感叹号很多，情绪来得快也去得快' }
+    ],
+    scene: [
+      { icon: '🌧️', name: '和TA一起看一场雨', detail: '开场：屋檐下偶遇，TA把伞倾向你这边；选择点3个；结局：雨停各自归家但都回头了；关系+2' },
+      { icon: '🏮', name: '灯会走散', detail: '开场：人潮中手被冲开；选择点4个；结局：在许愿灯下重逢；关系+3' },
+      { icon: '🍵', name: '深夜茶铺', detail: '开场：打烊前TA留了一盏灯；选择点3个；结局：天亮时互道了真名；关系+2' },
+      { icon: '❄️', name: '初雪之约', detail: '开场：TA说初雪时要一起做一件事；选择点5个；结局：雪落时如约而至；关系+4' },
+      { icon: '🗡️', name: '并肩一战', detail: '开场：巷口被围，TA把后背交给你；选择点3个；结局：背靠背突围；关系+5' },
+      { icon: '🌊', name: '海边拾贝', detail: '开场：退潮后TA捡到一枚会响的贝壳；选择点4个；结局：贝壳被串成一对风铃；关系+3' }
+    ],
+    event: [
+      { icon: '🌫️', name: 'TA今天遇到了一件烦心事', detail: '触发：亲密度≥30且上次互动>1天；TA主动发来低落的消息；用户3个回应选项；结果：倾听后关系+3' },
+      { icon: '🌤️', name: '清晨的第一句话', detail: '触发：每日首次进入；TA分享昨夜奇怪的梦；2个回应；结果：关系+1' },
+      { icon: '🍲', name: 'TA做多了饭', detail: '触发：亲密度≥40；TA以"做多了"为借口邀你吃饭；3个回应；结果：关系+2' },
+      { icon: '🌧️', name: 'TA在雨天想起旧事', detail: '触发：雨天+剧情碎片f1已解锁；TA欲言又止；3个回应；结果：解锁新碎片' },
+      { icon: '🎁', name: 'TA准备了小礼物', detail: '触发：周目第7天；TA塞给你一个纸包；2个回应；结果：关系+2' }
+    ],
+    fragment: [
+      { icon: '🧸', name: 'TA的童年记忆', detail: '解锁：亲密度≥60；内容：一段老宅院的可互动回忆；2个回应；影响：解锁隐藏对话' },
+      { icon: '⚔️', name: '那一战之后', detail: '解锁：完成场景"并肩一战"；内容：TA养伤时的独白；3个回应；影响：TA对你卸下防备' },
+      { icon: '📖', name: '未寄出的信', detail: '解锁：亲密度≥80；内容：TA写了一半的信；2个回应；影响：揭示代守之诺秘密' },
+      { icon: '🌙', name: '失眠夜的自白', detail: '解锁：完成事件"雨天旧事"；内容：凌晨三点的心事；3个回应；影响：关系上限+10' },
+      { icon: '🗺️', name: 'TA藏起来的地图', detail: '解锁：共同任务完成后；内容：一张标注了故乡的旧地图；2个回应；影响：开启新支线' }
+    ],
+    mission: [
+      { icon: '🗝️', name: '帮TA找到丢失的东西', detail: '目标：找回遗失的旧怀表；节点3个：当铺线索→巷口追逐→桥洞真相；奖励：关系+5·解锁新互动' },
+      { icon: '🏮', name: '一起布置灯会摊位', detail: '目标：在灯会前搭好摊位；节点4个：选位置→扎灯架→写灯谜→等客来；奖励：关系+4' },
+      { icon: '🌧️', name: '雨夜护送', detail: '目标：把TA平安送回城东；节点3个：借伞→绕开积水巷→门口道别；奖励：关系+3' },
+      { icon: '🍲', name: '复刻TA记忆里的味道', detail: '目标：做出TA童年吃过的那碗甜汤；节点4个：问配方→寻食材→失败一次→成功；奖励：关系+6·解锁碎片' },
+      { icon: '📜', name: '帮TA完成一个约定', detail: '目标：替TA兑现多年前答应别人的事；节点5个；奖励：关系+8·解锁IF线索' }
+    ],
+    post: [
+      { icon: '✍️', name: '创作日常', detail: '今天写完第三章，主角在雨里站了很久——我也陪他站了很久。各位晚安。' },
+      { icon: '📢', name: '更新预告', detail: '本周六晚八点，《西游记》卷二第一章准时上架！评论区抽3位读者送灵念卡。' },
+      { icon: '🎨', name: '设定分享', detail: '放了张世界观地图的局部：水帘洞七十二洞的灯，一盏一个故事。' },
+      { icon: '💬', name: '读者互动', detail: '投票：你们希望下一章先写巷口的追杀，还是先写茶铺的重逢？' },
+      { icon: '🌙', name: '深夜碎碎念', detail: '写到主角说"我不走了"的时候，自己先哭了。这行字改了七遍。' }
+    ],
+    card: [
+      { icon: '✨', name: '灵念 · 拾光', detail: '普通 · 「拾起一段被遗忘的时光」收藏后心屿背景泛起旧照片般的暖黄' },
+      { icon: '🌟', name: '灵念 · 听雨', detail: '稀有 · 「雨声会替你记住想说的话」设为背景后页面有细雨音效' },
+      { icon: '🌠', name: '灵念 · 灯引', detail: '史诗 · 「迷路时，总有一盏灯朝你亮」分享给好友双方各得关系值+1' },
+      { icon: '🌌', name: '灵念 · 双生影', detail: '传说 · 「世上另一个你，正走在你未选的路上」限定动作：影分身回眸' },
+      { icon: '💫', name: '灵念 · 长夜将明', detail: '限定 · 「最长的夜也挡不住天亮」卡面随真实时间在深夜泛起晨光' }
+    ],
+    agentBehavior: [
+      { icon: '⏰', name: '早安唤醒', detail: '触发：每日7:00-9:00首次上线；动作：TA用角色口吻道早安；模板：今天也请多指教' },
+      { icon: '🌧️', name: '雨天关心', detail: '触发：天气API返回雨天；动作：提醒带伞；模板：路上滑，走慢一点' },
+      { icon: '🎂', name: '生日惊喜', detail: '触发：用户生日当天；动作：TA筹备一场小惊喜；模板：闭上眼，数到三' },
+      { icon: '📚', name: '连载提醒', detail: '触发：关注的小说更新；动作：TA第一时间来报信；模板：更新了！我先去排队' },
+      { icon: '🌙', name: '晚安仪式', detail: '触发：每日23:00后；动作：互道晚安并总结今天；模板：今天辛苦了，梦里见' }
+    ],
+    mediaDesc: [
+      { icon: '🎨', name: '月下剑客', detail: '白衣少年持剑立于古寺残垣，月光如水银洒落，樱花随风飘零' },
+      { icon: '💜', name: '赛博少女', detail: '霓虹全息投影中蓝发少女触碰虚拟蝴蝶，数据流环绕' },
+      { icon: '🐉', name: '龙骑士', detail: '黑甲骑士乘巨龙穿越雷云，远方燃烧的城池，史诗构图' },
+      { icon: '🏔️', name: '仙侠意境', detail: '水墨风白衣仙人独坐孤峰，云海翻涌远处瀑布如练' },
+      { icon: '🏮', name: '临安雨巷', detail: '青石板雨巷尽头一盏暖黄灯笼，人物背影撑伞回眸' }
+    ],
+    suggest: [
+      { icon: '📉', name: '章节退出率偏高', detail: '第4章退出率28%，建议把关键冲突提前到章首300字内' },
+      { icon: '💞', name: '角色好感增长慢', detail: '孙悟空的好感获取仅为主线，建议增加2条日常互动支线' },
+      { icon: '⏱️', name: '平均游玩时长短', detail: '平均4.2分钟，低于同类30%；建议在世界入口加一段60秒沉浸引导' },
+      { icon: '🔁', name: '回头率可挖', detail: '7日回访率41%；建议对未解锁碎片用户推送一次剧情提醒' },
+      { icon: '🌟', name: '优势保持', detail: '完读率92%远超均值，当前节奏策略建议保持' }
+    ]
+  };
+
+  /* ---------- 领域词根（用于组合派生，保证"换一批"不重样）---------- */
+  var AIHELPER = window.AIHelper || null; // 若全局 AIHelper 存在则走其钩子（铁律 #19 预留）
+
+  function slice(kind, n) {
+    var pool = POOLS[kind] || [];
+    if (!pool.length) return [];
+    var out = [];
+    var base = (offset * 2) % pool.length;
+    for (var i = 0; i < n && i < pool.length; i++) {
+      out.push(pool[(base + i) % pool.length]);
+    }
+    return out;
+  }
+
+  /**
+   * 取候选
+   * @param {string} kind 池名（见 POOLS）
+   * @param {object} ctx  上下文（预留：如角色名注入 detail）
+   * @param {number} n    候选数 3-5，默认 4
+   */
+  function candidates(kind, ctx, n) {
+    n = Math.min(5, Math.max(3, n || 4));
+    if (AIHELPER && typeof AIHELPER.candidates === 'function') {
+      try {
+        var ext = AIHELPER.candidates(kind, ctx, n);
+        if (ext && ext.length) return ext.slice(0, n);
+      } catch (e) {}
+    }
+    var list = slice(kind, n).map(function (x) {
+      var item = { icon: x.icon, name: x.name, detail: x.detail };
+      if (ctx && ctx.charName && item.detail.indexOf('TA') >= 0) {
+        item.detail = item.detail.split('TA').join(ctx.charName);
+      }
+      return item;
+    });
+    return list;
+  }
+  function rotate() { offset = (offset + 1) % 3; return offset; }
+  function poolNames() { return Object.keys(POOLS); }
+
+  return { candidates: candidates, rotate: rotate, poolNames: poolNames };
+})();
+
+</script>
+<script data-bundled-source="js/creator-pages.js">/* =====================================================================
+ * 灵境 · 双生 — V23 创作页集中接线 (creator-pages.js)
+ * 依赖：creator-store.js / creator-ai.js（须先引入）
+ * 机制：按 location.pathname 识别页面，覆盖页内假交互函数 → 走 Store 真流程
+ * 铁律：Toast 替代 alert；额度真扣减；AI 候选恒 3-5 + 换一批
+ * ===================================================================== */
+(function () {
+  var page = (location.pathname.split('/').pop() || '').replace('.html', '');
+  var S = window.CreatorStore, A = window.CreatorAI;
+  if (!S) return;
+
+  /* ---------- 固定底条避让 tabbar（tabbar 高 76px + 安全区）---------- */
+  var avoidCss = document.createElement('style');
+  avoidCss.textContent = '.generate-bar,.bottom-actions,.publish-bar,.bottom-bar{bottom:calc(76px + env(safe-area-inset-bottom))!important}' +
+    '.modal-overlay{z-index:500!important}' +
+    '.modal-sheet{max-height:70vh;overflow:auto}';
+  document.head.appendChild(avoidCss);
+
+  /* ---------- 额度条文案 ---------- */
+  function quotaText(kind, unit) {
+    var q = S.quotaInfo(kind);
+    if (!q) return '';
+    if (q.unlimited || q.remaining === '∞') return '免费发布 · 无限制';
+    if (q.freeLeft > 0) return '免费额度内 · 今日剩余 ' + q.freeLeft + ' ' + unit;
+    return '免费额度已用完 · ' + q.cost + ' 灵晶/' + unit + ' · 余额 ' + S.getCoins().crystal;
+  }
+  function setQuotaLine(kind, unit) {
+    var el = document.querySelector('.cost-info');
+    if (el) el.textContent = quotaText(kind, unit);
+  }
+
+  /* ---------- AI 候选渲染（统一 3-5 条 + 换一批 + 我来说）---------- */
+  function renderCands(elId, kind, ctx, onPick) {
+    var box = document.getElementById(elId);
+    if (!box) return;
+    box.innerHTML = '<div class="ai-loading">AI 正在构思<div class="dots"><span></span><span></span><span></span></div></div>';
+    setTimeout(function () {
+      var list = A.candidates(kind, ctx, 4);
+      box.innerHTML = list.map(function (x, i) {
+        return '<div class="candidate-item" data-i="' + i + '"><div class="ci">' + x.icon + '</div>' +
+          '<div class="cf"><div class="cn">' + x.name + '</div><div class="cd">' + x.detail + '</div></div></div>';
+      }).join('') +
+        '<div style="text-align:center;margin-top:8px;display:flex;gap:16px;justify-content:center">' +
+        '<span style="font-size:12px;color:var(--xinyu);cursor:pointer" id="lj-ai-more">🔄 换一批</span>' +
+        '<span style="font-size:12px;color:var(--xinyu);cursor:pointer" id="lj-ai-mine">✍️ 我来说</span></div>';
+      Array.prototype.forEach.call(box.querySelectorAll('.candidate-item'), function (n, i) {
+        n.onclick = function () {
+          Array.prototype.forEach.call(box.querySelectorAll('.candidate-item'), function (c) { c.classList.remove('selected'); });
+          n.classList.add('selected');
+          onPick(list[i]);
+        };
+      });
+      box.querySelector('#lj-ai-more').onclick = function () { A.rotate(); renderCands(elId, kind, ctx, onPick); };
+      box.querySelector('#lj-ai-mine').onclick = function () {
+        var mine = prompt('我来说（自由输入）：');
+        if (mine) onPick({ name: '我的方案', detail: mine });
+      };
+    }, 900);
+  }
+
+  /* ---------- 通用生成流程（额度→扣费→弹窗→确认入库存档）---------- */
+  function mediaFlow(kind, unit, typeName, modalId, gridId, extra) {
+    var res = S.consume(kind);
+    if (!res.ok) {
+      S.toast('warn', '灵晶不足', '需要 ' + res.need + ' 灵晶，当前余额 ' + res.balance + '，请先充值');
+      return;
+    }
+    var m = document.getElementById(modalId);
+    if (m) m.classList.add('show');
+    S.toast(res.free ? 'info' : 'ok',
+      res.free ? '已生成 4 个候选' : '已生成 4 个候选（超额）',
+      res.free ? '免费额度内，今日剩余 ' + res.left + ' ' + unit : '本次消耗 ' + res.charged + ' 灵晶，余额 ' + res.balance);
+    setQuotaLine(kind, unit);
+    window.__ljLastConsume = res;
+    if (typeof extra === 'function') extra();
+  }
+  function mediaConfirm(kind, typeName) {
+    var m = document.querySelector('.modal-overlay.show');
+    if (m) m.classList.remove('show');
+    S.addMedia({ type: kind, name: typeName });
+    S.toast('ok', typeName + '已保存', '可在灵境工坊·我的作品/素材库中查看');
+  }
+
+  /* ================= 按页面接线 ================= */
+
+  if (page === 'create-image' || page === 'create-video') {
+    var kind = page === 'create-image' ? 'image' : 'video';
+    var unit = kind === 'image' ? '张' : '条';
+    document.addEventListener('DOMContentLoaded', function () { setQuotaLine(kind, unit); });
+    if (typeof window.gen === 'function') {
+      window.gen = function () {
+        mediaFlow(kind, unit, kind === 'image' ? '图片' : '视频', 'resultModal', 'resultGrid');
+      };
+    }
+    if (typeof window.confirm === 'function' || true) {
+      window.confirm = function () { mediaConfirm(kind, kind === 'image' ? '图片' : '视频'); };
+    }
+  }
+
+  if (page === 'create-sound') {
+    document.addEventListener('DOMContentLoaded', function () { setQuotaLine('sound', '条'); });
+    window.gen = function () {
+      var r = S.consume('sound');
+      if (!r.ok) { S.toast('warn', '灵晶不足', '需要 ' + r.need + ' 灵晶，余额 ' + r.balance); return; }
+      S.addMedia({ type: 'sound' });
+      S.toast(r.free ? 'ok' : 'ok', '已生成 4 条候选语音',
+        r.free ? '免费额度内，今日剩余 ' + r.left + ' 条' : '本次消耗 ' + r.charged + ' 灵晶，余额 ' + r.balance);
+      setQuotaLine('sound', '条');
+    };
+  }
+
+  if (page === 'create-post') {
+    window.addMedia = function () { S.toast('info', '选择素材', '图片/视频选择器即将开放，当前可发布纯图文'); };
+    window.saveDraft = function () { S.toast('ok', '已保存到草稿箱', '草稿保存在本地'); };
+    window.publish = function () {
+      var t = document.getElementById('postText');
+      if (!t || !t.value.trim()) { S.toast('warn', '内容为空', '写点什么再发布吧'); return; }
+      S.addPost({ text: t.value });
+      S.toast('ok', '动态发布成功', '已同步到你的创作者主页');
+      if (t) t.value = '';
+      var n = document.getElementById('charNum'); if (n) n.textContent = '0';
+    };
+  }
+
+  if (page === 'create-card') {
+    window.genCard = function () {
+      var r = S.consume('card');
+      if (!r.ok) { S.toast('warn', '灵晶不足', '需要 ' + r.need + ' 灵晶，余额 ' + r.balance); return; }
+      var sel = document.querySelector('.rarity-card.selected .rl') || document.querySelector('.rarity-card .rl');
+      S.addCard({ rarity: sel ? sel.textContent : '普通' });
+      S.toast('ok', '灵念已生成', (sel ? sel.textContent : '') + ' · 已存入灵念收藏（' +
+        (r.free ? '免费额度内' : '消耗 ' + r.charged + ' 灵晶') + '）');
+    };
+  }
+
+  if (page === 'agent-create') {
+    window.aiDesc = function () {
+      renderCands('lj-ai-box', 'agentBehavior', null, function (c) {
+        var d = document.getElementById('agentDesc');
+        if (d) d.value = c.detail;
+      });
+      var box = document.getElementById('lj-ai-box');
+      if (!box) S.toast('info', 'AI 候选', A.candidates('agentBehavior', null, 3).map(function (x) { return x.name; }).join(' / '));
+    };
+    window.aiAction = function () { S.toast('info', 'AI 正在生成动作内容', '候选将填充到执行动作列表'); };
+    window.aiTemplate = function () { S.toast('info', 'AI 正在生成回复模板', '3-5 条模板候选即将填充'); };
+    window.saveAgent = function () {
+      var r = S.consume('agentBehavior');
+      if (!r.ok) { S.toast('warn', '灵晶不足', '需要 ' + r.need + ' 灵晶，余额 ' + r.balance); return; }
+      var name = document.getElementById('agentName');
+      S.addBehavior({ name: name ? name.value || '未命名 Agent' : '未命名 Agent' });
+      S.toast('ok', 'Agent 创建成功', r.free ? '免费额度内（本月剩余 ' + r.left + ' 次）' : '消耗 ' + r.charged + ' 灵晶');
+    };
+  }
+
+  if (page === 'voice-clone') {
+    window.startClone = function () {
+      var cb = document.getElementById('legalCheck') || document.querySelector('input[type=checkbox]');
+      if (cb && !cb.checked) {
+        S.toast('warn', '需要授权确认', '请先勾选「我拥有该声音的合法授权」');
+        return;
+      }
+      var btn = document.getElementById('genBtn');
+      var base = '';
+      try { base = (localStorage.getItem('lingjing_api_base') || '').replace(/\/$/, ''); } catch (e) {}
+      if (!base) {
+        S.toast('warn', '音色复刻服务未接入', '请先配置生成 API；当前不会模拟上传、训练或完成状态');
+        return;
+      }
+      if (btn) { btn.disabled = true; btn.textContent = '正在提交真实生成任务…'; }
+      fetch(base + '/api/v1/generation/tasks', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ kind: 'sound', mode: 'voice-clone', prompt: '用户授权的音色复刻任务' })
+      }).then(function (res) {
+        return res.json().then(function (data) { if (!res.ok) throw new Error(data.detail || '生成接口失败'); return data; });
+      }).then(function (data) {
+        if (btn) { btn.disabled = false; btn.textContent = '✨ 开始复刻'; }
+        var state = data.status || data.state || 'queued';
+        S.toast('info', '音色复刻任务已提交', '任务 ' + (data.id || data.task_id || '已创建') + ' · 当前状态：' + state + '；不会伪造试听结果');
+      }).catch(function (err) {
+        if (btn) { btn.disabled = false; btn.textContent = '✨ 开始复刻'; }
+        S.toast('warn', '音色复刻未启动', err.message || '生成 API 不可用，未模拟完成');
+      });
+    };
+  }
+
+  /* ================= 灵境工坊首页（V3.0 §4.1）================= */
+  if (page === 'workshop') {
+    var TYPE_META = {
+      novel: { ico: '📖', label: '小说' }, character: { ico: '🪄', label: '角色' },
+      prop: { ico: '🎨', label: '道具' }, scene: { ico: '🏔️', label: '场景' }
+    };
+    function ljRenderWorks(filter) {
+      var list = document.getElementById('ljWorkList');
+      if (!list) return;
+      var works = S.works(filter === 'all' ? null : filter);
+      list.innerHTML = works.map(function (w) {
+        var m = TYPE_META[w.type] || { ico: '📦', label: '作品' };
+        var meta = w.type === 'novel'
+          ? (w.status + ' · ' + (w.words || '') + ' · ' + (w.readers || '') + ' · ⭐' + (w.score || '-') + ' · 收益 ' + (w.income || 0) + ' 灵晶')
+          : (w.status + ' · ' + (w.desc || m.label) + ' · 收益 ' + (w.income || 0) + ' 灵晶');
+        var act = w.type === 'character'
+          ? '<button class="asset-action" style="background:rgba(0,184,148,.15);color:var(--world)" onclick="LJNav(\'interaction-manage.html\')">互动管理</button>'
+          : '';
+        return '<div class="asset-item"><div class="asset-thumb">' + m.ico + '</div>' +
+          '<div class="asset-info"><div class="asset-name">' + w.title + '</div>' +
+          '<div class="asset-meta">' + meta + '</div></div>' + act +
+          '<button class="asset-action" onclick="LJNav(\'work-editor.html\')">编辑</button></div>';
+      }).join('');
+    }
+    function ljRenderLevel() {
+      var s = S.incomeSummary();
+      var el = function (id) { return document.getElementById(id); };
+      if (el('ljLevelName')) el('ljLevelName').textContent = s.level.lv + ' · ' + s.level.name;
+      if (el('ljLevelDesc')) el('ljLevelDesc').textContent = '分成比例 ' + s.level.share + ' · 独家发布 · 有实际收益才分成';
+      if (el('ljIncomeTotal')) el('ljIncomeTotal').textContent = s.total.toLocaleString();
+      if (el('ljIncomePending')) el('ljIncomePending').textContent = s.pending.toLocaleString();
+      if (el('ljWorkCount')) el('ljWorkCount').textContent = S.works().length;
+    }
+    window.ljWithdraw = function () {
+      S.toast('info', 'MVP 阶段提现规则', '收益仅可兑换平台灵晶；月流水超 10 万后接入正式提现（每月 1-5 日 · 最低 100 元）');
+    };
+    window.ljTpl = function (t) { S.toast('info', t, '预设模板即将开放：选择后自动填充创建向导'); };
+    document.addEventListener('DOMContentLoaded', function () {
+      ljRenderLevel();
+      ljRenderWorks('all');
+      var tabs = document.getElementById('ljWorkTabs');
+      if (tabs) tabs.addEventListener('click', function (e) {
+        var t = e.target.closest('.asset-tab');
+        if (!t) return;
+        Array.prototype.forEach.call(tabs.querySelectorAll('.asset-tab'), function (x) { x.classList.remove('active'); });
+        t.classList.add('active');
+        ljRenderWorks(t.getAttribute('data-w') || 'all');
+      });
+    });
+  }
+
+  /* ================= 数据看板（V3.0 §8：AI 优化建议真数据）================= */
+  if (page === 'dashboard') {
+    window.togglePeriod = function () {
+      S.toast('info', '时间范围', '今日 / 本周数据可切换；更多周期即将开放');
+    };
+    document.addEventListener('DOMContentLoaded', function () {
+      var box = document.querySelector('.content') || document.body;
+      var old = box.querySelectorAll('[data-lj-sug]');
+      Array.prototype.forEach.call(old, function (n) { n.remove(); });
+      var list = A.candidates('suggest', null, 5);
+      var sec = document.createElement('div');
+      sec.setAttribute('data-lj-sug', '1');
+      sec.style.cssText = 'padding:0 16px 100px';
+      sec.innerHTML = '<div style="font-size:15px;font-weight:600;margin:20px 0 12px">🤖 AI 优化建议</div>' +
+        list.map(function (x) {
+          return '<div style="background:var(--card,#16213E);border:1px solid rgba(108,92,231,.3);border-radius:12px;padding:12px 14px;margin-bottom:10px">' +
+            '<div style="font-size:13px;font-weight:600;color:var(--xinyu,#6C5CE7)">' + x.icon + ' ' + x.name + '</div>' +
+            '<div style="font-size:11px;color:var(--sub,#8A8A9A);margin-top:4px;line-height:1.5">' + x.detail + '</div></div>';
+        }).join('');
+      box.appendChild(sec);
+    });
+  }
+
+  /* ================= 作品编辑器（保存入库）================= */
+  if (page === 'work-editor') {
+    window.saveDraft = (function (orig) {
+      return function () {
+        var nameEl = document.querySelector('input');
+        var name = nameEl ? nameEl.value.trim() : '';
+        if (orig && !/saveDraft|savePrice/.test(String(orig))) { /* noop */ }
+        try { if (typeof orig === 'function') orig(); } catch (e) {}
+        if (name) {
+          S.addWork({ type: 'novel', title: name, status: '草稿', words: '0 字', income: 0 });
+          S.toast('ok', '草稿已保存', '「' + name + '」已存入灵境工坊·我的作品');
+        } else {
+          S.toast('warn', '未命名', '请先填写作品标题');
+        }
+      };
+    })(window.saveDraft);
+  }
+
+  /* ================= 互动管理（四模块真数据）================= */
+  if (page === 'interaction-manage') {
+    var CHAR = 'char_wukong';
+    var IMAP = {
+      scene: { pid: 'pageScene', key: 'scenes',    pool: 'scene',    label: '互动场景' },
+      daily: { pid: 'pageDaily', key: 'events',    pool: 'event',    label: '日常事件' },
+      frag:  { pid: 'pageFrag',  key: 'fragments', pool: 'fragment', label: '剧情碎片' },
+      coop:  { pid: 'pageCoop',  key: 'missions',  pool: 'mission',  label: '共同任务' }
+    };
+    var BASE_COUNT = { scenes: 3, events: 5, fragments: 4, missions: 2 }; // 页内演示底数
+    function ljRenderCounts() {
+      var c = S.interactionCounts(CHAR);
+      var keys = ['scenes', 'events', 'fragments', 'missions'];
+      var els = document.querySelectorAll('.mod-count');
+      Array.prototype.forEach.call(els, function (el, i) {
+        if (keys[i]) el.textContent = '已创建 ' + (BASE_COUNT[keys[i]] + (c[keys[i]] || 0)) + '个';
+      });
+    }
+    function ljRenderList(cfg) {
+      var pg = document.getElementById(cfg.pid);
+      if (!pg) return;
+      var ws = pg.querySelector('.ws');
+      if (!ws) return;
+      Array.prototype.forEach.call(ws.querySelectorAll('[data-lj="1"]'), function (n) { n.remove(); });
+      var items = S.interactions(CHAR, cfg.key);
+      items.forEach(function (x) {
+        var div = document.createElement('div');
+        div.className = 'list-item';
+        div.setAttribute('data-lj', '1');
+        div.innerHTML = '<div class="li-top"><span class="li-name">✨ ' + x.name + '</span>' +
+          '<span class="li-status ' + (x.status === 'draft' ? 'draft' : 'active') + '">' +
+          (x.status === 'draft' ? '草稿' : '已上线') + '</span></div>' +
+          '<div class="li-meta">' + (x.meta || '新建条目') + '</div>' +
+          '<div class="li-actions"><button class="btn" onclick="openCreate(\'' + cfgKeyOf(cfg) + '\')">编辑</button>' +
+          '<button class="btn danger" onclick="ljDelItem(\'' + cfg.key + '\',\'' + x.id + '\')">删除</button></div>';
+        ws.appendChild(div);
+      });
+    }
+    function cfgKeyOf(cfg) {
+      return Object.keys(IMAP).filter(function (k) { return IMAP[k] === cfg; })[0] || 'scene';
+    }
+    window.ljDelItem = function (kind, id) {
+      S.removeInteraction(CHAR, kind, id);
+      ljRenderCounts();
+      ljRenderList(IMAP[Object.keys(IMAP).filter(function (k) { return IMAP[k].key === kind; })[0]]);
+      S.toast('ok', '已删除', '条目已从列表移除');
+    };
+    document.addEventListener('DOMContentLoaded', function () {
+      ljRenderCounts();
+      Object.keys(IMAP).forEach(function (k) { ljRenderList(IMAP[k]); });
+    });
+    // 保存：抓表单第一输入项作为名称，入库
+    window.saveAndBack = function () {
+      var form = document.getElementById('createForm');
+      var nameEl = form ? form.querySelector('input') : null;
+      var name = nameEl ? nameEl.value.trim() : '';
+      if (!name) { S.toast('warn', '名称必填', '请至少填写第一项名称'); return; }
+      var cfg = IMAP[createType];
+      if (!cfg) { goBack(); return; }
+      var sel = form.querySelector('.candidate-item.selected .cd');
+      var item = S.addInteraction(CHAR, cfg.key, {
+        name: name, detail: sel ? sel.textContent : '',
+        status: 'draft', meta: '新建草稿 · 待完善选择点与分支'
+      });
+      S.toast('ok', '已保存', '「' + item.name + '」已存入' + cfg.label + '（草稿）');
+      ljRenderCounts(); ljRenderList(cfg);
+      goBack();
+    };
+    // 新建/编辑表单注入 AI 候选（3-5 条 + 换一批 + 我来说）
+    var _ljOpenCreate = window.openCreate;
+    window.openCreate = function (type) {
+      _ljOpenCreate(type);
+      var cfg = IMAP[type];
+      if (!cfg) return;
+      var form = document.getElementById('createForm');
+      if (!form || document.getElementById('lj-ai-box')) return;
+      var box = document.createElement('div');
+      box.id = 'lj-ai-box';
+      box.style.cssText = 'margin-bottom:16px';
+      form.insertBefore(box, form.firstChild);
+      renderCands('lj-ai-box', cfg.pool, null, function (c) {
+        var first = form.querySelector('input');
+        if (first && !first.value) first.value = c.name;
+      });
+    };
+  }
+})();
+</script>
+<script data-bundled-source="js/tabbar.js">
+/* =================================================================
+ * 灵境 · 双生 V17.0 — 5 Tab 全局状态管理（兼容 v6.4.1 shell-v64.css）
+ * 用法：主功能区页面 <body> 末尾引入 <script src="js/tabbar.js"><\/script>
+ *       页面任意位置预留 <div id="tabbar-mount"></div> 或 #tabbar 节点
+ * 功能：
+ *   1. localStorage 记忆当前 Tab（key: lingjing_v5170_current_tab）
+ *   2. URL 推断当前 Tab（href 包含 home/world/heart-island/creator-center/me）
+ *   3. 自动渲染 5 Tab 底部导航并高亮 active
+ *   4. 点击 Tab：记忆 + 跳转对应主功能区页面
+ *   5. 提供 window.LJTabbar API（go/setBadge/getCurrent）
+ *   6. 兼容沉浸页豁免：plot-runner / game-3d / catalog 不调用 mount()
+ * ================================================================= */
+(function () {
+  'use strict';
+
+  // 防止重复挂载
+  if (window.LJTabbar && window.LJTabbar.__mounted) {
+    return;
+  }
+
+  // ---------- 配置 ----------
+  var STORAGE_KEY = 'lingjing_v5170_current_tab';
+  var TABS = [
+    { id: 'home',   label: '首页', ico: '🏠', href: 'index.html',            match: ['product-preview', 'home', 'index'],  klass: 't-home' },
+    { id: 'world',  label: '世界', ico: '📖', href: 'library.html',          match: ['library', 'world', 'discover'],      klass: 't-world' },
+    { id: 'xinyu',  label: '心屿', ico: '💬', href: 'heart-island.html',     match: ['heart-island', 'xinyu', 'chat'],     klass: 't-xinyu' },
+    { id: 'create', label: '创作', ico: '✨', href: 'creator-center.html',   match: ['creator-center', 'creator', 'novel', 'create-', 'workshop', 'agent-create', 'work-editor', 'interaction-manage', 'dashboard', 'revenue-detail', 'voice-clone', 'my-works'], klass: 't-create' },
+    { id: 'me',     label: '我的', ico: '👤', href: 'me.html',                match: ['me', 'profile', 'wallet'],           klass: 't-me' }
+  ];
+
+  function resolveTabHref(n) {
+    var p = (window.location.pathname || '').toLowerCase();
+    var inSub = p.indexOf('/output/preview/') >= 0;
+    // home（index.html）永远回到根目录唯一主页
+    if (n === 'index.html') return inSub ? '../../index.html' : n;
+    // 其他 tab：根 + 前缀，子目录直链
+    return inSub ? n : 'output/preview/' + n;
+  }
+
+  // ---------- 工具 ----------
+  function $(s, p) { return (p || document).querySelector(s); }
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    if (attrs) {
+      Object.keys(attrs).forEach(function (k) {
+        if (k === 'class') node.className = attrs[k];
+        else if (k === 'html') node.innerHTML = attrs[k];
+        else if (k.indexOf('on') === 0) node.addEventListener(k.slice(2), attrs[k]);
+        else node.setAttribute(k, attrs[k]);
+      });
+    }
+    (children || []).forEach(function (c) {
+      if (typeof c === 'string') node.appendChild(document.createTextNode(c));
+      else if (c) node.appendChild(c);
+    });
+    return node;
+  }
+
+  function getPath() {
+    var path = (window.__LJ_PAGE__ || '') + '.html';
+    return path.split('/').pop() || '';
+  }
+
+  // 根据当前 URL 推断 tab id
+  function inferTabFromUrl() {
+    var file = getPath().toLowerCase();
+    for (var i = 0; i < TABS.length; i++) {
+      var t = TABS[i];
+      for (var j = 0; j < t.match.length; j++) {
+        if (file.indexOf(t.match[j].toLowerCase()) !== -1) return t.id;
+      }
+    }
+    return null;
+  }
+
+  function readStored() {
+    try {
+      var v = localStorage.getItem(STORAGE_KEY);
+      if (!v) return null;
+      var found = TABS.some(function (t) { return t.id === v; });
+      return found ? v : null;
+    } catch (e) { return null; }
+  }
+
+  function writeStored(id) {
+    try { localStorage.setItem(STORAGE_KEY, id); } catch (e) { /* ignore */ }
+  }
+
+  function getCurrent() {
+    var fromUrl = inferTabFromUrl();
+    if (fromUrl) return fromUrl;
+    var stored = readStored();
+    if (stored) return stored;
+    return 'home';
+  }
+
+  // ---------- 渲染 ----------
+  function buildTabbar(currentId) {
+    var bar = el('nav', { class: 'tabbar', role: 'navigation', 'aria-label': '主功能区' });
+    TABS.forEach(function (t) {
+      var klass = 'tab ' + t.klass + (t.id === currentId ? ' active' : '');
+      var a = el('a', { class: klass, href: resolveTabHref(t.href), 'data-tab': t.id }, [
+        el('span', { class: 'ico', 'aria-hidden': 'true' }, [t.ico]),
+        el('span', { class: 'lbl' }, [t.label])
+      ]);
+      // pointer-events 在父级强制开启
+      a.style.pointerEvents = 'auto';
+      a.addEventListener('click', function () {
+        writeStored(t.id);
+      });
+      bar.appendChild(a);
+    });
+    // V20-B：tabbar 永远在最顶层，z-index 200 高于所有 mask/dialog
+    // V20-E：保留 CSS 的 left:50% + transform:translateX(-50%) 居中策略，
+    //       不要用 left:0/right:0 强制铺满，否则 desktop 视口 + max-width:480px
+    //       会让 tabbar 贴在屏幕左边（手机游戏必须 mobile-first 居中）
+    bar.style.zIndex = '200';
+    bar.style.position = 'fixed';
+    bar.style.bottom = '0';
+    bar.style.left = '50%';
+    bar.style.transform = 'translateX(-50%)';
+    return bar;
+  }
+
+  function findMountPoint() {
+    // 跳过 product-preview.html 中的演示容器（带 data-demo="true"）
+    var existing = document.querySelectorAll('.tabbar');
+    for (var i = 0; i < existing.length; i++) {
+      var n = existing[i];
+      if (n.getAttribute && n.getAttribute('data-demo') === 'true') continue;
+      return n;
+    }
+    return document.getElementById('tabbar-mount') || null;
+  }
+
+  function mount() {
+    var mountPoint = findMountPoint();
+    var currentId = getCurrent();
+    writeStored(currentId);
+
+    var bar = buildTabbar(currentId);
+
+    if (!mountPoint) {
+      // 没有预留挂载点：追加到 #app 末尾，保证 5 Tab 一定出现
+      var app = document.getElementById('app') || document.body;
+      app.appendChild(bar);
+    } else if (mountPoint.classList && mountPoint.classList.contains('tabbar')) {
+      // 已有静态 .tabbar，替换内容但保留元素
+      mountPoint.innerHTML = '';
+      // 关键：把 inline z-index 也复制到 mountPoint（避免被静态元素 z-index 60 覆盖）
+      mountPoint.style.zIndex = bar.style.zIndex;
+      var children = Array.prototype.slice.call(bar.childNodes);
+      for (var i = 0; i < children.length; i++) mountPoint.appendChild(children[i]);
+    } else {
+      mountPoint.appendChild(bar);
+    }
+
+    // 给 body 加标识（便于测试与沉浸页判断）
+    document.body.setAttribute('data-lj-tabbar', currentId);
+    document.body.setAttribute('data-lj-tabbar-version', 'v17.0');
+
+    return bar;
+  }
+
+  // ---------- 公开 API ----------
+  function go(tabId) {
+    var found = TABS.filter(function (t) { return t.id === tabId; })[0];
+    if (!found) return false;
+    writeStored(found.id);
+    window.LJNav(resolveTabHref(found.href));
+    return true;
+  }
+
+  function setBadge(tabId, n) {
+    var a = document.querySelector('.tabbar a[data-tab="' + tabId + '"]');
+    if (!a) return;
+    var oldBadge = a.querySelector('.badge');
+    if (oldBadge) oldBadge.remove();
+    if (n && n > 0) {
+      var b = el('span', { class: 'badge' }, [String(n)]);
+      a.appendChild(b);
+    }
+  }
+
+  window.LJTabbar = {
+    TABS: TABS,
+    mount: mount,
+    go: go,
+    setBadge: setBadge,
+    getCurrent: getCurrent,
+    STORAGE_KEY: STORAGE_KEY,
+    __mounted: true
+  };
+
+  // ---------- 自动挂载 ----------
+  function ready(fn) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn);
+    } else {
+      fn();
+    }
+  }
+
+  ready(function () {
+    // 沉浸页豁免：body 上有 data-page="immersive" 或路径命中豁免名单则不挂载
+    var immersivePages = ['plot-runner.html', 'game-3d.html', 'catalog.html'];
+    var here = getPath().toLowerCase();
+    var isImmersive = immersivePages.some(function (n) { return here === n; })
+      || document.body.getAttribute('data-page') === 'immersive';
+    if (isImmersive) return;
+    try { mount(); } catch (e) { console.error('[LJTabbar] mount failed', e); }
+  });
+})();
+</script>
+<script>
+document.addEventListener('click', function (e) {
+  var el = e.target;
+  while (el && el.nodeType === 1 && el.tagName !== 'A') el = el.parentElement;
+  if (!el || el.tagName !== 'A') return;
+  var h = el.getAttribute('href') || '';
+  if (h.charAt(0) === '#') {
+    if (h.length > 1) {
+      e.preventDefault();
+      var t = document.getElementById(h.slice(1));
+      if (t && t.scrollIntoView) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      try { window.dispatchEvent(new Event('hashchange')); } catch (err) {}
+    }
+    return;
+  }
+  if (!h || /^[a-zA-Z][\w+.\-]*:/.test(h)) return;
+  if (/([\w.\-]+)\.html(\?|#|$)/.test(h)) {
+    e.preventDefault();
+    window.LJNav(h);
+  }
+}, true);
+</script>
+</body>
+</html>

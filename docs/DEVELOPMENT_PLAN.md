@@ -659,3 +659,7 @@ novel-ai-helper.html (核心新增)
 ## 2026-10-03 角色广场 SQLite 初始化修复
 - 修复：角色广场三张业务表在模块加载阶段初始化，避免全新 SQLite 数据库在首次请求前被测试夹具、审核队列或迁移逻辑访问时出现 `no such table`。
 - 验证：使用全新 SQLite 数据库运行 `apps/api` 全部 26 项 pytest，通过。
+
+## 2026-10-04 复刻音色真实任务边界
+- 修复：复刻音色按钮不再用定时器模拟上传、训练和完成；配置 `lingjing_api_base` 时提交真实 `/api/v1/generation/tasks` 的 `sound/voice-clone` 任务，未配置时明确提示服务未接入。
+- 验证：`scripts/test_voice_clone_api_ui.py` 使用真实 Uvicorn + Chromium 提交任务并确认“不会伪造试听结果”；截图为 `screenshots/voice-clone-api-ui.png`。
