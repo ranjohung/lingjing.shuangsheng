@@ -648,3 +648,6 @@ novel-ai-helper.html (核心新增)
 ## 2026-10-03 创作者中心钱包状态
 - 完成：`我的 → 创作者中心` 增加真实钱包接口状态区，配置 `lingjing_api_base` 时读取 `/api/v1/currency/lingjing` 与 `/transactions`；未连接时明确声明上方收益数字仅为本地创作台演示。
 - 边界：这只接通钱包余额/流水可见性，未把钱包流水当作创作者收益结算；收益分成、提现与版权结算仍待真实服务。
+
+## 2026-10-03 创作者中心钱包状态浏览器验收
+- 验证：`scripts/test_creator_wallet_status.py` 在真实 Uvicorn API 与 Chromium 中打开创作者中心，确认余额/流水来自接口，并明确显示收益结算服务仍未接入；截图为 `screenshots/creator-wallet-status.png`。
