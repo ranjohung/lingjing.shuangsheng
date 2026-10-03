@@ -14,6 +14,7 @@ from pydantic import BaseModel, Field
 from ..core.config import settings
 from ..core.security import CurrentUser, get_current_user, require_admin
 from ..core import audit
+from .memory_store import store
 
 router = APIRouter(prefix="/api/reports", tags=["reports"])
 
@@ -96,6 +97,15 @@ async def review_report(report_id: str, payload: ReviewRequest,
         conn.execute("UPDATE content_reports SET status=?, resolved_at=? WHERE id=?", (payload.status, now, report_id))
         conn.commit()
         updated = dict(row)
+    # 处理完成的角色/评论举报执行最小可逆下架；驳回不改内容可见性。
+    if payload.status == "resolved" and updated["target_type"] in {"character", "comment"}:
+        target_db = getattr(store, "_db_path", DB_PATH)
+        with closing(sqlite3.connect(target_db)) as target:
+            if updated["target_type"] == "character":
+                target.execute("UPDATE character_plaza SET status='moderated' WHERE character_id=?", (updated["target_id"],))
+            else:
+                target.execute("UPDATE character_comments SET status='moderated' WHERE id=?", (updated["target_id"],))
+            target.commit()
     updated["status"] = payload.status
     updated["resolved_at"] = now
     audit.record(admin.user_id, "content_report.review", report_id, {"status": payload.status, "target_id": updated["target_id"]})

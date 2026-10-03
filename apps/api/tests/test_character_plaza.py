@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 from src.main import app
 from src.modules.memory_store import store
 from src.core.security import CurrentUser, get_current_user
+from src.core.security import require_admin
 import sqlite3
 
 
@@ -35,5 +36,10 @@ def test_character_plaza_requires_owner_opt_in_and_supports_report(monkeypatch):
     assert comments[0]['content'] == '这个角色很有灵气'
     report = client.post(f'/api/characters/plaza/{cid}/report', json={'reason': '测试举报理由'})
     assert report.status_code == 201
+    report_id = report.json()['report_id']
+    app.dependency_overrides[require_admin] = lambda: CurrentUser(user_id='plaza-admin', is_dev=True, role='admin')
+    reviewed = client.post(f'/api/reports/admin/{report_id}/review', json={'status': 'resolved'})
+    assert reviewed.status_code == 200
+    assert not any(item['id'] == cid for item in client.get('/api/characters/plaza').json()['items'])
     assert client.delete(f'/api/characters/{cid}/publish').status_code == 200
     app.dependency_overrides.clear()
