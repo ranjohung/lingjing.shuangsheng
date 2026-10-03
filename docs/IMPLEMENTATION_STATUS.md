@@ -113,33 +113,40 @@ v5.15 入口：[output/preview/library.html](../output/preview/library.html) 即
 - [x] `apps/api` 标准库 unittest 回归：13 项通过；前端 `LJ_PAGES` JSON 结构校验：72 个页面可解析。
 - [x] 已恢复 `apps/api/requirements-dev.txt` 中的 pytest 运行环境；pytest 全量回归 20 项通过（保留 1 项 Starlette/httpx 弃用警告，不影响结果）。
 - [x] 新增 Alembic `0003_runtime_sqlite_tables`，将运行时实际使用的角色、记忆、关系、经济、世界存档和通知表纳入迁移链；迁移升级/降级回归通过。
-### 2026-10-01 持久化推进（世界存档）
+### 2026-10-01 持久化推进（世界存档，历史快照）
 
 - [x] `apps/api/src/modules/world_saves.py` 已将 API 存档写入 SQLite `api_world_saves`，按用户、小说、槽位唯一约束保存。
 - [x] 支持列表、读取、覆盖、删除以及进程重启后的恢复；`SAVES.clear()` 仍保留为测试清理钩子。
 - [x] 完成隔离用户烟测和跨进程恢复烟测；已补标准库持久化回归测试。
-- [ ] 仍需完成前端 API 接入和完整生产身份提供商配置。
-### 2026-10-01 持久化推进（经济账本）
+- [x] 后续已完成前端 API 接入；生产身份提供商仍属于部署配置项，见 2026-10-03 当前状态。
+### 2026-10-01 持久化推进（经济账本，历史快照）
 
 - [x] `apps/api/src/modules/economy.py` 已将灵晶、灵玉、行动值、世界货币、物品和交易记录写入 SQLite `economy_ledgers`。
 - [x] 账本以 `user_id` 为主键，余额、商城购买、兑换、世界消费和交易查询均保持用户隔离。
 - [x] 兼容现有 `LEDGERS.pop(user_id, None)` 测试清理语义；已完成编译、10 项 unittest、跨进程钱包烟测及隔离烟测。
-- [ ] pytest 尚未安装，pytest 风格经济测试仍需在开发依赖恢复后执行；世界存档和前端 API 接入仍待完成。
-### 2026-10-01 持久化推进（角色 / 记忆 / 关系）
+- [x] 后续已恢复 pytest 并完成经济、存档和前端 API 回归；本节保留原始阶段记录。
+### 2026-10-01 持久化推进（角色 / 记忆 / 关系，历史快照）
 
 - [x] `apps/api/src/modules/memory_store.py` 已接入 `SQLiteStore`；开发默认库固定为 `apps/api/story-development.db`。
 - [x] 角色、记忆、关系均按 `user_id` 隔离；角色创建、记忆搜索/失活、关系衰减与更新均写入 SQLite。
 - [x] 已完成跨进程重载读取烟测及用户隔离烟测；原有 10 项 unittest 全部通过。
-- [ ] 经济账本和世界存档仍待迁移到数据库；前端仍待接入真实 API。
-## 2026-10-01 后端评估
+- [x] 后续已完成经济账本、世界存档数据库迁移及前端 API 接入；本节保留原始阶段记录。
+## 2026-10-01 后端评估（历史快照）
 
 - [x] 确认正式产品需要后端：认证、跨设备存档、用户隔离、持久化经济账本和内容版本。
-- [x] 确认当前 `apps/api` 仍为开发降级：角色/记忆/关系/经济为进程内数据，认证为 dev fallback。
+- [x] 确认当时 `apps/api` 仍为开发降级：角色/记忆/关系/经济为进程内数据，认证为 dev fallback。
 - [x] 修复 API 虚拟环境依赖并完成后端回归基线（10 项 unittest 通过）。
 - [x] 启用 SQLite 故事会话持久化并加入 HS256 JWT 校验基线。
-- [ ] 将角色、记忆、关系、经济和完整游戏存档迁移到数据库；生产接入正式身份提供商。
-- [ ] 完成前端 API 接入后再评估支付和生成服务。
+- [x] 后续已将角色、记忆、关系、经济和游戏存档接入 SQLite；正式身份提供商仍是部署配置边界。
+- [x] 前端 API 接入已完成；支付和生成服务不属于本轮范围。
 - 详见 [BACKEND_ASSESSMENT_2026-10-01.md](BACKEND_ASSESSMENT_2026-10-01.md)。
+
+## 2026-10-03 当前状态索引
+
+- [x] SQLite 运行时表与 Alembic `0003_runtime_sqlite_tables` 对齐。
+- [x] 生产模式无 JWT 密钥时健康检查返回 `misconfigured_production`，不会伪装成已接入认证。
+- [x] pytest 全量 22 项通过；剩余 1 项为 Starlette/httpx 上游弃用警告。
+- [ ] 生产部署仍需由运维填写 `.env.local` 并接入正式 JWT 签发方和 API 域名。
 
 
 
