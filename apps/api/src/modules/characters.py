@@ -64,6 +64,12 @@ def _plaza_db():
     return conn
 
 
+# 在模块加载时建立角色广场 schema，确保全新 SQLite 数据库也能被
+# 管理员队列、迁移/测试夹具等非角色广场首个请求安全访问。
+_plaza_schema_conn = _plaza_db()
+_plaza_schema_conn.close()
+
+
 def _to_out(c) -> CharacterOut:
     return CharacterOut(
         id=c.id, name=c.name, persona=c.persona, relationship_type=c.relationship_type,
