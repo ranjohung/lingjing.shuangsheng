@@ -240,6 +240,7 @@ window.LJBack = function () {
         <div class="earn-cell"><div class="v">8,600</div><div class="l">已提现</div></div>
         <div class="earn-cell"><div class="v">2,450</div><div class="l">本月</div></div>
       </div>
+      <div id="lj-economy-state" style="margin:8px 0 12px;padding:9px 11px;border:1px solid rgba(255,255,255,.1);border-radius:10px;color:#aeb8d4;font-size:12px">收益数据仍需创作者结算服务；正在检测钱包接口…</div>
       <!-- 5.3 / 5.4 收益明细 + 提现 + 作品入口（v20l 结构保留） -->
       <div class="list">
         <a class="item" href="creator-center.html#works"><div class="ico">📚</div><div class="t">作品列表</div><div class="meta">2 部</div><div class="arr">›</div></a>
@@ -771,6 +772,9 @@ document.addEventListener('click', function (e) {
 </script>
 <script id="lj-character-plaza-comment-runtime">
 (function(){var list=document.getElementById('lj-plaza-list');if(!list)return;function bind(){list.querySelectorAll('.lj-plaza-card').forEach(function(card){if(card.querySelector('[data-plaza-comment]'))return;var report=card.querySelector('[data-plaza-report]');if(!report)return;var id=report.getAttribute('data-plaza-report'),button=document.createElement('button');button.className='lj-plaza-react';button.setAttribute('data-plaza-comment',id);button.textContent='评论';report.parentNode.insertBefore(button,report);button.onclick=function(){var text=window.prompt('写下你的评论','');if(!text||!text.trim())return;fetch((localStorage.getItem('lingjing_api_base')||'').replace(/\/$/,'')+'/api/characters/plaza/'+encodeURIComponent(id)+'/comments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:text.trim()})}).then(function(r){if(!r.ok)throw Error();return r.json()}).then(function(){button.textContent='已评论'}).catch(function(){button.textContent='接口不可用'})}})}new MutationObserver(bind).observe(list,{childList:true,subtree:true});bind()})();
+</script>
+<script id="lj-economy-status-runtime">
+(function(){var el=document.getElementById('lj-economy-state');if(!el)return;var base='';try{base=(localStorage.getItem('lingjing_api_base')||'').replace(/\/$/,'')}catch(e){}if(!base){el.textContent='钱包接口未连接；上方收益数字仅为本地创作台演示，不代表真实结算。';return}Promise.all([fetch(base+'/api/v1/currency/lingjing'),fetch(base+'/api/v1/currency/transactions')]).then(function(rs){if(!rs[0].ok||!rs[1].ok)throw Error();return Promise.all(rs.map(function(r){return r.json()}))}).then(function(data){el.textContent='钱包 API 在线 · 灵晶 '+String(data[0].lingjing||0)+' · 交易流水 '+String((data[1].items||[]).length)+' 条（收益结算服务仍未接入）';el.style.color='#54d6ae'}).catch(function(){el.textContent='钱包接口离线；上方收益数字仅为本地创作台演示，不代表真实结算。'})})();
 </script>
 </body>
 </html>
