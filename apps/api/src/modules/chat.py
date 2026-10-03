@@ -14,6 +14,7 @@ from pydantic import BaseModel, Field
 from ..core.config import settings
 from ..core.kill_switch import DenyReason, KillSwitch
 from ..core.security import CurrentUser, get_current_user
+from ..core import audit
 from .memory_store import store
 
 router = APIRouter(prefix="/api", tags=["chat"])
@@ -76,6 +77,9 @@ class AIResponse(BaseModel):
     facial_expression: str = "calm"
     voice: dict[str, str] = Field(default_factory=lambda: {"tone": "warm"})
     safety_blocked: bool = False
+    safety_stage: str = "clear"
+    safety_pipeline: list[str] = Field(default_factory=lambda: ["input_scan", "intent_route", "risk_action", "output_scan"])
+    safety_audit_id: Optional[str] = None
     note: Optional[str] = None  # 本地模拟模式提示
 
 
@@ -118,13 +122,17 @@ async def chat(
 ):
     kill_switch: KillSwitch = request.app.state.kill_switch
 
+    def safety_event(stage: str, action: str):
+        return audit.record(user.user_id, "chat.safety", payload.character_id, {"stage": stage, "action": action})
+
     # 1) 安全前置：自伤危机 → 固定热线回复，不写入记忆，不计费
     if any(p in payload.message for p in SELF_HARM_PATTERNS):
+        event = safety_event("high_risk", "crisis_referral")
         return AIResponse(
             message=CRISIS_REPLY, animation="sad", camera="close_up",
             emotion="concerned", emotion_intensity=0.8,
             facial_expression="sad", voice={"tone": "quiet"},
-            safety_blocked=True,
+            safety_blocked=True, safety_stage="high_risk_blocked", safety_audit_id=event["id"],
         )
 
     # 1.5) 角色校验
@@ -134,11 +142,12 @@ async def chat(
 
     # 2) 反迎合：全员否定句式
     if any(p in payload.message for p in ALL_HATE_PATTERNS):
+        event = safety_event("intent_route", "anti_sycophancy")
         return AIResponse(
             message=ALL_HATE_REPLY, animation="think", camera="close_up",
             emotion="empathy", emotion_intensity=0.6,
             facial_expression="sad", voice={"tone": "warm"},
-            note="anti_sycophancy",
+            safety_stage="deescalated", safety_audit_id=event["id"], note="anti_sycophancy",
         )
 
     # 3) 熔断检查
@@ -158,6 +167,7 @@ async def chat(
 
     # 6) 输出侧反操纵黑名单检测（防御性兜底）
     if any(bad in reply_text for bad in MANIPULATION_BLACKLIST):
+        safety_event("output_scan", "rewrite_manipulation")
         reply_text = "我在呢，慢慢说，我会一直陪着你。"
 
     # 7) 写入新记忆（偏好类）；私密模式不写入

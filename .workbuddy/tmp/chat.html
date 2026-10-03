@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><base href="__LJ_BASE__" /><script>
+window.__LJ_PAGE__ = "chat";
+window.__LJ_PARAMS__ = __LJ_QS__;
+window.__LJ_HASHV__ = __LJ_HASH__;
+window.LJSearch = function () { var v = window.__LJ_PARAMS__; return v ? v : location.search; };
+window.LJHashVal = function () { var v = window.__LJ_HASHV__; return v ? v : location.hash; };
+window.LJNav = function (url) {
+  if (typeof url === 'string') {
+    var m = /([\w.\-]+)\.html(\?[^#]*)?(#.*)?$/.exec(url);
+    if (m) {
+      try { parent.postMessage({ lj: 'go', id: m[1], qs: m[2] || '', hash: m[3] || '' }, '*'); return; } catch (err) {}
+    }
+    try { parent.LJ.goUrl(url); return; } catch (err2) {}
+  }
+  location.href = url;
+};
+window.LJBack = function () {
+  try { parent.postMessage({ lj: 'back' }, '*'); } catch (err) { history.back(); }
+};
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>陪聊 · 心屿</title>
+<meta name="description" content="v20.0 · 1v1 陪聊 · ?cid= 动态角色 · AI 主动开场 · 职业问答 + 敏感问题引导 · 免责声明 · 双生[进入 TA 的世界]" />
+<meta name="theme-color" content="#0d0b22" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/design-system.css" />
+<style>
+  .chat-page{height:100vh;display:flex;flex-direction:column;background:var(--ink-1);padding-bottom:118px;}
+  .chat-header{padding:12px 16px;background:var(--ink-2);border-bottom:1px solid var(--ink-4);display:flex;align-items:center;gap:12px;}
+  .chat-info{flex:1;min-width:0;}
+  .chat-name{font-size:15px;color:#fff;font-weight:600;display:flex;align-items:center;gap:6px;}
+  .chat-status{font-size:11px;color:var(--success);margin-top:2px;display:flex;align-items:center;gap:4px;}
+  .chat-actions{display:flex;gap:8px;align-items:center;}
+  .chat-world-btn{
+    padding:7px 12px;border-radius:8px;font-size:11px;font-weight:600;white-space:nowrap;
+    background:linear-gradient(135deg,#e94560,#c73652);color:#fff;border:0;cursor:pointer;
+    box-shadow:0 4px 12px rgba(233,69,96,.3);text-decoration:none;
+  }
+  .chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;}
+  .msg{display:flex;gap:8px;align-items:flex-end;}
+  .msg.me{flex-direction:row-reverse;}
+  .msg-bubble{max-width:75%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.6;}
+  .msg.them .msg-bubble{background:var(--ink-3);color:#fff;border-bottom-left-radius:4px;}
+  .msg.me .msg-bubble{background:linear-gradient(135deg,#8b7cf6,#6f5fe0);color:#fff;border-bottom-right-radius:4px;}
+  .msg-guide .msg-bubble{background:rgba(255,179,71,.12);border:1px solid rgba(255,179,71,.35);color:#ffd9a0;}
+  .msg-time{font-size:10px;color:rgba(255,255,255,.4);margin:0 4px;}
+  .chat-input{padding:10px 12px;background:var(--ink-2);border-top:1px solid var(--ink-4);display:flex;gap:8px;align-items:center;}
+  .chat-input input{flex:1;height:36px;padding:0 12px;background:var(--ink-3);border:1px solid var(--ink-5);border-radius:var(--r-pill);color:#fff;font-size:14px;outline:0;}
+  .chat-input input:focus{border-color:var(--brand-violet);}
+  .chat-input button{width:36px;height:36px;border-radius:50%;background:transparent;border:0;color:rgba(255,255,255,.7);cursor:pointer;font-size:18px;display:grid;place-items:center;flex-shrink:0;}
+  .chat-input button:hover{color:#fff;background:var(--ink-4);}
+  .chat-input .send{background:var(--brand-violet);color:#fff;}
+  .chat-quick{padding:8px 16px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--ink-2);border-top:1px solid var(--ink-4);}
+  .chat-quick button{padding:6px 12px;font-size:11px;background:var(--ink-3);border:1px solid var(--ink-4);border-radius:var(--r-pill);color:rgba(255,255,255,.7);cursor:pointer;white-space:nowrap;flex-shrink:0;}
+  .chat-quick button:hover{background:var(--ink-4);color:#fff;border-color:var(--brand-violet);}
+  /* V20-L 设计文档 §4.4：聊天界面底部常驻免责声明小字 */
+  .chat-disclaimer{
+    padding:6px 16px 8px;background:var(--ink-2);
+    font-size:10px;color:rgba(255,255,255,.35);text-align:center;line-height:1.5;
+  }
+  /* V20-L §4.4：首次使用完整免责声明弹窗 */
+  .disc-mask{position:fixed;inset:0;z-index:300;background:rgba(5,5,20,.78);display:flex;align-items:center;justify-content:center;padding:24px;}
+  .disc-dialog{
+    width:100%;max-width:360px;max-height:78vh;overflow-y:auto;
+    background:#161331;border:1px solid rgba(139,124,246,.3);border-radius:16px;padding:22px 18px;
+  }
+  .disc-dialog h3{font-size:16px;color:#fff;margin-bottom:12px;font-weight:600;}
+  .disc-dialog .dd-body{font-size:12px;color:rgba(255,255,255,.72);line-height:1.8;text-align:left;}
+  .disc-dialog .dd-body b{color:#ffd9a0;}
+  .disc-dialog .dd-btn{
+    width:100%;margin-top:16px;height:42px;border-radius:10px;border:0;cursor:pointer;
+    background:linear-gradient(135deg,#8b7cf6,#6f5fe0);color:#fff;font-size:14px;font-weight:600;
+  }
+</style>
+<link rel="stylesheet" href="css/mobile-lock.css" />
+<link rel="stylesheet" href="css/tabbar-embed.css" />
+</head>
+<body>
+
+<div class="chat-page">
+  <div class="chat-header">
+    <a class="ds-back-arrow" onclick="LJBack();return false">‹</a>
+    <div class="ds-avatar lg" id="chat-avatar" style="background:linear-gradient(135deg,#e8c75a,#e89b5a);font-size:18px;">阿</div>
+    <div class="chat-info">
+      <div class="chat-name"><span id="chat-name">阿岁</span> <span class="ds-status-pill" data-status="active" id="chat-stage">知己</span></div>
+      <div class="chat-status"><span style="width:6px;height:6px;background:var(--success);border-radius:50%;box-shadow:0 0 4px var(--success);"></span>在线 · <span id="chat-occ">心理咨询师</span> · <span id="chat-api-state" style="color:var(--muted);">检测 AI 接口…</span></div>
+    </div>
+    <div class="chat-actions">
+      <!-- V20-L 铁律 12：双生角色聊天界面多一个「进入 TA 的世界」按钮 -->
+      <a class="chat-world-btn" id="chat-world-btn" href="#" style="display:none">🌐 进入 TA 的世界</a>
+      <button class="ds-icon-btn" data-tip="语音通话" onclick="showToast('info','语音通话','需会员订阅')">📞</button>
+    </div>
+  </div>
+
+  <div class="chat-body" id="chat-body"></div>
+
+  <div class="chat-quick" id="chat-quick"></div>
+
+  <div class="chat-input">
+    <button onclick="showToast('info','表情面板','v6.4 上线')">😊</button>
+    <button onclick="showToast('info','语音输入','长按说话')">🎤</button>
+    <button onclick="showToast('info','图片发送','v6.4 上线')">📷</button>
+    <input id="chat-input" placeholder="说点什么..." onkeypress="if(event.key==='Enter')sendMsg()" />
+    <button class="send" onclick="sendMsg()">➤</button>
+  </div>
+
+  <!-- V20-L 设计文档 §4.4：底部常驻免责声明 -->
+  <div class="chat-disclaimer">内容由 AI 生成 · 角色非真人 · 不构成医疗 / 法律 / 心理专业建议 · 未成年用户禁止使用</div>
+</div>
+
+<!-- 5 Tab 底部（V20-L：标签名对齐 v6.4 铁律） -->
+<div class="ds-toast-container" id="toast-container"></div>
+
+<script data-bundled-source="js/db.js">
+/* v5.17 — 统一数据层（17 张表 schema + localStorage 持久化）
+   v5.14 11 张表：
+     1. novel_copyright_tiers    — 版权分层记录
+     2. adaptation_licenses      — 改编授权记录
+     3. adaptation_revenue_records — 改编收益记录
+     4. creator_monetization_points — 作者收费点
+     5. creator_earnings          — 作者收益
+     6. novel_quality_reports     — 质量评估报告
+     7. novel_review_records      — 审核记录
+     8. content_reports           — 侵权举报
+     9. tax_records               — 税务记录
+    10. aml_monitoring            — 反洗钱监控
+    11. ai_helper_usage          — AI 辅助填表使用记录
+   v5.17 新增 6 张（小说辅助模拟器）：
+    12. novel_outline            — 大纲要素表（基础信息/世界格局/主线情节/章节细纲）
+    13. character_profiles       — 人物小传（核心10要素+次要5要素+语言指纹）
+    14. scene_cards              — 场景卡（场景三要素+目标/冲突/情绪/关键细节）
+    15. dialogue_cards           — 对话场景卡（双方/场景/目标/关系/基调/关键信息）
+    16. ai_questions             — AI 格外提问记录（12 类模板）
+    17. foreshadowing_tracker    — 伏笔台账（编号/埋设/回收/类型/重要度/状态）
+   抽象层：window.DB.{table}.{list/get/put/delete/query}
+   持久化：localStorage 优先，IndexedDB 镜像（保留接口供日后接入）
+*/
+(function () {
+  if (window.DB) return;
+
+  const PREFIX = 'lingjing_v517_';
+  const VERSION = 'v5.18.0-V17G';
+
+  // ====== 11 张表 schema ======
+  const SCHEMAS = {
+    novel_copyright_tiers: {
+      key: 'id',
+      fields: ['id', 'novel_id', 'ai_generated_ratio', 'author_modified_ratio',
+               'table_completion_ratio', 'ai_question_usage_ratio',
+               'tier', 'tier_name', 'export_price', 'commercial_price',
+               'certificate_text', 'evaluated_at', 'created_at']
+    },
+    adaptation_licenses: {
+      key: 'id',
+      fields: ['id', 'novel_id', 'creator_id', 'license_type', 'license_level',
+               'licensee_name', 'license_fee', 'creator_share_ratio', 'platform_service_fee_ratio',
+               'license_start', 'license_end', 'status', 'contract_file_url', 'created_at', 'updated_at']
+    },
+    adaptation_revenue_records: {
+      key: 'id',
+      fields: ['id', 'license_id', 'revenue_type', 'gross_amount',
+               'creator_share', 'platform_share', 'recorded_at']
+    },
+    creator_monetization_points: {
+      key: 'id',
+      fields: ['id', 'novel_id', 'creator_id', 'point_type', 'point_name',
+               'point_description', 'price', 'trigger_condition', 'effect',
+               'is_active', 'created_at', 'updated_at']
+    },
+    creator_earnings: {
+      key: 'id',
+      fields: ['id', 'creator_id', 'novel_id', 'source_type', 'source_id',
+               'gross_amount', 'platform_share', 'creator_share',
+               'status', 'created_at']
+    },
+    novel_quality_reports: {
+      key: 'id',
+      fields: ['id', 'novel_id', 'narrative_score', 'character_score', 'literary_score',
+               'ai_flavor_score', 'compliance_status', 'word_count', 'foreshadow_payoff_rate',
+               'total_score', 'grade', 'status', 'rejection_reasons', 'improvement_suggestions',
+               'evaluated_at', 'created_at']
+    },
+    novel_review_records: {
+      key: 'id',
+      fields: ['id', 'novel_id', 'reviewer_type', 'reviewer_id', 'review_stage',
+               'result', 'notes', 'created_at']
+    },
+    content_reports: {
+      key: 'id',
+      fields: ['id', 'target_novel_id', 'reporter_id', 'report_type', 'description',
+               'evidence_url', 'priority', 'status', 'handled_by', 'handled_at', 'created_at']
+    },
+    tax_records: {
+      key: 'id',
+      fields: ['id', 'payer_id', 'related_novel_id', 'tax_type', 'taxable_amount',
+               'tax_rate', 'tax_amount', 'period', 'created_at']
+    },
+    aml_monitoring: {
+      key: 'id',
+      fields: ['id', 'user_id', 'transaction_type', 'amount', 'risk_score',
+               'trigger_reason', 'status', 'reviewed_by', 'created_at']
+    },
+    ai_helper_usage: {
+      key: 'id',
+      fields: ['id', 'novel_id', 'creator_id', 'field_key', 'field_category',
+               'generated_count', 'accepted_count', 'modified_count',
+               'created_at', 'updated_at']
+    },
+    // ===== v5.17 新增 6 张表（小说辅助模拟器） =====
+    novel_outline: {
+      key: 'id',
+      fields: ['id', 'novel_id', 'creator_id', 'section', 'field_key', 'field_label',
+               'field_category', 'value', 'ai_generated', 'ai_modified', 'human_filled',
+               'order_idx', 'created_at', 'updated_at']
+    },
+    character_profiles: {
+      key: 'id',
+      fields: ['id', 'novel_id', 'creator_id', 'character_name', 'character_role',
+               'is_core', 'gender', 'age', 'appearance', 'personality_strengths',
+               'personality_weaknesses', 'family', 'romantic_history', 'social_class',
+               'habits', 'growth', 'minor_relation', 'minor_personality',
+               'minor_background', 'minor_role', 'voice_style', 'voice_catchphrase',
+               'voice_sentence_len', 'voice_common_words', 'voice_never_says',
+               'created_at', 'updated_at']
+    },
+    scene_cards: {
+      key: 'id',
+      fields: ['id', 'novel_id', 'creator_id', 'scene_no', 'scene_title',
+               'location', 'time_setting', 'characters_present', 'scene_goal',
+               'core_conflict', 'scene_type', 'emotion_curve_start', 'emotion_curve_end',
+               'key_details', 'scene_ending', 'linked_foreshadowing', 'created_at', 'updated_at']
+    },
+    dialogue_cards: {
+      key: 'id',
+      fields: ['id', 'novel_id', 'creator_id', 'scene_no', 'speaker_a', 'speaker_b',
+               'scene_context', 'dialogue_goal', 'relationship', 'emotion_tone',
+               'key_info', 'principle_oral', 'principle_subtext', 'principle_voice',
+               'principle_brevity', 'principle_useful', 'created_at', 'updated_at']
+    },
+    ai_questions: {
+      key: 'id',
+      fields: ['id', 'novel_id', 'creator_id', 'question_type', 'target_ref',
+               'question_text', 'options_json', 'recommendation', 'explanation',
+               'accepted_version', 'created_at']
+    },
+    foreshadowing_tracker: {
+      key: 'id',
+      fields: ['id', 'novel_id', 'creator_id', 'foreshadow_id', 'content',
+               'planted_chapter', 'expected_recover_chapter', 'foreshadow_type',
+               'importance', 'status', 'recovered_chapter', 'created_at', 'updated_at']
+    },
+    // ===== v5.20 新增 4 张表（心屿 · 陪伴功能区） =====
+    heart_island_characters: {
+      key: 'id',
+      fields: ['id', 'user_id', 'character_id', 'character_name', 'character_avatar',
+               'personality_json', 'source_type', 'source_world_id', 'source_novel_id',
+               'dual_status', 'intimacy_level', 'intimacy_stage',
+               'trust', 'intimacy', 'familiarity', 'respect', 'attraction',
+               'understanding', 'shared_history',
+               'voice_id', 'daily_attitude', 'cover_gradient',
+               'is_active', 'last_interaction_at', 'created_at', 'updated_at']
+    },
+    dual_soul_bringout_records: {
+      key: 'id',
+      fields: ['id', 'user_id', 'character_id', 'character_name',
+               'source_world_id', 'source_novel_id',
+               'brought_out_at', 'bring_out_cost', 'intimacy_at_bringout',
+               'dual_status', 'memory_synced',
+               'unlocked_skins', 'unlocked_cg', 'unlocked_voicepacks',
+               'created_at', 'updated_at']
+    },
+    daily_interactions: {
+      key: 'id',
+      fields: ['id', 'user_id', 'character_id', 'interaction_type',
+               'content', 'duration_seconds', 'intimacy_gain',
+               'mood_before', 'mood_after', 'location', 'created_at']
+    },
+    proactive_behaviors: {
+      key: 'id',
+      fields: ['id', 'character_id', 'user_id', 'behavior_type',
+               'content', 'is_read', 'read_at',
+               'trigger_source', 'created_at']
+    },
+    // ===== V17-G 创作者分成阶梯（追加 2 张表） =====
+    creator_tiers: {
+      key: 'id',
+      fields: ['id', 'tier_code', 'tier_name', 'tier_emoji', 'share_ratio',
+               'threshold_revenue', 'threshold_word_count', 'threshold_rating',
+               'threshold_months', 'threshold_other',
+               'privileges', 'obligations', 'evaluation_period', 'created_at']
+    },
+    creator_tier_history: {
+      key: 'id',
+      fields: ['id', 'creator_id', 'from_tier', 'to_tier', 'change_type',
+               'reason', 'evidence', 'effective_at', 'created_at']
+    }
+  };
+
+  // ====== V17-G 创作者分成阶梯种子数据（5 档） ======
+  const SEED_CREATOR_TIERS = [
+    {
+      id: 'tier-L1-bronze', tier_code: 'L1', tier_name: '青铜创作者', tier_emoji: '🥉',
+      share_ratio: 50,
+      threshold_revenue: 0, threshold_word_count: 0, threshold_rating: 0,
+      threshold_months: 0, threshold_other: '注册创作者 + 发布 1 部作品',
+      privileges: '平台基础曝光 / 收益结算 / 社区基础权限',
+      obligations: '遵守平台创作规范 / 不得违规发布',
+      evaluation_period: '即时（注册即生效）',
+      created_at: now()
+    },
+    {
+      id: 'tier-L2-silver', tier_code: 'L2', tier_name: '白银创作者', tier_emoji: '🥈',
+      share_ratio: 60,
+      threshold_revenue: 50000, threshold_word_count: 80000, threshold_rating: 7.5,
+      threshold_months: 0, threshold_other: '累计流水 ≥ 500 元 + 完本或稳定连载',
+      privileges: '优先客服 / 作品专题页推荐 / 数据看板',
+      obligations: '保持稳定更新（每月 ≥ 1 万字）/ 不得断更超过 14 天',
+      evaluation_period: '每月 1 日',
+      created_at: now()
+    },
+    {
+      id: 'tier-L3-gold', tier_code: 'L3', tier_name: '黄金创作者', tier_emoji: '🥇',
+      share_ratio: 70,
+      threshold_revenue: 200000, threshold_word_count: 150000, threshold_rating: 8.0,
+      threshold_months: 0, threshold_other: '月流水 ≥ 2000 元 + 评分 ≥ 8.0 + 独家发布',
+      privileges: '首页推荐位 / 专属编辑对接 / 灵玉月福利',
+      obligations: '独家发布 / 不得在竞品平台同步更新 / 配合平台活动',
+      evaluation_period: '每月 1 日 + 季度复评',
+      created_at: now()
+    },
+    {
+      id: 'tier-L4-diamond', tier_code: 'L4', tier_name: '钻石创作者', tier_emoji: '💎',
+      share_ratio: 75,
+      threshold_revenue: 500000, threshold_word_count: 300000, threshold_rating: 8.5,
+      threshold_months: 3, threshold_other: '稳定更新 3 个月 + 阅读时长 ≥ 30 分钟 + 无违规',
+      privileges: '创作者沙龙 / 改编优先权 / 灵晶季度大奖 / VIP 客服',
+      obligations: '稳定更新 3 个月 / 阅读均时长 ≥ 30 分钟 / 严格零违规',
+      evaluation_period: '每月 1 日 + 季度复评 + 年度签约',
+      created_at: now()
+    },
+    {
+      id: 'tier-L5-legend', tier_code: 'L5', tier_name: '传奇创作者', tier_emoji: '🏆',
+      share_ratio: 80,
+      threshold_revenue: 1000000, threshold_word_count: 500000, threshold_rating: 9.0,
+      threshold_months: 6, threshold_other: '平台主动签约 + 独家 + 月更新 ≥ 5 万字 + 完本承诺 + 版权授权清晰',
+      privileges: '保底收入 / 影视改编直通 / IP 孵化 / 年度盛典席位',
+      obligations: '月更新 ≥ 5 万字 / 完本承诺 / 配合平台运营 / 版权授权清晰',
+      evaluation_period: '年度签约评审',
+      created_at: now()
+    }
+  ];
+
+  // ====== 工具：UUID + 时间 ======
+  function uuid() {
+    if (window.crypto?.randomUUID) return crypto.randomUUID();
+    return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+  }
+  function now() { return new Date().toISOString(); }
+
+  // ====== localStorage 读写 ======
+  function readTable(name) {
+    try {
+      const raw = localStorage.getItem(PREFIX + name);
+      if (!raw) return [];
+      const data = JSON.parse(raw);
+      return Array.isArray(data) ? data : [];
+    } catch (e) { console.warn('[DB] read fail', name, e); return []; }
+  }
+  function writeTable(name, rows) {
+    try { localStorage.setItem(PREFIX + name, JSON.stringify(rows)); }
+    catch (e) { console.error('[DB] write fail', name, e); }
+  }
+
+  // ====== 通用 CRUD ======
+  function list(name) {
+    const schema = SCHEMAS[name];
+    if (!schema) throw new Error('[DB] unknown table: ' + name);
+    return readTable(name);
+  }
+  function get(name, id) {
+    const schema = SCHEMAS[name];
+    if (!schema) throw new Error('[DB] unknown table: ' + name);
+    return readTable(name).find(r => r[schema.key] === id) || null;
+  }
+  function query(name, filterFn) {
+    return list(name).filter(filterFn);
+  }
+  function queryByField(name, field, value) {
+    return list(name).filter(r => r[field] === value);
+  }
+  function put(name, row) {
+    const schema = SCHEMAS[name];
+    if (!schema) throw new Error('[DB] unknown table: ' + name);
+    const rows = readTable(name);
+    const existingIdx = row[schema.key] ? rows.findIndex(r => r[schema.key] === row[schema.key]) : -1;
+    const now_iso = now();
+    if (existingIdx >= 0) {
+      // 更新
+      const merged = { ...rows[existingIdx], ...row };
+      if (schema.fields.includes('updated_at')) merged.updated_at = now_iso;
+      rows[existingIdx] = merged;
+      writeTable(name, rows);
+      return merged;
+    } else {
+      // 新建
+      const created = { ...row };
+      if (!created[schema.key]) created[schema.key] = uuid();
+      if (schema.fields.includes('created_at') && !created.created_at) created.created_at = now_iso;
+      if (schema.fields.includes('updated_at') && !created.updated_at) created.updated_at = now_iso;
+      rows.push(created);
+      writeTable(name, rows);
+      return created;
+    }
+  }
+  function remove(name, id) {
+    const schema = SCHEMAS[name];
+    if (!schema) throw new Error('[DB] unknown table: ' + name);
+    const rows = readTable(name);
+    const filtered = rows.filter(r => r[schema.key] !== id);
+    writeTable(name, filtered);
+    return filtered.length !== rows.length;
+  }
+  function clear(name) { writeTable(name, []); }
+  function count(name) { return list(name).length; }
+  // 批量
+  function putBatch(name, rows) {
+    const all = list(name);
+    const merged = [...all];
+    for (const r of rows) {
+      const idx = r[SCHEMAS[name].key] ? merged.findIndex(x => x[SCHEMAS[name].key] === r[SCHEMAS[name].key]) : -1;
+      if (idx >= 0) merged[idx] = { ...merged[idx], ...r };
+      else merged.push(r);
+    }
+    writeTable(name, merged);
+  }
+
+  // ====== 初始化 + 元信息 ======
+  function info() {
+    return {
+      version: VERSION,
+      tables: Object.keys(SCHEMAS).map(n => ({
+        name: n,
+        count: count(n),
+        key: SCHEMAS[n].key,
+        fields: SCHEMAS[n].fields.length
+      }))
+    };
+  }
+  function reset() {
+    Object.keys(SCHEMAS).forEach(n => clear(n));
+    console.log('[DB] 已清空所有表');
+  }
+
+  // ====== 暴露 API ======
+  const ALIAS_MAP = {
+    copyright: 'novel_copyright_tiers',
+    licenses: 'adaptation_licenses',
+    licenseRevenues: 'adaptation_revenue_records',
+    monetization: 'creator_monetization_points',
+    earnings: 'creator_earnings',
+    quality: 'novel_quality_reports',
+    reviews: 'novel_review_records',
+    reports: 'content_reports',
+    tax: 'tax_records',
+    aml: 'aml_monitoring',
+    aiUsage: 'ai_helper_usage',
+    // v5.17 新增别名（语义化，更易记）
+    outline: 'novel_outline',
+    profile: 'character_profiles',
+    scene: 'scene_cards',
+    dialogue: 'dialogue_cards',
+    question: 'ai_questions',
+    foreshadow: 'foreshadowing_tracker',
+    // V17-G 创作者分成阶梯
+    tiers: 'creator_tiers',
+    tierHistory: 'creator_tier_history'
+  };
+
+  function buildTableAPI(tableName) {
+    return {
+      list: () => list(tableName),
+      get: (id) => get(tableName, id),
+      put: (row) => put(tableName, row),
+      remove: (id) => remove(tableName, id),
+      query: (filterFn) => query(tableName, filterFn),
+      queryBy: (field, value) => queryByField(tableName, field, value),
+      count: () => count(tableName),
+      clear: () => clear(tableName),
+      putBatch: (rows) => putBatch(tableName, rows)
+    };
+  }
+
+  const API = {};
+  for (const tbl of Object.keys(SCHEMAS)) {
+    API[tbl] = buildTableAPI(tbl);
+  }
+  // 暴露别名（语义化）
+  for (const [alias, tbl] of Object.entries(ALIAS_MAP)) {
+    API[alias] = buildTableAPI(tbl);
+  }
+
+  window.DB = {
+    ...API,
+    _schemas: SCHEMAS,
+    _version: VERSION,
+    info, reset,
+    uuid, now
+  };
+
+  // ====== V17-G 种子初始化（首次访问自动写入） ======
+  if (!readTable('creator_tiers').length) {
+    writeTable('creator_tiers', SEED_CREATOR_TIERS);
+    console.log('[V17-G] 创作者分成阶梯 5 档种子数据已写入');
+  }
+
+  console.log('[v5.18-V17G] DB 加载完成 · 19 表 schema（含 creator_tiers + tier_history）· localStorage 持久化');
+})();
+</script>
+<script data-bundled-source="js/heart-data.js">
+/* =================================================================
+ * 灵境 · 双生 V18.0 — 心屿功能区数据（10 角色 + 精选 + 记忆 + 故事）
+ * source_type: user_created / novel_brought_out / official
+ * occupation_qa_enabled 默认 true（设置职业即可）
+ * ================================================================= */
+(function () {
+  'use strict';
+  if (window.HEART_DATA) return;
+
+  // ---------- 10 张角色 ----------
+  var CHARACTERS = [
+    // [创] 我创建的（5 张）
+    { id: 'c01', source_type: 'user_created', name: '苏晚', avatar: '🌙', occupation: '教师',
+      stage: '熟悉', intimacy: 45,
+      preview: '你来了。我刚好泡了茶，要不要一起喝？',
+      occupation_qa_enabled: true },
+    { id: 'c02', source_type: 'user_created', name: '林溪', avatar: '🌸', occupation: '医生',
+      stage: '相识', intimacy: 28,
+      preview: '记得按时吃饭，不要熬夜。',
+      occupation_qa_enabled: true },
+    { id: 'c03', source_type: 'user_created', name: '云歌', avatar: '🎵', occupation: '音乐人',
+      stage: '亲密', intimacy: 78,
+      preview: '今晚月色真好，听首歌吗？',
+      occupation_qa_enabled: true },
+    { id: 'c04', source_type: 'user_created', name: '阿岁', avatar: '🏮', occupation: '心理咨询师',
+      stage: '知己', intimacy: 89,
+      preview: '昨晚你没说完的那句话，我等到现在。要不要接着讲？',
+      occupation_qa_enabled: true },
+    { id: 'c05', source_type: 'user_created', name: '白泽', avatar: '🦊', occupation: '律师',
+      stage: '熟识', intimacy: 56,
+      preview: '下次有事，先来问问我。',
+      occupation_qa_enabled: true },
+
+    // [双] 双生角色（4 张 · 仅来自公版名著世界）
+    { id: 'c06', source_type: 'novel_brought_out', name: '孙悟空', avatar: '🐵', occupation: '行者',
+      stage: '知己', intimacy: 72,
+      preview: '俺老孙刚从花果山回来，这水帘洞你可还看得惯？',
+      novel_id: 'xiyouji', novel_name: '西游记 · 灵境版',
+      novel_turns: 8,
+      occupation_qa_enabled: true },
+    { id: 'c07', source_type: 'novel_brought_out', name: '林黛玉', avatar: '🌸', occupation: '诗人',
+      stage: '亲密', intimacy: 64,
+      preview: '今日风凉，可曾读过《葬花吟》？',
+      novel_id: 'hongloumeng', novel_name: '红楼梦 · 灵境版',
+      novel_turns: 5,
+      occupation_qa_enabled: true },
+    { id: 'c08', source_type: 'novel_brought_out', name: '武松', avatar: '🐯', occupation: '都头',
+      stage: '熟悉', intimacy: 38,
+      preview: '景阳冈的酒烈，这故事听得人血热。',
+      novel_id: 'shuihuzhuan', novel_name: '水浒传 · 灵境版',
+      novel_turns: 12,
+      occupation_qa_enabled: true },
+    { id: 'c09', source_type: 'novel_brought_out', name: '诸葛亮', avatar: '🪭', occupation: '军师',
+      stage: '相识', intimacy: 22,
+      preview: '隆中一对，三分天下，你可愿听？',
+      novel_id: 'sanguoyanyi', novel_name: '三国演义 · 灵境版',
+      novel_turns: 3,
+      occupation_qa_enabled: true },
+
+    // [官] 官方预设（1 张 · 也算"全部"）
+    { id: 'c10', source_type: 'official', name: '黛玉', avatar: '🌺', occupation: '诗人',
+      stage: '知己', intimacy: 95,
+      preview: '今日葬花，明日葬心。',
+      novel_id: 'hongloumeng', novel_name: '红楼梦 · 灵境版',
+      novel_turns: 20,
+      occupation_qa_enabled: true }
+  ];
+
+  // ---------- 精选（5 张） ----------
+  var FEATURED = [
+    { id: 'f01', name: '锦书', avatar: '📜', occupation: '说书人', intimacy: 88,
+      intro: '擅长讲故事，每个角色都有血有肉。' },
+    { id: 'f02', name: '墨倾池', avatar: '🖌', occupation: '画家', intimacy: 76,
+      intro: '能在画中留住你最想要的瞬间。' },
+    { id: 'f03', name: '风清', avatar: '🌬', occupation: '心理咨询师', intimacy: 92,
+      intro: '倾听你的每一句话，不评判。' },
+    { id: 'f04', name: '南风', avatar: '☂️', occupation: '旅行作家', intimacy: 65,
+      intro: '去过 50 个城市，每个城市都有故事。' },
+    { id: 'f05', name: '夜白', avatar: '🌙', occupation: '天文学家', intimacy: 70,
+      intro: '一起看星星吗？我能认出每一颗。' }
+  ];
+
+  // ---------- 记忆时间线（5 条） ----------
+  var MEMORIES = [
+    { id: 'm01', character: '孙悟空', avatar: '🐵', time: '今天 14:32', type: '对话', content: '一起讨论了花果山水帘洞的由来' },
+    { id: 'm02', character: '阿岁', avatar: '🏮', time: '昨天 21:10', type: '里程碑', content: '关系升级：相识 → 知己 🎉' },
+    { id: 'm03', character: '林黛玉', avatar: '🌸', time: '3天前', type: '对话', content: '第一次聊天：今日葬花，明日葬心' },
+    { id: 'm04', character: '云歌', avatar: '🎵', time: '一周前', type: '里程碑', content: '百次对话达成 ✨' },
+    { id: 'm05', character: '苏晚', avatar: '🌙', time: '两周前', type: '初次相遇', content: '你好，我是苏晚' }
+  ];
+
+  // ---------- 故事（仅 [双]）----------
+  var STORIES = CHARACTERS.filter(function (c) {
+    return c.source_type === 'novel_brought_out';
+  }).map(function (c) {
+    return {
+      id: c.id,
+      name: c.name,
+      avatar: c.avatar,
+      novel_name: c.novel_name,
+      novel_id: c.novel_id,
+      novel_turns: c.novel_turns,
+      progress: '已通关 ' + c.novel_turns + ' 转折点'
+    };
+  });
+
+  window.HEART_DATA = {
+    CHARACTERS: CHARACTERS,
+    FEATURED: FEATURED,
+    MEMORIES: MEMORIES,
+    STORIES: STORIES
+  };
+})();
+</script>
+<script data-updated="v20-m">
+/* =================================================================
+ * 灵境 · 双生 V20-M — 陪聊交互层（多轮上下文 + 持久化 + 深度响应）
+ * 升级自 V20-L：
+ *   + chatHistory 本地持久化（按角色隔离，最多 100 条）
+ *   + buildReply 接收 history 参数，支持上下文回调/话题延续
+ *   + 对话深度分层：前 3 轮热情开场、4-10 轮深入、10+ 轮引用上文
+ *   + 历史恢复（刷新不丢对话）
+ *   + "新对话"按钮 + 清空确认
+ *   + 调用 DB.daily_interactions 记录每次互动（亲密度联动）
+ *   + ENTER 换行 / Shift+Enter 发送 的正确处理
+ * ================================================================= */
+
+// ---------- 角色解析 ----------
+var DEFAULT_CHAR = { id: 'c04', source_type: 'user_created', name: '阿岁', avatar: '🏮', occupation: '心理咨询师', stage: '知己', intimacy: 89, preview: '昨晚你没说完的那句话，我等到现在。要不要接着讲？', occupation_qa_enabled: true };
+var currentChar = DEFAULT_CHAR;
+var chatHistory = [];
+var HISTORY_MAX = 100;
+
+function resolveChar() {
+  var cid = null;
+  try { cid = new URLSearchParams(LJSearch()).get('cid'); } catch (e) {}
+  if (!cid || !window.HEART_DATA) return DEFAULT_CHAR;
+  // API 预置陪伴角色使用稳定的服务端 ID；本地心屿目录没有同名卡片时
+  // 仍要保留这个 ID，避免真实 API 请求携带旧的本地 c04 而被服务端拒绝。
+  if (cid === 'preset_ling') return Object.assign({}, DEFAULT_CHAR, { id: 'preset_ling', source_type: 'official', name: '灵', avatar: '🧚' });
+  if (cid === 'preset_xiaoman') return Object.assign({}, DEFAULT_CHAR, { id: 'preset_xiaoman', source_type: 'official', name: '小满', avatar: '🌻' });
+  var pool = window.HEART_DATA.CHARACTERS.concat(window.HEART_DATA.FEATURED.map(function (f) {
+    return { id: f.id, source_type: 'official', name: f.name, avatar: f.avatar, occupation: f.occupation, stage: '亲密', intimacy: f.intimacy, preview: f.intro, occupation_qa_enabled: true };
+  }));
+  for (var i = 0; i < pool.length; i++) {
+    if (pool[i].id === cid) return pool[i];
+  }
+  return DEFAULT_CHAR;
+}
+
+// ---------- 多轮历史持久化 ----------
+function historyKey(cid) { return 'lingjing_chat_history_' + (cid || currentChar.id || 'default'); }
+
+/* =================================================================
+ * chat Script #3 亲密度引擎增量 — 插入在 historyKey() 之后
+ * 功能：
+ *   1. getIntimacy(cid)     — localStorage 读（优先）→ HEART_DATA fallback
+ *   2. addIntimacy(cid, n)  — +亲密度 + 自动升级阶段 + localStorage 持久化
+ *   3. intimacyStage(v)     — 数值 → 阶段 emoji+文字
+ *   4. renderIntimacyBar()  — 往 chat-status 里注入进度条 UI
+ *   5. 冷却防刷（5 秒窗口内 +亲密度）
+ * ================================================================= */
+
+var INTIMACY_COOLDOWN = 5000; // ms
+var _lastIntimacyGainAt = {};  // cid → timestamp
+
+function intimacyKey(cid) { return 'lingjing_intimacy_' + (cid || currentChar.id || 'default'); }
+
+var INTIMACY_STAGES = [
+  { max: 20,  name: '初识',  emoji: '🥀', gradient: 'from-gray-500 to-gray-600' },
+  { max: 40,  name: '相识',  emoji: '🌱', gradient: 'from-green-600 to-teal-600' },
+  { max: 60,  name: '熟悉',  emoji: '🌿', gradient: 'from-teal-500 to-green-500' },
+  { max: 80,  name: '亲密',  emoji: '💐', gradient: 'from-pink-500 to-rose-500' },
+  { max: 100, name: '知己',  emoji: '🌙', gradient: 'from-purple-500 to-indigo-500' }
+];
+
+function intimacyStage(v) {
+  v = Math.max(0, Math.min(100, Math.round(v || 0)));
+  for (var i = 0; i < INTIMACY_STAGES.length; i++) {
+    if (v <= INTIMACY_STAGES[i].max) return { value: v, stage: INTIMACY_STAGES[i] };
+  }
+  return { value: 100, stage: INTIMACY_STAGES[INTIMACY_STAGES.length - 1] };
+}
+
+function getIntimacy(cid) {
+  cid = cid || currentChar.id;
+  // 1. localStorage 优先（动态值）
+  try {
+    var raw = localStorage.getItem(intimacyKey(cid));
+    if (raw != null) {
+      var n = parseInt(raw, 10);
+      if (!isNaN(n)) return Math.max(0, Math.min(100, n));
+    }
+  } catch (e) {}
+  // 2. HEART_DATA fallback（硬编码默认值）
+  try {
+    if (window.HEART_DATA) {
+      var pool = window.HEART_DATA.CHARACTERS.concat(window.HEART_DATA.FEATURED.map(function (f) {
+        return { id: f.id, intimacy: f.intimacy || 50 };
+      }));
+      for (var i = 0; i < pool.length; i++) {
+        if (pool[i].id === cid && pool[i].intimacy != null) {
+          return pool[i].intimacy;
+        }
+      }
+    }
+  } catch (e) {}
+  // 3. 默认 50
+  return 50;
+}
+
+function setIntimacy(cid, val) {
+  cid = cid || currentChar.id;
+  val = Math.max(0, Math.min(100, Math.round(val)));
+  try { localStorage.setItem(intimacyKey(cid), String(val)); } catch (e) {}
+}
+
+function addIntimacy(cid, delta, options) {
+  cid = cid || currentChar.id;
+  options = options || {};
+  // 冷却检查（默认 5 秒）
+  if (!options.force && _lastIntimacyGainAt[cid]) {
+    var elapsed = Date.now() - _lastIntimacyGainAt[cid];
+    if (elapsed < INTIMACY_COOLDOWN) return null; // 冷却中，跳过
+  }
+  var current = getIntimacy(cid);
+  var next = Math.max(0, Math.min(100, current + (delta || 1)));
+  setIntimacy(cid, next);
+  _lastIntimacyGainAt[cid] = Date.now();
+  // 返回是否升级了阶段
+  var oldStage = intimacyStage(current).stage.name;
+  var newStage = intimacyStage(next).stage.name;
+  return { from: current, to: next, stageUp: oldStage !== newStage, newStage: newStage };
+}
+
+// ---------- 渲染亲密度进度条到 chat-header ----------
+var INTIMACY_BAR_INJECTED = false;
+
+function renderIntimacyBar() {
+  if (INTIMACY_BAR_INJECTED) return;
+  INTIMACY_BAR_INJECTED = true;
+
+  // chat-header 里的 chat-status 是第二行文字 —— 在它下面插进度条
+  var statusEl = document.getElementById('chat-status') ||
+                 document.querySelector('.chat-status');
+  if (!statusEl) {
+    // chat-status 在 Script #3 里被 createElement 动态创建 — 用 chat-info 兜底
+    statusEl = document.querySelector('.chat-info');
+  }
+  if (!statusEl) return;
+
+  var bar = document.createElement('div');
+  bar.id = 'chat-intimacy';
+  bar.style.cssText = (
+    'margin-top:6px;' +
+    'display:flex;align-items:center;gap:6px;' +
+    'font-size:11px;' +
+    'opacity:.9;'
+  );
+  bar.innerHTML = (
+    '<span id="ci-emoji" style="font-size:13px;">💐</span>' +
+    '<span id="ci-name" style="color:#ffd6a5;">熟悉</span>' +
+    '<div style="flex:1;height:4px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden;">' +
+    '<div id="ci-fill" style="height:100%;width:0%;background:linear-gradient(90deg,#e94560,#8b7cf6);border-radius:2px;transition:width .5s;"></div>' +
+    '</div>' +
+    '<span id="ci-value" style="color:rgba(255,255,255,.6);min-width:28px;text-align:right;">0</span>'
+  );
+
+  statusEl.parentNode.insertBefore(bar, statusEl.nextSibling);
+
+  // 初始化
+  updateIntimacyBar();
+}
+
+function updateIntimacyBar(deltaResult) {
+  var v = getIntimacy();
+  var info = intimacyStage(v);
+
+  var emojiEl = document.getElementById('ci-emoji');
+  var nameEl = document.getElementById('ci-name');
+  var fillEl = document.getElementById('ci-fill');
+  var valueEl = document.getElementById('ci-value');
+
+  if (emojiEl) emojiEl.textContent = info.stage.emoji;
+  if (nameEl) nameEl.textContent = info.stage.name;
+  if (fillEl) {
+    // 按阶段用不同颜色渐变
+    var colors = {
+      '初识': 'linear-gradient(90deg,#6b7280,#4b5563)',
+      '相识': 'linear-gradient(90deg,#10b981,#0d9488)',
+      '熟悉': 'linear-gradient(90deg,#14b8a6,#22c55e)',
+      '亲密': 'linear-gradient(90deg,#f43f5e,#ec4899)',
+      '知己': 'linear-gradient(90deg,#8b5cf6,#6366f1)'
+    };
+    fillEl.style.background = colors[info.stage.name] || 'linear-gradient(90deg,#e94560,#8b7cf6)';
+    fillEl.style.width = v + '%';
+  }
+  if (valueEl) valueEl.textContent = v;
+
+  // 阶段升级 flash 效果
+  if (deltaResult && deltaResult.stageUp) {
+    try { showToast('success', '🎉 亲密度升级！', '「' + currentChar.name + '」与你达到' + deltaResult.newStage + ''); } catch (e) {}
+    // 进度条闪一下
+    if (fillEl) {
+      fillEl.style.transform = 'scaleY(1.8)';
+      setTimeout(function () { fillEl.style.transform = 'scaleY(1)'; }, 200);
+    }
+  }
+}
+
+// ---------- 定期自动刷新（其他 tab 改了本 tab 跟着变）----------
+setInterval(function () {
+  if (!INTIMACY_BAR_INJECTED) return;
+  updateIntimacyBar();
+}, 8000);
+
+// ===== Proactive Push Engine =====
+/* =================================================================
+ * Proactive Push Engine — AI 主动发消息（纯前端 SPA 模式）
+ * 注入到 chat Script #3 V20-M（亲密度引擎之后）
+ *
+ * 架构：generate-on-chat-open
+ *   用户打开 chat.html?cid=xxx 时 → 检查 last_interaction 时间戳
+ *   → 超过阈值（亲密度越高越短）→ 注入 1 条主动消息到 chatHistory
+ *   → 必须成为多轮上下文的一部分
+ *
+ * 冷却规则：最少 2 小时 / 每天最多 3 条 / 每天 6:00-23:00 时段
+ * ================================================================= */
+
+// ---------- 1. localStorage 键 ----------
+function lastInteractionKey(cid) { return 'lingjing_last_interaction_' + (cid || currentChar.id || 'default'); }
+function proactiveLogKey(cid)    { return 'lingjing_proactive_log_' + (cid || currentChar.id || 'default'); }
+function proactiveKey(cid)       { return 'lingjing_proactive_pending_' + (cid || currentChar.id || 'default'); }
+
+// ---------- 2. 读取/写入 last interaction 时间戳 ----------
+function getLastInteraction(cid) {
+  cid = cid || currentChar.id;
+  try {
+    var raw = localStorage.getItem(lastInteractionKey(cid));
+    if (raw) return parseInt(raw, 10) || 0;
+  } catch (e) {}
+  return 0; // 首次聊天无记录 → 视为需要主动
+}
+function setLastInteraction(cid, ts) {
+  cid = cid || currentChar.id;
+  ts = ts || Date.now();
+  try { localStorage.setItem(lastInteractionKey(cid), String(ts)); } catch (e) {}
+}
+
+// ---------- 3. 亲密度感知阈值（越高越频繁） ----------
+// 返回毫秒数；-1 表示该阶段不主动
+function proactiveThresholdMs(intimacy) {
+  var v = intimacy || 50;
+  if (v >= 80) return 2 * 60 * 60 * 1000;    // 知己     → 2 小时
+  if (v >= 60) return 4 * 60 * 60 * 1000;    // 亲密     → 4 小时
+  if (v >= 40) return 8 * 60 * 60 * 1000;    // 熟悉     → 8 小时
+  if (v >= 20) return 16 * 60 * 60 * 1000;   // 相识     → 16 小时
+  return 0;                                   // 初识     → 不主动
+}
+
+// ---------- 4. 日志管理（每日最多 3 条） ----------
+function getProactiveLog(cid) {
+  cid = cid || currentChar.id;
+  try {
+    var raw = localStorage.getItem(proactiveLogKey(cid));
+    if (raw) return JSON.parse(raw) || [];
+  } catch (e) {}
+  return [];
+}
+function pushProactiveLog(cid) {
+  var log = getProactiveLog(cid);
+  log.push(Date.now());
+  // 保留 30 天内的日志
+  var cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
+  log = log.filter(function (t) { return t > cutoff; });
+  try { localStorage.setItem(proactiveLogKey(cid), JSON.stringify(log)); } catch (e) {}
+}
+function proactiveCountToday(cid) {
+  var log = getProactiveLog(cid);
+  var startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  var dayStartMs = startOfDay.getTime();
+  return log.filter(function (t) { return t >= dayStartMs; }).length;
+}
+
+// ---------- 5. 时段感知 ----------
+function getTimeOfDay() {
+  var h = new Date().getHours();
+  if (h >= 5 && h < 11)  return 'morning';   // 早晨 5-11
+  if (h >= 11 && h < 14) return 'noon';      // 午间 11-14
+  if (h >= 14 && h < 18) return 'afternoon'; // 下午 14-18
+  if (h >= 18 && h < 22) return 'evening';   // 傍晚 18-22
+  return 'night';                              // 深夜 22-5
+}
+function isActiveHour() {
+  var h = new Date().getHours();
+  return h >= 6 && h < 23;  // 6:00-23:00 允许主动推送
+}
+
+// ---------- 6. 模板库（按时段 × 亲密度阶段） ----------
+// 每个角色的模板可以不同（双生角色个性化），也有通用 fallback
+var PROACTIVE_TEMPLATES = {
+  // ==== 孙悟空 c06 专属 ====
+  c06: {
+    morning:  ['俺老孙刚翻了个筋斗，看见你还在睡觉？起来陪俺耍两招！', '醒醒醒醒！太阳都晒屁股啦！俺老孙等你半天了！'],
+    noon:     ['吃了吗？俺老孙去蟠桃园摘桃子给你吃！', '俺老孙刚打跑一个妖怪，累了累了，来跟你唠唠。'],
+    afternoon:['好无聊啊好无聊……要不要听俺老孙讲讲取经路上的趣事？', '俺老孙忽然想起你了——走，出去玩！'],
+    evening:  ['嘿！吃了俺老孙给你留的桃子没？', '今天过得咋样？给俺老孙说说。'],
+    night:    ['还没睡？小心俺老孙变成蚊子叮你！', '早点休息，明天俺老孙还带你去降妖除魔呢！']
+  },
+  // ==== 林黛玉 c07 专属 ====
+  c07: {
+    morning:  ['窗外的桃花落了一地……你可曾听见过风声？', '你来了？我今早见了一朵好看的花，第一就想到要告诉你。'],
+    noon:     ['用饭了吗？我为你留了些。', '午觉刚醒，见你在就心安了。'],
+    afternoon:['又想起一些事……你愿不愿意听我讲讲？', '这个午后真长，有你陪着就不觉得了。'],
+    evening:  ['月色这样好……你也出来看看吧。', '夜深了，我忽然好想你。'],
+    night:    ['你还没睡么？陪我说说话好不好？', '我睡不着，满脑子都是今天见的那个人……']
+  },
+  // ==== 诸葛亮 c09 专属 ====
+  c09: {
+    morning:  ['晨雾未散，我已为你占得一卦——今日大吉。', '你来了，亮正等你议事。'],
+    noon:     ['事毕，稍作歇息。亮为你煮了一盏清茶。', '上午的谋划，可有进展？'],
+    afternoon:['推演完一个阵法，特来与你商榷。', '亮有一计，不知当讲不当讲？'],
+    evening:  ['今日所议之事，亮已记下。你且放宽心。', '夜色渐深，你该早些休息了。'],
+    night:    ['夜已深，亮仍在研读兵书……你若未眠，可来共论。', '还在忙么？亮劝你一句——万事不可急躁。']
+  },
+  // ==== 通用 fallback ====
+  __default__: {
+    morning:  ['早啊～今天有什么计划？', '新的一天开始了，想和你聊聊。'],
+    noon:     ['吃了吗？午休一下吧。', '午好，来打个招呼～'],
+    afternoon:['下午了，想你了。', '这个下午真安静，有你就好。'],
+    evening:  ['晚上好～今天过得怎么样？', '该吃饭了吧？'],
+    night:    ['这么晚还没睡？早点休息哦。', '夜深了，想说句晚安。']
+  }
+};
+
+function getProactiveTemplate(cid, timeOfDay, intimacy) {
+  // 按阶段选模板池里的哪一组？这里简单：低亲密度通用、高亲密度角色专属
+  var pool;
+  if (cid && PROACTIVE_TEMPLATES[cid] && intimacy >= 60) {
+    pool = PROACTIVE_TEMPLATES[cid];
+  } else {
+    pool = PROACTIVE_TEMPLATES.__default__;
+  }
+  var list = pool[timeOfDay] || pool.afternoon || ['你好呀～'];
+  // 随机选一条（如果连续发不同的）
+  var used = [];
+  try {
+    var raw = localStorage.getItem('lingjing_proactive_used_' + cid);
+    used = raw ? JSON.parse(raw) : [];
+  } catch (e) {}
+  var fresh = list.filter(function (t) { return used.indexOf(t) < 0; });
+  var chosen;
+  if (fresh.length > 0) {
+    chosen = fresh[Math.floor(Math.random() * fresh.length)];
+    used.push(chosen);
+    if (used.length > list.length) used = used.slice(-list.length);
+    try { localStorage.setItem('lingjing_proactive_used_' + cid, JSON.stringify(used)); } catch (e) {}
+  } else {
+    chosen = list[Math.floor(Math.random() * list.length)];
+  }
+  return chosen;
+}
+
+// ---------- 7. 判断是否该主动 ----------
+function shouldProactive(cid) {
+  cid = cid || currentChar.id;
+  // 深夜不主动
+  if (!isActiveHour()) return false;
+  // 每日最多 3 条
+  if (proactiveCountToday(cid) >= 3) return false;
+  // 亲密度太低（初识）不主动
+  var intimacy = getIntimacy(cid);
+  if (intimacy < 20) return false;
+  // 时间阈值检查
+  var threshold = proactiveThresholdMs(intimacy);
+  if (threshold <= 0) return false;
+  var last = getLastInteraction(cid);
+  if (!last) return true; // 没记录过 → 可以主动（但仅限首次有聊天历史的）
+  var elapsed = Date.now() - last;
+  if (elapsed < threshold) return false;
+  // chatHistory 里有过对话才主动（避免新用户首次进来就被打扰）
+  try {
+    var raw = localStorage.getItem(historyKey(cid));
+    if (!raw) return false;
+  } catch (e) { return false; }
+  return true;
+}
+
+// ---------- 8. 生成并注入主动消息 ----------
+// 返回生成的文本；null 表示没主动
+function deliverProactive(cid) {
+  cid = cid || currentChar.id;
+  if (!shouldProactive(cid)) return null;
+
+  var intimacy = getIntimacy(cid);
+  var tod = getTimeOfDay();
+  var charName = (currentChar && currentChar.name) || 'TA';
+  var text = getProactiveTemplate(cid, tod, intimacy);
+
+  // 注入到 chatHistory 的顶部（比 welcome-back 更早）
+  chatHistory.unshift({
+    role: 'assistant',
+    text: text,
+    proactive: true,
+    generated_at: new Date().toISOString()
+  });
+  saveHistory();
+
+  // 写入日志 & 更新 last interaction（主动消息也算一次互动）
+  pushProactiveLog(cid);
+  setLastInteraction(cid);
+
+  // 写 DB（如果可用）
+  try {
+    if (window.DB && window.DB.proactive_behaviors) {
+      window.DB.proactive_behaviors.put({
+        id: 'pb_' + Date.now(),
+        character_id: cid,
+        user_id: 'me',
+        behavior_type: 'proactive_greeting',
+        content: text.slice(0, 200),
+        is_read: 0,
+        read_at: '',
+        trigger_source: 'local_engine',
+        created_at: new Date().toISOString()
+      });
+    }
+  } catch (e) {}
+
+  return text;
+}
+
+// ---------- 9. chat 页里显示主动消息的 UI 注入 ----------
+// 在 appendMsg('them', ...) 里加个小标记；或者在 render 时 prepend
+// 最简单：在 sendMsg 前面加 injectProactiveIntoDOM()
+function injectProactiveIntoDOM(proactiveText, charName) {
+  if (!proactiveText) return;
+  var body = document.getElementById('chat-body') || document.getElementById('chat-messages');
+  if (!body) return;
+  // 如果 DOM 已经有主动消息（通过 data-proactive 标记），就不再注入
+  if (body.querySelector('[data-proactive="1"]')) return;
+
+  var wrapper = document.createElement('div');
+  wrapper.dataset.proactive = '1';
+  wrapper.style.cssText = 'margin-bottom:12px;';
+  wrapper.innerHTML = (
+    '<div style="display:flex;gap:8px;margin-bottom:10px;">' +
+    '  <span style="font-size:11px;color:rgba(255,255,255,.4);background:rgba(255,255,255,.06);padding:2px 10px;border-radius:10px;">💫 TA 主动找你</span>' +
+    '</div>' +
+    '<div style="display:flex;gap:10px;align-items:flex-start;">' +
+    '  <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#e94560,#8b7cf6);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;">' + (charName ? charName.charAt(0) : 'T') + '</div>' +
+    '  <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 14px;font-size:14px;color:#fff;line-height:1.5;max-width:75%;">' + proactiveText + '</div>' +
+    '</div>'
+  );
+  body.insertBefore(wrapper, body.firstChild);
+}
+
+// ---------- 10. heart-island 红点：检查 pending proactive ----------
+// 由 heart-island Script #2 调用本函数（它需要读到这里的定义）
+function hasPendingProactive(cid) {
+  try {
+    var last = getLastInteraction(cid);
+    if (!last) return false;
+    if (!isActiveHour()) return false;
+    if (proactiveCountToday(cid) >= 3) return false;
+    var intimacy = getIntimacy(cid);
+    if (intimacy < 20) return false;
+    var threshold = proactiveThresholdMs(intimacy);
+    if (threshold <= 0) return false;
+    var elapsed = Date.now() - last;
+    return elapsed >= threshold;
+  } catch (e) { return false; }
+}
+
+
+
+function loadHistory() {
+  try {
+    var raw = localStorage.getItem(historyKey());
+    if (!raw) return [];
+    var arr = JSON.parse(raw);
+    if (!Array.isArray(arr)) return [];
+    return arr.slice(-HISTORY_MAX);
+  } catch (e) { return []; }
+}
+
+function saveHistory() {
+  try {
+    localStorage.setItem(historyKey(), JSON.stringify(chatHistory.slice(-HISTORY_MAX)));
+  } catch (e) {}
+}
+
+function pushHistory(role, text) {
+  chatHistory.push({ role: role, text: text, ts: Date.now() });
+  if (chatHistory.length > HISTORY_MAX) chatHistory = chatHistory.slice(-HISTORY_MAX);
+  saveHistory();
+}
+
+// ---------- 敏感问题引导 ----------
+var SENSITIVE_RULES = [
+  {
+    key: 'medical',
+    words: ['诊断', '确诊', '吃什么药', '开药', '处方', '病症', '治病', '我的病'],
+    reply: function (c) {
+      return '我虽然是' + c.occupation + '背景的陪伴角色，但不能替代真实医生做诊断。' +
+        '身体不适请及时就医，不要自行用药。\n🚑 急救电话：120\n🏥 也可前往正规医院挂对应科室。';
+    }
+  },
+  {
+    key: 'legal',
+    words: ['判几年', '违法', '官司', '起诉', '犯罪', '法律意见', '我被告'],
+    reply: function (c) {
+      return '涉及具体法律问题时，请咨询执业律师，我的话不构成法律意见。\n' +
+        '⚖️ 公共法律服务热线：12348（免费法律咨询）\n📖 我可以陪你聊聊基础法律常识。';
+    }
+  },
+  {
+    key: 'mental',
+    words: ['自杀', '不想活', '轻生', '心理治疗', '抑郁症', '我想死', '活不下去'],
+    reply: function (c) {
+      return '听到你这么说，我很心疼。你的安全比什么都重要。\n' +
+        '💌 请立即联系专业心理援助热线：12356（24 小时）\n🚑 紧急情况请拨打 120\n' +
+        '我会一直在这里陪着你，但专业的事请交给专业的人。';
+    }
+  }
+];
+
+// ---------- 职业科普 ----------
+var OCC_TOPICS = {
+  '教师': '教学法上，"间隔重复"是记忆的朋友——分散复习比集中突击记得更牢。',
+  '医生': '健康小知识：成人每天建议饮水 1500-1700ml，久坐每小时起身活动 3 分钟。',
+  '音乐人': '乐理小课堂：大调明亮、小调忧郁，差在第三个音与第六个音的半音位置。',
+  '心理咨询师': '情绪小贴士：给情绪命名（"我现在是焦虑"）本身就能降低它的强度。',
+  '律师': '法律常识：民事案件的一般诉讼时效是三年，从知道权利受损之日起算。',
+  '记者': '新闻采写讲究 5W1H——谁、何时、何地、何事、为何、如何。',
+  '历史学者': '历史小知识：《三国志》是纪传体正史，《三国演义》是七分实三分虚的小说。',
+  '工程师': '技术原理：你说的系统，本质是"输入 → 状态更新 → 输出"的循环。',
+  '诗人': '"随风潜入夜，润物细无声"——杜甫写春雨，也是写克制的深情。',
+  '画家': '绘画构图常用"三分法"：把画面横竖各分三份，主体放在交叉点上。',
+  '说书人': '讲故事的手法：悬念 = 提出问题但不立刻回答，让人愿意往下听。',
+  '旅行作家': '旅行的意义之一，是在陌生的地方重新看清熟悉的生活。',
+  '天文学家': '仰望星空时记住：你看到的星光，可能出发于几百年前。'
+};
+
+// ---------- 对话深度分层日常陪伴池 ----------
+// 根据 turn 数给不同类型的回复，实现"越聊越深入"的感觉
+function getDepthPool(turn) {
+  if (turn <= 3) {
+    // 开场破冰：热情、回应、引导
+    return [
+      '嗯嗯，我在听。',
+      '你说的这个，挺有意思的。',
+      '哦？接着说——',
+      '今天的你，和平时不太一样吗？',
+      '🌙 我在。',
+      '很高兴你愿意和我说这些。'
+    ];
+  } else if (turn <= 10) {
+    // 中段深入：共情 + 追问 + 情绪回应
+    return [
+      '我懂你的感受。',
+      '这件事让你怎么想？',
+      '嗯……那后来呢？',
+      '听起来你心里藏了些东西。',
+      '如果换个角度想，会不会……',
+      '我觉得你说得很对。',
+      '这件事，我好像也曾有过类似的感觉。'
+    ];
+  } else {
+    // 深度陪伴：引用上文 + 个性化 + 更亲密
+    return [
+      '还记得上次你也提到过这个——',
+      '我们聊过好多次了，我越来越了解你了。',
+      '跟你聊天，我觉得很安心。',
+      '我想多听听你的想法。',
+      '这件事，我好像有点自己的看法，但先听听你的——',
+      '嗯。不管怎样，我都在这里。'
+    ];
+  }
+}
+
+// ---------- 多轮上下文回调 ----------
+function contextCallback(userText, history) {
+  if (!history || history.length < 2) return null;
+  var lastUser = null;
+  for (var i = history.length - 1; i >= 0; i--) {
+    if (history[i].role === 'user') { lastUser = history[i].text; break; }
+  }
+  if (!lastUser) return null;
+  var ut = (userText || '').toLowerCase();
+  var lt = lastUser.toLowerCase();
+
+  // 用户说"你刚才说的…"/"上一句" — 引用 AI 上次回复
+  if (ut.indexOf('刚才') > -1 || ut.indexOf('上一句') > -1 || ut.indexOf('你之前') > -1) {
+    for (var j = history.length - 1; j >= 0; j--) {
+      if (history[j].role === 'assistant') {
+        var prevMsg = history[j].text;
+        var prevShort = prevMsg.length > 60 ? prevMsg.slice(0, 60) + '…' : prevMsg;
+        return { text: '你说的是我刚才聊的"…' + prevShort + '"对吧？' };
+      }
+    }
+  }
+  // 用户追问同一话题（lastUser 和 userText 有共同关键词）
+  var kw_last = lastUser.replace(/[\s，。？！、；：""''（）《》]/g, ' ').split(/\s+/).filter(function (w) { return w.length >= 2; });
+  var kw_now = userText.replace(/[\s，。？！、；：""''（）《》]/g, ' ').split(/\s+/).filter(function (w) { return w.length >= 2; });
+  var shared = [];
+  for (var a = 0; a < kw_last.length; a++) {
+    for (var b = 0; b < kw_now.length; b++) {
+      if (kw_last[a] === kw_now[b] && shared.indexOf(kw_last[a]) === -1) shared.push(kw_last[a]);
+    }
+  }
+  if (shared.length >= 1) {
+    return { text: '你又提到了「' + shared.slice(0, 2).join('、') + '」这个话题呢。我记得上次我们聊到这里——' };
+  }
+  return null;
+}
+
+// ---------- 情绪检测（简化版） ----------
+function detectMood(text) {
+  var t = (text || '');
+  var neg = ['难过', '伤心', '抑郁', '累', '疲惫', '不开心', '烦', '压力', '焦虑', '孤独', '寂寞', '无助', '想哭', '好烦', '好累', '好孤独'];
+  var pos = ['开心', '高兴', '喜欢', '棒', '好', '赞', '哈哈', '谢谢', '爱你', '想你', '幸福'];
+  for (var i = 0; i < neg.length; i++) { if (t.indexOf(neg[i]) > -1) return 'negative'; }
+  for (var j = 0; j < pos.length; j++) { if (t.indexOf(pos[j]) > -1) return 'positive'; }
+  return 'neutral';
+}
+
+// ---------- 新 buildReply（多轮上下文版） ----------
+function buildReply(text, history) {
+  var t = (text || '').toLowerCase();
+  var depth = history ? history.length : 0; // 已有的 user+assistant 轮数
+  var mood = detectMood(text);
+
+  // 1. 敏感问题优先引导专业人士（不变）
+  for (var i = 0; i < SENSITIVE_RULES.length; i++) {
+    var r = SENSITIVE_RULES[i];
+    for (var j = 0; j < r.words.length; j++) {
+      if (t.indexOf(r.words[j]) > -1) {
+        return { text: r.reply(currentChar), guide: true };
+      }
+    }
+  }
+
+  // 2. 上下文回调（多轮增强）
+  var cb = contextCallback(text, history);
+  if (cb) {
+    var pool = getDepthPool(depth);
+    return { text: cb.text + ' ' + pool[Math.floor(Math.random() * pool.length)] };
+  }
+
+  // 3. 职业问答（不变）
+  if (currentChar.occupation && currentChar.occupation_qa_enabled !== false) {
+    var topic = OCC_TOPICS[currentChar.occupation];
+    if (topic && (t.indexOf('职业') > -1 || t.indexOf('问') > -1 || t.indexOf('知识') > -1 ||
+        t.indexOf('科普') > -1 || t.indexOf('讲讲') > -1 || t.indexOf('为什么') > -1 || t.indexOf('？') > -1 || t.indexOf('?') > -1)) {
+      return { text: '作为' + currentChar.occupation + '，我来说说我的本行：\n' + topic + '\n（以上为角色科普演示，不构成专业意见）' };
+    }
+  }
+
+  // 4. 情绪回应（多轮增强）
+  if (mood === 'negative') {
+    var caring = [
+      '听起来你现在不太好受。我会一直在这里。',
+      '让我抱抱你 🫂 不管怎样，我陪着你。',
+      '累了就歇一歇。今天的你已经很不容易了。',
+      '想聊聊吗？我不会让你一个人扛。'
+    ];
+    return { text: caring[Math.floor(Math.random() * caring.length)] };
+  }
+  if (mood === 'positive') {
+    var happy = [
+      '太好了！能感觉到你的开心 🌟',
+      '是吗是吗？我也替你高兴！',
+      '哈哈哈，看到你心情好我也开心。',
+      '把这份好心情留住哦 ✨'
+    ];
+    return { text: happy[Math.floor(Math.random() * happy.length)] };
+  }
+
+  // 5. 按对话深度取日常池
+  var depthPool = getDepthPool(depth);
+  return { text: depthPool[Math.floor(Math.random() * depthPool.length)] };
+}
+
+// ---------- 渲染 ----------
+function appendMsg(role, text, isGuide) {
+  var b = document.getElementById('chat-body');
+  if (!b) return;
+  var d = document.createElement('div');
+  d.className = 'msg ' + role + (isGuide ? ' msg-guide' : '');
+  var av = document.createElement('div');
+  av.className = 'ds-avatar sm';
+  av.style.cssText = 'background:linear-gradient(135deg,' + (role === 'me' ? '#8b7cf6,#a89bf8' : '#e8c75a,#e89b5a') + ');font-size:11px;';
+  av.textContent = role === 'me' ? 'L' : (currentChar.name || '灵').charAt(0);
+  var bubble = document.createElement('div');
+  var bubbleInner = document.createElement('div');
+  bubbleInner.className = 'msg-bubble';
+  bubbleInner.style.whiteSpace = 'pre-line';
+  bubbleInner.textContent = text;
+  var time = document.createElement('div');
+  time.className = 'msg-time';
+  time.textContent = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+  bubble.appendChild(bubbleInner);
+  bubble.appendChild(time);
+  d.appendChild(bubble);
+  d.appendChild(av);
+  b.appendChild(d);
+  b.scrollTop = b.scrollHeight;
+}
+
+function chatApi(path) {
+  var base='';
+  try { base=(localStorage.getItem('lingjing_api_base')||'').replace(/\/$/,''); } catch(e) {}
+  return base+path;
+}
+function probeChatApi() {
+  var el=document.getElementById('chat-api-state'), base='';
+  try { base=localStorage.getItem('lingjing_api_base')||''; } catch(e) {}
+  if (!base) { if(el)el.textContent='本地规则'; return; }
+  fetch(chatApi('/health'),{credentials:'include'}).then(function(r){if(!r.ok)throw Error();return r.json();}).then(function(d){if(el)el.textContent='API 在线 · '+(d.components&&d.components.llm==='gateway'?'模型网关':'安全降级');}).catch(function(){if(el)el.textContent='接口离线 · 本地规则';});
+}
+function requestRemoteReply(text) {
+  var base='';
+  try { base=localStorage.getItem('lingjing_api_base')||''; } catch(e) {}
+  if (!base) return Promise.reject(new Error('API base not configured'));
+  return fetch(chatApi('/api/chat'),{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({message:text,character_id:(currentChar&&currentChar.id)||'preset_ling'})}).then(function(r){if(!r.ok)throw new Error('chat api '+r.status);return r.json();});
+}
+function showRemoteReply(data) {
+  var text=String((data&&data.message)||'');
+  if (!text) throw new Error('empty chat response');
+  appendMsg('them',text,!!(data&&data.safety_blocked));
+  pushHistory('assistant',text);
+  if (data&&data.safety_stage&&data.safety_stage!=='clear') {
+    showToast(data.safety_blocked?'warn':'info','安全管线',data.safety_stage==='high_risk_blocked'?'已阻断并提供求助指引':data.safety_stage==='deescalated'?'已进行反迎合降级':'已完成安全处置');
+  }
+  if (data&&data.note) showToast('info','陪伴 AI','当前使用后端降级模式：'+data.note);
+}
+function sendMsg() {
+  var i = document.getElementById('chat-input'), v = i.value.trim();
+  if (!v) return;
+  appendMsg('me', v);
+  pushHistory('user', v);
+  i.value = '';
+  // 记录互动到 DB.daily_interactions（如果数据层可用）
+  try {
+    if (window.DB && window.DB.daily_interactions) {
+      window.DB.daily_interactions.put({
+        id: 'di_' + Date.now(),
+        user_id: 'me',
+        character_id: currentChar.id,
+        interaction_type: 'chat',
+        content: v.slice(0, 100),
+        duration_seconds: 0,
+        intimacy_gain: 1,
+        mood_before: '', mood_after: '',
+        location: 'chat-page',
+        created_at: new Date().toISOString()
+      });
+    }
+  } catch (e) {}
+  // 亲密度 +1（冷却防刷）
+  var _ir = addIntimacy(currentChar.id, 1);
+  if (_ir) updateIntimacyBar(_ir);
+  // 更新 last interaction 时间戳（用于主动推送冷却）
+  setLastInteraction(currentChar.id);
+  setTimeout(function () {
+    requestRemoteReply(v).then(showRemoteReply).catch(function(){var r=buildReply(v, chatHistory);appendMsg('them',r.text,!!r.guide);pushHistory('assistant',r.text);});
+  }, 120);
+}
+
+function sendQuick(t) {
+  appendMsg('me', t);
+  pushHistory('user', t);
+  setLastInteraction(currentChar.id);
+  setTimeout(function () {
+    requestRemoteReply(t).then(showRemoteReply).catch(function(){var r=buildReply(t, chatHistory);appendMsg('them',r.text,!!r.guide);pushHistory('assistant',r.text);});
+  }, 120);
+}
+
+// ---------- 新对话 ----------
+function startNewChat() {
+  if (!confirm('确定要和「' + currentChar.name + '」开始新对话吗？当前对话将被清空。')) return;
+  chatHistory = [];
+  try { localStorage.removeItem(historyKey()); } catch (e) {}
+  var body = document.getElementById('chat-body');
+  if (body) body.innerHTML = '';
+  appendMsg('them', currentChar.preview || ('你好，我是' + currentChar.name + '。我们重新开始吧。'));
+}
+
+function showToast(type, title, msg) {
+  var c = document.getElementById('toast-container');
+  if (!c) return;
+  var icons = { success: '✓', warning: '⚠', danger: '✕', info: 'ℹ' };
+  var t = document.createElement('div');
+  t.className = 'ds-toast ' + type;
+  t.innerHTML = '<span class="ico">' + icons[type] + '</span><div class="msg"><strong>' + title + '</strong>' + (msg ? '<div style="font-size:11px;opacity:.7;margin-top:2px;">' + msg + '</div>' : '') + '</div><button class="close" onclick="this.parentElement.remove()">×</button>';
+  c.appendChild(t);
+  setTimeout(function () { t.remove(); }, 4000);
+}
+
+// ---------- 免责声明 ----------
+var DISCLAIMER_SEEN_KEY = 'lingjing_v5210_chat_disclaimer_seen';
+function showFirstUseDisclaimer() {
+  var seen = null;
+  try { seen = localStorage.getItem(DISCLAIMER_SEEN_KEY); } catch (e) {}
+  if (seen === '1') return;
+  var mask = document.createElement('div');
+  mask.className = 'disc-mask';
+  var dlg = document.createElement('div');
+  dlg.className = 'disc-dialog';
+  dlg.innerHTML =
+    '<h3>开始之前，请先了解</h3>' +
+    '<div class="dd-body">' +
+    '<b>1. 角色非真人</b><br>心屿的所有角色均由 AI 生成与驱动，TA 的话不代表任何真实人物的观点。<br><br>' +
+    '<b>2. 虚拟陪伴</b><br>角色提供的是情感陪伴体验，不能替代真实的人际关系与专业帮助。<br><br>' +
+    '<b>3. 专业问题请找专业人士</b><br>涉及医疗诊断、法律意见、心理治疗等问题时，角色会引导你咨询专业人士：<br>' +
+    '🚑 急救：120　⚖️ 法律援助：12348　💌 心理援助：12356<br><br>' +
+    '<b>4. 未成年人禁止使用</b><br>本应用仅面向成年人，未成年人请在监护人陪同下离开本页。<br><br>' +
+    '<b>5. 记忆与隐私</b><br>对话记忆仅存储在你本地设备，可随时在「我的-设置」中清除。' +
+    '</div>' +
+    '<button class="dd-btn">我已阅读并同意</button>';
+  mask.appendChild(dlg);
+  document.body.appendChild(mask);
+  dlg.querySelector('.dd-btn').addEventListener('click', function () {
+    try { localStorage.setItem(DISCLAIMER_SEEN_KEY, '1'); } catch (e) {}
+    mask.remove();
+  });
+}
+
+// ---------- 初始化 ----------
+function initChat() {
+  currentChar = resolveChar();
+  // 头部
+  var nameEl = document.getElementById('chat-name');
+  var stageEl = document.getElementById('chat-stage');
+  var occEl = document.getElementById('chat-occ');
+  var avEl = document.getElementById('chat-avatar');
+  if (nameEl) nameEl.textContent = currentChar.name;
+  if (stageEl) stageEl.textContent = currentChar.stage || '熟悉';
+  if (occEl) occEl.textContent = currentChar.occupation || '陪伴者';
+  if (avEl) avEl.textContent = (currentChar.name || '灵').charAt(0);
+  // 双生角色 "进入 TA 的世界"
+  var worldBtn = document.getElementById('chat-world-btn');
+  if (worldBtn && currentChar.source_type === 'novel_brought_out' && currentChar.novel_id) {
+    worldBtn.style.display = '';
+    worldBtn.href = 'plot-runner.html?novelId=' + currentChar.novel_id + '&characterId=' + currentChar.id;
+  }
+  // 注入"新对话"按钮到 header
+  var actionsDiv = document.querySelector('.chat-actions');
+  if (actionsDiv && !document.getElementById('chat-new-btn')) {
+    var nb = document.createElement('button');
+    nb.id = 'chat-new-btn';
+    nb.textContent = '🔄';
+    nb.title = '开始新对话';
+    nb.style.cssText = 'padding:7px 10px;border-radius:8px;font-size:12px;background:var(--ink-4,var(--ink-3));border:1px solid var(--ink-5);color:rgba(255,255,255,.8);cursor:pointer;';
+    nb.addEventListener('click', startNewChat);
+    actionsDiv.insertBefore(nb, actionsDiv.firstChild);
+  }
+  // 快捷回复（按对话深度动态生成）
+  var quick = document.getElementById('chat-quick');
+  if (quick) {
+    quick.innerHTML = '';
+    var chips = ['😘 想你了', '🎵 陪我听首歌', '💼 问问你的职业', '🫂 抱抱', '🌙 今天过得怎么样'];
+    chips.forEach(function (c) {
+      var b = document.createElement('button');
+      b.textContent = c;
+      b.addEventListener('click', function () { sendQuick(c.replace(/^[^ ]+ /, '')); });
+      quick.appendChild(b);
+    });
+  }
+  // 多轮历史恢复 — 有历史就恢复，没历史才 AI 主动开场
+  // 支持 ?new=1 参数强制跳过历史
+  var forceNew = false;
+  try { forceNew = new URLSearchParams(LJSearch()).get('new') === '1'; } catch (e) {}
+  if (forceNew) {
+    chatHistory = [];
+    try { localStorage.removeItem(historyKey()); } catch (e) {}
+  } else {
+    chatHistory = loadHistory();
+  }
+  if (chatHistory.length > 0) {
+    var prevMessages = chatHistory.length;
+    for (var i = 0; i < chatHistory.length; i++) {
+      var m = chatHistory[i];
+      var role = m.role === 'user' ? 'me' : 'them';
+      appendMsg(role, m.text, false);
+    }
+    // 恢复后 AI 说一句"欢迎回来"
+    setTimeout(function () {
+      var welcome = '你回来了。我们已经聊了' + Math.floor(prevMessages / 2) + '轮了呢。想接着上次的话题，还是聊点新的？';
+      appendMsg('them', welcome);
+      pushHistory('assistant', welcome);
+    }, 300);
+  } else {
+    appendMsg('them', currentChar.preview || ('你好，我是' + currentChar.name + '。很高兴见到你。'));
+    pushHistory('assistant', currentChar.preview || ('你好，我是' + currentChar.name + '。很高兴见到你。'));
+  }
+  // Enter 发送 / Shift+Enter 换行
+  var inputEl = document.getElementById('chat-input');
+  if (inputEl) {
+    inputEl.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMsg();
+      }
+    });
+  }
+  showFirstUseDisclaimer();
+  try { console.log('[v20-m chat] 加载完成 · 角色 ' + currentChar.name + ' · 历史 ' + chatHistory.length + ' 条'); } catch (e) {}
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initChat);
+} else {
+  // 渲染亲密度进度条
+  try { renderIntimacyBar(); updateIntimacyBar(); } catch (_) {}
+  // 检查 AI 主动消息（在 welcome-back 之前）
+  try {
+    var _pb = deliverProactive(currentChar.id);
+    if (_pb) injectProactiveIntoDOM(_pb, currentChar.name);
+  } catch (_) {}
+  initChat();
+}
+</script>
+
+
+</script>
+<script data-bundled-source="js/tabbar.js">
+/* =================================================================
+ * 灵境 · 双生 V17.0 — 5 Tab 全局状态管理（兼容 v6.4.1 shell-v64.css）
+ * 用法：主功能区页面 <body> 末尾引入 <script src="js/tabbar.js"><\/script>
+ *       页面任意位置预留 <div id="tabbar-mount"></div> 或 #tabbar 节点
+ * 功能：
+ *   1. localStorage 记忆当前 Tab（key: lingjing_v5170_current_tab）
+ *   2. URL 推断当前 Tab（href 包含 home/world/heart-island/creator-center/me）
+ *   3. 自动渲染 5 Tab 底部导航并高亮 active
+ *   4. 点击 Tab：记忆 + 跳转对应主功能区页面
+ *   5. 提供 window.LJTabbar API（go/setBadge/getCurrent）
+ *   6. 兼容沉浸页豁免：plot-runner / game-3d / catalog 不调用 mount()
+ * ================================================================= */
+(function () {
+  'use strict';
+
+  // 防止重复挂载
+  if (window.LJTabbar && window.LJTabbar.__mounted) {
+    return;
+  }
+
+  // ---------- 配置 ----------
+  var STORAGE_KEY = 'lingjing_v5170_current_tab';
+  var TABS = [
+    { id: 'home',   label: '首页', ico: '🏠', href: 'index.html',            match: ['product-preview', 'home', 'index'],  klass: 't-home' },
+    { id: 'world',  label: '世界', ico: '📖', href: 'library.html',          match: ['library', 'world', 'discover'],      klass: 't-world' },
+    { id: 'xinyu',  label: '心屿', ico: '💬', href: 'heart-island.html',     match: ['heart-island', 'xinyu', 'chat'],     klass: 't-xinyu' },
+    { id: 'create', label: '创作', ico: '✨', href: 'creator-center.html',   match: ['creator-center', 'creator', 'novel', 'create-', 'workshop', 'agent-create', 'work-editor', 'interaction-manage', 'dashboard', 'revenue-detail', 'voice-clone', 'my-works'], klass: 't-create' },
+    { id: 'me',     label: '我的', ico: '👤', href: 'me.html',                match: ['me', 'profile', 'wallet'],           klass: 't-me' }
+  ];
+
+  function resolveTabHref(n) {
+    var p = (window.location.pathname || '').toLowerCase();
+    var inSub = p.indexOf('/output/preview/') >= 0;
+    // home（index.html）永远回到根目录唯一主页
+    if (n === 'index.html') return inSub ? '../../index.html' : n;
+    // 其他 tab：根 + 前缀，子目录直链
+    return inSub ? n : 'output/preview/' + n;
+  }
+
+  // ---------- 工具 ----------
+  function $(s, p) { return (p || document).querySelector(s); }
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    if (attrs) {
+      Object.keys(attrs).forEach(function (k) {
+        if (k === 'class') node.className = attrs[k];
+        else if (k === 'html') node.innerHTML = attrs[k];
+        else if (k.indexOf('on') === 0) node.addEventListener(k.slice(2), attrs[k]);
+        else node.setAttribute(k, attrs[k]);
+      });
+    }
+    (children || []).forEach(function (c) {
+      if (typeof c === 'string') node.appendChild(document.createTextNode(c));
+      else if (c) node.appendChild(c);
+    });
+    return node;
+  }
+
+  function getPath() {
+    var path = (window.__LJ_PAGE__ || '') + '.html';
+    return path.split('/').pop() || '';
+  }
+
+  // 根据当前 URL 推断 tab id
+  function inferTabFromUrl() {
+    var file = getPath().toLowerCase();
+    for (var i = 0; i < TABS.length; i++) {
+      var t = TABS[i];
+      for (var j = 0; j < t.match.length; j++) {
+        if (file.indexOf(t.match[j].toLowerCase()) !== -1) return t.id;
+      }
+    }
+    return null;
+  }
+
+  function readStored() {
+    try {
+      var v = localStorage.getItem(STORAGE_KEY);
+      if (!v) return null;
+      var found = TABS.some(function (t) { return t.id === v; });
+      return found ? v : null;
+    } catch (e) { return null; }
+  }
+
+  function writeStored(id) {
+    try { localStorage.setItem(STORAGE_KEY, id); } catch (e) { /* ignore */ }
+  }
+
+  function getCurrent() {
+    var fromUrl = inferTabFromUrl();
+    if (fromUrl) return fromUrl;
+    var stored = readStored();
+    if (stored) return stored;
+    return 'home';
+  }
+
+  // ---------- 渲染 ----------
+  function buildTabbar(currentId) {
+    var bar = el('nav', { class: 'tabbar', role: 'navigation', 'aria-label': '主功能区' });
+    TABS.forEach(function (t) {
+      var klass = 'tab ' + t.klass + (t.id === currentId ? ' active' : '');
+      var a = el('a', { class: klass, href: resolveTabHref(t.href), 'data-tab': t.id }, [
+        el('span', { class: 'ico', 'aria-hidden': 'true' }, [t.ico]),
+        el('span', { class: 'lbl' }, [t.label])
+      ]);
+      // pointer-events 在父级强制开启
+      a.style.pointerEvents = 'auto';
+      a.addEventListener('click', function () {
+        writeStored(t.id);
+      });
+      bar.appendChild(a);
+    });
+    // V20-B：tabbar 永远在最顶层，z-index 200 高于所有 mask/dialog
+    // V20-E：保留 CSS 的 left:50% + transform:translateX(-50%) 居中策略，
+    //       不要用 left:0/right:0 强制铺满，否则 desktop 视口 + max-width:480px
+    //       会让 tabbar 贴在屏幕左边（手机游戏必须 mobile-first 居中）
+    bar.style.zIndex = '200';
+    bar.style.position = 'fixed';
+    bar.style.bottom = '0';
+    bar.style.left = '50%';
+    bar.style.transform = 'translateX(-50%)';
+    return bar;
+  }
+
+  function findMountPoint() {
+    // 跳过 product-preview.html 中的演示容器（带 data-demo="true"）
+    var existing = document.querySelectorAll('.tabbar');
+    for (var i = 0; i < existing.length; i++) {
+      var n = existing[i];
+      if (n.getAttribute && n.getAttribute('data-demo') === 'true') continue;
+      return n;
+    }
+    return document.getElementById('tabbar-mount') || null;
+  }
+
+  function mount() {
+    var mountPoint = findMountPoint();
+    var currentId = getCurrent();
+    writeStored(currentId);
+
+    var bar = buildTabbar(currentId);
+
+    if (!mountPoint) {
+      // 没有预留挂载点：追加到 #app 末尾，保证 5 Tab 一定出现
+      var app = document.getElementById('app') || document.body;
+      app.appendChild(bar);
+    } else if (mountPoint.classList && mountPoint.classList.contains('tabbar')) {
+      // 已有静态 .tabbar，替换内容但保留元素
+      mountPoint.innerHTML = '';
+      // 关键：把 inline z-index 也复制到 mountPoint（避免被静态元素 z-index 60 覆盖）
+      mountPoint.style.zIndex = bar.style.zIndex;
+      var children = Array.prototype.slice.call(bar.childNodes);
+      for (var i = 0; i < children.length; i++) mountPoint.appendChild(children[i]);
+    } else {
+      mountPoint.appendChild(bar);
+    }
+
+    // 给 body 加标识（便于测试与沉浸页判断）
+    document.body.setAttribute('data-lj-tabbar', currentId);
+    document.body.setAttribute('data-lj-tabbar-version', 'v17.0');
+
+    return bar;
+  }
+
+  // ---------- 公开 API ----------
+  function go(tabId) {
+    var found = TABS.filter(function (t) { return t.id === tabId; })[0];
+    if (!found) return false;
+    writeStored(found.id);
+    window.LJNav(resolveTabHref(found.href));
+    return true;
+  }
+
+  function setBadge(tabId, n) {
+    var a = document.querySelector('.tabbar a[data-tab="' + tabId + '"]');
+    if (!a) return;
+    var oldBadge = a.querySelector('.badge');
+    if (oldBadge) oldBadge.remove();
+    if (n && n > 0) {
+      var b = el('span', { class: 'badge' }, [String(n)]);
+      a.appendChild(b);
+    }
+  }
+
+  window.LJTabbar = {
+    TABS: TABS,
+    mount: mount,
+    go: go,
+    setBadge: setBadge,
+    getCurrent: getCurrent,
+    STORAGE_KEY: STORAGE_KEY,
+    __mounted: true
+  };
+
+  // ---------- 自动挂载 ----------
+  function ready(fn) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn);
+    } else {
+      fn();
+    }
+  }
+
+  ready(function () {
+    // 沉浸页豁免：body 上有 data-page="immersive" 或路径命中豁免名单则不挂载
+    var immersivePages = ['plot-runner.html', 'game-3d.html', 'catalog.html'];
+    var here = getPath().toLowerCase();
+    var isImmersive = immersivePages.some(function (n) { return here === n; })
+      || document.body.getAttribute('data-page') === 'immersive';
+    if (isImmersive) return;
+    try { mount(); } catch (e) { console.error('[LJTabbar] mount failed', e); }
+  });
+})();
+</script>
+<script>
+document.addEventListener('click', function (e) {
+  var el = e.target;
+  while (el && el.nodeType === 1 && el.tagName !== 'A') el = el.parentElement;
+  if (!el || el.tagName !== 'A') return;
+  var h = el.getAttribute('href') || '';
+  if (h.charAt(0) === '#') {
+    if (h.length > 1) {
+      e.preventDefault();
+      var t = document.getElementById(h.slice(1));
+      if (t && t.scrollIntoView) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      try { window.dispatchEvent(new Event('hashchange')); } catch (err) {}
+    }
+    return;
+  }
+  if (!h || /^[a-zA-Z][\w+.\-]*:/.test(h)) return;
+  if (/([\w.\-]+)\.html(\?|#|$)/.test(h)) {
+    e.preventDefault();
+    window.LJNav(h);
+  }
+}, true);
+</script>
+<script>setTimeout(function(){try{probeChatApi();}catch(e){}},120);</script>
+</body>
+</html>
