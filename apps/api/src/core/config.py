@@ -13,6 +13,8 @@ class Settings(BaseSettings):
     # API
     api_host: str = "0.0.0.0"
     api_port: int = 8000
+    # 逗号分隔的前端来源；生产环境通过 CORS_ORIGINS 显式覆盖，不使用通配符配合凭据。
+    cors_origins: str = "http://localhost:3000,https://ranjohung.github.io"
 
     # PostgreSQL（Phase 5 起使用）
     database_url: str = "postgresql://mirai:local_dev_pass@localhost:5432/mirai"
@@ -27,6 +29,9 @@ class Settings(BaseSettings):
     environment: str = "development"
     dev_auth_enabled: bool = True
     dev_user_id: str = "local-dev-user"
+    # 管理员开发入口必须显式配置；默认没有任何开发管理员。
+    dev_admin_enabled: bool = False
+    dev_admin_user_id: str = ""
     auth_jwt_secret: str | None = None
     supabase_url: str | None = None
     supabase_anon_key: str | None = None
@@ -52,6 +57,11 @@ class Settings(BaseSettings):
     @property
     def llm_configured(self) -> bool:
         return bool(self.openai_api_key)
+
+    @property
+    def production_auth_ready(self) -> bool:
+        """生产模式必须有签名密钥；开发 fallback 不算生产认证。"""
+        return not self.environment.lower() in {"production", "prod"} or bool(self.auth_jwt_secret)
 
 
 settings = Settings()

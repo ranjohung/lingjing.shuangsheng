@@ -8,7 +8,7 @@ from __future__ import annotations
 import logging
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
+from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -24,6 +24,10 @@ from .modules.profile import router as profile_router
 from .modules.scenes import router as scenes_router
 from .modules.world_saves import router as world_saves_router
 from .modules.story.router import router as story_router
+from .modules.reports import router as reports_router
+from .modules.generation import router as generation_router
+from .core.security import CurrentUser, require_admin
+from .core import audit
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("mirai.api")
@@ -44,7 +48,7 @@ app = FastAPI(title="MIRAI 灵境 API", version="0.1.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[x.strip() for x in settings.cors_origins.split(",") if x.strip()],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -59,6 +63,14 @@ app.include_router(profile_router)
 app.include_router(scenes_router)
 app.include_router(world_saves_router)
 app.include_router(story_router)
+app.include_router(reports_router)
+app.include_router(generation_router)
+
+# FastAPI's current lazy router implementation does not materialize included
+# routes until the schema is built.  Do this once during import so a real
+# Uvicorn process exposes /api/* immediately instead of returning 404 and
+# causing browser clients to silently fall back to local demo logic.
+app.openapi()
 
 
 @app.get("/health")
@@ -73,7 +85,7 @@ async def health(request: Request):
             "cache": ks.cache_kind,
             "database": "sqlite" if settings.story_database_url and settings.story_database_url.startswith("sqlite") else ("configured" if settings.story_database_url else "not_configured"),
             "kill_switch": "enabled",
-            "auth": "jwt" if settings.auth_jwt_secret else ("dev_fallback" if settings.dev_auth_enabled else "not_configured"),
+            "auth": "jwt" if settings.auth_jwt_secret else ("misconfigured_production" if not settings.production_auth_ready else ("dev_fallback" if settings.dev_auth_enabled else "not_configured")),
             "llm": "rule_engine" if not settings.llm_configured else "gateway",
         },
         "budget": {"spent_usd": round(cost, 4), "limit_usd": ks.daily_limit},
@@ -81,16 +93,22 @@ async def health(request: Request):
 
 
 @app.get("/admin/cost/today")
-async def cost_today(request: Request):
+async def cost_today(request: Request, _admin: CurrentUser = Depends(require_admin)):
     ks: KillSwitch = request.app.state.kill_switch
     return {"spent_usd": round(await ks.daily_cost(), 4), "limit_usd": ks.daily_limit}
 
 
 @app.post("/admin/kill-switch/reset")
-async def kill_switch_reset(request: Request):
+async def kill_switch_reset(request: Request, _admin: CurrentUser = Depends(require_admin)):
     ks: KillSwitch = request.app.state.kill_switch
     await ks.reset()
+    audit.record(_admin.user_id, "kill_switch.reset", "/admin/kill-switch/reset")
     return {"reset": True, "spent_usd": 0.0}
+
+
+@app.get("/admin/audit-log")
+async def audit_log(limit: int = 50, _admin: CurrentUser = Depends(require_admin)):
+    return {"items": audit.list_events(limit), "mode": "sqlite-dev"}
 
 
 @app.exception_handler(Exception)
